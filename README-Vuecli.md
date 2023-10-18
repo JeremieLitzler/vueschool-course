@@ -9,14 +9,19 @@
 - Install Vue CLI : `npm install -g @vue/cli`
   - You need version 4 or higher ( as of Oct 18th 2023, it is 5.0.8)
 
-## With Vue CLI
+## Creating a project
 
-See [this README](README-Vuecli.md).
+```bash
+vue create vueschool-forum
+# You need to select the preset with Vue
+# And run `npm audit fix --force`
+```
 
-### With Vite
+## Linter configuration
 
-See [this README](README-Vite.md).
-
-## Must read documentation
-
-- [Style guide](https://vuejs.org/style-guide)
+```bash
+vue add eslint
+# Pick the options:
+# ? Pick an ESLint config: Standard
+# ? Pick additional lint features: Lint on save
+```
