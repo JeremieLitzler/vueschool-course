@@ -1,22 +1,19 @@
-# Projects and notes with VueSchool courses
+# Vue.js + Firebase Authentication
 
-## Prerequisites
+## Differences between course and current Firebase
 
-- Visual Studio Code
-- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
-- [TypeScript Vue Plugin](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)
-- [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
-- Install Vue CLI : `npm install -g @vue/cli`
-  - You need version 4 or higher ( as of Oct 18th 2023, it is 5.0.8)
+**_The following is true on October 20th 2023._**
 
-## With Vue CLI
+Once you create you project, you need to register an application:
 
-See [this README](README-Vuecli.md).
+- select the `Web` technology
 
-### With Vite
+![alt](README-images/from-project-overview-screen.jpg)
 
-See [this README](README-Vite.md).
+- give a name to your app and confirm the registration
 
-## Must read documentation
+![alt](README-images/add-app-form.jpg)
 
-- [Style guide](https://vuejs.org/style-guide)
+- go to the settings to retrieve the configuration code
+
+![alt](README-images/install-firebase.jpg)

@@ -1,0 +1,130 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue.js and Firebase Auth</title>
+    <style>
+      .success {
+          color: green;
+      }
+      .error {
+          color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Vue.js + Firebase Authentication</h1>
+      <div v-if="authUser">
+        <h2>Signed in as {{ authUser.email }}</h2>
+        <button @click="signOut">Sign out</button>
+      </div>
+      <div v-else>
+        <form @submit.prevent="register">
+          <h2>Register</h2>
+          <label for="email">
+            Your email:
+            <input type="email" name="email" id="email" v-model="email" />
+          </label>
+          <label for="password">
+            Your password:
+            <input
+              type="password"
+              name="password"
+              id="password"
+              v-model="password"
+            />
+          </label>
+          <button>Submit</button>
+          <p :class="feedback.cssClass">{{ feedback.message }}</p>
+        </form>
+        <form @submit.prevent="signIn">
+          <h2>Sign-in</h2>
+          <label for="email">
+            Your email:
+            <input type="email" name="email" id="email" v-model="email" />
+          </label>
+          <label for="password">
+            Your password:
+            <input
+              type="password"
+              name="password"
+              id="password"
+              v-model="password"
+            />
+          </label>
+          <button>Connect</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyB1QUF0y6-GPU0P_rYeWCkWGuQENZa_fLs",
+        authDomain: "vs-firebase-auth-8b92a.firebaseapp.com",
+        projectId: "vs-firebase-auth-8b92a",
+        storageBucket: "vs-firebase-auth-8b92a.appspot.com",
+        messagingSenderId: "380375543997",
+        appId: "1:380375543997:web:420a005bf70ece3a61c7d4"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      new Vue({
+        el: "#app",
+        data: {
+            email: "",
+            password: "",
+            authUser: null,
+            feedback: {
+                cssClass: "success",
+                message: null
+            }
+        },
+        methods: {
+            register () {
+                firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                .then(user => {
+                  this.feedback.message = "Registration successful!";
+                  this.feedback.cssClass = "success";
+                  this.setUser(user);
+                  this.resetInputs();
+                }).catch((err) => {
+                    this.feedback.cssClass = "error";
+                    this.feedback.message = err.message;
+                });
+            },
+            signIn () {
+                firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                .then(user => {
+                  this.feedback.message = "Successful signed in!";
+                  this.feedback.cssClass = "success";
+                  this.setUser(user);
+                  this.resetInputs();
+                }).catch((err) => {
+                    this.feedback.cssClass = "error";
+                    this.feedback.message = err.message;
+                });
+            },
+            signOut () {
+                firebase.auth().signOut();
+                this.resetFeedback();
+                this.setUser(null);
+            },
+            setUser(user) {
+                this.authUser = user
+            },
+            resetFeedback() {
+                this.feedback.message = '';
+            },
+            resetInputs () {
+                this.email = '';
+                this.password = '';
+            }
+        },
+      })
+    </script>
+  </body>
+</html>
