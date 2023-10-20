@@ -1,5 +1,12 @@
 # Vue.js + Firebase Authentication
 
+## Prerequisites
+
+```sh
+npm install -g local-web-server
+ws # in current directory
+```
+
 ## Differences between course and current Firebase
 
 **_The following is true on October 20th 2023._**
