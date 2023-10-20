@@ -20,3 +20,68 @@ See [this README](README-Vite.md).
 ## Must read documentation
 
 - [Style guide](https://vuejs.org/style-guide)
+
+## Notes
+
+### Fundamentals
+
+#### Dynamic classes
+
+```javascript
+        <li
+          v-for="item in items"
+          :key="item.label"
+          class="item"
+          :class="{strikeout: item.purchased}"
+        >
+          {{ item.label }}
+        </li>
+
+```
+
+or for several classes:
+
+```javascript
+        <li
+          v-for="item in items"
+          :key="item.label"
+          class="item"
+          :class="[item.purchased ? 'strikeout': '', item.highlight ? 'highlight': '']"
+        >
+          {{ item.label }}
+        </li>
+
+```
+
+#### About `computed`
+
+- A `computed` must return a value, contrary to methods.
+- When do you need to use `computed` instead of methods?
+  - When you change data, use methods.
+  - When you change the presentation, use computed properties.
+
+### How to lazy load routes with Vue Router
+
+It is is done with Webpack.
+
+It can be done for the routes or within components having sub-components.
+
+For a route, it looks like this:
+
+```javascript
+  {
+    path: '/a-route',
+    name: 'a-route',
+    component: () =>
+      import(/* webpackChunkName: "a-route" */ '../views/PageSomething.vue'),
+  },
+
+```
+
+Webpack will generate a `a-route.js` file that is loaded only when the route is browsed to.
+
+For a component, we use the same techique the parent component:
+
+```javascript
+
+```
