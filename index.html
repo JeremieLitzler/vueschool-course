@@ -1,0 +1,105 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue fundamentals</title>
+    <style>
+      .strikeout {
+        color: gray;
+              text-decoration: line-through;
+          }
+      .highlight {
+        color: red;
+          }
+    </style>
+  </head>
+  <body>
+    <div id="shopping-list">
+      <div class="header">
+        <h1>{{ header.toLocaleUpperCase() }}</h1>
+        <button
+          v-if="state === 'default'"
+          @click="changeState('edit')"
+          class="btn btn-primary"
+        >
+          Add item
+        </button>
+        <button v-else @click="changeState('default')" class="btn btn-cancel">
+          Cancel
+        </button>
+      </div>
+      <div class="add-item-form" v-if="state === 'edit'">
+        <input
+          type="text"
+          name="additen"
+          id="additen"
+          v-model="newItem"
+          @keyup.enter="saveItem"
+          placeholder="Add an item"
+        />
+        <span>{{ characterCount }} / 200</span>
+        <button
+          class="btn btn-primary"
+          :disabled="newItem.length === 0"
+          @click="saveItem"
+        >
+          Save Item
+        </button>
+      </div>
+      <ul>
+        <li
+          v-for="item in reverseItems"
+          :key="item.label"
+          :class="[item.purchased ? 'strikeout': '', item.highlight ? 'highlight': '']"
+          @click="togglePurchased(item)"
+        >
+          {{ item.label }}
+        </li>
+      </ul>
+      <p v-if="items.length === 0">No more items to buy!</p>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16"></script>
+    <script>
+      const shoppingList = new Vue({
+          el: '#shopping-list',
+          data: {
+            state: "default",
+            header: 'shopping list app',
+              newItem: "",
+              items: [
+                { label: 'item 1', purchased: false, highlight: false },
+                { label: 'item 2', purchased: true, highlight: false },
+                { label: 'item 3', purchased: false, highlight: true }
+              ]
+          },
+          computed: {
+            characterCount() {
+                return this.newItem.length;
+            },
+            reverseItems() {
+                return this.items.slice(0).reverse();
+            }
+          },
+          methods: {
+            isInputInvalid: function () {
+                return this.newItem.length === 0
+            },
+            saveItem: function() {
+                this.items.push({label:this.newItem, purchased:false});
+                this.resetInput()
+            },
+            changeState: function (newState) {
+                this.state = newState;
+                this.resetInput()
+            },
+            resetInput: function () {
+                this.newItem = ''
+            },
+            togglePurchased: function (item) {
+                item.purchased = !item.purchased;
+            }
+          }
+      })
+    </script>
+  </body>
+</html>
