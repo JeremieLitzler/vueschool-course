@@ -105,7 +105,11 @@ new Vue({
       this.authUser
         .updatePassword(this.newPassword)
         .then(() => {
-          this.signOut();
+          this.signOut(false);
+          this.setFeedback(
+            'success',
+            'Please signin again following your password modification.',
+          );
         })
         .catch((err) => {
           if (err.code === 'auth/requires-recent-login') {
@@ -116,12 +120,12 @@ new Vue({
           this.setFeedback('error', err.message);
         });
     },
-    signOut() {
+    signOut(runFeedbackReset = true) {
       firebase
         .auth()
         .signOut()
         .then(() => {
-          this.resetFeedback();
+          if (runFeedbackReset) this.resetFeedback();
           this.setUser(null);
         });
     },
