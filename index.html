@@ -38,7 +38,12 @@
           <div class="form-group">
             <label for="name"
               >Name*:
-              <input type="text" id="name" v-model="$v.form.name.$model" />
+              <input
+                type="text"
+                id="name"
+                v-model="$v.form.name.$model"
+                :class="{error: $v.form.name.$error, valid: !$v.form.name.$invalid}"
+              />
             </label>
             <p v-if="$v.form.name.$error">The name is required.</p>
           </div>
@@ -50,6 +55,7 @@
                 type="number"
                 id="age"
                 v-model.number="$v.form.age.$model"
+                :class="{error: $v.form.age.$error, valid: !$v.form.age.$invalid}"
               />
             </label>
             <div v-if="$v.form.age.$error">
