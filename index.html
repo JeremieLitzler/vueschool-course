@@ -22,6 +22,7 @@
           What's up, {{ authUser.displayName ? authUser.displayName : "friend"
           }}?
         </p>
+        <button @click="sendEmailVerification">Send Email Verification</button>
         <button @click="signOut">Sign out</button>
         <form @submit.prevent="updateProfile">
           <h2>Edit my profile</h2>
@@ -47,7 +48,7 @@
           <button>Update</button>
           <p :class="feedback.cssClass">{{ feedback.message }}</p>
         </form>
-        <form @submit.prevent="updateEmail">
+        <form @submit.prevent="verifyEmail">
           <h2>Change my email</h2>
           <p class="error">
             NB: doesn't work because this
@@ -56,6 +57,13 @@
               target="_blank"
               rel="noopener noreferrer"
               >Enable or disable email enumeration protection</a
+            >. <br />See
+            <a
+              href="https://vueschool.io/lessons/update-a-firebase-users-email-and-password"
+              target="_blank"
+              rel="noopener noreferrer"
+              >my comment in the lesson "Update Firebase Authentication User
+              Email and Password"</a
             >
           </p>
           <label for="newEmail">

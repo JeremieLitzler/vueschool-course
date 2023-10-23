@@ -68,15 +68,51 @@ new Vue({
         photoURL: this.editUserProps.photoURL,
       });
     },
+    sendEmailVerification() {
+      const actionCodeSettings = {
+        url: `https://127.0.0.1:8000/?email=${this.authUser.email}`,
+        iOS: {
+          bundleId: 'com.example.ios',
+        },
+        android: {
+          packageName: 'com.example.android',
+          installApp: true,
+          minimumVersion: '12',
+        },
+        handleCodeInApp: false,
+      };
+
+      firebase
+        .auth()
+        .currentUser.sendEmailVerification(actionCodeSettings)
+        .then(function () {
+          this.setFeedback(
+            'success',
+            'Check your email for a link or code to verify your account',
+          );
+        })
+        .catch(function (err) {
+          this.setFeedback('error', err.message);
+        });
+    },
+
     verifyEmail() {
       const actionCodeSettings = {
         url: `https://127.0.0.1:8000/?email=${this.authUser.email}`,
+        iOS: {
+          bundleId: 'com.example.ios',
+        },
+        android: {
+          packageName: 'com.example.android',
+          installApp: true,
+          minimumVersion: '12',
+        },
         handleCodeInApp: true,
       };
       firebase
         .auth()
-        .verifyBeforeUpdateEmail(
-          this.authUser,
+        .currentUser.verifyBeforeUpdateEmail(
+          // this.authUser,
           this.newEmail,
           actionCodeSettings,
         )
@@ -130,6 +166,7 @@ new Vue({
         });
     },
     setUser(user) {
+      console.log(user);
       this.authUser = user;
       if (user) {
         this.editUserProps.displayName = user.displayName;
