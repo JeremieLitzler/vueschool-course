@@ -1,0 +1,75 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue.js Form Validation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Course on Vue.js Form Validation</h1>
+      <section>
+        <h2>With Vanilla JS</h2>
+        <form @submit.prevent="submitFormVanilla" autocomplete="off">
+          <div class="form-group">
+            <label for="name"
+              >Name*:
+              <input type="text" v-model="form.name" id="name" />
+            </label>
+            <p v-if="!nameIsValid">The name is required.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="age"
+              >Age:
+              <input type="number" v-model.number="form.age" id="age" />
+            </label>
+            <p v-if="!ageIsValid">
+              The age should be set great than 12 but no more than 120.
+            </p>
+          </div>
+          <button :disabled="!formIsValid">Submit</button>
+        </form>
+      </section>
+      <section>
+        <h2>With Vanilla JS</h2>
+        <form @submit.prevent="submitFormWithVuelidate" autocomplete="off">
+          <div class="form-group">
+            <label for="name"
+              >Name*:
+              <input type="text" id="name" v-model="$v.form.name.$model" />
+            </label>
+            <p v-if="$v.form.name.$error">The name is required.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="age"
+              >Age:
+              <input
+                type="number"
+                id="age"
+                v-model.number="$v.form.age.$model"
+              />
+            </label>
+            <div v-if="$v.form.age.$error">
+              <p v-if="!$v.form.age.required">The age is required.</p>
+              <p v-else-if="!$v.form.age.integer">
+                The age must be an integer.
+              </p>
+              <p v-else-if="!$v.form.age.between">
+                The age must be set great than 12 but no more than 120.
+              </p>
+            </div>
+          </div>
+          <button :disabled="$v.form.$invalid">Submit</button>
+        </form>
+      </section>
+    </div>
+    <script src="https://unpkg.com/vue@2.7"></script>
+    <script src="libs/vuelidate.min.js"></script>
+    <script src="libs/validators.min.js"></script>
+
+    <script src="app.js"></script>
+  </body>
+</html>
