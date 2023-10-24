@@ -5,6 +5,19 @@ let PlanComponent = {
       type: String,
       required: true,
     },
+    selectedPlan: {
+      type: String,
+    },
+  },
+  computed: {
+    isSelected() {
+      return this.selectedPlan === this.name;
+    },
+  },
+  methods: {
+    select() {
+      this.$emit('select-plan', this.name);
+    },
   },
 };
 let PlanPickerComponent = {
@@ -13,7 +26,15 @@ let PlanPickerComponent = {
     'plan-item': PlanComponent,
   },
   data() {
-    return { plans: ['The Single', 'The Curious', 'The Addict'] };
+    return {
+      plans: ['The Single', 'The Curious', 'The Addict'],
+      selectedPlan: null,
+    };
+  },
+  methods: {
+    selectPlan(plan) {
+      this.selectedPlan = plan;
+    },
   },
 };
 
