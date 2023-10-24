@@ -1,11 +1,13 @@
 console.log('Loading Vue...');
+Vue.component('click-counter', {
+  template: '<button @click="count++">{{count}}</button>',
+  data() {
+    return {
+      count: 0,
+    };
+  },
+});
+
 new Vue({
   el: '#app',
-  data() {
-    return { };
-  },
-  computed: {
-  },
-  methods: {
-  },
 });
