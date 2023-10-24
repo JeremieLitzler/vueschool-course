@@ -41,6 +41,17 @@ new Vue({
     },
   },
   methods: {
+    shouldAppendValidClass(field) {
+      // ex: field = $v.form.someInput
+      // below we check the field:
+      //  > is not invalid
+      //  > is not empty
+      return !field.$invalid && field.$model;
+    },
+    shouldAppendErrorClass(field) {
+      // ex: field = $v.form.someInput
+      return !field.$error;
+    },
     submitFormVanilla() {
       if (this.formIsValid) {
         console.log(this.form);
