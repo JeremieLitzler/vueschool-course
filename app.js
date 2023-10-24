@@ -1,6 +1,6 @@
 console.log('Loading Vue...');
 Vue.component('click-counter', {
-  template: '<button @click="count++">{{count}}</button>',
+  template: '#click-counter-template', //this is a css selector
   data() {
     return {
       count: 0,
