@@ -33,43 +33,60 @@
         </form>
       </section>
       <section>
-        <h2>With Vanilla JS</h2>
+        <h2>With Vuelidate</h2>
         <form @submit.prevent="submitFormWithVuelidate" autocomplete="off">
           <div class="form-group">
-            <label for="name"
-              >Name*:
-              <input
-                type="text"
-                id="name"
-                v-model="form.name"
-                @blur="$v.form.name.$touch()"
-                :class="{error: $v.form.name.$error, valid: !$v.form.name.$invalid}"
-              />
-            </label>
-            <p v-if="$v.form.name.$error">The name is required.</p>
+            <label for="name">Name:</label>
+            <input
+              v-model="form.name"
+              @blur="$v.form.name.$touch()"
+              :class="{error: $v.form.name.$error, valid: !$v.form.name.$invalid}"
+              id="name"
+            />
+            <p v-if="$v.form.name.$error" class="error-message">
+              The name field is required
+            </p>
           </div>
 
           <div class="form-group">
-            <label for="age"
-              >Age:
-              <input
-                type="number"
-                id="age"
-                v-model.number="form.age"
-                @blur="$v.form.age.$touch()"
-                :class="{error: $v.form.age.$error, valid: !$v.form.age.$invalid}"
-              />
-            </label>
+            <label for="age">Age:</label>
+            <input
+              type="number"
+              v-model.number="form.age"
+              @blur="$v.form.age.$touch()"
+              :class="{error: $v.form.age.$error, valid: !$v.form.age.$invalid}"
+              id="age"
+            />
             <div v-if="$v.form.age.$error">
-              <p v-if="!$v.form.age.required">The age is required.</p>
-              <p v-else-if="!$v.form.age.integer">
-                The age must be an integer.
+              <p v-if="!$v.form.age.required" class="error-message">
+                The age field is required
               </p>
-              <p v-else-if="!$v.form.age.between">
-                The age must be set great than 12 but no more than 120.
+              <p v-else-if="!$v.form.age.integer" class="error-message">
+                The age field should be an integer
+              </p>
+              <p v-else-if="!$v.form.age.between" class="error-message">
+                You should be at least 12 and younger than 120 to continue
               </p>
             </div>
           </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              v-model="form.email"
+              @blur="$v.form.email.$touch()"
+              :class="{error: $v.form.email.$error, valid: !$v.form.email.$invalid && form.email}"
+              id="email"
+            />
+            <p
+              v-if="!$v.form.email.email && $v.form.email.$error"
+              class="error-message"
+            >
+              Invalid email address
+            </p>
+          </div>
+
           <button>Submit</button>
         </form>
       </section>

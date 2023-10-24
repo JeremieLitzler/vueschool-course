@@ -4,7 +4,7 @@ Vue.use(vuelidate.default);
 new Vue({
   el: '#app',
   data() {
-    return { form: { name: null, age: null } };
+    return { form: { name: null, age: null, email: null } };
   },
   validations: {
     form: {
@@ -18,6 +18,9 @@ new Vue({
         // max: validators.maxValue(120),
         // IMPORTANT: "between" include the value specified so it behave as "<=" or ">=" operators
         between: validators.between(12, 120),
+      },
+      email: {
+        email: validators.email,
       },
     },
   },
