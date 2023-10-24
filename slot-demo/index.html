@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Vue.js Slots Fundamentals</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>Vue.js Slots Fundamentals</h1>
+
+      <todo-item>
+        <!-- This the content tha goes into  <slot></slot> -->
+        <!-- Anything that is not in a named slot will into the unnamed slot -->
+        Buy Bananas
+
+        <!--Using the named slot "description" -->
+        <template #description>
+          <p>Bananas are good for your health.</p>
+        </template>
+        <!--Using the named slot "button-text" -->
+        <template #button-text> Make it rain </template>
+
+        <p>The End.</p>
+      </todo-item>
+
+      <todo-item> Eat Bananas </todo-item>
+    </div>
+
+    <script type="text/x-template" id="todo-item-template">
+      <div>
+        <input type="checkbox" v-model="completed">
+        <span :class="{done: completed}">
+          <!-- Here is rendered the content of todo-item, e.g. "Eat Bananas" -->
+          <slot></slot>
+        </span>
+        <!-- See line above "<template #description>" for the slot below -->
+        <slot name="description">No description</slot>
+        <button>
+          <!-- The word "Highlight" below is the default slot value, in case you don't specify a slot button in the usage of "Eat Bananas" above -->
+          <slot name="button-text">Highlight</slot>
+        </button>
+      </div>
+    </script>
+
+    <script src="https://unpkg.com/vue@2.7.15"></script>
+    <script src="app.js"></script>
+    <style>
+      .done {
+        color: green;
+        text-decoration: line-through;
+      }
+    </style>
+  </body>
+</html>
