@@ -12,7 +12,15 @@ Vue.use(vuelidate.default);
 new Vue({
   el: '#app',
   data() {
-    return { form: { name: null, age: null, email: null, food: null } };
+    return {
+      form: {
+        name: null,
+        age: null,
+        email: null,
+        food: null,
+        newsletter: null,
+      },
+    };
   },
   validations: {
     form: {
@@ -29,6 +37,9 @@ new Vue({
       },
       email: {
         email: validators.email,
+        required: validators.requiredIf(function () {
+          return !!this.form.newsletter;
+        }),
       },
       food: {
         pizzaOrBurger,
