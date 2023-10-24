@@ -1,10 +1,18 @@
 console.log('Loading Vue...');
 
+const pizzaOrBurger = (value) =>
+  value === 'pizza' ||
+  value === 'burger' ||
+  // prevent the input to be considered as required
+  !validators.helpers.req(value);
+
+const oldEnoughAndAlive = validators.between(12, 120);
+
 Vue.use(vuelidate.default);
 new Vue({
   el: '#app',
   data() {
-    return { form: { name: null, age: null, email: null } };
+    return { form: { name: null, age: null, email: null, food: null } };
   },
   validations: {
     form: {
@@ -17,10 +25,13 @@ new Vue({
         // min: validators.minValue(12),
         // max: validators.maxValue(120),
         // IMPORTANT: "between" include the value specified so it behave as "<=" or ">=" operators
-        between: validators.between(12, 120),
+        oldEnoughAndAlive,
       },
       email: {
         email: validators.email,
+      },
+      food: {
+        pizzaOrBurger,
       },
     },
   },
@@ -45,12 +56,15 @@ new Vue({
       // ex: field = $v.form.someInput
       // below we check the field:
       //  > is not invalid
-      //  > is not empty
+      //  > is empty, otherwise it will apply the CSS class
       return !field.$invalid && field.$model;
     },
     shouldAppendErrorClass(field) {
       // ex: field = $v.form.someInput
-      return !field.$error;
+      // below we check the field:
+      //  > has no errors
+      //  > is empty, otherwise it will apply the CSS class
+      return !field.$error && field.$model;
     },
     submitFormVanilla() {
       if (this.formIsValid) {
