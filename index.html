@@ -41,7 +41,8 @@
               <input
                 type="text"
                 id="name"
-                v-model="$v.form.name.$model"
+                v-model="form.name"
+                @blur="$v.form.name.$touch()"
                 :class="{error: $v.form.name.$error, valid: !$v.form.name.$invalid}"
               />
             </label>
@@ -54,7 +55,8 @@
               <input
                 type="number"
                 id="age"
-                v-model.number="$v.form.age.$model"
+                v-model.number="form.age"
+                @blur="$v.form.age.$touch()"
                 :class="{error: $v.form.age.$error, valid: !$v.form.age.$invalid}"
               />
             </label>
@@ -68,7 +70,7 @@
               </p>
             </div>
           </div>
-          <button :disabled="$v.form.$invalid">Submit</button>
+          <button>Submit</button>
         </form>
       </section>
     </div>

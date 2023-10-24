@@ -46,6 +46,7 @@ new Vue({
       }
     },
     submitFormWithVuelidate() {
+      this.$v.form.$touch();
       if (!this.$v.form.$invalid) {
         console.log(this.form);
       } else {
