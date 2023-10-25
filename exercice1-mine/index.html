@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    />
+    <style>
+      .dynamic-input {margin: 1em 0;}
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <p>
+        <em
+          >While typing a value in the input work when hit "Enter", you need to
+          delete the previous value and hit "Enter" before typing a new value
+          and have the UI update on a third hit "Enter"...</em
+        >
+      </p>
+      <github-profiles></github-profiles>
+    </div>
+
+    <script type="text/x-template" id="github-profiles-template">
+      <div class="ui container">
+        <h1>GitHub Profiles</h1>
+        <form @submit.prevent="submitFormWithVuelidate">
+          <div class="form-group github-username">
+            <label for="github-username"
+              >GitHub username:
+              <input
+                v-model.lazy="$v.form.githubUsername.$model"
+                :class="{error: shouldAppendErrorClass($v.form.githubUsername), valid: shouldAppendValidClass($v.form.githubUsername)}"
+
+                id="github-username"
+              />
+            </label>
+            <span v-show="$v.form.githubUsername.$pending">🌀</span>
+            <p
+              v-if="!$v.form.githubUsername.exists && $v.form.githubUsername.$error"
+              class="error-message"
+            >
+              There is not GitHub user with this username
+            </p>
+          </div>
+        </form>
+
+        <div class="ui cards">
+          <div class="ui card">
+            <h2>Static example</h2>
+            <div class="image">
+              <img
+                src="https://semantic-ui.com/images/avatar2/large/kristy.png"
+              />
+            </div>
+            <div class="content">
+              <a class="header">Kristy</a>
+              <div class="meta">
+                <span class="date">Joined in 2013</span>
+              </div>
+              <div class="description">
+                Kristy is an art director living in New York.
+              </div>
+            </div>
+            <div class="extra content">
+              <a>
+                <i class="user icon"></i>
+                22 Friends
+              </a>
+            </div>
+          </div>
+
+          <div v-if="isGithubUsernameProvided">
+            <github-user-card :username="form.githubUsername"></github-user-card>
+          </div>
+          <div v-else>No GitHub username provided</div>
+        </div>
+      </div>
+    </script>
+    <script type="text/x-template" id="github-user-card-template">
+
+      <!-- Template for GitHub card -->
+      <div class="ui card">
+        <h2>Dynamic example</h2>
+        <div class="image">
+          <img :src="user.avatar_url" />
+        </div>
+        <div class="content">
+          <a class="header"
+          :href="`https://github.com/${username}`">{{ user.name }}</a>
+          <div class="meta">
+            <span class="date">Joined in {{ userJoinedYear }}</span>
+          </div>
+          <div class="description">
+            {{ user.bio }}
+          </div>
+        </div>
+        <div class="extra content">
+          <a :href="`https://github.com/${username}?tab=followers`">
+            <i class="user icon"></i>
+            {{ user.followers }} Friends
+          </a>
+        </div>
+      </div>
+    </script>
+
+    <!-- Import Vue.js and axios -->
+    <script src="https://unpkg.com/vue@2.7"></script>
+    <script src="./exercice1-mine/libs/vuelidate.min.js"></script>
+    <script src="./exercice1-mine/libs/validators.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Your JavaScript Code :) -->
+    <script src="./exercice1-mine/app.js"></script>
+  </body>
+</html>
