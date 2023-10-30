@@ -1,7 +1,7 @@
 console.log('Loading Vue...');
 Vue.createApp({})
   .component('click-counter', {
-    template: '<button @click="counter++">{{ counter }}</button>',
+    template: '#click-counter-template',
     data() {
       return {
         counter: 0,
