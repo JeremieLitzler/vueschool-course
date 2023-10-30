@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="app" class="ui container">
+      <h1>Notification center</h1>
+      <notification-message notification-type="red">
+        <template #header>My custom header</template>
+        <template #body
+          >Go to the <b>special offers</b> page to see now.</template
+        >
+      </notification-message>
+      <notification-message notification-type="yellow"> </notification-message>
+    </div>
+
+    <!-- Template for Notification Message -->
+    <script type="text/x-template" id="notification-message-template">
+      <!-- Notification Message Markup -->
+      <!-- Types: info, warning, error, success -->
+      <div
+        class="ui message"
+        :class="notificationType"
+        v-if="!hidden">
+        <i class="close icon" @click="hideMessage"></i>
+        <div class="header">
+          <slot name="header">
+            No header
+          </slot>
+        </div>
+        <p>
+          <slot name="body">
+            No body
+          </slot>
+        </p>
+      </div>
+    </script>
+
+    <!-- Import Vue.js -->
+    <script src="https://unpkg.com/vue@2.7"></script>
+    <!-- Your JavaScript Code :) -->
+    <script src="./app.js"></script>
+  </body>
+</html>
