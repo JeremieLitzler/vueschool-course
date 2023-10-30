@@ -1,8 +1,10 @@
 # Projects and notes with VueSchool courses
 
+[Back to the table of content](README.md)
+
 ## Prerequisites
 
-See [the README](README.md).
+See [here](part-prerequisites.md).
 
 ## Creating a project
 

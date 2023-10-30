@@ -4,6 +4,10 @@ Vuelidate is light and easy to use.
 
 See [the documentation](https://vuelidate.js.org/).
 
+## `$error` in Vuelidate
+
+It is a shorthand for`$invalid` = True && `$dirty` = True.
+
 ## To handle error messages and when to display them
 
 You can either let Vuelidate handle the transition to _dirty state_ using the `$model`.
