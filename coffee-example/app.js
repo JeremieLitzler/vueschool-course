@@ -18,9 +18,9 @@ const PlanPickerComponent = {
       ],
     };
   },
+  components: { 'plan-picker-item': PlanPickerItemComponent },
 };
 
-const app = Vue.createApp({})
-  .component('plan-picker', PlanPickerComponent)
-  .component('plan-picker-item', PlanPickerItemComponent)
-  .mount('#app');
+const app = Vue.createApp({
+  components: { 'plan-picker': PlanPickerComponent },
+}).mount('#app');
