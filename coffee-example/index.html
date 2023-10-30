@@ -11,7 +11,6 @@
     <div id="app" class="container mx-auto py-6">
       <div class="content">
         <h1 class="title">Coffee Plans</h1>
-        <plan-picker></plan-picker>
 
         <h2 class="subtitle">
           We travel the world to source the very best single origin coffee for
@@ -26,14 +25,20 @@
       <div class="plans">
           <plan-picker-item
             v-for="plan in plans"
-            :key="plan.name"
-            :item-border-color="plan.color"
+            :key="plan.id"
+            :plan-id="plan.id"
+            :isPlanSelected="markPlanAsSelected(plan.id)"
+            @select-plan="receiveSelectedPlan"
             >{{ plan.name }}</plan-picker-item
-          >
-        </div>
+            >
+          </div>
     </script>
     <script type="text/x-template" id="plan-picker-item-template">
-      <div class="plan" :class="`b-2px b-style b-${itemBorderColor}`">
+      <div
+        class="plan b-2px b-style"
+        :class="{'active-plan': isPlanSelected}"
+        @click="selectPlan"
+      >
         <div class="description">
           <span class="title"><slot></slot></span>
         </div>
