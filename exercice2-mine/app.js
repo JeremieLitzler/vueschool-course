@@ -17,9 +17,8 @@ let NotificationMessageComponent = {
     },
   },
 };
-new Vue({
-  el: '#app',
+Vue.createApp({
   components: {
     'notification-message': NotificationMessageComponent,
   },
-});
+}).mount('#app');
