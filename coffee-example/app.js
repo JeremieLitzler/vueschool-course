@@ -9,9 +9,6 @@ const PlanPickerItemComponent = {
 };
 const PlanPickerComponent = {
   template: '#plan-picker-template',
-};
-
-const app = Vue.createApp({
   data() {
     return {
       plans: [
@@ -21,7 +18,9 @@ const app = Vue.createApp({
       ],
     };
   },
-})
+};
+
+const app = Vue.createApp({})
   .component('plan-picker', PlanPickerComponent)
   .component('plan-picker-item', PlanPickerItemComponent)
   .mount('#app');
