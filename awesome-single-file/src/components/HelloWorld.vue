@@ -1,7 +1,11 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <big-yellow-username username="JeremieLitzler"></big-yellow-username>
+    <!--
+      See https://vuejs.org/style-guide/rules-strongly-recommended.html#component-name-casing-in-templates
+      Component name casing in templates
+    -->
+    <BigYellowUsername username="JeremieLitzler" />
   </div>
 </template>
 
