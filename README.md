@@ -16,6 +16,8 @@
 
 ### [VueJS 3 Components Fundamentals](module-vuejs3-component-fundamentals.md)
 
+### [Single File Components](module-single-file-components.md)
+
 ### Routing
 
 #### How to lazy load routes with Vue Router

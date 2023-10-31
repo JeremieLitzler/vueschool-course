@@ -61,7 +61,7 @@ Custom events use the directive `$emit` that takes an event name and a payload.
 
 PS1: The payload isn't required.
 
-PS2: Name the event well and use Kebab-case in the child component **_AND_** the parent's template to avoid headaches!
+PS2: [Name the event well and use kebab-case in the child component](https://learnvue.co/articles/vue-best-practices#_2-use-kebab-case-for-events) **_AND_** the parent's template to avoid headaches!
 
 ## Lifecycle Hooks
 
