@@ -5,20 +5,34 @@
       See https://vuejs.org/style-guide/rules-strongly-recommended.html#component-name-casing-in-templates
       Component name casing in templates
     -->
-    <BigYellowUsername username="JeremieLitzler" />
+    <button @click="showUsername = !showUsername">Toggle Usernale</button>
+    <div v-if="showUsername">
+      <BigYellowUsername username="JeremieLitzler" />
+    </div>
   </div>
 </template>
 
 <script>
-import BigYellowUsername from "@/components/BigYellowUsername.vue";
-
 export default {
   name: "HelloWorld",
   props: {
     msg: String,
   },
+  data() {
+    return {
+      showUsername: false,
+    };
+  },
   components: {
-    BigYellowUsername,
+    BigYellowUsername: () =>
+      import(
+        /* webpackChunkName: "BigYellowUsername" */ "@/components/BigYellowUsername.vue"
+      ),
+  },
+  methods: {
+    toggle() {
+      this.showUsername = true;
+    },
   },
 };
 </script>
