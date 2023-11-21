@@ -1,23 +1,32 @@
 <template>
   <section>
     <slot name="title">Default title</slot>
-    <ul class="userlist" v-if="state === 'loaded'">
-      <li v-for="item in data.results" :key="item.email">
-        <div>
-          <img
-            width="48"
-            height="48"
-            :src="item.picture.large"
-            :alt="item.name.first + ' ' + item.name.last"
-          />
-          <div>
-            <div>{{ item.name.first }}</div>
-            <!-- show additional information -->
-            <slot name="additional-user-info" :item="item"></slot>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <slot
+      name="userlist"
+      :usercount="data.results.length"
+      :userlist="data.results"
+      v-if="state === 'loaded'"
+    >
+      <ul class="userlist">
+        <li v-for="item in data.results" :key="item.email">
+          <slot name="userinfo" :user="item">
+            <div>
+              <img
+                width="48"
+                height="48"
+                :src="item.picture.large"
+                :alt="item.name.first + ' ' + item.name.last"
+              />
+              <div>
+                <div>{{ item.name.first }}</div>
+                <!-- show additional information -->
+                <slot name="additional-user-info" :userObj="item"></slot>
+              </div>
+            </div>
+          </slot>
+        </li>
+      </ul>
+    </slot>
     <slot v-if="state === 'loading'" name="loading">Loading...</slot>
     <slot name="idle"></slot>
     <slot name="loaded"></slot>
