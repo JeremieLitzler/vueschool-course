@@ -1,61 +1,34 @@
 <template>
   <div>
     <h1>User list project</h1>
-    <p>The list below use the same <pre>AppUserList</pre> component but, thanks to slots in that component, we are able to keep the commun functionnalities and render the list very differently!</p>
+    <div>
+      The list below use the same
+      <pre>AppUserList</pre>
+      component but, thanks to slots in that component, we are able to keep the
+      commun functionnalities and render the list very differently!
+    </div>
     <div class="user-lists">
-      <AppUserList>
-        <template #title>
-          <h2>An awesome user list</h2>
-        </template>
-        <template #loading>
-          <AppSpinner />
-        </template>
-        <template #additional-user-info="{userObj}">
-          <a :href="'mailto:' + userObj.email"> {{ userObj.email }} </a><br />
-          <a :href="'tel:' + userObj.phone">
-            {{ userObj.phone }}
-          </a>
-        </template>
-      </AppUserList>
-      <!-- <AppUserList>
-        <template #title>
-          <h2>Another awesome list with the country of some users</h2>
-        </template>
-        <template #userinfo="{user}">
-          <pre>
-          {{ user.location.country  }}
-        </pre
-          >
-        </template>
-        <template #loading>
-          <AppSpinner />
-        </template>
-      </AppUserList> -->
-      <AppUserList>
-        <template #title>
-          <h2>A final list with the whole component as a slot</h2>
-        </template>
-        <template #userlist="{userlist, usercount}">
-          User count: {{ usercount }}
-          <AppUserCardsList :userlist="userlist" />
-        </template>
-        <template #loading>
-          <AppSpinner />
-        </template>
-      </AppUserList>
+      <ExampleUsage1 />
+      <ExampleUsage2 />
+      <ExampleUsage3 />
+      <ExampleUsage4 />
     </div>
   </div>
 </template>
 
 <script>
-  import AppUserList from "@/components/AppUserList";
-  import AppSpinner from "@/components/AppSpinner";
-  import AppUserCardsList from "@/components/AppUserCardsList";
+  import ExampleUsage1 from "@/components/ExampleUsage1";
+  import ExampleUsage2 from "@/components/ExampleUsage2";
+  import ExampleUsage3 from "@/components/ExampleUsage3";
+  import ExampleUsage4 from "@/components/ExampleUsage4";
   export default {
     components: {
-      AppUserList,
-      AppSpinner,
-      AppUserCardsList
+      ExampleUsage1,
+      ExampleUsage2,
+      ExampleUsage3,
+      ExampleUsage4,
     },
+    methods: {
+    }
   };
 </script>

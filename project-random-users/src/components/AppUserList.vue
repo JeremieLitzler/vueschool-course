@@ -5,6 +5,7 @@
       name="userlist"
       :usercount="data.results.length"
       :userlist="data.results"
+      :removeInComponentSlot="removeInComponentSlot"
       v-if="state === 'loaded'"
     >
       <ul class="userlist">
@@ -75,6 +76,10 @@
           return error;
         }
       },
+      removeInComponentSlot(obsoleteUser) {
+        console.log("Clicked removeInComponentSlot", obsoleteUser);
+        this.data.results = this.data.results.filter(user => user.email != obsoleteUser.email);
+      }
     },
   };
 </script>

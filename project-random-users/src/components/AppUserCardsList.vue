@@ -8,7 +8,7 @@
           :src="item.picture.large"
           :alt="item.name.first + ' ' + item.name.last"
         />
-        <p>{{ item.name.first }}</p>
+        <slot name="additional-user-info" :userObj="item"></slot>
       </li>
     </ul>
   </section>

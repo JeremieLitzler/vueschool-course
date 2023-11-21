@@ -31,17 +31,19 @@ img {
   max-width: 100%;
 }
 
-h1 + p > pre {
+pre {
   display: inline;
 }
 
 .user-lists {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .user-lists section {
-  flex: 1;
+  /* flex: 1; */
+  flex-basis: 1;
 }
 
 .userlist-simple {
