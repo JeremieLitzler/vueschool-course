@@ -12,6 +12,14 @@
           />
           <div>
             <div>{{ item.name.first }}</div>
+            <!-- show additional information -->
+            <slot name="additional-user-info"></slot>
+            <p>
+              {{ emailinfo(item) }}
+            </p>
+            <p>
+              {{ phonenumberinfo(item) }}
+            </p>
           </div>
         </div>
       </li>
@@ -29,64 +37,74 @@
 </template>
 
 <script>
-const states = {
-  idle: "idle",
-  loading: "loading",
-  loaded: "loaded",
-  failed: "failed",
-};
-export default {
-  data() {
-    return {
-      state: "idle",
-      data: undefined,
-      error: undefined,
-      states,
-    };
-  },
-  mounted() {
-    this.load();
-  },
-  methods: {
-    async load() {
-      this.state = "loading";
-      this.error = undefined;
-      this.data = undefined;
-      try {
-        const response = await fetch("https://randomuser.me/api/?results=5");
-        const json = await response.json();
-        this.state = "loaded";
-        this.data = json;
-        return response;
-      } catch (error) {
-        this.state = "failed";
-        this.error = error;
-        return error;
+  const states = {
+    idle: "idle",
+    loading: "loading",
+    loaded: "loaded",
+    failed: "failed",
+  };
+  export default {
+    props: {
+      emailinfo: {
+        type: Function,
+        default: () => {}
+      },
+      phonenumberinfo: {
+        type: Function,
+        default: () => {}
       }
     },
-  },
-};
+    data() {
+      return {
+        state: "idle",
+        data: undefined,
+        error: undefined,
+        states,
+      };
+    },
+    mounted() {
+      this.load();
+    },
+    methods: {
+      async load() {
+        this.state = "loading";
+        this.error = undefined;
+        this.data = undefined;
+        try {
+          const response = await fetch("https://randomuser.me/api/?results=5");
+          const json = await response.json();
+          this.state = "loaded";
+          this.data = json;
+          return response;
+        } catch (error) {
+          this.state = "failed";
+          this.error = error;
+          return error;
+        }
+      },
+    },
+  };
 </script>
 
 <style>
-.userlist {
-  margin: 10px;
-}
-.userlist img {
-  border-radius: 50%;
-  margin-right: 1rem;
-}
+  .userlist {
+    margin: 10px;
+  }
+  .userlist img {
+    border-radius: 50%;
+    margin-right: 1rem;
+  }
 
-.userlist li + li {
-  margin-top: 10px;
-}
+  .userlist li + li {
+    margin-top: 10px;
+  }
 
-.userlist li > div {
-  display: flex;
-  align-items: center;
-}
+  .userlist li > div {
+    display: flex;
+    align-items: center;
+  }
 
-.userlist li div div {
-  flex: 1;
-}
+  .userlist li div div {
+    flex: 1;
+  }
 </style>
