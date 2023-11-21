@@ -13,13 +13,7 @@
           <div>
             <div>{{ item.name.first }}</div>
             <!-- show additional information -->
-            <slot name="additional-user-info"></slot>
-            <p>
-              {{ emailinfo(item) }}
-            </p>
-            <p>
-              {{ phonenumberinfo(item) }}
-            </p>
+            <slot name="additional-user-info" :item="item"></slot>
           </div>
         </div>
       </li>
@@ -44,16 +38,6 @@
     failed: "failed",
   };
   export default {
-    props: {
-      emailinfo: {
-        type: Function,
-        default: () => {}
-      },
-      phonenumberinfo: {
-        type: Function,
-        default: () => {}
-      }
-    },
     data() {
       return {
         state: "idle",
