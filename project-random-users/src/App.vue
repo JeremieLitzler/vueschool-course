@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>User list project</h1>
+    <p>The list below use the same <pre>AppUserList</pre> component but, thanks to slots in that component, we are able to keep the commun functionnalities and render the list very differently!</p>
     <div class="user-lists">
       <AppUserList>
         <template #title>

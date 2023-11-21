@@ -31,6 +31,10 @@ img {
   max-width: 100%;
 }
 
+h1 + p > pre {
+  display: inline;
+}
+
 .user-lists {
   display: flex;
   justify-content: space-around;
