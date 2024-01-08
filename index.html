@@ -9,7 +9,16 @@
   <body>
     <div id="shopping-list">
       <h1>{{ header || "Welcome!" }}</h1>
-      <input v-model="header" />
+      <input type="text" placeholder="Add an item" v-model="newItem" />
+      <label>
+        <input
+          type="checkbox"
+          name="priorityHigh"
+          v-model="newItemHighPriority"
+        />
+        High priority
+      </label>
+      <p>{{newItem}}</p>
       <ul>
         <!-- For loop with destructuring of object items -->
         <li v-for="{id, label} in items" :key="id">{{label}}</li>
@@ -29,9 +38,11 @@
         data() {
           return {
             header: 'Shopping list app',
+            newItem: "",
+            newItemHighPriority: false,
             items: [
               {id: 1, label: "Food"}, {id:2, label:"Tools"}, {id:3, label: "Paper"}
-            ]
+            ],
           }
         }
       }).mount('#shopping-list')
