@@ -8,8 +8,16 @@
 
   <body>
     <div id="shopping-list">
-      <h1>{{ header || "Welcome!" }}</h1>
-      <div class="add-item-form">
+      <div class="header">
+        <h1>{{ header || "Welcome!" }}</h1>
+        <button class="btn btn-cancel" v-if="editing" @click="doEdit(false)">
+          Cancel
+        </button>
+        <button class="btn btn-primary" v-else @click="doEdit(true)">
+          Add item
+        </button>
+      </div>
+      <div class="add-item-form" v-if="editing">
         <input
           type="text"
           placeholder="Add an item"
@@ -31,35 +39,10 @@
         <!-- For loop with destructuring of object items -->
         <li v-for="{id, label} in items" :key="id">{{label}}</li>
       </ul>
-      <ul>
-        <!-- For loop with index -->
-        <li v-for="(item, index) in items" :key="item.id">
-          {{item.label }} (index: {{ index }})
-        </li>
-      </ul>
+      <p v-if="items.length === 0">Nice job! You've bought everything.</p>
     </div>
 
     <script src="https://unpkg.com/vue@3"></script>
-    <script>
-
-            Vue.createApp({
-              data() {
-                return {
-                  header: 'Shopping list app',
-                  newItem: "",
-                  newItemHighPriority: false,
-                  items: [
-                    {id: 1, label: "Food"}, {id:2, label:"Tools"}, {id:3, label: "Paper"}
-                  ],
-                }
-              },
-              methods: {
-                saveitem() {
-      this.items.push({id: (this.items.length + 1), label: this.newItem });
-      this.newItem = "";
-                }
-              }
-            }).mount('#shopping-list')
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
