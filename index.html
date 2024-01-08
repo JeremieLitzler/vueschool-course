@@ -10,6 +10,16 @@
     <div id="shopping-list">
       <h1>{{ header || "Welcome!" }}</h1>
       <input v-model="header" />
+      <ul>
+        <!-- For loop with destructuring of object items -->
+        <li v-for="{id, label} in items" :key="id">{{label}}</li>
+      </ul>
+      <ul>
+        <!-- For loop with index -->
+        <li v-for="(item, index) in items" :key="item.id">
+          {{item.label }} (index: {{ index }})
+        </li>
+      </ul>
     </div>
 
     <script src="https://unpkg.com/vue@3"></script>
@@ -18,7 +28,10 @@
       Vue.createApp({
         data() {
           return {
-            header: 'Shopping list app'
+            header: 'Shopping list app',
+            items: [
+              {id: 1, label: "Food"}, {id:2, label:"Tools"}, {id:3, label: "Paper"}
+            ]
           }
         }
       }).mount('#shopping-list')
