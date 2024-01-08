@@ -1,16 +1,27 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue.js</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Shopping List App</title>
+    <link rel="stylesheet" href="main.css" />
   </head>
 
   <body>
-    <div id="app">
-      <h1>Course on Vue.js</h1>
+    <div id="shopping-list">
+      <h1>{{ header }}</h1>
+      <input v-model="header" />
     </div>
-    <script src="https://unpkg.com/vue@2.5.16"></script>
-    <script src="app.js"></script>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script>
+
+      Vue.createApp({
+        data() {
+          return {
+            header: 'View is ready to party'
+          }
+        }
+      }).mount('#shopping-list')
+    </script>
   </body>
 </html>
