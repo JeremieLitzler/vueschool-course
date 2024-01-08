@@ -9,16 +9,29 @@
   <body>
     <div id="shopping-list">
       <h1>{{ header || "Welcome!" }}</h1>
-      <input type="text" placeholder="Add an item" v-model="newItem" />
-      <label>
+      <div class="add-item-form">
         <input
-          type="checkbox"
-          name="priorityHigh"
-          v-model="newItemHighPriority"
+          type="text"
+          placeholder="Add an item"
+          v-model="newItem"
+          @keyup.enter="items.push({id: (items.length + 1), label: newItem })"
         />
-        High priority
-      </label>
-      <p>{{newItem}}</p>
+        <label>
+          <input
+            type="checkbox"
+            name="priorityHigh"
+            v-model="newItemHighPriority"
+          />
+          High priority
+        </label>
+        <button
+          @click="items.push({id: (items.length + 1), label: newItem })"
+          class="btn btn-primary"
+        >
+          Save item
+        </button>
+      </div>
+
       <ul>
         <!-- For loop with destructuring of object items -->
         <li v-for="{id, label} in items" :key="id">{{label}}</li>
