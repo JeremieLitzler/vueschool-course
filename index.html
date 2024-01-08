@@ -32,12 +32,32 @@
           />
           High priority
         </label>
-        <button @click="saveitem" class="btn btn-primary">Save item</button>
+        <button
+          class="btn btn-primary"
+          @click="saveitem"
+          :disabled="newItem.length === 0"
+        >
+          Save item
+        </button>
       </div>
 
       <ul>
-        <!-- For loop with destructuring of object items -->
-        <li v-for="{id, label} in items" :key="id">{{label}}</li>
+        <!-- For loop with destructuring of object items 
+        <li
+          v-for="{id, label, purchased, highPriority} in items"
+          :key="id"
+        >
+          {{label}}
+        </li>
+        -->
+        <li
+          v-for="item in items"
+          :key="item.id"
+          :class="{strikeout: item.purchased, priority: item.highPriority}"
+          @click="togglePurchase(item)"
+        >
+          {{item.label}}
+        </li>
       </ul>
       <p v-if="items.length === 0">Nice job! You've bought everything.</p>
     </div>
