@@ -1,15 +1,22 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, computed } from 'vue'
 
   const header = ref('Shopping list app')
   const items = ref([
 
     ]);
 
+  const reverseItems = computed(() => {
+    return [...items.value.reverse()];
+  });
   const newItem = ref("");
   const newItemHighPriority = ref(false);
 
-  let editing = ref(false);
+  const editing = ref(false);
+
+  const characterCount = computed(() => {
+    return newItem.value.length
+  });
 
   const  saveItem = () => {
     items.value.push({
@@ -50,7 +57,7 @@
     <label>
       Name
       <input type="text" placeholder="Add an item" v-model="newItem" />
-      <!--<span v-if="characterCount> 0">{{characterCount}}/200</span>-->
+      <p v-if="characterCount > 0">{{characterCount}}/200</p>
     </label>
     <label>
       <input
@@ -74,7 +81,7 @@
   </li>
   -->
     <li
-      v-for="item in items"
+      v-for="item in reverseItems"
       :key="item.id"
       :class="{strikeout: item.purchased, priority: item.highPriority}"
       @click="togglePurchase(item)"
