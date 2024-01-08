@@ -8,7 +8,7 @@
 
   <body>
     <div id="shopping-list">
-      <h1>{{ header }}</h1>
+      <h1>{{ header || "Welcome!" }}</h1>
       <input v-model="header" />
     </div>
 
@@ -18,7 +18,7 @@
       Vue.createApp({
         data() {
           return {
-            header: 'View is ready to party'
+            header: 'Shopping list app'
           }
         }
       }).mount('#shopping-list')
