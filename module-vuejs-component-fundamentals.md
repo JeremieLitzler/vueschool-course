@@ -115,3 +115,5 @@ The usage could be:
 <!-- This usage will use the default value for the named templates -->
 <todo-item> Eat Bananas </todo-item>
 ```
+
+See [more notes on slots](module-reusable-vujes-components-with-slots.md).

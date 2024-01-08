@@ -1,5 +1,15 @@
 # Fundamentals
 
+## Double mustaches
+
+We can evaluate one expression in a `{{ ... }}`.
+
+We cannot declare variables or declare if statements.
+
+However, the ternary statement can be used in `{{ ifTrue ? "Display this" : "Display that" }}`.
+
+Or even us the `OR` operator `{{ aStringValue || "Default value" }}`.
+
 ## Dynamic CSS classes
 
 ```javascript
