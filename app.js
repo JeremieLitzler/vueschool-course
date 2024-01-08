@@ -12,6 +12,14 @@ Vue.createApp({
       ],
     };
   },
+  computed: {
+    characterCount() {
+      return this.newItem.length;
+    },
+    reverItems() {
+      return [...this.items.reverse()];
+    },
+  },
   methods: {
     saveitem() {
       this.items.push({
