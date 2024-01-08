@@ -14,7 +14,7 @@
           type="text"
           placeholder="Add an item"
           v-model="newItem"
-          @keyup.enter="items.push({id: (items.length + 1), label: newItem })"
+          @keyup.enter="saveitem"
         />
         <label>
           <input
@@ -24,12 +24,7 @@
           />
           High priority
         </label>
-        <button
-          @click="items.push({id: (items.length + 1), label: newItem })"
-          class="btn btn-primary"
-        >
-          Save item
-        </button>
+        <button @click="saveitem" class="btn btn-primary">Save item</button>
       </div>
 
       <ul>
@@ -47,18 +42,24 @@
     <script src="https://unpkg.com/vue@3"></script>
     <script>
 
-      Vue.createApp({
-        data() {
-          return {
-            header: 'Shopping list app',
-            newItem: "",
-            newItemHighPriority: false,
-            items: [
-              {id: 1, label: "Food"}, {id:2, label:"Tools"}, {id:3, label: "Paper"}
-            ],
-          }
-        }
-      }).mount('#shopping-list')
+            Vue.createApp({
+              data() {
+                return {
+                  header: 'Shopping list app',
+                  newItem: "",
+                  newItemHighPriority: false,
+                  items: [
+                    {id: 1, label: "Food"}, {id:2, label:"Tools"}, {id:3, label: "Paper"}
+                  ],
+                }
+              },
+              methods: {
+                saveitem() {
+      this.items.push({id: (this.items.length + 1), label: this.newItem });
+      this.newItem = "";
+                }
+              }
+            }).mount('#shopping-list')
     </script>
   </body>
 </html>
