@@ -31,7 +31,7 @@
     clearInputs();
   }
 
-  const togglePurchase = (item) => {
+  const togglePurchase = (item: Object) => {
     item.purchased = !item.purchased;
   }
 
