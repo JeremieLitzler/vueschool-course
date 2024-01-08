@@ -56,7 +56,7 @@
         </li>
         -->
         <li
-          v-for="item in reverItems"
+          v-for="item in reverseItems"
           :key="item.id"
           :class="{strikeout: item.purchased, priority: item.highPriority}"
           @click="togglePurchase(item)"

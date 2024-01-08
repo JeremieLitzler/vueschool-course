@@ -16,7 +16,7 @@ Vue.createApp({
     characterCount() {
       return this.newItem.length;
     },
-    reverItems() {
+    reverseItems() {
       return [...this.items.reverse()];
     },
   },
