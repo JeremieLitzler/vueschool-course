@@ -6,12 +6,13 @@
   </div>
 </template>
 <script setup>
+  import { useRouter, useRoute } from "vue-router";
   import usePost from '../composables/usePost';
 
-  defineProps();
   const { post, fetchOne } = usePost();
 
-  fetchOne(1);
+  const route = useRoute();
+  fetchOne(route.params.id);
 
   const user = {
     name: "Leanne Graham",
