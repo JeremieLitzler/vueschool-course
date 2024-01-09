@@ -9,8 +9,8 @@
 
 <script setup></script>
 <style lang="css">
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-}
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
 </style>
