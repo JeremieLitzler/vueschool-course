@@ -1,27 +1,28 @@
 <script>
-  import { ref } from "vue";
+  import { ref, reactive } from "vue";
   import YummyMeal from "./components/YummyMeal.vue";
     export default {
       components:{
         YummyMeal
       },
       setup() {
-        const name = ref("The Snazzy Burger");
+        const appName = ref("The Snazzy Burger");
+        const meal = reactive({name: "Hamburger", price: 5});
         const placeOrder = () => {
           alert("You've ordered a great meal!")
         };
         const addItemToCart = (item) => {
           alert(`One ${item} was added to the cart`)
         }
-        return { name, placeOrder, addItemToCart };
+        return { appName, meal, placeOrder, addItemToCart };
       }
     }
 </script>
 
 <template>
-  <h1>{{ name }}</h1>
+  <h1>{{ appName }}</h1>
   <button @click="placeOrder">Order</button>
-  <YummyMeal name="Hamburger" :price="5" @addToCart="addItemToCart" />
+  <YummyMeal :name="meal.name" :price="meal.price" @addToCart="addItemToCart" />
 </template>
 
 <style scoped>
