@@ -6,15 +6,14 @@
   </div>
 </template>
 <script setup>
-  import { useRouter, useRoute } from "vue-router";
-  import usePost from '../composables/usePost';
+  import { useRoute } from "vue-router";
+  import useResource from '../composables/useResource';
 
-  const { post, fetchOne } = usePost();
+  const { item: post, fetchOne: fetchPost } = useResource('posts');
 
   const route = useRoute();
-  fetchOne(route.params.id);
+  fetchPost(route.params.id);
 
-  const user = {
-    name: "Leanne Graham",
-  };
+  const { item: user, fetchOne: fetchUser } = useResource('users');
+  fetchUser(1)
 </script>
