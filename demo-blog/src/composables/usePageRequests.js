@@ -6,7 +6,7 @@ const activeRequests = reactive([]);
 
 export default function userPageRequests() {
   const isLoading = computed(() => !!activeRequests.length);
-  //Same tehe following is the same as above:
+  //The following is the same as above:
   //const isLoading = computed(() => (activeRequests.length ? true : false));
 
   const makeRequest = async (url) => {
