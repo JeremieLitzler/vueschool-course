@@ -1,5 +1,5 @@
 <script>
-  import { ref, reactive } from "vue";
+  import { ref, reactive, computed } from "vue";
   import YummyMeal from "./components/YummyMeal.vue";
     export default {
       components:{
