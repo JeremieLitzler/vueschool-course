@@ -22,14 +22,10 @@
   />
 </template>
 
-<script>
-  import { ref, reactive, watch, provide } from "vue";
+<script setup>
+  import { ref, reactive, watch, provide, onMounted } from "vue";
   import YummyMeal from "./components/YummyMeal.vue";
-    export default {
-      components:{
-        YummyMeal
-      },
-      setup() {
+
         const currencySymbol = ref("$");
         provide("currencySymbol", currencySymbol);
         const appName = ref("The Snazzy Burger");
@@ -46,9 +42,10 @@
           cart.push(item);
         }
         const hideCartOnAddItem = watch(() => [...cart], (newCart, oldCart) => alert(newCart.join('\n')));
-        return { appName, currencySymbol, meals, placeOrder, addItemToCart, hideCartOnAddItem };
-      }
-    }
+
+        onMounted(() => {
+          console.log(appName.value, "Mounted");
+        })
 </script>
 
 <style scoped>

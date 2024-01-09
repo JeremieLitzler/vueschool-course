@@ -8,21 +8,16 @@
   </div>
 </template>
 
-<script>
-    import YummyMealPrice from "./YummyMealPrice.vue";
-    export default {
-      props: {
-          name: String,
-          price: Number,
-      },
-      setup(props, { emit }) {
-          const addToCart = () => emit("addToCart", props.name);
-          return {
-              addToCart
-          };
-      },
-      components: { YummyMealPrice }
-  }
+<script setup>
+  import YummyMealPrice from "./YummyMealPrice.vue";
+
+  const emit = defineEmits(["addToCart"]);
+  defineProps({
+        name: String,
+        price: Number,
+    });
+
+  const addToCart = () => emit("addToCart", props.name);
 </script>
 
 <style scoped>
