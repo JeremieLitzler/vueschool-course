@@ -18,8 +18,16 @@
 </script>
 
 <template>
-  <h2>{{ name }} @ {{ prettyPrice }}</h2>
-  <button @click="addToCart">Add to cart</button>
+  <div class="meal">
+    <h2>{{ name }} @ {{ prettyPrice }}</h2>
+    <button @click="addToCart">Add to cart</button>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .meal {
+    display: flex;
+    justify-content: space-between;
+    margin: .5em;
+  }
+</style>

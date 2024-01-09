@@ -1,5 +1,5 @@
 <script>
-  import { ref, reactive, computed } from "vue";
+  import { ref, reactive, watch } from "vue";
   import YummyMeal from "./components/YummyMeal.vue";
     export default {
       components:{
@@ -7,22 +7,36 @@
       },
       setup() {
         const appName = ref("The Snazzy Burger");
-        const meal = reactive({name: "Hamburger", price: 5});
+        const cart = reactive([]);
+        const meals = reactive([
+          {name: "Hamburger", price: 5},
+          {name: "Tacos", price: 7.55},
+          {name: "Ceasar salad", price: 4},
+          {name: "Nothing", price: 0}]);
         const placeOrder = () => {
           alert("You've ordered a great meal!")
         };
         const addItemToCart = (item) => {
-          alert(`One ${item} was added to the cart`)
+          cart.push(item);
         }
-        return { appName, meal, placeOrder, addItemToCart };
+        const hideCartOnAddItem = watch(() => [...cart], (newCart, oldCart) => alert(newCart.join('\n')))
+        return { appName, meals, placeOrder, addItemToCart, hideCartOnAddItem };
       }
     }
 </script>
 
 <template>
   <h1>{{ appName }}</h1>
-  <button @click="placeOrder">Order</button>
-  <YummyMeal :name="meal.name" :price="meal.price" @addToCart="addItemToCart" />
+  <input type="text" v-model="appName" />
+  <button @click="placeOrder">Place Order</button>
+  <button @click="hideCartOnAddItem">Hide cart alerts</button>
+  <YummyMeal
+    v-for="meal in meals"
+    :key="meal.name"
+    :name="meal.name"
+    :price="meal.price"
+    @addToCart="addItemToCart"
+  />
 </template>
 
 <style scoped>
