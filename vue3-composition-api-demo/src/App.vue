@@ -1,11 +1,37 @@
+<template>
+  <h1>{{ appName }}</h1>
+  <input type="text" v-model="appName" />
+  <label>
+    Currency
+    <select v-model="currencySymbol">
+      <option value="$">US Dollar</option>
+      <option value="£">Sterling</option>
+      <option value="€">Euro</option>
+    </select>
+  </label>
+  <button @click="placeOrder">Place Order</button>
+  <button @click="hideCartOnAddItem">Hide cart alerts</button>
+
+  <YummyMeal
+    v-for="meal in meals"
+    :key="meal.name"
+    :name="meal.name"
+    :price="meal.price"
+    :currencySymbol="currencySymbol"
+    @addToCart="addItemToCart"
+  />
+</template>
+
 <script>
-  import { ref, reactive, watch } from "vue";
+  import { ref, reactive, watch, provide } from "vue";
   import YummyMeal from "./components/YummyMeal.vue";
     export default {
       components:{
         YummyMeal
       },
       setup() {
+        const currencySymbol = ref("$");
+        provide("currencySymbol", currencySymbol);
         const appName = ref("The Snazzy Burger");
         const cart = reactive([]);
         const meals = reactive([
@@ -14,30 +40,16 @@
           {name: "Ceasar salad", price: 4},
           {name: "Nothing", price: 0}]);
         const placeOrder = () => {
-          alert("You've ordered a great meal!")
+          alert("You've ordered a great meal!");
         };
         const addItemToCart = (item) => {
           cart.push(item);
         }
-        const hideCartOnAddItem = watch(() => [...cart], (newCart, oldCart) => alert(newCart.join('\n')))
-        return { appName, meals, placeOrder, addItemToCart, hideCartOnAddItem };
+        const hideCartOnAddItem = watch(() => [...cart], (newCart, oldCart) => alert(newCart.join('\n')));
+        return { appName, currencySymbol, meals, placeOrder, addItemToCart, hideCartOnAddItem };
       }
     }
 </script>
-
-<template>
-  <h1>{{ appName }}</h1>
-  <input type="text" v-model="appName" />
-  <button @click="placeOrder">Place Order</button>
-  <button @click="hideCartOnAddItem">Hide cart alerts</button>
-  <YummyMeal
-    v-for="meal in meals"
-    :key="meal.name"
-    :name="meal.name"
-    :price="meal.price"
-    @addToCart="addItemToCart"
-  />
-</template>
 
 <style scoped>
   .logo {

@@ -1,28 +1,29 @@
-<script>
-  import { computed } from "vue";
-  export default {
-    props: {
-      name: String,
-      price: Number
-    },
-    setup(props, { emit}){
-      const addToCart = () => emit("addToCart", props.name);
-      const prettyPrice = computed(() => `$${props.price.toFixed(2)}`);
-
-      return {
-        prettyPrice,
-        addToCart
-      }
-    }
-  }
-</script>
-
 <template>
   <div class="meal">
-    <h2>{{ name }} @ {{ prettyPrice }}</h2>
+    <h2>
+      {{ name }} @
+      <YummyMealPrice :price="price" />
+    </h2>
     <button @click="addToCart">Add to cart</button>
   </div>
 </template>
+
+<script>
+    import YummyMealPrice from "./YummyMealPrice.vue";
+    export default {
+      props: {
+          name: String,
+          price: Number,
+      },
+      setup(props, { emit }) {
+          const addToCart = () => emit("addToCart", props.name);
+          return {
+              addToCart
+          };
+      },
+      components: { YummyMealPrice }
+  }
+</script>
 
 <style scoped>
   .meal {
