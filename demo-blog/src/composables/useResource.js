@@ -1,18 +1,18 @@
 import { ref } from 'vue';
 import useSourceApi from './useSourceApi';
+import usePageRequests from './usePageRequests';
 
 export default function useUser(endpoint) {
   const { apiUrlBase } = useSourceApi();
+  const { makeRequest } = usePageRequests();
   const items = ref([]);
   const item = ref(null);
   const fetchAll = async () => {
-    const response = await fetch(`${apiUrlBase}/${endpoint}`);
-    items.value = await response.json();
+    items.value = await makeRequest(`${apiUrlBase}/${endpoint}`);
   };
 
   const fetchOne = async (id) => {
-    const response = await fetch(`${apiUrlBase}/${endpoint}/${id}`);
-    item.value = await response.json();
+    item.value = await makeRequest(`${apiUrlBase}/${endpoint}/${id}`);
   };
 
   return {
