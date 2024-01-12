@@ -34,7 +34,7 @@ a:visited {
 }
 
 /* Navigation */
-#nav {
+.nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -48,16 +48,17 @@ a:visited {
   border-bottom: 5px solid #4e6c71;
   z-index: 2;
 }
-#nav a {
+.nav a {
   display: inline-block;
   margin-right: 20px;
   color: white;
   opacity: 0.7;
   transition: 0.2 ease color;
 }
-#nav a.router-link-active,
-#nav a:hover {
+.nav a.router-link-active,
+.nav a:hover {
   opacity: 1;
+  text-decoration: underline;
 }
 #logo {
   font-weight: bold;
