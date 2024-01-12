@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Al destinations</h1>
+    <h1>All destinations</h1>
     <section class="destinations">
       <router-link
         v-for="destination in destinations"
