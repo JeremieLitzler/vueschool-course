@@ -10,13 +10,12 @@
 
 <script setup>
   import { useRoute } from "vue-router";
-  import useApiData from "../composables/useApiData";
-  // import { watch } from "vue";
+  // import useApiData from "../composables/useApiData";
+  import useSourceData from "@/composables/useSourceData";
 
   const route = useRoute();
-  const { destination, fetchDestination} = useApiData(route.params.slug);
-  fetchDestination();
-  // watch(() => route.params, fetchDestination);
+  const { destination, /* fetchDestination */ } = useSourceData(route.params.slug);
+  //fetchDestination();
 </script>
 
 <style lang="scss" scoped></style>
