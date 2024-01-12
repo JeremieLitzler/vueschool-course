@@ -9,13 +9,19 @@
 </template>
 
 <script setup>
-  import { useRoute } from "vue-router";
-  // import useApiData from "../composables/useApiData";
-  import useSourceData from "@/composables/useSourceData";
+    import { useRoute } from "vue-router";
+    // import useApiData from "../composables/useApiData";
+    import useSourceData from "@/composables/useSourceData";
 
-  const route = useRoute();
-  const { destination, /* fetchDestination */ } = useSourceData(route.params.slug);
-  //fetchDestination();
+  const props = defineProps({
+      slug:{
+        type: String,
+        required: true
+      }
+    })
+    const route = useRoute();
+    const { destination, /* fetchDestination */ } = useSourceData(props.slug);
+    //fetchDestination();
 </script>
 
 <style lang="scss" scoped></style>
