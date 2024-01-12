@@ -1,17 +1,21 @@
 <template>
   <div class="nav">
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/brazil">Brazil</RouterLink>
-    <RouterLink to="/hawaii">Hawaii</RouterLink>
-    <RouterLink to="/panama">Panama</RouterLink>
-    <RouterLink to="/jamaica">Jamaica</RouterLink>
-    <RouterLink to="/destination/1">Dynamic route</RouterLink>
-    <a href="http://vuejs.org" target="_blank" rel="noopener noreferrer"
-      >Vue docs</a
+    <router-link id="logo" :to="{name: 'home'}"
+      >Vue School Travel App</router-link
     >
+    <router-link
+      v-for="destination in data.destinations"
+      :key="destination.id"
+      :to="{name: 'destination-show', params:{id:destination.id,slug:destination.slug}}"
+    >
+      {{ destination.name }}
+    </router-link>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+  import useSourceData from "../composables/useSourceData";
+  const data = useSourceData();
+</script>
 
 <style lang="scss" scoped></style>
