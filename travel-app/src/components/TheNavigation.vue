@@ -5,6 +5,7 @@
     <RouterLink to="/hawaii">Hawaii</RouterLink>
     <RouterLink to="/panama">Panama</RouterLink>
     <RouterLink to="/jamaica">Jamaica</RouterLink>
+    <RouterLink to="/destination/1">Dynamic route</RouterLink>
     <a href="http://vuejs.org" target="_blank" rel="noopener noreferrer"
       >Vue docs</a
     >
