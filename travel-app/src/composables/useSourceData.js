@@ -14,6 +14,7 @@ export default function useSourceData(destinationId) {
     destinationId === undefined ? reactive({}) : reactive(destinationMatch);
 
   return {
+    sourceData,
     destination,
     destinations,
   };
