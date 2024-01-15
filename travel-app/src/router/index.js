@@ -12,6 +12,19 @@ const routes = [
   //routes go here
   { path: '/', name: 'home', component: HomeVue },
   {
+    path: '/protected',
+    name: 'protected',
+    component: () => import('@/views/ProtectedArea.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/UserLogin.vue'),
+  },
+  {
     path: '/destination-details/:id/:slug',
     name: routesNames.destinationShow,
     component: () => import('@/views/DestinationShow.vue'),
@@ -63,6 +76,17 @@ const router = createRouter({
       })
     );
   },
+});
+
+router.beforeEach((to, from) => {
+  if (to.meta.requiresAuth && !window.user) {
+    // Load a login page
+    return {
+      name: 'login',
+    };
+  }
+
+  //Else continue
 });
 
 export default router;
