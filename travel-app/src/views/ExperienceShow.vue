@@ -22,12 +22,8 @@
     }
   });
   const { destination } = useSourceData(props.id);
-  console.log("experience show > destination=", destination);
-  console.log("experience show > props.experienceSlug =", props.experienceSlug);
   const experienceMatch = destination.experiences.find(element => element.slug === props.experienceSlug);
-  console.log("experience show > experienceMatch =", experienceMatch);
   const experience = reactive(experienceMatch);
-  console.log("End - experience-show");
 </script>
 
 <style lang="scss" scoped></style>
