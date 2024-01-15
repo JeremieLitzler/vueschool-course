@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import routesNames from './routesNames';
 ('@/router/routesNames');
 import HomeVue from '@/views/Home.vue';
+import NotFoundVue from '@/views/NotFound.vue';
 
 const routes = [
   //routes go here
@@ -22,6 +23,11 @@ const routes = [
         }),
       },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notfound',
+    component: NotFoundVue,
   },
 ];
 
