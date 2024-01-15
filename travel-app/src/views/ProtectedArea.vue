@@ -12,7 +12,7 @@
 
   const router = useRouter();
   const logoutUser  = () => {
-    window.user = undefined;
+    window.userLogged = undefined;
     router.push({name: 'home'});
   }
 </script>

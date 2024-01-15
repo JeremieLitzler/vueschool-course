@@ -25,7 +25,7 @@
   const password = ref("");
 
   const loginUser = () => {
-    window.user = username.value;
+    window.userLogged = `{user: ${username.value}, password: ${password.value}}`;
     router.push({name: 'protected'});
   }
 </script>
