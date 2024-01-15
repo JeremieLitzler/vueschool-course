@@ -1,6 +1,7 @@
 <template>
   <section class="destination">
     <h2>{{ destination.name }}</h2>
+    <GoBackButton />
     <div class="destination-details">
       <img :src="`/images/${destination.image}`" :alt="destination.name" />
       <p>{{ destination.description }}</p>
@@ -25,6 +26,7 @@
   console.log("Start - destination-show");
   import useSourceData from "@/composables/useSourceData";
   import ExperienceCard from "@/components/ExperienceCard.vue";
+  import GoBackButton from "@/components/GoBackButton.vue";
 
   const props = defineProps({
     id:{
