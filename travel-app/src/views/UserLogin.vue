@@ -17,16 +17,20 @@
 
 <script setup>
   import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRouter, useRoute } from 'vue-router';
 
   const router = useRouter();
-
+  const route = useRoute();
   const username = ref("");
   const password = ref("");
 
   const loginUser = () => {
-    window.userLogged = `{user: ${username.value}, password: ${password.value}}`;
-    router.push({name: 'protected'});
+    console.log("clicked loginUser");
+    window.userLogged = `{"user": "${username.value}", "password": "${password.value}"}`;
+    console.log("window.userLogged >", window.userLogged);
+
+    const redirectPath = route.query.redirect;
+    router.push(redirectPath || {name: 'dashboard'});
   }
 </script>
 

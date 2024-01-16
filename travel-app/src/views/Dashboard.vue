@@ -1,14 +1,21 @@
 <template>
   <div>
-    <h1>Protected Area</h1>
+    <h1>dashboard Area</h1>
     <h2>Hello {{ username }}</h2>
+    <section>
+      <h3>Your invoices</h3>
+      <router-link :to="{name: 'invoices'}"
+        ><button class="btn">Go to Invoices</button></router-link
+      >
+    </section>
     <button class="btn" @click="logoutUser">Logout</button>
   </div>
 </template>
 
 <script setup>
   import { useRouter } from 'vue-router';
-  const username = window.user;
+  const userLogged = JSON.parse(window.userLogged);
+  const { user: username } = userLogged;
 
   const router = useRouter();
   const logoutUser  = () => {

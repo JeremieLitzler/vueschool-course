@@ -10,7 +10,7 @@
     >
       {{ destination.name }}
     </router-link>
-    <router-link :to="{name: 'protected'}">Protected Area</router-link>
+    <router-link :to="{name: 'dashboard'}">Dashboard</router-link>
   </div>
 </template>
 
