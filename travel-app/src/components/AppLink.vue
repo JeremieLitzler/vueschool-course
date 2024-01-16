@@ -23,5 +23,3 @@
     return typeof props.to === "string" && props.to.startsWith('http');
   });
 </script>
-
-<style lang="scss" scoped></style>
