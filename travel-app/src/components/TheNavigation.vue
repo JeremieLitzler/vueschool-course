@@ -1,16 +1,15 @@
 <template>
   <div class="nav">
-    <router-link id="logo" :to="{name: 'home'}"
-      >Vue School Travel App</router-link
-    >
-    <router-link
+    <AppLink id="logo" :to="{name: 'home'}">Vue School Travel App</AppLink>
+    <AppLink
       v-for="destination in data.destinations"
       :key="destination.id"
       :to="{name: 'destination-show', params:{id:destination.id,slug:destination.slug}}"
     >
       {{ destination.name }}
-    </router-link>
-    <router-link :to="{name: 'dashboard'}">Dashboard</router-link>
+    </AppLink>
+    <AppLink :to="{name: 'dashboard'}">Dashboard</AppLink>
+    <AppLink to="https://google.com">Google</AppLink>
   </div>
 </template>
 
