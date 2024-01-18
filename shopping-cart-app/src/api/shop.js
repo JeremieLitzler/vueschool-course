@@ -1,3 +1,4 @@
+const apiDelay = 1000;
 const _products = [
   { id: 1, title: 'iPad 4 Mini', price: 500.01, inventory: 2 },
   { id: 2, title: 'H&M T-Shirt White', price: 10.99, inventory: 10 },
@@ -6,7 +7,7 @@ const _products = [
 
 export default {
   getProducts(callback) {
-    setTimeout(() => callback(_products), 100);
+    setTimeout(() => callback(_products), apiDelay);
   },
 
   buyProducts(products, callback, errorCallback) {

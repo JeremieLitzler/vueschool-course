@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>Product List</h1>
-    <ul>
+    <p v-if="loading">Loading...</p>
+    <ul v-else>
       <li v-for="product in products" :id="product.id">
         {{ product.title }} - {{ product.price }}
       </li>
@@ -10,15 +11,12 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import store from '@/store/index';
-  import shop from '@/api/shop';
 
+  const loading = ref(true);
+  store.dispatch("fetchProducts").then(() => loading.value = false);
   const products = computed(() => store.getters.availableProducts);
-
-  shop.getProducts(products => {
-    store.commit('setProducts', products)
-  })
 </script>
 
 <style lang="scss" scoped></style>
