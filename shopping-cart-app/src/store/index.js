@@ -6,6 +6,7 @@ export const store = createStore({
     products: [],
     //contains {id, quantity}
     cart: [],
+    checkoutStatus: false,
   },
   getters: {
     availableProducts(state, getters) {
@@ -37,6 +38,9 @@ export const store = createStore({
       const match = state.products.find((item) => item.id === product.id);
       return match || match.inventory > 0;
     },
+    getCheckoutStatus(state) {
+      return state.checkoutStatus;
+    },
   },
   actions: {
     fetchProducts({ commit }) {
@@ -48,6 +52,8 @@ export const store = createStore({
       });
     },
     addProductToCart({ state, commit }, product) {
+      commit('setCheckoutStatus', false);
+
       if (product.inventory === 0) {
         throw new Error('Product is out of stock... sorry!');
       }
@@ -76,6 +82,19 @@ export const store = createStore({
         commit('incrementProductInventory', cartItem.product);
       }
     },
+    checkout({ state, commit, dispatch }) {
+      shop.buyProducts(
+        state.cart,
+        () => {
+          commit('emptyCart');
+          commit('setCheckoutStatus', true);
+          dispatch('fetchProducts');
+        },
+        () => {
+          commit('setCheckoutStatus', false);
+        },
+      );
+    },
   },
   mutations: {
     setProducts(state, products) {
@@ -100,5 +119,11 @@ export const store = createStore({
       product.inventory++;
     },
     updateQuantity(state, cartItem) {},
+    setCheckoutStatus(state, status) {
+      state.checkoutStatus = status;
+    },
+    emptyCart(state) {
+      state.cart = [];
+    },
   },
 });
