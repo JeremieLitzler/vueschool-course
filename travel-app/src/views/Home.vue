@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h1>All destinations</h1>
+    <button @click="triggerRouterError">Trigger router error</button>
     <section class="destinations">
       <router-link
         v-for="destination in destinations"
@@ -17,9 +18,17 @@
 
 <script setup>
   import { reactive } from "vue";
+  import { useRouter } from "vue-router";
   import sourceData from "@/data.json";
   console.log(sourceData);
   const destinations = reactive(sourceData.destinations);
+
+  const router = useRouter();
+  const triggerRouterError = async () => {
+    //let navigate to the home page while on the home page...
+    const result = await router.push('/');
+    console.log(result);
+  }
 </script>
 
 <style lang="scss" scoped></style>
