@@ -38,6 +38,10 @@ export default [
     },
   },
   {
+    path: '/example/:id(\\d+)', //match a route ending with at least 1 digit and nothing else.
+    component: () => import('@/views/UserLogin.vue'),
+  },
+  {
     path: '/destination-details/:id/:slug',
     name: routesNames.destinationShow,
     component: () => import('@/views/DestinationShow.vue'),
