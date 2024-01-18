@@ -14,7 +14,7 @@
   import shop from '@/api/shop';
   import store from '@/store/index';
 
-  const products = computed(() => store.state.products);
+  const products = computed(() => store.getters.availableProducts);
 
   shop.getProducts(products => {
     store.commit('setProducts', products)

@@ -5,12 +5,12 @@ export default new Vuex.Store({
     products: [],
   },
   getters: {
-    productsCount() {
-      //calculate a readonly value
+    availableProducts(state, getters) {
+      return state.products.filter((product) => product.inventory > 0);
     },
   },
   actions: {
-    fetchProducs() {
+    fetchProducts() {
       //make api call
     },
   },
