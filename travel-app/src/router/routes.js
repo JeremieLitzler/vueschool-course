@@ -10,6 +10,7 @@ const { sourceData } = useSourceData();
 export default [
   //routes go here
   { path: '/', name: 'home', component: HomeVue },
+  { path: '/home', redirect: { name: 'home' } },
   {
     path: '/dashboard',
     name: 'dashboard',
