@@ -1,11 +1,13 @@
 <template>
   <div>
     <ProductList />
+    <ShoppingCart />
   </div>
 </template>
 
 <script setup>
   import ProductList from './components/ProductList.vue';
+  import ShoppingCart from './components/ShoppingCart.vue';
 </script>
 <style scoped>
   .logo {

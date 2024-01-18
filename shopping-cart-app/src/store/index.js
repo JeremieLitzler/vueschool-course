@@ -11,6 +11,32 @@ export const store = createStore({
     availableProducts(state, getters) {
       return state.products.filter((product) => product.inventory > 0);
     },
+    cartContent(state) {
+      return state.cart.map((cartItem) => {
+        const product = state.products.find(
+          (product) => product.id === cartItem.product.id,
+        );
+        return {
+          product,
+          quantity: cartItem.quantity,
+        };
+      });
+    },
+    cartTotal(state, getters) {
+      let total = 0;
+      getters.cartContent.forEach((cartItem) => {
+        total += cartItem.product.price * cartItem.quantity;
+      });
+      //   return getters.cartContent.reduce(
+      //     (total, product) => total + cartItem.product.price * cartItem.quantity,
+      //     0,
+      //   );
+      return total;
+    },
+    isProductAvailable(state, product) {
+      const match = state.products.find((item) => item.id === product.id);
+      return match || match.inventory > 0;
+    },
   },
   actions: {
     fetchProducts({ commit }) {
@@ -26,7 +52,9 @@ export const store = createStore({
         throw new Error('Product is out of stock... sorry!');
       }
 
-      const cartItem = state.cart.find((item) => item.id === product.id);
+      const cartItem = state.cart.find(
+        (item) => item.product.id === product.id,
+      );
 
       if (!cartItem) {
         // If product not in current cart
@@ -34,9 +62,19 @@ export const store = createStore({
         commit('pushProductToCart', product);
       } else {
         // increment quantity
-        commit('incrementItemQuantity', cartItem);
+        commit('incrementCartItemQuantity', cartItem);
       }
       commit('decrementProductInventory', product);
+    },
+    updateCartItemQuantity({ commit, getters }, { cartItem, direction }) {
+      console.log(direction);
+      if (direction === '+' && getters.isProductAvailable(product)) {
+        commit('incrementCartItemQuantity', cartItem);
+        commit('decrementProductInventory', cartItem.product);
+      } else {
+        commit('decrementCartItemQuantity', cartItem);
+        commit('incrementProductInventory', cartItem.product);
+      }
     },
   },
   mutations: {
@@ -44,13 +82,23 @@ export const store = createStore({
       state.products = products;
     },
     pushProductToCart(state, product) {
-      state.cart.push({ id: product.id, quantity: 1 });
+      state.cart.push({
+        product,
+        quantity: 1,
+      });
     },
-    incrementItemQuantity(state, cartItem) {
-      cartItem.quantity++;
+    decrementCartItemQuantity(state, cartItem) {
+      cartItem.quantity--;
     },
     decrementProductInventory(state, product) {
       product.inventory--;
     },
+    incrementCartItemQuantity(state, cartItem) {
+      cartItem.quantity++;
+    },
+    incrementProductInventory(state, product) {
+      product.inventory++;
+    },
+    updateQuantity(state, cartItem) {},
   },
 });

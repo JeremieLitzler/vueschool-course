@@ -5,8 +5,9 @@
     <ul v-else>
       <li v-for="product in products" :id="product.id">
         {{ product.title }} |
-        {{ product.price }}
+        {{ useCurrency(product.price, '$', 2) }}
         ({{ product.inventory > 0 ? `${product.inventory} left` : "Out of stock"
+
         }})
 
         <button @click="addProductToCart(product)">Add to cart</button>
@@ -18,6 +19,7 @@
 <script setup>
   import { computed, ref } from 'vue';
   import { useStore } from 'vuex';
+  import useCurrency  from '@/composables/useCurrency'
 
   const store = useStore();
 
