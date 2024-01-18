@@ -143,7 +143,7 @@ The result is in the `dist` folder:
 - the main JavaScript file (`index-[hash].js`)
 - a JavaScript file for each component of each route.
 
-With Vuecli, it uses a similar technique but using a Webpack comment.
+With Vuecli, it uses a similar technique but using a Webpack comment to name the chunk with magic comment:
 
 ```javascript
 var routes = [
