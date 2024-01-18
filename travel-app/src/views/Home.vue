@@ -1,7 +1,13 @@
 <template>
   <div class="home">
     <h1>All destinations</h1>
-    <button @click="triggerRouterError">Trigger router error</button>
+    <button @click="triggerRouterError" class="btn">Trigger router error</button
+    ><br /><br />
+    <button @click="addDynamicRoute" class="btn">Add dynamic route</button
+    ><br /><br />
+    <router-link to="/dynamic">Visite Dynamic Route</router-link><br /><br />
+    <router-link :to="{name: 'dynamic'}">Visite Dynamic Route</router-link
+    ><br /><br />
     <section class="destinations">
       <router-link
         v-for="destination in destinations"
@@ -40,6 +46,15 @@
     else {
       //all was fine.
     }
+  }
+
+  const addDynamicRoute = () => {
+    router.addRoute({
+      name: "dynamic",
+      path: "/dynamic",
+      component: () => import("@/views/UserLogin.vue")
+    });
+
   }
 </script>
 
