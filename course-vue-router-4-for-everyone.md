@@ -145,6 +145,16 @@ The result is in the `dist` folder:
 
 With Vuecli, it uses a similar technique but using a Webpack comment.
 
+```javascript
+var routes = [
+  {
+    path: '/brazil',
+    name: 'brazil',
+    component: () => import(/* webpackChunkName: "brazil" */ '@/views/Brazil.vue'),
+  }
+]
+```
+
 ## Custimizing the router link active class
 
 It is easy to do that with the `linkActiveClass` property in the `createRouter` options.
