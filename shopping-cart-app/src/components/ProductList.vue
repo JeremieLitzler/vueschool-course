@@ -12,10 +12,14 @@
 
 <script setup>
   import { computed, ref } from 'vue';
-  import store from '@/store/index';
+  import { useStore } from 'vuex';
+
+  const store = useStore();
 
   const loading = ref(true);
+
   store.dispatch("fetchProducts").then(() => loading.value = false);
+
   const products = computed(() => store.getters.availableProducts);
 </script>
 

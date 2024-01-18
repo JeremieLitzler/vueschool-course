@@ -1,7 +1,7 @@
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import shop from '@/api/shop';
 
-export default new Vuex.Store({
+export const store = createStore({
   state: {
     products: [],
   },
