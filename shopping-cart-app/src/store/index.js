@@ -1,9 +1,6 @@
 import Vuex from 'vuex';
-import Vue from 'vue';
 
-Vue.useAttrs(Vuex);
-
-new Vuex.Store({
+export default new Vuex.Store({
   state: {
     products: [],
   },
@@ -15,6 +12,11 @@ new Vuex.Store({
   actions: {
     fetchProducs() {
       //make api call
+    },
+  },
+  mutations: {
+    setProducts(state, products) {
+      state.products = products;
     },
   },
 });

@@ -10,14 +10,15 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { computed } from 'vue';
   import shop from '@/api/shop';
+  import store from '@/store/index';
 
-  const products = ref([]);
+  const products = computed(() => store.state.products);
 
-  shop.getProducts(data => {
-    products.value = data;
-  });
+  shop.getProducts(products => {
+    store.commit('setProducts', products)
+  })
 </script>
 
 <style lang="scss" scoped></style>
