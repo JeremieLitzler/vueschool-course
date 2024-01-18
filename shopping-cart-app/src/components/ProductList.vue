@@ -4,7 +4,10 @@
     <p v-if="loading">Loading...</p>
     <ul v-else>
       <li v-for="product in products" :id="product.id">
-        {{ product.title }} - {{ product.price }}
+        {{ product.title }} |
+        {{ product.price }}
+        ({{ product.inventory > 0 ? `${product.inventory} left` : "Out of stock"
+        }})
 
         <button @click="addProductToCart(product)">Add to cart</button>
       </li>
