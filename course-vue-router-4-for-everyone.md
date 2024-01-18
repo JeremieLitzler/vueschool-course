@@ -553,3 +553,178 @@ And its usage would be:
     <AppLink :to="{name: 'dashboard'}">Dashboard</AppLink>
     <AppLink to="https://google.com">Google</AppLink>
 ```
+
+## `Router.push` vs `Router.replace`
+
+The method `push` will add a new entry in the history stack, while `replace` won't.
+
+`replace` effectively replaces the entry or remove it from the history stack.
+
+## Named views
+
+The usecase is customization of layouts per route.
+
+For example, the following defines a `LeftSideBar` component used in the `Dashboard` route of the routes definition array:
+
+```javascript
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    components: {
+      default: () => import('@/views/Dashboard.vue'),
+      LeftSideBar: () => import('@/components/LeftSideBar.vue'),
+    },
+    meta: {
+      requiresAuth: true,
+    },
+  },
+```
+
+You can then add the `router-view` as follow in `App.vue` to make available in the application:
+
+```htm
+    <router-view class="view left-sidebar" name="LefSideBar"></router-view>
+```
+
+The `name` attribut is important: the value must match the key in the `components` object of the route using the component.
+
+## Redirects and aliases
+
+Redirects allow to catch a route and redirect it another:
+
+```javascript
+  { path: '/', name: 'home', component: HomeVue },
+  { path: '/home', redirect: { name: 'home' } },
+
+```
+
+The URL changes in a redirect.
+
+Aliases load the target view, but the URL doesn't change.
+
+```javascript
+  { path: '/', name: 'home', component: HomeVue, alias: '/home' },
+```
+
+## Detecting Navigation Failures
+
+Why would it happen?
+
+1. Users are already on the page that they are trying to navigate to.
+2. A guard aborts the navigation by returning false
+3. A new navigation guard takes place before the previous one has finished
+4. A navigation guard redirects somewhere else by returning a new location
+5. A navigation guard throw an Error.
+
+To trigger the cases, see the following case:
+
+```javascript
+  import { NavigationFailureType, isNavigationFailure, useRouter } from "vue-router";
+  const router = useRouter();
+  const triggerRouterError = async () => {
+    //let navigate to the home page while on the home page...
+    const navigationResult = await router.push('/');
+    console.log(navigationResult);
+    if (isNavigationFailure(navigationResult, NavigationFailureType.duplicated)) {
+      //the route is the current and cannot be navigated to
+    }
+    else if (isNavigationFailure(navigationResult, NavigationFailureType.aborted)) {
+      //false is returned in a navigation guard
+    }
+    else if (isNavigationFailure(navigationResult, NavigationFailureType.cancelled)) {
+      //a new navigation took place before the current could finish.
+    }
+    else {
+      //all was fine.
+    }
+```
+
+`navigationResult` contains the `to` and `from` objects and the typical route properties.
+
+## Advanced Routes’ Matching Syntax with regex
+
+Using regular expressions on a route's path can allow fine tuning of the rout.
+
+For example:
+
+```javascript
+  {
+    //match a route ending with at least 1 digit and nothing else.
+    // => "/example/1" will work
+    // => "/example/123" will work
+    // => "/example/one" won't work and will load the 404 page
+    path: '/example/:id(\\d+)',
+    component: () => import('@/views/Example.vue'),
+  },
+```
+
+This can be extended to having a list of data:
+
+```javascript
+  {
+    //match a route ending with at least 1 digit and nothing else.
+    // => "/example/1/2/3/4" will provide in params a value "id" being an array of STRING values 1, 2, 3 and 4.
+    path: '/example/:id+',
+    component: () => import('@/views/Example.vue'),
+  },
+```
+
+Having the `+` makes requires to provide at least ne value for `id`. Otherwise, you get a 404.
+
+Having the `*` makes the `id` optional and it will load the route and its component. `route.params.id` will just be `undefined`.
+
+And put it together with format restriction and repeatable params:
+
+```javascript
+  {
+    //match a route ending with at least 1 digit and nothing else.
+    // => "/example/1/2/3/4" will provide in params a value "id" being an array of INTEGER values 1, 2, 3 and 4.
+    path: '/example/:id(\\d+)+',
+    component: () => import('@/views/Example.vue'),
+  },
+```
+
+Finally, making the parameter optional without making it repeatable, use `?`:
+
+```javascript
+  {
+    //match a route ending with 0 to N digits and nothing else.
+    // => "/example" will work
+    // => "/example/123" will work
+    path: '/example/:id(\\d+)?',
+    component: () => import('@/views/Example.vue'),
+  },
+```
+
+## Dynamic routes
+
+Using the `addRoute` method of the `router` instance, you add a route on the fly:
+
+```javascript
+  const addDynamicRoute = () => {
+    router.addRoute({
+      name: "dynamic",
+      path: "/dynamic",
+      component: () => import("@/views/UserLogin.vue")
+    });
+  }
+```
+
+The caveat is: you cannot use the name of the route until you are sure it is available.
+
+So using the path:
+
+```htm
+    <button @click="addDynamicRoute" class="btn">Add dynamic route</button>
+    <!-- will show and lead to 404 if the button isn't clicked -->
+    <router-link to="/dynamic">Visite Dynamic Route</router-link>
+    <!-- will break the current page since the named route "dynamic" doesn't exist -->
+    <router-link :to="{name: 'dynamic'}">Visite Dynamic Route</router-link
+
+```
+
+Similarly, you can remove routes:
+
+```javascript
+    router.removeRoute("dynamic");
+```
