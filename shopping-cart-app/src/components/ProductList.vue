@@ -11,8 +11,8 @@
 
 <script setup>
   import { computed } from 'vue';
-  import shop from '@/api/shop';
   import store from '@/store/index';
+  import shop from '@/api/shop';
 
   const products = computed(() => store.getters.availableProducts);
 
