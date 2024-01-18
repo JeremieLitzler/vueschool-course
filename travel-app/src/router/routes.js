@@ -13,7 +13,10 @@ export default [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import('@/views/Dashboard.vue'),
+    components: {
+      default: () => import('@/views/Dashboard.vue'),
+      LeftSideBar: () => import('@/components/LeftSideBar.vue'),
+    },
     meta: {
       requiresAuth: true,
     },
@@ -26,7 +29,10 @@ export default [
   {
     path: '/invoices',
     name: 'invoices',
-    component: () => import('@/views/Invoices.vue'),
+    components: {
+      default: () => import('@/views/Invoices.vue'),
+      LeftSideBar: () => import('@/components/LeftSideBar.vue'),
+    },
     meta: {
       requiresAuth: true,
     },
