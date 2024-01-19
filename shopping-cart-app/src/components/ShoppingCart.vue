@@ -12,7 +12,7 @@
       </li>
     </ul>
     <p v-if="!getCheckoutStatus">Total: {{ useCurrency(cartTotal, '$', 2) }}</p>
-    <button v-if="!getCheckoutStatus" @click="store.dispatch('checkout')">
+    <button v-if="!getCheckoutStatus" @click="store.dispatch('cart/checkout')">
       Checkout
     </button>
     <p v-if="getCheckoutStatus">Your order is successul. Thank you.</p>
@@ -23,20 +23,18 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
   import { useStore } from 'vuex';
-  import { mapGetters } from '@/store/mapState'
+  import { mapGetters } from '@/store/mapStore'
   import useCurrency  from '@/composables/useCurrency'
 
   const store = useStore();
 
-  const { cartContent, cartTotal, getCheckoutStatus } = mapGetters();
+  const { ["cart/cartContent"]: cartContent, ["cart/cartTotal"]: cartTotal, ["cart/getCheckoutStatus"]: getCheckoutStatus } = mapGetters();
 
   const updateCartItemQuantity = (cartItem, direction) => {
-    store.dispatch('updateCartItemQuantity', {cartItem, direction});
+    store.dispatch('cart/updateCartItemQuantity', {cartItem, direction});
   }
-
-  const orderSuccessul = ref(false);
 </script>
 
 <style lang="scss" scoped></style>
+@/store/mapStore

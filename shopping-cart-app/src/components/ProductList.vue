@@ -15,25 +15,39 @@
         </button>
       </li>
     </ul>
+    <p v-if="!loading && (!products ||products.length === 0)">
+      No product for sales... 🤨
+    </p>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import { useStore } from 'vuex';
-  import { mapState, mapGetters } from '@/store/mapState'
-  import useCurrency  from '@/composables/useCurrency'
+    import { ref } from 'vue';
+    import { useStore } from 'vuex';
+    import { mapGetters } from '@/store/mapStore'
+    import useCurrency  from '@/composables/useCurrency'
 
-  const store = useStore();
+    const store = useStore();
 
-  const loading = ref(true);
-  store.dispatch("fetchProducts").then(() => loading.value = false);
-  const { products } = mapState();
-  const { isProductInStock, productInventoryMessage } = mapGetters();
+  // mapState();
+  // mapGetters();
+  // mapActions();
+  // mapMutations();
 
-  const addProductToCart = (product) => {
-    store.dispatch('addProductToCart', product);
-  }
+    const loading = ref(true);
+    store.dispatch("products/fetchProducts").then(() => {
+      console.log("Products loaded...");
+      loading.value = false
+    });
+
+    const { ["products/availableProducts"]: products, ["products/isProductInStock"]: isProductInStock, ["products/productInventoryMessage"]: productInventoryMessage } = mapGetters();
+
+    console.log("Setup > ProducList comp = ", products);
+
+    const addProductToCart = (product) => {
+      store.dispatch('cart/addProductToCart', product);
+    }
 </script>
 
 <style lang="scss" scoped></style>
+@/store/mapStore
