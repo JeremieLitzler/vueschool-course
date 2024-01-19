@@ -340,3 +340,7 @@ const actionY1 = (payload) => {
 So in the end, only the mapGetters are really needed in the helper library, in my experience.
 
 Also, if you find yourself wanting to use `mapState` from that library, tell me how you make it work when using namescaped modules. I used a getter to access for example `moduleX.state.property1`.
+
+## Conclusion
+
+I hope you learn a lot on Vuex. At the time of writing this article, Vuex has been replaced by Pinia and [VueSchool have a course](https://vueschool.io/courses/pinia-the-enjoyable-vue-store) on the new recommended state management of Vue.
