@@ -11,18 +11,11 @@
         <button @click="updateCartItemQuantity(cartItem, 'decrease')">-</button>
       </li>
     </ul>
-    <p v-if="!store.getters.getCheckoutStatus">
-      Total: {{ useCurrency(cartTotal, '$', 2) }}
-    </p>
-    <button
-      v-if="!store.getters.getCheckoutStatus"
-      @click="store.dispatch('checkout')"
-    >
+    <p v-if="!getCheckoutStatus">Total: {{ useCurrency(cartTotal, '$', 2) }}</p>
+    <button v-if="!getCheckoutStatus" @click="store.dispatch('checkout')">
       Checkout
     </button>
-    <p v-if="store.getters.getCheckoutStatus">
-      Your order is successul. Thank you.
-    </p>
+    <p v-if="getCheckoutStatus">Your order is successul. Thank you.</p>
     <!-- <p v-if="!store.getters.checkoutStatus">
       Your order failed. Sorry and try again.
     </p> -->
@@ -30,14 +23,14 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue';
+  import { ref } from 'vue';
   import { useStore } from 'vuex';
+  import { mapGetters } from '@/store/mapState'
   import useCurrency  from '@/composables/useCurrency'
 
   const store = useStore();
 
-  const cartContent = computed(() => store.getters.cartContent);
-  const cartTotal = computed(() => store.getters.cartTotal);
+  const { cartContent, cartTotal, getCheckoutStatus } = mapGetters();
 
   const updateCartItemQuantity = (cartItem, direction) => {
     store.dispatch('updateCartItemQuantity', {cartItem, direction});

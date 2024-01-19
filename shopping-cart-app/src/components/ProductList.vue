@@ -19,20 +19,18 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue';
+  import { ref } from 'vue';
   import { useStore } from 'vuex';
+  import { mapState, mapGetters } from '@/store/mapState'
   import useCurrency  from '@/composables/useCurrency'
 
   const store = useStore();
 
   const loading = ref(true);
-
   store.dispatch("fetchProducts").then(() => loading.value = false);
+  const { products } = mapState();
+  const { isProductInStock, productInventoryMessage } = mapGetters();
 
-  const products = computed(() => store.state.products);
-
-  const isProductInStock = computed(() => store.getters.isProductInStock);
-  const productInventoryMessage = computed(() => store.getters.productInventoryMessage);
   const addProductToCart = (product) => {
     store.dispatch('addProductToCart', product);
   }
