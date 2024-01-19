@@ -47,6 +47,36 @@ In a component, you use simply as the following:
   const products = computed(() => store.getters.availableProducts);
 ```
 
+If you ever need to pass to a getter a parameter other than `state` or `getters`, you will need to return a function.
+
+For example:
+
+- in the the store, you declare such getter:
+
+```javascript
+    isProductInStock() {
+      return (product) => product.inventory > 0;
+    },
+```
+
+- in the component script, you add a computed property:
+
+```javascript
+//using Composition API
+const isProductInStock = computed(() => store.getters.isProductInStock);
+```
+
+- and in the component template, you pass the object or data the getter needs via the computed variable:
+
+```htm
+<button
+    @click="addProductToCart(product)"
+    :disabled="!isProductInStock(product)"
+>
+    Add to cart
+</button>
+```
+
 ## More about `actions`
 
 Any action receives a `context` parameter that allow to access:
@@ -114,3 +144,199 @@ It is really easy to see the mutation history under `DevTools > Vue > Vuex`.
 If you have like I had a difficulty to see the mutation, reinstall the Vue.js devtools.
 
 With the tool, you can easily go back and forward in the timeline with a simple click.
+
+## Vuex Map Helpers
+
+The advantage of vuex map helpers is to make the code less verbose:
+
+```javascript
+  import { computed } from 'vue';
+
+  const products = computed(() => store.state.products);
+
+  const isProductInStock = computed(() => store.getters.isProductInStock);
+  const productInventoryMessage = computed(() => store.getters.productInventoryMessage);
+```
+
+versus
+
+```javascript
+  import { mapState, mapGetters } from '@/store/mapState'
+
+  const { products } = mapState();
+
+  const { isProductInStock, productInventoryMessage } = mapGetters();
+
+```
+
+The code above is using Composition API and the helper library suggested by [Markus Kottländer](https://stackoverflow.com/users/2560696/markus-kottl%c3%a4nder) on this [Stackoverflow thread](https://stackoverflow.com/a/68653980).
+
+With the Option API, you can use the `mapState`, `mapActions` and `mapGetters` from the `vuex` package and achieve a similar result.
+
+See [this commit](https://github.com/vueschool/learn-vuex/commit/34f07edcc470f616ed92a13a332fd1a6993b30fc) from [the lesson "Vuex Map Helpers
+"](https://vueschool.io/lessons/vuex-mapping-state-mutations-getters-and-actions) on [the course "Vuex for Everyone"](https://vueschool.io/courses/vuex-for-everyone).
+
+## Split Vuex Store in Multiple Files
+
+It comes a time when a store can be big. Using the split pattern, you can extract state, getters, actions and mutations to a distinct file.
+
+## Vuex modules
+
+To organize a state, you can go further than multiple files using modules.
+
+In the end, the store folder would look this:
+
+```txt
+src
+    |_ store
+        |_ index.js
+        |_ state.js
+        |_ getters.js
+        |_ actions.js
+        |_ mutations.js
+        |_ modules
+            |_ firstModule.js
+            |_ secondModule.js
+```
+
+You could also extract the `state`,`getters`, `actions` and `mutations` to separate files in a `firstModule` folder.
+
+An advice: do not use `createStore` in the modules. Simply `export default { ... }`. That module object contains the same properties as the root state:
+
+```javascript
+export default {
+  namescaped: true,
+  state: {
+      //state properties go here
+  },
+  getters {
+      //getters go here
+  },
+  actions: {
+      // etc...
+  },
+  mutations,
+  strict: true,
+}
+```
+
+It is good practice to use `namescaped` to avoid name collisions.
+
+### Call an action of module X within an action of module Y
+
+Simply, tell the action of module Y that the action is in the `rootGetters` object:
+
+```javascript
+    methodOfModuleY(
+      { state, commit, getters, rootState, rootGetters },
+      payload,
+    ) {
+      commit('mutationOfModuleY', true);
+
+      if (!rootGetters['moduleX/methodToCall'](payload)) {
+        // do something...
+      }
+    }
+```
+
+Another way is the following: simply, tell the action of module Y that the mutation is in at the root.
+
+```javascript
+    methodOfModuleY(
+      { state, commit, dispatch },
+      payload,
+    ) {
+        //set payload to null if none
+        dispatch('moduleX/anotherMethod', payload, { root: true });
+    }
+```
+
+### Call a mutation of module X within an action module Y
+
+Simply, tell the action of module Y that the mutation is in at the root:
+
+```javascript
+    methodOfModuleY(
+      { state, commit, dispatch },
+      payload,
+    ) {
+        //set payload to null if none
+         commit('moduleX/aMutationInX', payload, { root: true });
+    }
+```
+
+### From the components
+
+#### Using the Options API
+
+You will have the `mapState`, `mapGetters`, `mapActions` and `mapMutations` available.
+
+Using the spread operator, you get access to the properties or methods using different syntax:
+
+```javascript
+...mapGetters({
+    getterX1: "moduleX/getter1"
+    getterY1: "moduleY/getter1"
+})
+//or
+...mapGetters("moduleX", {
+    getterX1: "getter1"
+    getterX2: "getter2"
+})
+```
+
+#### With the Composition API
+
+I had more difficulty to figure it out but here how it looks.
+
+Supposing you have a store organized as the following:
+
+```javascript
+src
+    |_ store
+        |_ index.js
+        |_ state.js
+        |_ getters.js
+        |_ actions.js
+        |_ mutations.js
+        |_ modules
+            |_ firstModule.js
+                |_ state
+                    |_ property1
+                    |_ property2
+                |_ getters
+                    |_ getter1
+                    |_ getter2
+                |_ actions
+                    |_ action1
+                    |_ action2
+                |_ mutations
+            |_ secondModule.js
+                |_ state
+                |_ getters
+                    |_ getter1
+                    |_ getter2
+                |_ actions
+                    |_ action1
+                    |_ action2
+                |_ mutations
+
+```
+
+You can use it this way using the `mapStore` helper library suggested by [Markus Kottländer](https://stackoverflow.com/users/2560696/markus-kottl%c3%a4nder) on this [Stackoverflow thread](https://stackoverflow.com/a/68653980):
+
+```javascript
+import { useStore } from 'vuex';
+import { mapGetters } from '@/store/mapStore'
+
+const { ["moduleX/getter1"]: getterX1, ["moduleX/getter2"]: getterX2, ["moduleY/getter1"]: getterY1 } = mapGetters();
+
+const actionY1 = (payload) => {
+      store.dispatch('moduleY/action1', payload);
+    }
+
+```
+
+So in the end, only the mapGetters are really needed in the helper library, in my experience.
+
+Also, if you find yourself wanting to use `mapState` from that library, tell me how you make it work when using namescaped modules. I used a getter to access for example `moduleX.state.property1`.
