@@ -6,11 +6,13 @@
       <li v-for="product in products" :id="product.id">
         {{ product.title }} |
         {{ useCurrency(product.price, '$', 2) }}
-        ({{ product.inventory > 0 ? `${product.inventory} left` : "Out of stock"
-
-        }})
-
-        <button @click="addProductToCart(product)">Add to cart</button>
+        ({{ productInventoryMessage(product) }})
+        <button
+          @click="addProductToCart(product)"
+          :disabled="!isProductInStock(product)"
+        >
+          Add to cart
+        </button>
       </li>
     </ul>
   </div>
@@ -27,8 +29,10 @@
 
   store.dispatch("fetchProducts").then(() => loading.value = false);
 
-  const products = computed(() => store.getters.availableProducts);
+  const products = computed(() => store.state.products);
 
+  const isProductInStock = computed(() => store.getters.isProductInStock);
+  const productInventoryMessage = computed(() => store.getters.productInventoryMessage);
   const addProductToCart = (product) => {
     store.dispatch('addProductToCart', product);
   }

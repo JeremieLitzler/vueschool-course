@@ -34,9 +34,12 @@ export const store = createStore({
       //   );
       return total;
     },
-    isProductAvailable(state, product) {
-      const match = state.products.find((item) => item.id === product.id);
-      return match || match.inventory > 0;
+    isProductInStock() {
+      return (product) => product.inventory > 0;
+    },
+    productInventoryMessage() {
+      return (product) =>
+        product.inventory > 0 ? `${product.inventory} left` : 'Out of stock';
     },
     getCheckoutStatus(state) {
       return state.checkoutStatus;
@@ -51,10 +54,10 @@ export const store = createStore({
         });
       });
     },
-    addProductToCart({ state, commit }, product) {
+    addProductToCart({ state, commit, getters }, product) {
       commit('setCheckoutStatus', false);
 
-      if (product.inventory === 0) {
+      if (!getters.isProductInStock(product)) {
         throw new Error('Product is out of stock... sorry!');
       }
 
@@ -74,7 +77,7 @@ export const store = createStore({
     },
     updateCartItemQuantity({ commit, getters }, { cartItem, direction }) {
       console.log(direction);
-      if (direction === '+' && getters.isProductAvailable(product)) {
+      if (direction === '+' && getters.isProductInStock(product)) {
         commit('incrementCartItemQuantity', cartItem);
         commit('decrementProductInventory', cartItem.product);
       } else {
