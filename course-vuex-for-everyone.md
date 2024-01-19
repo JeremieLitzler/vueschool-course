@@ -343,4 +343,8 @@ Also, if you find yourself wanting to use `mapState` from that library, tell me 
 
 ## Conclusion
 
-I hope you learn a lot on Vuex. At the time of writing this article, Vuex has been replaced by Pinia and [VueSchool have a course](https://vueschool.io/courses/pinia-the-enjoyable-vue-store) on the new recommended state management of Vue.
+I hope you learn a lot on Vuex.
+
+At the time of writing this article, Vuex has been replaced by Pinia and [VueSchool have a course](https://vueschool.io/courses/pinia-the-enjoyable-vue-store) on the new recommended state management of Vue.
+
+Stay tuned for the notes of that course!
