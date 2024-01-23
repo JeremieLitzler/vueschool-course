@@ -24,7 +24,7 @@
             :key="name"
             :product="items[0]"
             :count="cartStore.groupCount(name)"
-            @updateCount=""
+            @updateCount="cartStore.updateQuantityItem($event, items[0])"
             @clear="cartStore.removeAllItemsByName(name)"
           />
         </ul>
