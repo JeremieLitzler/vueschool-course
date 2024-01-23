@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { groupBy } from 'lodash';
-import { toRef } from 'vue';
+import { useAuthUserStore } from './AuthUserStore';
 
 export const useCartStore = defineStore('CartStore', {
   //state
@@ -37,6 +37,12 @@ export const useCartStore = defineStore('CartStore', {
     updateQuantityItem(count, item) {
       this.removeAllItemsByName(item.name);
       this.addToCart(count, item);
+    },
+    checkout() {
+      const authUserStore = useAuthUserStore();
+      alert(
+        `${authUserStore.username} just bought ${this.count} items at a total of $${this.total}`,
+      );
     },
   },
 });
