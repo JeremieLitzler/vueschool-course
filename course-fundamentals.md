@@ -74,3 +74,7 @@ Using it this correct way will render the HTML fine:
 ```htm
 <notification-message notification-type="red"></notification-message>
 ```
+
+## The `$event` handler
+
+See [the docs](https://vuejs.org/guide/essentials/event-handling).
