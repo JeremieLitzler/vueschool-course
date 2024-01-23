@@ -7,6 +7,7 @@ export const useCartStore = defineStore('CartStore', {
       items: [],
     };
   },
+  getters: {},
   actions: {
     addToCart(count, product) {
       count = parseInt(count);
@@ -16,5 +17,4 @@ export const useCartStore = defineStore('CartStore', {
       }
     },
   },
-  //getters
 });
