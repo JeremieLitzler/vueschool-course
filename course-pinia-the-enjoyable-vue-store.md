@@ -192,6 +192,69 @@ In the component, it is used like this:
 
 ```
 
+## Using a store in another store
+
+It is exactly the same as in the template:
+
+```javascript
+import { useAuthUserStore } from './AuthUserStore';
+
+export const useCartStore = defineStore('CartStore', {
+  //... down in the actions...
+      checkout() {
+      const authUserStore = useAuthUserStore();
+      alert(
+        `${authUserStore.username} just bought ${this.count} items at a total of $${this.total}`,
+      );
+    },
+}
+```
+
+## Using in Pinia with the Options API
+
+### Accessing the state
+
+See [this commit](https://github.com/vueschool/pinia-the-enjoyable-vue-store/commit/9fb923bbee82714318038c31ee3e4ef41e74e8fd) for using helper functions `mapState` and `mapWritableState`.
+
+`mapState` is used in the `computed` options and make the data readonly. It is the contrary for `mapWritableState`.
+
+### Accessing the getters
+
+You can use the `mapState` helper function.
+
+Of course, using `mapWritableState` isn't going to do anything.
+
+### Accessing the actions
+
+Using the helper function `mapActions`, you simply provide the store and the name of the action:
+
+```htm
+<script>
+// imports
+import { useAuthUserStore } from "@/stores/AuthUserStore";
+import { mapState, mapActions } from "pinia";
+
+export default {
+  computed: {
+    ...mapState(useAuthUserStore, {
+      user: "username",
+    }),
+  },
+  methods: {
+    ...mapActions(useAuthUserStore,
+    //using an object is nicer to customize the name of the action in the template
+    {
+      toTwitter: "visitTwitterProfile",
+    }),
+  },
+};
+</script>
+
+<template>
+  <span class="mr-5" @click="toTwitter">{{ user }}</span>
+</template>
+```
+
 ## Conclusion
 
 What did I learn that is better in Pinia:
