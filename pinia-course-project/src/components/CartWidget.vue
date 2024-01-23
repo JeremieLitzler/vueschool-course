@@ -20,14 +20,10 @@
       <div v-if="cartStore.isNotEmpty">
         <ul class="items-in-cart">
           <CartItem
-            :product="{ name: 'Dried Pineapple', price: 5 }"
-            :count="5"
-            @updateCount=""
-            @clear=""
-          />
-          <CartItem
-            :product="{ name: 'Pineapple Gum', price: 3 }"
-            :count="5"
+            v-for="(items, name) in cartStore.groupedItems"
+            :key="name"
+            :product="items[0]"
+            :count="cartStore.groupCount(name)"
             @updateCount=""
             @clear=""
           />
