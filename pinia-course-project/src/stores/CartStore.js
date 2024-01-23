@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { groupBy } from 'lodash';
+import { toRef } from 'vue';
 
 export const useCartStore = defineStore('CartStore', {
   //state
@@ -13,9 +14,8 @@ export const useCartStore = defineStore('CartStore', {
     isNotEmpty: (state) => state.count > 0,
     groupedItems: (state) => groupBy(state.items, (item) => item.name),
     groupCount: (state) => (name) => state.groupedItems[name].length,
-    total: (state) => {
-      return state.items.reduce((total = 0, item) => total + item.price);
-    },
+    total: (state) =>
+      state.items.reduce((cartTotal, item) => cartTotal + item.price, 0),
   },
   actions: {
     addToCart(count, product) {
@@ -24,6 +24,9 @@ export const useCartStore = defineStore('CartStore', {
       for (let index = 0; index < count; index++) {
         this.items.push({ ...product });
       }
+    },
+    removeAllItemsByName(name) {
+      this.items = this.items.filter((item) => item.name != name);
     },
   },
 });
