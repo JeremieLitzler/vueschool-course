@@ -255,6 +255,18 @@ export default {
 </template>
 ```
 
+## Preserve State with Hot Module Replacement
+
+You will need to use `acceptHMR` from `pinia` package and add the following at the end of each store:
+
+```javascript
+import { defineStore, acceptHMRUpdate } from 'pinia';
+// use the following on each store by updating 'useMyStore'
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useMyStore, import.meta.hot));
+}
+```
+
 ## Conclusion
 
 What did I learn that is better in Pinia:
