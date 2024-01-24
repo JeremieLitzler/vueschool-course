@@ -44,6 +44,9 @@
   cartStore.$subscribe((mutation, state) => {
     if (!doingHistory.value){
       cartHistory.push(JSON.stringify(state));
+      //reset the futureCart not with [] because it is reactive
+      //instead, the splice method clears the items from it.
+      futureCart.splice(0, futureCart.length);
     }
   });
 
