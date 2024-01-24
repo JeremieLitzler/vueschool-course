@@ -1,12 +1,19 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
+// import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval';
 import { groupBy } from 'lodash';
 import { useAuthUserStore } from './AuthUserStore';
 
-export const useCartStore = defineStore('CartStore', {
+const storeName = 'CartStore';
+// const { data: storedObject, isFinished } = useIDBKeyval(storeName, {
+//   items: [],
+// });
+
+export const useCartStore = defineStore(storeName, {
   historyEnabled: true,
   //state
   state: () => {
     return {
+      //   items: storedObject.value.items([]),
       items: [],
     };
   },
