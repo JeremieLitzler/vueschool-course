@@ -1,10 +1,9 @@
 <script setup>
   // imports
-  import { ref } from "vue";
-  import CartItem from "./CartItem.vue";
-  import { useCartStore } from "../stores/CartStore";
+  import { ref, reactive } from "vue";
+  import CartItem from "@/components/CartItem.vue";
+  import { useCartStore } from "@/stores/CartStore";
   const cartStore = useCartStore();
-
   // data
   const active = ref(false);
 </script>
