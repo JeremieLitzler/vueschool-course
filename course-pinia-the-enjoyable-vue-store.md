@@ -460,9 +460,19 @@ export function MyPiniaPlugin({ pinia, app, store, options }) {
 
 Read [more in the docs](https://pinia.vuejs.org/core-concepts/plugins.html).
 
+## Use Composables in the Pinia State
+
+You can use composables, either from an external package like VueUse or your own.
+
+In the lesson, Daniel showcased the useLocalStorage composable from VueUse, but on January 24th 2024, I add an error I could resolve.
+
 ## Conclusion
 
 What did I learn that is better in Pinia:
 
 - mutations are implicit, which make is easier to use.
--
+- it is built via Composition API in mind
+- it is easy to extend
+- it is easy to manage undo and redo thanks state subscription.
+
+Thanks to the VueSchool team for the course and the geate examples.
