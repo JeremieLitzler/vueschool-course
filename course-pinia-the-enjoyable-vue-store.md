@@ -267,6 +267,199 @@ if (import.meta.hot) {
 }
 ```
 
+## Subscribing to Actions
+
+When you call an action and you want to another action triggered, you can do so using the `$onAction` hook:
+
+```javascript
+/**
+    name is the name of the action
+    store is the store instance, same as `someStore`
+    args is thearray of parameters passed to the action
+    after is the hook after the action returns or resolves
+    onError is the hook if the action throws or rejects
+ */
+  cartStore.$onAction(({name, store, args, after, onError }) => {
+    if (name === "addToCart"){
+      after(() => {
+        console.log("onAction", args[0]);
+      });
+      onError((err) => {
+        console.error("onError", err);
+      })
+    }
+  })
+```
+
+### What are potential usecases of subscribing to actions
+
+- Showing notifications to the user once the action has completed.
+- Recording analytic data
+- Saving errors to Sentry
+
+Read [more in the docs](https://pinia.vuejs.org/core-concepts/actions.html#Subscribing-to-actions).
+
+## Subscribe to the State
+
+It is possible using `$subscribe` function:
+
+```javascript
+  cartStore.$subscribe((mutation, state) => {
+
+  })
+```
+
+### What are potential usecases of subscribing to state
+
+- Undo or Redo functionnality: see
+
+Read [more in the docs](https://pinia.vuejs.org/core-concepts/state.html#Subscribing-to-the-state)
+
+## Creating a Pinia plugin
+
+To do so, we need to create a javascript file under a `plugins` folder in `src`.
+
+This files contains a function that holds the logic of the plugin. For a Pinia plugin, the function takes a context object providing access to:
+
+- `context.pinia`: the pinia instance created with `createPinia()`
+- `context.app`: the current app created with `createApp()` (Vue 3 only)
+- `context.store`: the store the plugin is augmenting
+- `context.options`: the options object defining the store passed to `defineStore()`
+
+For example, in a plugin providing undo and redo functions, you finish the function by returning the functions into an object.
+
+```javascript
+import { ref, reactive } from 'vue';
+
+export function PiniaHistoryPlugin({ pinia, app, store, options }) {
+  const cartHistory = reactive([]);
+  const futureCart = reactive([]);
+  //This is necessary to prevent the $subscribe function to run when we are undoing.
+  const doingHistory = ref(false);
+
+  cartHistory.push(JSON.stringify(store.$state));
+
+  const undo = () => {
+    //Cannot undo if the history has only the initial value
+    if (cartHistory.length === 1) {
+      console.log('Nothing to undo...');
+      return;
+    }
+
+    console.log('Undoing to previous state mutation...');
+    doingHistory.value = true;
+    futureCart.push(cartHistory.pop());
+    store.$state = JSON.parse(cartHistory.at(-1));
+    doingHistory.value = false;
+  };
+  const redo = () => {
+    console.log('Redoing to previous state mutation...');
+    const latestState = futureCart.pop();
+    if (!latestState) {
+      console.log('No redo possible because the future is empty...');
+      return;
+    }
+    doingHistory.value = true;
+    cartHistory.push(latestState);
+    store.$state = JSON.parse(latestState);
+    doingHistory.value = false;
+  };
+
+  store.$subscribe((mutation, state) => {
+    if (!doingHistory.value) {
+      cartHistory.push(JSON.stringify(state));
+      //reset the futureCart not with [] because it is reactive
+      //instead, the splice method clears the items from it.
+      futureCart.splice(0, futureCart.length);
+    }
+  });
+
+  return {
+    undo,
+    redo,
+  };
+}
+```
+
+To use the plugin, you will need:
+
+- to register it in `main.js`
+
+```javascript
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import App from './App.vue';
+import { PiniaHistoryPlugin } from '@/plugins/PiniaHistoryPlugin';
+
+const pinia = createPinia();
+pinia.use(PiniaHistoryPlugin);
+
+// Init App
+createApp(App)
+  .use(pinia)
+  .use(FontAwesomePlugin)
+  .mount('#app');
+```
+
+- to call the methods returned by the plugin as if they were properties of the store. I am pretty sure that, if you needed to pass on parameters to a function, you could simply apply the same technique as the dynamic getters.
+
+If you needed to enable the plugin for certain stores only, you simply add a custom property to the store's options:
+
+```javascript
+import { defineStore } from 'pinia';
+
+export const useMyStore = defineStore('MyStore', {
+  enabledPlugin: true,
+  //state
+  state: () => {
+    return {
+      data: [],
+    };
+  },
+  getters: {
+    // ... getters go here
+  },
+  actions: {
+    //... actions go here
+  },
+});
+```
+
+Then use the options' property in the plugin to exist if the property isn't true:
+
+```javascript
+import { reactive } from 'vue';
+
+export function MyPiniaPlugin({ pinia, app, store, options }) {
+  if (!options.enabledPlugin) return;
+
+  const someData = reactive([]);
+  const otherData = reactive([]);
+
+  const method1 = () => {
+    // custom logic goes here
+  };
+
+  const method2 = () => {
+    // custom logic goes here
+  };
+
+  store.$subscribe((mutation, state) => {
+    // logic to mutate state
+  });
+
+  return {
+    someData,
+    otherData,
+    method1,
+    method2,
+  };
+}
+
+```
+
+Read [more in the docs](https://pinia.vuejs.org/core-concepts/plugins.html).
+
 ## Conclusion
 
 What did I learn that is better in Pinia:
