@@ -1,12 +1,25 @@
 <script setup>
-  import TheHeader from "@/components/TheHeader.vue";
-  import ProductCard from "@/components/ProductCard.vue";
-  import { useProductStore } from "./stores/ProductStore";
-  import { useCartStore } from "./stores/CartStore";
+    import TheHeader from "@/components/TheHeader.vue";
+    import ProductCard from "@/components/ProductCard.vue";
+    import { useProductStore } from "./stores/ProductStore";
+    import { useCartStore } from "./stores/CartStore";
 
-  const productStore = useProductStore();
-  const cartStore = useCartStore();
-  productStore.fill();
+    const productStore = useProductStore();
+    const cartStore = useCartStore();
+  /**
+   *
+   */
+    cartStore.$onAction(({name, store, args, after, onError }) => {
+      if (name === "addToCart"){
+        after(() => {
+          console.log("onAction", args[0]);
+        });
+        onError((err) => {
+          console.error("onError", err);
+        })
+      }
+    })
+    productStore.fill();
 </script>
 
 <template>
