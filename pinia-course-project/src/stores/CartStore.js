@@ -3,6 +3,7 @@ import { groupBy } from 'lodash';
 import { useAuthUserStore } from './AuthUserStore';
 
 export const useCartStore = defineStore('CartStore', {
+  historyEnabled: true,
   //state
   state: () => {
     return {
