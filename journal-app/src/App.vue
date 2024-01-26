@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { provide, inject, reactive } from "vue";
 import TheHeader from "@/components/TheHeader.vue";
-import EntryEditor from "./components/EntryEditor.vue";
+import EntryEditor from "@/components/EntryEditor.vue";
 import EntryCard from "@/components/EntryCard.vue";
 import type User from "@/types/User";
-import JournalEntry from "./types/JournalEntry";
-
+import JournalEntry from "@/types/JournalEntry";
+import { userInjectionKey } from "@/injectKeys";
+const entries = reactive<JournalEntry[]>([]);
 const user: User = reactive({
   id: 1,
   username: "Jeremiel",
   settings: [],
 });
 
-const entries = reactive<JournalEntry[]>([]);
+//hooks
+provide(userInjectionKey, user);
+
+//methods
 const handleAddEntry = (entry: JournalEntry) => {
   entries.unshift(entry);
 };
