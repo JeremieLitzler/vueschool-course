@@ -236,6 +236,6 @@ createApp(App).directive('close', clickCloseDirective).mount('#app');
 
 ## Conclusion
 
-As the docs say, don't use custom directive for everything:
+As [the docs say](https://vuejs.org/guide/reusability/custom-directives.html#introduction), don't use custom directive for everything:
 
 > Custom directives should only be used when the desired functionality can only be achieved via direct DOM manipulation. Prefer declarative templating using built-in directives such as `v-bind` when possible because they are more efficient and server-rendering friendly.
