@@ -13,6 +13,13 @@
     const speedName = binding.arg || 'normal';
     const speed = speedsMs[speedName];
     const colors =  binding.value;
+
+    if(binding.modifiers.underline) {
+      element.style.textDecoration = "underline";
+    }
+    if(binding.modifiers.italic) {
+      element.style.fontStyle = "italic";
+    }
     setInterval(() => {
       element.style.color = colors[i];
       i++;
@@ -26,5 +33,5 @@
 </script>
 
 <template>
-  <h1 v-color:slow="colorsPickerArr">My title</h1>
+  <h1 v-color:slow.italic="colorsPickerArr">My title</h1>
 </template>
