@@ -24,7 +24,7 @@ const handleAddEntry = (entry: JournalEntry) => {
     <EntryEditor @@create="handleAddEntry" />
     <ul>
       <li v-for="entry in entries" :key="entry.id">
-        <EntryCard />
+        <EntryCard :entry="entry" />
       </li>
     </ul>
   </main>
