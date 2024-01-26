@@ -6,6 +6,7 @@ import EmojiField from "@/components/EmojiField.vue";
 import ArrowCircleRight from "@/assets/icons/arrow-circle-right.svg";
 import type Emoji from "@/types/Emoji";
 
+const MAX_CHARS = 300;
 const entryMessage = ref("");
 const entryMessageLength = computed(() => entryMessage.value.length);
 const emoji: Ref<Emoji | null> = ref(null);
@@ -14,12 +15,12 @@ const emoji: Ref<Emoji | null> = ref(null);
   <form class="entry-form" @submit.prevent>
     <textarea
       v-model="entryMessage"
-      maxlength="280"
+      :maxlength="MAX_CHARS"
       placeholder="New Journal Entry for danielkelly_io"
     ></textarea>
     <EmojiField v-model="emoji" />
     <div class="entry-form-footer">
-      <span>{{ entryMessageLength }} / 280</span>
+      <span>{{ entryMessageLength }} / {{ MAX_CHARS }}</span>
       <button>Remember <ArrowCircleRight width="20" /></button>
     </div>
   </form>
