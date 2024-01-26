@@ -21,7 +21,7 @@ const injectUser = inject(userInjectionKey);
     <div class="entry-footer">
       <DateDisplay :date="entry.createdAt" class="mr-2" />
       |
-      <span class="ml-2">{{ injectUser?.username }}</span>
+      <span class="ml-2">{{ injectUser?.username || "Anonymous" }}</span>
     </div>
   </div>
 </template>
