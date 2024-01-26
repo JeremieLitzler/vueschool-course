@@ -5,32 +5,38 @@ import type { Ref } from "vue";
 import EmojiField from "@/components/EmojiField.vue";
 import ArrowCircleRight from "@/assets/icons/arrow-circle-right.svg";
 import type Emoji from "@/types/Emoji";
+import JournalEntry from "@/types/JournalEntry";
 
 defineEmits<{
-  (
-    event: "@create",
-    entry: { entryMessage: string; emoji: Emoji | null },
-  ): void;
+  (event: "@create", entry: JournalEntry): void;
 }>();
 
 const MAX_CHARS = 300;
-const entryMessage = ref("");
-const entryMessageLength = computed(() => entryMessage.value.length);
+const body = ref("");
+const bodyLength = computed(() => body.value.length);
 const emoji: Ref<Emoji | null> = ref(null);
 </script>
 <template>
   <form
     class="entry-form"
-    @submit.prevent="$emit('@create', { entryMessage, emoji })"
+    @submit.prevent="
+      $emit('@create', {
+        body,
+        emoji,
+        createdAt: new Date(),
+        userId: 1,
+        id: Math.random(),
+      })
+    "
   >
     <textarea
-      v-model="entryMessage"
+      v-model="body"
       :maxlength="MAX_CHARS"
       placeholder="New Journal Entry for danielkelly_io"
     ></textarea>
     <EmojiField v-model="emoji" />
     <div class="entry-form-footer">
-      <span>{{ entryMessageLength }} / {{ MAX_CHARS }}</span>
+      <span>{{ bodyLength }} / {{ MAX_CHARS }}</span>
       <button>Remember <ArrowCircleRight width="20" /></button>
     </div>
   </form>
