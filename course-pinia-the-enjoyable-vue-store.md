@@ -475,4 +475,4 @@ What did I learn that is better in Pinia:
 - it is easy to extend
 - it is easy to manage undo and redo thanks state subscription.
 
-Thanks to the VueSchool team for the course and the geate examples.
+Thanks to the VueSchool team for the course and the geate examples. 
