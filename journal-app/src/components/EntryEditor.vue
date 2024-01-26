@@ -6,7 +6,12 @@ import EmojiField from "@/components/EmojiField.vue";
 import ArrowCircleRight from "@/assets/icons/arrow-circle-right.svg";
 import type Emoji from "@/types/Emoji";
 
-defineEmits(["@addEntry"]);
+defineEmits<{
+  (
+    event: "@create",
+    entry: { entryMessage: string; emoji: Emoji | null },
+  ): void;
+}>();
 
 const MAX_CHARS = 300;
 const entryMessage = ref("");
@@ -16,7 +21,7 @@ const emoji: Ref<Emoji | null> = ref(null);
 <template>
   <form
     class="entry-form"
-    @submit.prevent="$emit('@addEntry', { entryMessage, emoji })"
+    @submit.prevent="$emit('@create', { entryMessage, emoji })"
   >
     <textarea
       v-model="entryMessage"

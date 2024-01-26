@@ -4,18 +4,26 @@ import TheHeader from "@/components/TheHeader.vue";
 import EntryEditor from "./components/EntryEditor.vue";
 import EntryCard from "@/components/EntryCard.vue";
 import type User from "@/types/User";
+import Emoji from "./types/Emoji";
 
 const user: User = reactive({
   id: 1,
   username: "Jeremiel",
   settings: [],
 });
+
+const handleAddEntry = (entry: {
+  entryMessage: string;
+  emoji: Emoji | null;
+}) => {
+  console.log(entry);
+};
 </script>
 
 <template>
   <main class="container m-auto p-10">
     <TheHeader />
-    <EntryEditor />
+    <EntryEditor @@create="handleAddEntry" />
     <ul>
       <li>
         <EntryCard />
