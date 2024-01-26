@@ -83,3 +83,11 @@ See [this lesson](https://vueschool.io/lessons/vue-fundamentals-capi-computed-pr
 I find that the Options API more structured and the Composition API more flexible.
 
 See [this lesson](https://vueschool.io/lessons/vue-fundamentals-capi-course-conclusion) where I asked the question.
+
+### Event definition
+
+It is recommended in Vue 3 to define the component's events for better documentation how a component should work. It also gives hints to the IDE to make TypeScript work better.
+
+You perform this in the script setup, using the `defineEmits` that takes an array of strings.
+
+Read [more in the docs](https://vuejs.org/guide/components/events.html).
