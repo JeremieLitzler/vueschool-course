@@ -5,19 +5,6 @@
 
 <script setup>
   const handleClickOutside = () => alert("You clicked outside");
-  const vClose = {
-      mounted(element, binding) {
-          element.__ClickOutsideHandler__ = (event) => {
-              if (!(element === event.target || element.contains(event.target))) {
-                  binding.value(event);
-              };
-          }
-          document.body.addEventListener("click", element.__ClickOutsideHandler__)
-      },
-      unmounted(element) {
-          document.body.removeEventListener("click", element.__ClickOutsideHandler__);
-      }
-  }
 </script>
 <style scoped>
   .box {
