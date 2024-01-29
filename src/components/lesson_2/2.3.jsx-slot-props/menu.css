@@ -1,0 +1,46 @@
+:root {
+  --main-color:rgb(0, 153, 24);
+}
+[data-part="content"] {
+  background: white;
+  color: rgb(53, 53, 53);
+  padding: 0.5rem 0;
+  border-radius: 5px;
+  box-shadow: 1px 5px 12px 0px rgba(132, 132, 132, 0.43);
+  margin: 0.2rem 0;
+}
+
+[data-part="trigger"] {
+  background: var(--main-color);
+  font-weight: bold;
+}
+
+[data-part="content"]:focus {
+  outline: none;
+}
+
+li {
+  list-style: none;
+  padding: 0.5rem 0;
+  transition: all 0.1s ease-in-out;
+  padding: 0.5rem 1rem;
+  
+}
+
+li:hover, li[data-focus=""] {
+  background: var(--main-color);
+  color: white;
+  cursor: pointer;
+}
+
+li:hover > span.active {
+  color: white;
+}
+li:active {
+  background: rgb(1, 94, 15);
+}
+
+.active {
+  color: var(--main-color);
+  font-weight: bold;
+}
