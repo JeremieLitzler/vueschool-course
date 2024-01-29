@@ -1,47 +1,13 @@
-# Projects and notes with VueSchool courses
+# VueSchool Functional Components
 
-## [Prerequisites](part-prerequisites.md)
+## Installation
 
-## [Initialize a Vue project](part-init-vue-project.md)
+Run `npm install` or `yarn` to install all dependencies.
 
-## [Must read documentation](part-docs-must-read.md)
+### Run Server
 
-## Notes
+To run the server and see the app in action run
 
-### [Fundamentals](module-fundamentals.md)
-
-### [Form validation, with Vuelidate](module-vuejs-form-validation.md)
-
-### [VueJS Components Fundamentals](module-vuejs-component-fundamentals.md)
-
-### [VueJS 3 Components Fundamentals](module-vuejs3-component-fundamentals.md)
-
-### [Single File Components](module-single-file-components.md)
-
-### Routing
-
-#### How to lazy load routes with Vue Router
-
-It is is done with Webpack.
-
-It can be done for the routes or within components having sub-components.
-
-For a route, it looks like this:
-
-```javascript
-  {
-    path: '/a-route',
-    name: 'a-route',
-    component: () =>
-      import(/* webpackChunkName: "a-route" */ '../views/PageSomething.vue'),
-  },
-
-```
-
-Webpack will generate a `a-route.js` file that is loaded only when the route is browsed to.
-
-For a component, we use the same techique the parent component:
-
-```javascript
-
+```shell
+$ npm run serve
 ```
