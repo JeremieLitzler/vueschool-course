@@ -1,47 +1,52 @@
-# Projects and notes with VueSchool courses
+# vsc-with-vue3
 
-## [Prerequisites](part-prerequisites.md)
+This template should help get you started developing with Vue 3 in Vite.
 
-## [Initialize a Vue project](part-init-vue-project.md)
+## Recommended IDE Setup
 
-## [Must read documentation](part-docs-must-read.md)
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Notes
+## Type Support for `.vue` Imports in TS
 
-### [Fundamentals](module-fundamentals.md)
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-### [Form validation, with Vuelidate](module-vuejs-form-validation.md)
+If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
 
-### [VueJS Components Fundamentals](module-vuejs-component-fundamentals.md)
+1. Disable the built-in TypeScript Extension
+   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-### [VueJS 3 Components Fundamentals](module-vuejs3-component-fundamentals.md)
+## Customize configuration
 
-### [Single File Components](module-single-file-components.md)
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-### Routing
+## Project Setup
 
-#### How to lazy load routes with Vue Router
-
-It is is done with Webpack.
-
-It can be done for the routes or within components having sub-components.
-
-For a route, it looks like this:
-
-```javascript
-  {
-    path: '/a-route',
-    name: 'a-route',
-    component: () =>
-      import(/* webpackChunkName: "a-route" */ '../views/PageSomething.vue'),
-  },
-
+```sh
+npm install
 ```
 
-Webpack will generate a `a-route.js` file that is loaded only when the route is browsed to.
+### Compile and Hot-Reload for Development
 
-For a component, we use the same techique the parent component:
+```sh
+npm run dev
+```
 
-```javascript
+### Type-Check, Compile and Minify for Production
 
+```sh
+npm run build
+```
+
+### Run Unit Tests with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:unit
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
 ```

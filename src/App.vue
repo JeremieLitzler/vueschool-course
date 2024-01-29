@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+import TheWelcome from './components/TheWelcome.vue';
+import { computed, ref } from 'vue';
+const a = ref(1);
+const b = ref(2);
+const c = computed(() => a.value + b.value);
+async function handleClick() {
+  console.log('clicked handleClick');
 
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/');
+  const posts = await res.json();
+  posts.forEach((post) => {
+    if (post) {
+    }
+  });
+}
+</script>
 <template>
   <header>
+    <button @click="handleClick">Get posts</button>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
+    <TheWelcome />
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
 
