@@ -10,6 +10,8 @@ This means that the view instance is not available in a functionnal component, a
 
 > In more plain English, this means that the component does not support reactivity and cannot make a reference to itself through the this keyword.
 
+## What, why, when and how
+
 I like [this free article](https://medium.com/js-dojo/vue-js-functional-components-what-why-and-when-439cfaa08713) from Vue.js Developers publication on Medium.
 
 It is a pretty complete article.
