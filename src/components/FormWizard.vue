@@ -20,7 +20,7 @@
       <button @click="goBack" v-if="currentStepNumber > 1" class="btn-outlined">
         Back
       </button>
-      <button @click="goNext" class="btn">Next</button>
+      <button :disabled="!canGoNext" @click="goNext" class="btn">Next</button>
     </div>
 
     <pre><code>{{form}}</code></pre>
@@ -54,6 +54,7 @@ export default {
         chocolate: false,
         otherTreat: false,
       },
+      canGoNext: false,
     };
   },
   computed: {
@@ -67,9 +68,11 @@ export default {
     },
     goNext() {
       this.currentStepNumber++;
+      this.canGoNext = false;
     },
     processStep(stepData) {
       Object.assign(this.form, stepData);
+      this.canGoNext = true;
     },
   },
 };
