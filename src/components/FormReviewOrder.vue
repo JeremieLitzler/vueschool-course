@@ -2,9 +2,7 @@
   <div>
     <h1 class="title">Confirm your order</h1>
 
-    <h2 class="subtitle">
-      We're almost there!
-    </h2>
+    <h2 class="subtitle">We're almost there!</h2>
 
     <div class="summary">
       <h3>Subscription</h3>
@@ -15,42 +13,44 @@
 
       <div class="plans">
         <div class="plan active-plan">
-          <div class="weight">
-            PLAN WEIGHT
-          </div>
+          <div class="weight">PLAN WEIGHT</div>
 
           <div class="description">
-            <span class="title">
-              PLAN NAME
-            </span>
-            <span class="description">
-              PLAN DESC
-            </span>
+            <span class="title"> PLAN NAME </span>
+            <span class="description"> PLAN DESC </span>
           </div>
 
           <div class="price">
             <span class="dollar-sign">$</span>
-            <span class="number">{{totalPrice}}</span>
+            <span class="number">{{ totalPrice }}</span>
           </div>
         </div>
       </div>
 
-      <h3>
-        Level up your box
-      </h3>
+      <h3>Level up your box</h3>
 
-      <p class="description">
-        Treat yourself by leveling up your monthly box
-      </p>
+      <p class="description">Treat yourself by leveling up your monthly box</p>
 
-      <div class="options">
+      <div @change="setReviewOrderData" class="options">
         <div class="option">
-          <input v-model="form.chocolate" type="checkbox" value="chocolate" id="chocolate">
-          <label for="chocolate">4 pcs. Single Origin Chocolate (+$4/month)</label>
+          <input
+            v-model="form.chocolate"
+            type="checkbox"
+            value="chocolate"
+            id="chocolate"
+          />
+          <label for="chocolate"
+            >4 pcs. Single Origin Chocolate (+$4/month)</label
+          >
         </div>
 
         <div class="option">
-          <input v-model="form.otherTreat" type="checkbox" value="chocolate" id="other_treat">
+          <input
+            v-model="form.otherTreat"
+            type="checkbox"
+            value="chocolate"
+            id="other_treat"
+          />
           <label for="other_treat">Another delicious treat (+$2/month)</label>
         </div>
       </div>
@@ -65,9 +65,7 @@
 
         <div class="w-1/3">
           <h3>RECIPIENT</h3>
-          <p class="leading-normal">
-            ADDRESS
-          </p>
+          <p class="leading-normal">ADDRESS</p>
         </div>
       </div>
     </div>
@@ -75,23 +73,29 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        form: {
-          chocolate: false,
-          otherTreat: false
-        }
-      }
+export default {
+  data() {
+    return {
+      form: {
+        chocolate: false,
+        otherTreat: false,
+      },
+    };
+  },
+  computed: {
+    totalPrice() {
+      return 0;
     },
-    computed: {
-      totalPrice () {
-        return 0
-      }
-    }
-  }
+  },
+  methods: {
+    setReviewOrderData() {
+      this.$emit("setReviewOrderData", {
+        chocolate: this.form.chocolate,
+        otherTreat: this.form.otherTreat,
+      });
+    },
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

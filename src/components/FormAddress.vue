@@ -6,11 +6,10 @@
       Where should we send your freshly roasted coffee beans?
     </h2>
 
-    <form class="form">
+    <form @input="setAddress" class="form">
       <div class="form-group">
         <label class="form-label" for="delivery_name">Name</label>
         <input
-          @blur="setAddress"
           v-model="$v.form.recipient.$model"
           type="text"
           placeholder="Recipients Name"
@@ -25,7 +24,6 @@
       <div class="form-group">
         <label class="form-label" for="address">Address</label>
         <textarea
-          @blur="setAddress"
           v-model="$v.form.address.$model"
           placeholder="London Street 470978 New England"
           rows="3"

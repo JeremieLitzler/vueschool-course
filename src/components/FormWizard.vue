@@ -6,7 +6,10 @@
       @setUserDetails="processStep"
     />
     <FormAddress v-if="currentStepNumber === 3" @setAddress="processStep" />
-    <FormReviewOrder v-if="currentStepNumber === 4" />
+    <FormReviewOrder
+      v-if="currentStepNumber === 4"
+      @setReviewOrderData="processStep"
+    />
 
     <div class="progress-bar">
       <div :style="`width: ${progress}%;`"></div>

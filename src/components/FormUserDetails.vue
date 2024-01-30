@@ -6,11 +6,10 @@
       Create an account or log in to order your liquid gold subscription
     </h2>
 
-    <form class="form">
+    <form @input="setUserDetails" class="form">
       <div class="form-group">
         <label class="form-label" for="email">Email</label>
         <input
-          @blur="setUserDetails"
           type="text"
           v-model="$v.form.email.$model"
           placeholder="your@email.com"
@@ -31,7 +30,6 @@
       <div class="form-group">
         <label class="form-label" for="password">Password</label>
         <input
-          @blur="setUserDetails"
           v-model="$v.form.password.$model"
           type="password"
           placeholder="Super Secret Password"
@@ -49,7 +47,6 @@
       <div class="form-group">
         <label class="form-label" for="name">Name</label>
         <input
-          @blur="setUserDetails"
           v-model="$v.form.name.$model"
           type="text"
           placeholder="What should we call you?"
