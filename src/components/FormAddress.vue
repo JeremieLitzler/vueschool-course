@@ -9,13 +9,29 @@
     <form class="form">
       <div class="form-group">
         <label class="form-label" for="delivery_name">Name</label>
-        <input v-model="$v.form.recipient.$model" type="text" placeholder="Recipients Name" class="form-control" id="delivery_name">
-        <div v-if="$v.form.recipient.$error" class="error">field is required</div>
+        <input
+          @blur="setAddress"
+          v-model="$v.form.recipient.$model"
+          type="text"
+          placeholder="Recipients Name"
+          class="form-control"
+          id="delivery_name"
+        />
+        <div v-if="$v.form.recipient.$error" class="error">
+          field is required
+        </div>
       </div>
 
       <div class="form-group">
         <label class="form-label" for="address">Address</label>
-        <textarea v-model="$v.form.address.$model" placeholder="London Street 470978 New England" rows="3" class="form-control" id="address"></textarea>
+        <textarea
+          @blur="setAddress"
+          v-model="$v.form.address.$model"
+          placeholder="London Street 470978 New England"
+          rows="3"
+          class="form-control"
+          id="address"
+        ></textarea>
         <div v-if="$v.form.address.$error" class="error">field is required</div>
       </div>
     </form>
@@ -23,29 +39,37 @@
 </template>
 
 <script>
-  import {required} from 'vuelidate/lib/validators'
-  export default {
-    data () {
-      return {
-        form: {
-          address: null,
-          recipient: null
-        }
+import { required } from "vuelidate/lib/validators";
+export default {
+  data() {
+    return {
+      form: {
+        address: null,
+        recipient: null,
+      },
+    };
+  },
+  validations: {
+    form: {
+      address: {
+        required,
+      },
+      recipient: {
+        required,
+      },
+    },
+  },
+  methods: {
+    setAddress() {
+      if (!this.$v.$invalid) {
+        this.$emit("setAddress", {
+          address: this.form.address,
+          recipient: this.form.recipient,
+        });
       }
     },
-    validations: {
-      form: {
-        address: {
-          required
-        },
-        recipient: {
-          required
-        }
-      }
-    }
-  }
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
