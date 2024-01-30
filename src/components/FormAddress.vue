@@ -6,31 +6,35 @@
       Where should we send your freshly roasted coffee beans?
     </h2>
 
-    <form class="form">
-      <div class="form-group">
-        <label class="form-label" for="delivery_name">Name</label>
+    <form class="addressForm">
+      <div class="addressForm-group">
+        <label class="addressForm-label" for="delivery_name">Name</label>
         <input
-          v-model="$v.form.recipient.$model"
+          @blur="submitAddressData"
+          v-model="addressForm.recipient"
           type="text"
           placeholder="Recipients Name"
-          class="form-control"
+          class="addressForm-control"
           id="delivery_name"
         />
-        <div v-if="$v.form.recipient.$error" class="error">
+        <div v-if="v$.addressForm.recipient.$error" class="error">
           field is required
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="address">Address</label>
+      <div class="addressForm-group">
+        <label class="addressForm-label" for="address">Address</label>
         <textarea
-          v-model="$v.form.address.$model"
+          @blur="submitAddressData"
+          v-model="addressForm.address"
           placeholder="London Street 470978 New England"
           rows="3"
-          class="form-control"
+          class="addressForm-control"
           id="address"
         ></textarea>
-        <div v-if="$v.form.address.$error" class="error">field is required</div>
+        <div v-if="v$.addressForm.address.$error" class="error">
+          field is required
+        </div>
       </div>
     </form>
   </div>
@@ -41,13 +45,13 @@ import { ref } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 
-const form = ref({
+const addressForm = ref({
   address: null,
   recipient: null,
 });
 
 const rules = {
-  form: {
+  addressForm: {
     address: {
       required,
     },
@@ -56,7 +60,13 @@ const rules = {
     },
   },
 };
-const $v = useVuelidate(rules, form);
+
+const v$ = useVuelidate(rules, addressForm);
+
+const emit = defineEmits(["setAddress"]);
+const submitAddressData = () => {
+  emit("setAddress", addressForm.value);
+};
 </script>
 
 <style scoped></style>

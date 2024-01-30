@@ -10,19 +10,24 @@
       <div class="form-group">
         <label class="form-label" for="email">Email</label>
         <input
+          @blur="submitUserData"
           type="text"
-          v-model="$v.form.email.$model"
+          v-model="v$.userForm.email.$model"
           placeholder="your@email.com"
           class="form-control"
           id="email"
         />
         <div
-          v-if="$v.form.email.$error && !$v.form.email.required"
+          v-if="v$.userForm.email.$error && !v$.userForm.email.required"
           class="error"
         >
           email is required
         </div>
-        <div v-if="$v.form.email.$error && !$v.form.email.email" class="error">
+        {{ v$.userForm.email }}
+        <div
+          v-if="v$.userForm.email.$error && !v$.userForm.email.email"
+          class="error"
+        >
           email is invalid
         </div>
       </div>
@@ -30,14 +35,17 @@
       <div class="form-group">
         <label class="form-label" for="password">Password</label>
         <input
-          v-model="$v.form.password.$model"
+          @blur="submitUserData"
+          v-model="v$.userForm.password.$model"
           type="password"
           placeholder="Super Secret Password"
           class="form-control"
           id="password"
         />
+        {{ v$.userForm.password }}
+
         <div
-          v-if="$v.form.password.$error && !$v.form.password.required"
+          v-if="!v$.userForm.password.$error && !v$.userForm.password.required"
           class="error"
         >
           password is required
@@ -47,13 +55,16 @@
       <div class="form-group">
         <label class="form-label" for="name">Name</label>
         <input
-          v-model="$v.form.name.$model"
+          @blur="submitUserData"
+          v-model="v$.userForm.name.$model"
           type="text"
           placeholder="What should we call you?"
           class="form-control"
           id="name"
         />
-        <div v-if="$v.form.name.$error" class="error">name is required</div>
+        {{ v$.userForm.name }}
+
+        <div v-if="v$.userForm.name.$error" class="error">name is required</div>
       </div>
     </form>
   </div>
@@ -64,14 +75,14 @@ import { ref } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 
-const form = ref({
+const userForm = ref({
   email: null,
   password: null,
   name: null,
 });
 
 const rules = {
-  form: {
+  userForm: {
     email: {
       required,
       email,
@@ -84,8 +95,18 @@ const rules = {
     },
   },
 };
-const $v = useVuelidate(rules, form);
-console.table($v.value.form);
+const v$ = useVuelidate(rules, userForm);
+
+const emit = defineEmits(["setUserInfo"]);
+const submitUserData = () => {
+  console.log("v$ > ", v$);
+  console.log("v$.$invalid > ", v$.$invalid);
+  if (!v$.$invalid) {
+    emit("setUserInfo", userForm.value);
+  } else {
+    console.log("Form is invalid...");
+  }
+};
 </script>
 
 <style scoped></style>

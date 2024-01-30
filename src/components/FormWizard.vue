@@ -1,8 +1,11 @@
 <template>
   <div>
-    <FormPlanPicker v-if="currentStepNumber === 1" />
-    <FormUserDetails v-if="currentStepNumber === 2" />
-    <FormAddress v-if="currentStepNumber === 3" />
+    <FormPlanPicker v-if="currentStepNumber === 1" @pickPlan="processStep" />
+    <FormUserDetails
+      v-if="currentStepNumber === 2"
+      @setUserInfo="processStep"
+    />
+    <FormAddress v-if="currentStepNumber === 3" @setAddress="processStep" />
     <FormReviewOrder v-if="currentStepNumber === 4" />
 
     <div class="progress-bar">
@@ -41,12 +44,16 @@ const form = ref({
   otherTreat: false,
 });
 
-const progress = computed(() => (currentStepNumber / length) * 100);
+const progress = computed(() => (currentStepNumber.value / length.value) * 100);
 
 const goBack = () => {
   currentStepNumber.value--;
 };
 const goNext = () => {
   currentStepNumber.value++;
+};
+
+const processStep = (stepData) => {
+  Object.assign(form.value, stepData);
 };
 </script>

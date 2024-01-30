@@ -11,7 +11,9 @@
         v-for="plan in plans"
         :key="plan.price"
         @click="pickPlan(plan)"
-        :class="{ 'active-plan': selectedPlan === plan }"
+        :class="{
+          'active-plan': isSelected(plan),
+        }"
         class="plan"
       >
         <div class="weight">
@@ -31,9 +33,9 @@
         </div>
       </div>
     </div>
-    <!-- <div v-if="$v.selectedPlan.$error" class="error">
-      you should pick a plan to continue
-    </div> -->
+    <div v-if="$v.selectedPlan.$error" class="error">
+      You should pick a plan to continue
+    </div>
   </div>
 </template>
 
@@ -42,8 +44,10 @@ import { ref } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 
-const selectedPlan = ref(1);
-const plans = ref([
+const selectedPlan = ref(null);
+const isSelected = (plan) =>
+  selectedPlan.value && selectedPlan.value.price === plan.price;
+const plans = [
   {
     price: 19,
     weight: "250g",
@@ -64,14 +68,17 @@ const plans = ref([
     description:
       "Two bags of two different types of freshly roasted coffee every month.",
   },
-]);
+];
 const rules = {
   selectedPlan: {
     required,
   },
 };
-const $v = useVuelidate(rules);
+const emit = defineEmits(["pickPlan"]);
+
+const $v = useVuelidate(rules, selectedPlan);
 const pickPlan = (plan) => {
-  $v.selectedPlan = plan;
+  selectedPlan.value = plan;
+  emit("pickPlan", { plan });
 };
 </script>
