@@ -1,47 +1,7 @@
-# Projects and notes with VueSchool courses
+# Vue 3 + Vite
 
-## [Prerequisites](part-prerequisites.md)
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## [Initialize a Vue project](part-init-vue-project.md)
+## Recommended IDE Setup
 
-## [Must read documentation](part-docs-must-read.md)
-
-## Notes
-
-### [Fundamentals](module-fundamentals.md)
-
-### [Form validation, with Vuelidate](module-vuejs-form-validation.md)
-
-### [VueJS Components Fundamentals](module-vuejs-component-fundamentals.md)
-
-### [VueJS 3 Components Fundamentals](module-vuejs3-component-fundamentals.md)
-
-### [Single File Components](module-single-file-components.md)
-
-### Routing
-
-#### How to lazy load routes with Vue Router
-
-It is is done with Webpack.
-
-It can be done for the routes or within components having sub-components.
-
-For a route, it looks like this:
-
-```javascript
-  {
-    path: '/a-route',
-    name: 'a-route',
-    component: () =>
-      import(/* webpackChunkName: "a-route" */ '../views/PageSomething.vue'),
-  },
-
-```
-
-Webpack will generate a `a-route.js` file that is loaded only when the route is browsed to.
-
-For a component, we use the same techique the parent component:
-
-```javascript
-
-```
+- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
