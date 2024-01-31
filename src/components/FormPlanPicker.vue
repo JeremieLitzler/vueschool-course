@@ -76,12 +76,11 @@ export default {
   },
   methods: {
     pickPlan(plan) {
-      // if (this.$v.$invalid) {
-      //   throw new Error("Plan wasn't picked...");
-      // } else {
       this.selectedPlan = plan;
-      this.$emit("sendStepData", { plan });
-      // }
+      this.$emit("sendStepData", {
+        data: { plan },
+        isValid: true,
+      });
     },
   },
 };

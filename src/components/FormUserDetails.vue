@@ -87,12 +87,14 @@ export default {
   },
   methods: {
     setUserDetails() {
-      if (!this.$v.$invalid)
-        this.$emit("sendStepData", {
+      this.$emit("sendStepData", {
+        data: {
           email: this.form.email,
           password: this.form.password,
           name: this.form.name,
-        });
+        },
+        isValid: !this.$v.$invalid,
+      });
     },
   },
 };

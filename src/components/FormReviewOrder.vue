@@ -92,7 +92,6 @@ export default {
   },
   computed: {
     totalPrice() {
-      console.log("FormReviewOrder", this.wizardData);
       let total = this.wizardData.plan.price;
       if (this.form.chocolate) {
         total += this.chocolatePrice;
@@ -106,8 +105,11 @@ export default {
   methods: {
     setReviewOrderData() {
       this.$emit("setReviewOrderData", {
-        chocolate: this.form.chocolate,
-        otherTreat: this.form.otherTreat,
+        data: {
+          chocolate: this.form.chocolate,
+          otherTreat: this.form.otherTreat,
+        },
+        isValid: true,
       });
     },
   },

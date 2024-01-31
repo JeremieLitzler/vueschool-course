@@ -1,10 +1,12 @@
 <template>
   <div>
-    <component
-      :is="steps[currentStepIndex]"
-      @sendStepData="processStep"
-      :wizard-data="form"
-    />
+    <KeepAlive>
+      <component
+        :is="steps[currentStepIndex]"
+        @sendStepData="processStep"
+        :wizard-data="form"
+      />
+    </KeepAlive>
 
     <div class="progress-bar">
       <div :style="`width: ${progress}%;`"></div>
@@ -69,20 +71,32 @@ export default {
     progress() {
       return (this.currentStepNumber / this.length) * 100;
     },
+    isUserDataFilled() {
+      return this.form.email && this.form.name && this.form.password;
+    },
+    isAddressFilled() {
+      return this.form.recipient && this.form.address;
+    },
+    isLastStep() {
+      return this.steps.length - 1 === this.currentStepIndex;
+    },
+    isDataFilled() {
+      return this.isUserDataFilled || this.isAddressFilled;
+    },
   },
   methods: {
     goBack() {
       this.currentStepNumber--;
+      this.enableNextStep = true;
     },
     goNext() {
       this.currentStepNumber++;
-      this.enableNextStep = false;
-      console.log("goNext > enableNextStep", this.enableNextStep);
+      this.enableNextStep = this.isLastStep ? false : this.isDataFilled;
     },
-    processStep(stepData) {
-      Object.assign(this.form, stepData);
-      this.enableNextStep = true;
-      console.log("processStep > enableNextStep", this.enableNextStep);
+    processStep({ data, isValid }) {
+      Object.assign(this.form, data);
+      this.enableNextStep = isValid;
+      console.log("processStep > ", isValid);
     },
   },
 };

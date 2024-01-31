@@ -65,12 +65,13 @@ export default {
   },
   methods: {
     setAddress() {
-      if (!this.$v.$invalid) {
-        this.$emit("sendStepData", {
+      this.$emit("sendStepData", {
+        data: {
           address: this.form.address,
           recipient: this.form.recipient,
-        });
-      }
+        },
+        isValid: !this.$v.$invalid,
+      });
     },
   },
 };
