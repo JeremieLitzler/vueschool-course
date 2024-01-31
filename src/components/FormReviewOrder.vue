@@ -92,11 +92,12 @@ export default {
   },
   computed: {
     totalPrice() {
+      console.log("FormReviewOrder", this.wizardData);
       let total = this.wizardData.plan.price;
-      if (this.wizardData.chocolate) {
+      if (this.form.chocolate) {
         total += this.chocolatePrice;
       }
-      if (this.wizardData.otherTreat) {
+      if (this.form.otherTreat) {
         total += this.otherTreatPrice;
       }
       return total;

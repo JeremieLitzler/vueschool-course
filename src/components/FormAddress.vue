@@ -66,7 +66,7 @@ export default {
   methods: {
     setAddress() {
       if (!this.$v.$invalid) {
-        this.$emit("setAddress", {
+        this.$emit("sendStepData", {
           address: this.form.address,
           recipient: this.form.recipient,
         });

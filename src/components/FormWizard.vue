@@ -1,18 +1,8 @@
 <template>
   <div>
-    <FormPlanPicker v-if="currentStepNumber === 1" @setPlan="processStep" />
-    <FormUserDetails
-      v-if="currentStepNumber === 2"
-      @setUserDetails="processStep"
-    />
-    <FormAddress
-      v-if="currentStepNumber === 3"
-      @setAddress="processStep"
-      :wizard-data="form"
-    />
-    <FormReviewOrder
-      v-if="currentStepNumber === 4"
-      @setReviewOrderData="processStep"
+    <component
+      :is="steps[currentStepIndex]"
+      @sendStepData="processStep"
       :wizard-data="form"
     />
 
@@ -25,7 +15,9 @@
       <button @click="goBack" v-if="currentStepNumber > 1" class="btn-outlined">
         Back
       </button>
-      <button :disabled="!canGoNext" @click="goNext" class="btn">Next</button>
+      <button :disabled="!enableNextStep" @click="goNext" class="btn">
+        Next
+      </button>
     </div>
 
     <pre><code>{{form}}</code></pre>
@@ -48,7 +40,12 @@ export default {
   data() {
     return {
       currentStepNumber: 1,
-      length: 4,
+      steps: [
+        "FormPlanPicker",
+        "FormUserDetails",
+        "FormAddress",
+        "FormReviewOrder",
+      ],
       form: {
         plan: null,
         email: null,
@@ -59,10 +56,16 @@ export default {
         chocolate: false,
         otherTreat: false,
       },
-      canGoNext: false,
+      enableNextStep: false,
     };
   },
   computed: {
+    currentStepIndex() {
+      return this.currentStepNumber - 1;
+    },
+    length() {
+      return this.steps.length;
+    },
     progress() {
       return (this.currentStepNumber / this.length) * 100;
     },
@@ -73,11 +76,13 @@ export default {
     },
     goNext() {
       this.currentStepNumber++;
-      this.canGoNext = false;
+      this.enableNextStep = false;
+      console.log("goNext > enableNextStep", this.enableNextStep);
     },
     processStep(stepData) {
       Object.assign(this.form, stepData);
-      this.canGoNext = true;
+      this.enableNextStep = true;
+      console.log("processStep > enableNextStep", this.enableNextStep);
     },
   },
 };

@@ -88,7 +88,7 @@ export default {
   methods: {
     setUserDetails() {
       if (!this.$v.$invalid)
-        this.$emit("setUserDetails", {
+        this.$emit("sendStepData", {
           email: this.form.email,
           password: this.form.password,
           name: this.form.name,

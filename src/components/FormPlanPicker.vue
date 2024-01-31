@@ -80,7 +80,7 @@ export default {
       //   throw new Error("Plan wasn't picked...");
       // } else {
       this.selectedPlan = plan;
-      this.$emit("setPlan", { plan });
+      this.$emit("sendStepData", { plan });
       // }
     },
   },
