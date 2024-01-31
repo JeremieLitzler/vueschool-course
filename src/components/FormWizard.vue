@@ -2,6 +2,7 @@
   <div>
     <KeepAlive>
       <component
+        ref="currentStep"
         :is="steps[currentStepIndex]"
         @sendStepData="processStep"
         :wizard-data="form"
@@ -91,12 +92,15 @@ export default {
     },
     goNext() {
       this.currentStepNumber++;
-      this.enableNextStep = this.isLastStep ? false : this.isDataFilled;
+      //this.enableNextStep = this.isLastStep ? false : this.isDataFilled;
+      this.$nextTick(() => {
+        this.enableNextStep =
+          this.$refs.currentStep.$v && this.$refs.currentStep.$v.$invalid;
+      });
     },
     processStep({ data, isValid }) {
       Object.assign(this.form, data);
       this.enableNextStep = isValid;
-      console.log("processStep > ", isValid);
     },
   },
 };

@@ -6,7 +6,7 @@
       Create an account or log in to order your liquid gold subscription
     </h2>
 
-    <form @input="setUserDetails" class="form">
+    <form @input="setData" class="form">
       <div class="form-group">
         <label class="form-label" for="email">Email</label>
         <input
@@ -86,7 +86,7 @@ export default {
     },
   },
   methods: {
-    setUserDetails() {
+    setData() {
       this.$emit("sendStepData", {
         data: {
           email: this.form.email,

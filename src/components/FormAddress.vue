@@ -6,7 +6,7 @@
       Where should we send your freshly roasted coffee beans?
     </h2>
 
-    <form @input="setAddress" class="form">
+    <form @input="setData" class="form">
       <div class="form-group">
         <label class="form-label" for="delivery_name">Name</label>
         <input
@@ -64,7 +64,7 @@ export default {
     },
   },
   methods: {
-    setAddress() {
+    setData() {
       this.$emit("sendStepData", {
         data: {
           address: this.form.address,

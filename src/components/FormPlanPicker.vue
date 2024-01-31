@@ -10,7 +10,7 @@
       <div
         v-for="plan in plans"
         :key="plan.price"
-        @click="pickPlan(plan)"
+        @click="setData(plan)"
         :class="{ 'active-plan': selectedPlan === plan }"
         class="plan"
       >
@@ -75,7 +75,7 @@ export default {
     },
   },
   methods: {
-    pickPlan(plan) {
+    setData(plan) {
       this.selectedPlan = plan;
       this.$emit("sendStepData", {
         data: { plan },
