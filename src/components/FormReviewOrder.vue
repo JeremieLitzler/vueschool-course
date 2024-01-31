@@ -102,6 +102,7 @@ export default {
       return total;
     },
   },
+  validations: {},
   methods: {
     setData() {
       this.$emit("setReviewOrderData", {
