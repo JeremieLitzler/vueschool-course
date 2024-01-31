@@ -6,10 +6,11 @@
       Create an account or log in to order your liquid gold subscription
     </h2>
 
-    <form @input="setData" class="form">
+    <form v-if="!loggedIn" @input="setData" class="form">
       <div class="form-group">
         <label class="form-label" for="email">Email</label>
         <input
+          @input="checkUserExists"
           type="text"
           v-model="$v.form.email.$model"
           placeholder="your@email.com"
@@ -27,7 +28,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div v-if="emailCheckedInDb" class="form-group">
         <label class="form-label" for="password">Password</label>
         <input
           v-model="$v.form.password.$model"
@@ -42,9 +43,19 @@
         >
           password is required
         </div>
+        <div
+          v-if="$v.form.password.$error && !$v.form.password.correct"
+          class="error"
+        >
+          password is invalid - try again
+        </div>
       </div>
 
-      <div class="form-group">
+      <div v-if="existingUser" class="form-group">
+        <button @click.prevent="loginUser" class="btn">Login</button>
+      </div>
+
+      <div v-if="emailCheckedInDb && !existingUser" class="form-group">
         <label class="form-label" for="name">Name</label>
         <input
           v-model="$v.form.name.$model"
@@ -56,11 +67,17 @@
         <div v-if="$v.form.name.$error" class="error">name is required</div>
       </div>
     </form>
+    <div v-else class="text-center">
+      Successfully logged in!
+      <a href="#" @click="logUserOff">Not {{ form.name }}?</a>
+    </div>
   </div>
 </template>
 
 <script>
 import { required, email } from "vuelidate/lib/validators";
+import { authenticateUser, checkIfUserExistsInDB } from "../api/index";
+
 export default {
   data() {
     return {
@@ -69,6 +86,10 @@ export default {
         password: null,
         name: null,
       },
+      emailCheckedInDb: false,
+      existingUser: false,
+      wrongPassword: false,
+      loggedIn: false,
     };
   },
   validations: {
@@ -79,6 +100,9 @@ export default {
       },
       password: {
         required,
+        correct() {
+          return !this.wrongPassword;
+        },
       },
       name: {
         required,
@@ -86,6 +110,50 @@ export default {
     },
   },
   methods: {
+    checkUserExists() {
+      if (this.$v.form.email.$invalid) {
+        console.log("checkUserExists > form.email.$invalid = true");
+        this.emailCheckedInDb = false;
+        this.existingUser = false;
+        return;
+      }
+
+      console.log("checkUserExists > form.email.$invalid = false");
+      return checkIfUserExistsInDB(this.form.email)
+        .then(() => {
+          console.log("checkUserExists > run then()");
+          this.existingUser = true;
+          this.emailCheckedInDb = true;
+        })
+        .catch(() => {
+          console.log("checkUserExists > run catch()");
+          this.existingUser = false;
+          this.emailCheckedInDb = true;
+        });
+    },
+    loginUser() {
+      if (this.$v.form.email.$invalid) {
+        return;
+      }
+      this.wrongPassword = false;
+
+      return authenticateUser(this.form.email, this.form.password)
+        .then((user) => {
+          this.form.name = user.name;
+          this.loggedIn = true;
+          this.setData();
+        })
+        .catch(() => (this.wrongPassword = true));
+    },
+    logUserOff() {
+      this.loggedIn = false;
+      this.emailCheckedInDb = false;
+      this.existingUser = false;
+      this.wrongPassword = false;
+      this.form.email = "";
+      this.form.password = "";
+      this.form.name = "";
+    },
     setData() {
       this.$emit("sendStepData", {
         data: {
