@@ -5,10 +5,15 @@
       v-if="currentStepNumber === 2"
       @setUserDetails="processStep"
     />
-    <FormAddress v-if="currentStepNumber === 3" @setAddress="processStep" />
+    <FormAddress
+      v-if="currentStepNumber === 3"
+      @setAddress="processStep"
+      :wizard-data="form"
+    />
     <FormReviewOrder
       v-if="currentStepNumber === 4"
       @setReviewOrderData="processStep"
+      :wizard-data="form"
     />
 
     <div class="progress-bar">
