@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="wizardInProgress">
+    <div v-if="wizardInProgress" v-show="asyncState !== 'pending'">
       <KeepAlive>
         <component
           ref="currentStep"
@@ -44,6 +44,12 @@
         >
       </p>
     </div>
+    <div class="loading-wrapper" v-if="asyncState === 'pending'">
+      <div class="loader">
+        <img src="/spinner.svg" alt="" />
+        <p>Please wait, we're hitting our servers!</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -83,6 +89,7 @@ export default {
         otherTreat: false,
       },
       enableNextStep: false,
+      asyncState: null,
     };
   },
   computed: {
@@ -146,8 +153,10 @@ export default {
       this.enableNextStep = isValid;
     },
     submitOrder() {
+      this.asyncState = "pending";
       postFormToDB(this.form).then(() => {
         console.log("Form submitted", this.form);
+        this.asyncState = "success";
         this.currentStepNumber++;
       });
     },
