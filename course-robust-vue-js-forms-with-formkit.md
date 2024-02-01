@@ -127,7 +127,7 @@ With FornKit, we simply use the exact same component, `<FormKit />` but with the
 </FormKit>
 ```
 
-The `:value` tells FormitKit that it need to bind the `formData` object to the inputs. You declare it in the script setup:
+The `:value` tells FormKit that it need to bind the `formData` object to the inputs. You declare it in the script setup:
 
 ```typescript
 const formData = ref({
