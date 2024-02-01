@@ -53,6 +53,9 @@ export default {
       },
     };
   },
+  activated() {
+    this.form.recipient = this.wizardData.name;
+  },
   validations: {
     form: {
       address: {
