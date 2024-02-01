@@ -3,9 +3,8 @@
     <div v-if="wizardInProgress" v-show="asyncState !== 'pending'">
       <KeepAlive>
         <component
-          ref="currentStep"
+          ref="currentStepComponent"
           :is="steps[currentStepIndex]"
-          @sendStepData="processStep"
           @updateAsyncState="updateAsyncState"
           :wizard-data="form"
         />
@@ -24,11 +23,7 @@
         >
           Back
         </button>
-        <button
-          :disabled="!enableNextStep"
-          @click="nextButtonAction"
-          class="btn"
-        >
+        <button @click="nextButtonAction" class="btn">
           {{ isLastStep ? "Complete order" : "Next" }}
         </button>
       </div>
@@ -89,7 +84,6 @@ export default {
         chocolate: false,
         otherTreat: false,
       },
-      enableNextStep: false,
       asyncState: null,
     };
   },
@@ -128,33 +122,32 @@ export default {
       this.enableNextStep = true;
     },
     nextButtonAction() {
-      if (this.isLastStep) {
-        this.submitOrder();
-      } else {
-        this.goNext();
-      }
+      console.log(
+        "nextButtonAction > this.$refs",
+        this.$refs.currentStepComponent
+      );
+      this.$refs.currentStepComponent
+        .submitStep()
+        .then((data) => {
+          console.log("nextButtonAction > resolve");
+          //update the form data
+          Object.assign(this.form, data);
+          //go to the next step
+          if (this.isLastStep) {
+            this.submitOrder();
+          } else {
+            this.goNext();
+          }
+        })
+        .catch((err) => {
+          //handle the error
+          console.log("nextButtonAction > reject");
+          console.error(err);
+          //going to the next step isn't possible
+        });
     },
     goNext() {
-      console.log("goNext > this.$refs.currentStep", this.$refs.currentStep);
       this.currentStepNumber++;
-      //this.enableNextStep = this.isLastStep ? false : this.isDataFilled;
-      this.$nextTick(() => {
-        console.log(
-          "goNext > nextTick > this.$refs.currentStep",
-          this.$refs.currentStep
-        );
-        console.log(
-          "goNext > nextTick > this.$refs.currentStep.$v.$invalid",
-          this.$refs.currentStep.$v.$invalid
-        );
-        this.enableNextStep =
-          //this.$refs.currentStep.$v &&
-          !this.$refs.currentStep.$v.$invalid;
-      });
-    },
-    processStep({ data, isValid }) {
-      Object.assign(this.form, data);
-      this.enableNextStep = isValid;
     },
     submitOrder() {
       this.asyncState = "pending";

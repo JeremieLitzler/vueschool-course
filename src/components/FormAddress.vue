@@ -6,7 +6,7 @@
       Where should we send your freshly roasted coffee beans?
     </h2>
 
-    <form @input="setData" class="form">
+    <form @input="submitStep" class="form">
       <div class="form-group">
         <label class="form-label" for="delivery_name">Name</label>
         <input
@@ -67,13 +67,19 @@ export default {
     },
   },
   methods: {
-    setData() {
-      this.$emit("sendStepData", {
-        data: {
-          address: this.form.address,
-          recipient: this.form.recipient,
-        },
-        isValid: !this.$v.$invalid,
+    submitStep() {
+      this.$v.$touch(); // to display the error on the parent, we need to touch.
+      return new Promise((resolve, reject) => {
+        if (!this.$v.$invalid) {
+          //resolve if data is valid
+          resolve({
+            address: this.form.address,
+            recipient: this.form.recipient,
+          });
+        } else {
+          //reject if data is invalid
+          reject("Plan not selected");
+        }
       });
     },
   },

@@ -31,7 +31,7 @@
 
       <p class="description">Treat yourself by leveling up your monthly box</p>
 
-      <div @change="setData" class="options">
+      <div class="options">
         <div class="option">
           <input
             v-model="form.chocolate"
@@ -104,13 +104,10 @@ export default {
   },
   validations: {},
   methods: {
-    setData() {
-      this.$emit("setReviewOrderData", {
-        data: {
-          chocolate: this.form.chocolate,
-          otherTreat: this.form.otherTreat,
-        },
-        isValid: true,
+    submitStep() {
+      return Promise.resolve({
+        chocolate: this.form.chocolate,
+        otherTreat: this.form.otherTreat,
       });
     },
   },

@@ -10,7 +10,7 @@
       <div
         v-for="plan in plans"
         :key="plan.price"
-        @click="setData(plan)"
+        @click="pickPlan(plan)"
         :class="{ 'active-plan': selectedPlan === plan }"
         class="plan"
       >
@@ -75,11 +75,19 @@ export default {
     },
   },
   methods: {
-    setData(plan) {
+    pickPlan(plan) {
       this.selectedPlan = plan;
-      this.$emit("sendStepData", {
-        data: { plan },
-        isValid: true,
+    },
+    submitStep() {
+      this.$v.$touch(); // to display the error on the parent, we need to touch.
+      return new Promise((resolve, reject) => {
+        if (!this.$v.$invalid) {
+          //resolve if data is valid
+          resolve({ plan: this.selectedPlan });
+        } else {
+          //reject if data is invalid
+          reject("Plan not selected");
+        }
       });
     },
   },

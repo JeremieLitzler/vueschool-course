@@ -6,17 +6,19 @@
       Create an account or log in to order your liquid gold subscription
     </h2>
 
-    <form v-if="!loggedIn" @input="setData" class="form">
+    <form v-if="!loggedIn" class="form">
       <div class="form-group">
         <label class="form-label" for="email">Email</label>
         <input
-          @input="checkUserExists"
           type="text"
           v-model="$v.form.email.$model"
           placeholder="your@email.com"
           class="form-control"
           id="email"
         />
+        <div v-if="emailCheckedInDb" class="info">
+          <a href="#" @click="logUserOff">&nbsp; Not you?</a>
+        </div>
         <div
           v-if="$v.form.email.$error && !$v.form.email.required"
           class="error"
@@ -51,10 +53,6 @@
         </div>
       </div>
 
-      <div v-if="existingUser" class="form-group">
-        <button @click.prevent="loginUser" class="btn">Login</button>
-      </div>
-
       <div v-if="emailCheckedInDb && !existingUser" class="form-group">
         <label class="form-label" for="name">Name</label>
         <input
@@ -75,9 +73,8 @@
 </template>
 
 <script>
+import { authenticateUser, checkIfUserExistsInDB } from "../api";
 import { required, email } from "vuelidate/lib/validators";
-import { authenticateUser, checkIfUserExistsInDB } from "../api/index";
-
 export default {
   data() {
     return {
@@ -89,8 +86,12 @@ export default {
       emailCheckedInDb: false,
       existingUser: false,
       wrongPassword: false,
-      loggedIn: false,
     };
+  },
+  computed: {
+    loggedIn() {
+      return this.existingUser && this.form.name;
+    },
   },
   validations: {
     form: {
@@ -112,49 +113,42 @@ export default {
   methods: {
     checkUserExists() {
       if (this.$v.form.email.$invalid) {
-        console.log("checkUserExists > form.email.$invalid = true");
         this.emailCheckedInDb = false;
         this.existingUser = false;
-        return;
+        return Promise.reject("Email is invalid");
+      } else {
+        this.$emit("updateAsyncState", "pending");
+        return checkIfUserExistsInDB(this.form.email)
+          .then(() => {
+            this.existingUser = true;
+            this.emailCheckedInDb = true;
+            this.$emit("updateAsyncState", "success");
+          })
+          .catch(() => {
+            this.existingUser = false;
+            this.emailCheckedInDb = true;
+            this.$emit("updateAsyncState", "failed");
+          });
       }
-
-      console.log("checkUserExists > form.email.$invalid = false");
-      this.$emit("updateAsyncState", "pending");
-      return checkIfUserExistsInDB(this.form.email)
-        .then(() => {
-          console.log("checkUserExists > run then()");
-          this.existingUser = true;
-          this.emailCheckedInDb = true;
-          this.$emit("updateAsyncState", "success");
-        })
-        .catch(() => {
-          console.log("checkUserExists > run catch()");
-          this.existingUser = false;
-          this.emailCheckedInDb = true;
-          this.$emit("updateAsyncState", "failed");
-        });
     },
     loginUser() {
-      if (this.$v.form.email.$invalid) {
-        return;
-      }
       this.wrongPassword = false;
-
-      this.$emit("updateAsyncState", "pending");
-      return authenticateUser(this.form.email, this.form.password)
-        .then((user) => {
-          this.form.name = user.name;
-          this.loggedIn = true;
-          this.setData();
-          this.$emit("updateAsyncState", "success");
-        })
-        .catch(() => {
-          this.$emit("updateAsyncState", "failed");
-          this.wrongPassword = true;
-        });
+      if (this.$v.form.password.$invalid) {
+        return Promise.reject("Password is invalid");
+      } else {
+        this.$emit("updateAsyncState", "pending");
+        return authenticateUser(this.form.email, this.form.password)
+          .then((user) => {
+            this.form.name = user.name;
+            this.$emit("updateAsyncState", "success");
+          })
+          .catch(() => {
+            this.$emit("updateAsyncState", "failed");
+            this.wrongPassword = true;
+          });
+      }
     },
     logUserOff() {
-      this.loggedIn = false;
       this.emailCheckedInDb = false;
       this.existingUser = false;
       this.wrongPassword = false;
@@ -162,14 +156,35 @@ export default {
       this.form.password = "";
       this.form.name = "";
     },
-    setData() {
-      this.$emit("sendStepData", {
-        data: {
-          email: this.form.email,
-          password: this.form.password,
-          name: this.form.name,
-        },
-        isValid: !this.$v.$invalid,
+    submitStep() {
+      let prerequisites = null;
+      if (!this.emailCheckedInDb) {
+        this.$v.form.email.$touch();
+        prerequisites = this.checkUserExists();
+      } else {
+        if (this.existingUser) {
+          this.$v.$touch();
+          prerequisites = this.loginUser();
+        } else {
+          prerequisites = Promise.resolve();
+        }
+      }
+      return new Promise((resolve, reject) => {
+        prerequisites
+          .then(() => {
+            if (!this.$v.$invalid) {
+              //resolve if data is valid
+              resolve({
+                email: this.form.email,
+                password: this.form.password,
+                name: this.form.name,
+              });
+            } else {
+              //reject if data is invalid
+              reject("Plan not selected");
+            }
+          })
+          .catch((err) => reject(err));
       });
     },
   },
