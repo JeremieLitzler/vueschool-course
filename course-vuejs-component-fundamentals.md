@@ -28,13 +28,14 @@ A component can be:
 Global components are not ideal, because, even if you don't use it, then the build tool (ex.: Webpack) will include it in the bundles, even if it is not used in the application.
 
 ```javascript
-Vue.component('plan-picker', {// <== this is a global register
-  template: '#plan-picker-template',
+Vue.component("plan-picker", {
+  // <== this is a global register
+  template: "#plan-picker-template",
   components: {
-    'plan-item': PlanComponent, // <== this is a local register
+    "plan-item": PlanComponent, // <== this is a local register
   },
   data() {
-    return { plans: ['The Single', 'The Curious', 'The Addict'] };
+    return { plans: ["The Single", "The Curious", "The Addict"] };
   },
 });
 ```
@@ -77,39 +78,39 @@ For example, a template using slots could be:
 
 ```htm
 <script type="text/x-template" id="todo-item-template">
-      <div>
-        <input type="checkbox" v-model="completed">
-        <span :class="{done: completed}">
-          <!-- Here is rendered the content of todo-item, e.g. "Eat Bananas" -->
-          <slot></slot>
-        </span>
-        <!-- The usage in the next example below "<template #description>" for the named slot below -->
-        <slot name="description">No description</slot>
-        <button>
-          <!-- The word "Highlight" below is the default slot value, in case you don't specify a slot button in the usage of "Eat Bananas" above -->
-          <slot name="button-text">Highlight</slot>
-        </button>
-      </div>
-    </script>
+  <div>
+    <input type="checkbox" v-model="completed">
+    <span :class="{done: completed}">
+      <!-- Here is rendered the content of todo-item, e.g. "Eat Bananas" -->
+      <slot></slot>
+    </span>
+    <!-- The usage in the next example below "<template #description>" for the named slot below -->
+    <slot name="description">No description</slot>
+    <button>
+      <!-- The word "Highlight" below is the default slot value, in case you don't specify a slot button in the usage of "Eat Bananas" above -->
+      <slot name="button-text">Highlight</slot>
+    </button>
+  </div>
+</script>
 ```
 
 The usage could be:
 
 ```htm
 <todo-item>
-    <!-- This the content tha goes into  <slot></slot> -->
-    <!-- Anything that is not in a named slot will into the unnamed slot -->
-    Buy Bananas
+  <!-- This the content tha goes into  <slot></slot> -->
+  <!-- Anything that is not in a named slot will into the unnamed slot -->
+  Buy Bananas
 
-    <!--Using the named slot "description" -->
-    <template #description>
-        <p>Bananas are good for your health.</p>
-    </template>
-    <!--Using the named slot "button-text" -->
-    <template #button-text> Make it rain </template>
+  <!--Using the named slot "description" -->
+  <template #description>
+    <p>Bananas are good for your health.</p>
+  </template>
+  <!--Using the named slot "button-text" -->
+  <template #button-text> Make it rain </template>
 
-    <!-- This will be rendered before the named slot just above. It kinda mess up the HTML... so you should use a named slot for it. -->
-    <p>The End.</p>
+  <!-- This will be rendered before the named slot just above. It kinda mess up the HTML... so you should use a named slot for it. -->
+  <p>The End.</p>
 </todo-item>
 
 <!-- This usage will use the default value for the named templates -->
@@ -117,3 +118,23 @@ The usage could be:
 ```
 
 See [more notes on slots](module-reusable-vujes-components-with-slots.md).
+
+## Dynamic components
+
+This is [used to dynamically switch between components](https://vuejs.org/guide/essentials/component-basics.html#dynamic-components).
+
+The following:
+
+```javascript
+<FormPlanPicker v-if="currentStepNumber === 1" @setPlan="processStep" />
+```
+
+Can be replaced by:
+
+```javascript
+<component
+  is="FormPlanPicker"
+  v-if="currentStepNumber === 1"
+  @setPlan="processStep"
+></component>
+```
