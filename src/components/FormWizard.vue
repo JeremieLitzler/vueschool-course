@@ -6,6 +6,7 @@
           ref="currentStep"
           :is="steps[currentStepIndex]"
           @sendStepData="processStep"
+          @updateAsyncState="updateAsyncState"
           :wizard-data="form"
         />
       </KeepAlive>
@@ -119,6 +120,9 @@ export default {
     },
   },
   methods: {
+    updateAsyncState(state) {
+      this.asyncState = state;
+    },
     goBack() {
       this.currentStepNumber--;
       this.enableNextStep = true;

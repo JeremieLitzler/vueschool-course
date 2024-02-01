@@ -119,16 +119,19 @@ export default {
       }
 
       console.log("checkUserExists > form.email.$invalid = false");
+      this.$emit("updateAsyncState", "pending");
       return checkIfUserExistsInDB(this.form.email)
         .then(() => {
           console.log("checkUserExists > run then()");
           this.existingUser = true;
           this.emailCheckedInDb = true;
+          this.$emit("updateAsyncState", "success");
         })
         .catch(() => {
           console.log("checkUserExists > run catch()");
           this.existingUser = false;
           this.emailCheckedInDb = true;
+          this.$emit("updateAsyncState", "failed");
         });
     },
     loginUser() {
@@ -137,13 +140,18 @@ export default {
       }
       this.wrongPassword = false;
 
+      this.$emit("updateAsyncState", "pending");
       return authenticateUser(this.form.email, this.form.password)
         .then((user) => {
           this.form.name = user.name;
           this.loggedIn = true;
           this.setData();
+          this.$emit("updateAsyncState", "success");
         })
-        .catch(() => (this.wrongPassword = true));
+        .catch(() => {
+          this.$emit("updateAsyncState", "failed");
+          this.wrongPassword = true;
+        });
     },
     logUserOff() {
       this.loggedIn = false;
