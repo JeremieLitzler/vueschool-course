@@ -1,47 +1,75 @@
-# Projects and notes with VueSchool courses
+# Nuxt 3 Minimal Starter
 
-## [Prerequisites](part-prerequisites.md)
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## [Initialize a Vue project](part-init-vue-project.md)
+## Setup
 
-## [Must read documentation](part-docs-must-read.md)
+Make sure to install the dependencies:
 
-## Notes
+```bash
+# npm
+npm install
 
-### [Fundamentals](module-fundamentals.md)
+# pnpm
+pnpm install
 
-### [Form validation, with Vuelidate](module-vuejs-form-validation.md)
+# yarn
+yarn install
 
-### [VueJS Components Fundamentals](module-vuejs-component-fundamentals.md)
-
-### [VueJS 3 Components Fundamentals](module-vuejs3-component-fundamentals.md)
-
-### [Single File Components](module-single-file-components.md)
-
-### Routing
-
-#### How to lazy load routes with Vue Router
-
-It is is done with Webpack.
-
-It can be done for the routes or within components having sub-components.
-
-For a route, it looks like this:
-
-```javascript
-  {
-    path: '/a-route',
-    name: 'a-route',
-    component: () =>
-      import(/* webpackChunkName: "a-route" */ '../views/PageSomething.vue'),
-  },
-
+# bun
+bun install
 ```
 
-Webpack will generate a `a-route.js` file that is loaded only when the route is browsed to.
+## Development Server
 
-For a component, we use the same techique the parent component:
+Start the development server on `http://localhost:3000`:
 
-```javascript
+```bash
+# npm
+npm run dev
 
+# pnpm
+pnpm run dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
 ```
+
+## Production
+
+Build the application for production:
+
+```bash
+# npm
+npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
+```
+
+Locally preview production build:
+
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
