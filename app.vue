@@ -1,32 +1,47 @@
 <script setup lang="ts">
+import type { FormKitSchema } from "@formkit/vue";
 const formData = ref({
   username: "Jeremiel",
   password: "",
 });
 
-async function submit(data: Object): void {
+async function submit(data: Object): Promise<void> {
   await wait(3000);
   console.log(data);
 }
 </script>
 <template>
-  <FormKit type="form" :value="formData" @submit="submit" submit-label="Login">
-    <h1>Login</h1>
-    <FormKit
-      validation="(500)username_is_unique"
-      :validation-messages="{ username_is_unique({args, name, node}) : string {
-        return `${node.value} is already taken!`;
-      }}"
-      type="text"
-      label="Username"
-      name="username"
-    />
-    <FormKit
-      type="password"
-      label="Password"
-      name="password"
-      validation="required|alpha|length:10-30"
-    />
-    <FormKit type="checkbox" label="Remember me?" name="rememberMe" />
-  </FormKit>
+  <FormKitSchema
+    :data="{ formData, attrs: { onSubmit: submit } }"
+    :schema="[
+      {
+        $formkit: 'form',
+        submitLabel: 'Login',
+        value: '$formData',
+        bind: '$attrs',
+        children: [
+          { $el: 'h1', children: 'Login' },
+          {
+            validation: '(500)username_is_unique',
+            $formkit: 'text',
+            label: 'Username',
+            name: 'username',
+          },
+          {
+            $formkit: 'password',
+            label: 'Password',
+            name: 'password',
+            validation: 'required|alpha|length:10-30',
+            if: '$value.username',
+          },
+          {
+            $formkit: 'checkbox',
+            label: 'Remember me?',
+            name: 'rememberMe',
+            if: '$value.username',
+          },
+        ],
+      },
+    ]"
+  />
 </template>
