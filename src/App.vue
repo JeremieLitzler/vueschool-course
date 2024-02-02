@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UseClipBoard from "./components/UseClipBoard.vue";
 import UseTitle from "./components/UseTitle.vue";
+import UseDarkAndColorMode from "./components/UseDarkAndColorMode.vue";
 </script>
 
 <template>
@@ -18,9 +19,16 @@ import UseTitle from "./components/UseTitle.vue";
   <section class="use">
     <UseClipBoard />
   </section>
+  <section class="use">
+    <UseDarkAndColorMode />
+  </section>
 </template>
 
 <style>
+.dark {
+  background-color: #333;
+  color: white;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -32,6 +40,9 @@ import UseTitle from "./components/UseTitle.vue";
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+details {
+  margin-bottom: 1em;
 }
 details summary::-webkit-details-marker,
 details summary::marker {
@@ -49,8 +60,6 @@ section.use {
 }
 
 summary {
-  background-color: beige;
-  color: #333;
   padding: 0.5em 0em;
   border-radius: 1em 1em 100em 100em;
 }
