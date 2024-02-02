@@ -1,11 +1,23 @@
-import { DefaultConfigOptions } from "@formkit/vue";
+import type { DefaultConfigOptions } from "@formkit/vue";
+import { createProPlugin, inputs } from "@formkit/pro";
 import { createAutoAnimatePlugin } from "@formkit/addons";
 import { createToolTipPlugin } from "@/formkit-plugins/tooltip-plugin/index";
 import "@/formkit-plugins/tooltip-plugin/styles.css";
+import "@formkit/pro/genesis";
+
+useNuxtApp();
+const configNuxt = useRuntimeConfig();
+
+const autoAnimateInstance = createAutoAnimatePlugin();
+const toolTipInstance = createToolTipPlugin();
+const formKitProInstance = createProPlugin(
+  configNuxt.public.formkitProApiKey as string,
+  inputs
+);
 
 const config: DefaultConfigOptions = {
   theme: "genesis",
-  plugins: [createAutoAnimatePlugin(), createToolTipPlugin()],
+  plugins: [autoAnimateInstance, toolTipInstance, formKitProInstance],
   messages: {
     en: {
       validation: {
