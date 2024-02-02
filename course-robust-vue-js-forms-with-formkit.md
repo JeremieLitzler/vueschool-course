@@ -365,3 +365,195 @@ const config: DefaultConfigOptions = {
 
 export default config;
 ```
+
+## Build Forms From A Schema
+
+You can define a form in a serialized JavaScript object and import it using `FormKitSchema`.
+
+It needs to be imported because it is globally registered like the component `FormKit`.
+
+```typescript
+import type { FormKitSchema } from "@formkit/vue";
+```
+
+Then, using the `:schema` prop on `FormKitSchema`, we define an array of object that simply the same as the component.
+
+So, the component:
+
+```htm
+<FormKit
+  validation="(500)username_is_unique"
+  :validation-messages="{ username_is_unique({args, name, node}) : string {
+      return `${node.value} is already taken!`;
+  }}"
+  type="text"
+  label="Username"
+  name="username"
+/>
+```
+
+becomes:
+
+```typescript
+{
+  $formkit: 'password',
+  label: 'Password',
+  name: 'password',
+  validation: 'required|alpha|length:10-30',
+},
+```
+
+In a login form hydrated with some data, it would look this:
+
+```htm
+<FormKitSchema
+  :data="{ formData, attrs: { onSubmit: submit } }"
+  :schema="[
+      {
+        $formkit: 'form',
+        submitLabel: 'Login',
+        value: '$formData',
+        bind: '$attrs',
+        children: [
+          { $el: 'h1', children: 'Login' },
+          {
+            validation: '(500)username_is_unique',
+            $formkit: 'text',
+            label: 'Username',
+            name: 'username',
+          },
+          {
+            $formkit: 'password',
+            label: 'Password',
+            name: 'password',
+            validation: 'required|alpha|length:10-30',
+            if: '$value.username',
+          },
+          {
+            $formkit: 'checkbox',
+            label: 'Remember me?',
+            name: 'rememberMe',
+            if: '$value.username',
+          },
+        ],
+      },
+    ]"
+/>
+```
+
+A few important things:
+
+- the `type` is replaced with `$formkit` to specify the type.
+- to be able to store in a database the schema, you must use the `:data` prop on the `FormKitSchema` component instead of referencing outside data into the schema
+  - See line `value: '$formatData'` that is serializable.
+  - `value: formData` would be valid but serializable.
+- the `attrs` object is necessary to bind the submission method to the form's submit method.
+  - you need bind the `$attrs` to the `bind` property in the root `FormKit`.
+- the `if` property add more control, for example showing a field conditionnally on another.
+
+Read [the docs for more the schema component](https://formkit.com/essentials/schema#schema).
+
+## Extending FormKit with Plugins
+
+You can either:
+
+- use a plugin available in the official `@formkit/addons` package, like `AutoAnimate`
+- create your plugin by:
+
+  - creating a folder `formkit-plugins` to store the plugins
+  - creating a folder `my-plugin` to store the JavaScript file and the styles, if any
+  - creating the JavaScript file that override some logic:
+
+    ```javascript
+    export const createToolTipPlugin = (options) => {
+      return function toolTipPlugin(node) {
+        //grab the current schema
+        const original = node.props.definition.schema;
+        //and extend it
+        node.props.definition.schema = (extensions = {}) => {
+          //make sure the help section never rendered as it is what we want to override
+          extensions.help = { if: "false" };
+          //and redifine the the label do that...
+          extensions.label = {
+            children: [
+              "$label",
+              {
+                //when the help prop is defined
+                if: "$help",
+                //we add a span...
+                $el: "span",
+                attrs: {
+                  class: "tooltip",
+                },
+                ///... that contains ...
+                children: [
+                  // this text node
+                  "?",
+                  // and this span contains the help prop value
+                  {
+                    $el: "span",
+                    attrs: {
+                      class: "tooltip-inner",
+                    },
+                    children: "$help",
+                  },
+                ],
+              },
+            ],
+          };
+          //finally, we return the schema extended
+          return original(extensions);
+        };
+      };
+    };
+    ```
+
+Using plugins can be done within the component using it, but also, you can register it at the `formkit.config.ts` level:
+
+```typescript
+import { DefaultConfigOptions } from "@formkit/vue";
+import { createAutoAnimatePlugin } from "@formkit/addons";
+import { createToolTipPlugin } from "@/formkit-plugins/tooltip-plugin/index";
+import "@/formkit-plugins/tooltip-plugin/styles.css";
+
+const config: DefaultConfigOptions = {
+  theme: "genesis",
+  plugins: [createAutoAnimatePlugin(), createToolTipPlugin()],
+  ...
+}
+```
+
+## Create And Use Custom Formkit Inputs
+
+You definitely use the Pro inputs but you can also:
+
+- build your own
+- use third-party libraries like `Vue-multiselect`
+
+FormKit provides [a checklist](https://formkit.com/essentials/custom-inputs#input-checklist) to follow when you create a new input.
+
+Depending on the use or not of `createInput` method from FormKit, you will have more or less work to do.
+
+It feels like a lot of work to create custom inputs using FormKit. I see how they are trying to do a good job at accessibility. But the weight of the library is not ideal. (Don't le me start with Nuxt...).
+
+PS: [following the lesson](https://vueschool.io/lessons/create-a-custom-formkit-input) on February 2nd 2024, I wasn't able to make it work, even with the exact same code as Daniel.
+
+## FormKit Pro Usage
+
+Even if it is not fully free, the Pro inputs include the Repeater and Toggle inputs for free.
+
+For the others, you will need to pay on monthly fee and $149 once.
+
+I tried to figure out how to include the API key of the Pro version using a `.env` file.
+
+I've for help [in the lesson](https://vueschool.io/lessons/level-up-with-pro-inputs) and [this Medium article](https://medium.com/@jogarcia/environment-variables-in-nuxt-3-89d42c36f66b).
+
+## Creating a theme with Tailwind and FormKit
+
+I didn't go through [the lesson on this topic](https://vueschool.io/courses/robust-vue-js-forms-with-formkit) since I broken the app in the previous lesson.
+
+## Conclusion
+
+Build forms isn't the easiest task using the libraries out there.
+
+I need to get some experience about that to see in real life projects.
