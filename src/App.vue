@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UseClipBoard from "./components/UseClipBoard.vue";
 import UseTitle from "./components/UseTitle.vue";
 </script>
 
@@ -11,7 +12,12 @@ import UseTitle from "./components/UseTitle.vue";
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <UseTitle />
+  <section class="use">
+    <UseTitle />
+  </section>
+  <section class="use">
+    <UseClipBoard />
+  </section>
 </template>
 
 <style scoped>

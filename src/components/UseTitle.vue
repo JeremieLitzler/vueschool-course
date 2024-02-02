@@ -1,5 +1,6 @@
 <template>
   <h1>{{ title }}</h1>
+  <h2>Demo of useTitle</h2>
   <input type="text" v-model="title" />
 </template>
 
