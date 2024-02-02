@@ -44,11 +44,12 @@ async function submit(data: Object): Promise<void> {
             name: 'rememberMe',
             if: '$value.username',
           },
-          // {
-          //   $formkit: 'multiSelect',
-          //   label: 'Framework',
-          //   options: ['Vue', 'React', 'Svelte'],
-          // },
+          //{
+          //  $formkit: 'multiSelect',
+          //  label: 'Framework',
+          //  options: ['Vue', 'React', 'Svelte'],
+          //  multiple: true,
+          //},
         ],
       },
     ]"
