@@ -1,15 +1,18 @@
 <template>
-  <h2>Demo of useClipboard</h2>
-  <h3>From Reactive Ref</h3>
-  <input type="text" v-model="textToCopy" />
-  <button @click="copyRefVar()">
-    {{ copiedRefVar ? "Copied" : "Copy" }}
-  </button>
-  <h3>By passing the value to copy function</h3>
-  <input type="text" v-model="textToCopy2" />
-  <button @click="copyArg(textToCopy2)">
-    {{ copiedArg ? "Copied" : "Copy" }}
-  </button>
+  <details>
+    <summary><pre>⬇️ useClipboard</pre></summary>
+    <h2>Demo of useClipboard</h2>
+    <h3>From Reactive Ref</h3>
+    <input type="text" v-model="textToCopy" />
+    <button @click="copyRefVar()">
+      {{ copiedRefVar ? "Copied" : "Copy" }}
+    </button>
+    <h3>By passing the value to copy function</h3>
+    <input type="text" v-model="textToCopy2" />
+    <button @click="copyArg(textToCopy2)">
+      {{ copiedArg ? "Copied" : "Copy" }}
+    </button>
+  </details>
 </template>
 
 <script setup lang="ts">
