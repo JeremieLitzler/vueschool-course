@@ -15,6 +15,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@formkit/addons": "^1.5.3",
     "@formkit/nuxt": "^1.5.3"
   }
 }

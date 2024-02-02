@@ -1,7 +1,11 @@
-import type { DefaultConfigOptions } from "@formkit/vue";
+import { DefaultConfigOptions } from "@formkit/vue";
+import { createAutoAnimatePlugin } from "@formkit/addons";
+import { createToolTipPlugin } from "@/formkit-plugins/tooltip-plugin/index";
+import "@/formkit-plugins/tooltip-plugin/styles.css";
 
 const config: DefaultConfigOptions = {
   theme: "genesis",
+  plugins: [createAutoAnimatePlugin(), createToolTipPlugin()],
   messages: {
     en: {
       validation: {

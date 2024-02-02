@@ -26,6 +26,7 @@ async function submit(data: Object): Promise<void> {
             $formkit: 'text',
             label: 'Username',
             name: 'username',
+            help: 'Please fill out your username',
           },
           {
             $formkit: 'password',
