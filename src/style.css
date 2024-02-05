@@ -1,5 +1,7 @@
 :root {
   --light-main: #fafafa;
+  --dark-main: #252525;
+
   --theme-color: #3eaf7c;
 
   --theme-color-shade-10: #389e70;
@@ -24,7 +26,6 @@
   --theme-color-tint-90: #ecf7f2;
   --theme-color-tint-100: #ffffff;
 
-  --dark-main: #252525;
   --accent-dark: hsl(from var(--theme-color) h calc(s - 30%) l);
 
   --btn-bd-size: 2px;
