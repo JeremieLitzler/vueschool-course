@@ -1,6 +1,11 @@
 <template>
   <details>
-    <summary><pre>⬇️ useClipboard</pre></summary>
+    <summary
+      :aria-label="summaryAccessibilityLabel"
+      :title="summaryAccessibilityLabel"
+    >
+      <pre>useClipboard</pre>
+    </summary>
     <h2>Demo of useClipboard</h2>
     <h3>From Reactive Ref</h3>
     <input type="text" v-model="textToCopy" />
@@ -16,8 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { useClipboard } from "@vueuse/core";
+
+import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
+
+const summaryAccessibilityLabel: string | undefined = inject(
+  summaryAccessibilityLabelKey
+);
+
 const textToCopy = ref("//Hello from Ref Var");
 const textToCopy2 = ref("//Hello By Arg");
 
@@ -26,7 +38,7 @@ const { copy: copyRefVar, copied: copiedRefVar } = useClipboard({
   copiedDuring: 500,
 });
 const { copy: copyArg, copied: copiedArg } = useClipboard({
-  source: textToCopy.value,
+  source: textToCopy2.value,
   copiedDuring: 500,
 });
 </script>

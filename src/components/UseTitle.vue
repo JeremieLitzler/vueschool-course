@@ -1,10 +1,11 @@
 <template>
   <h1>{{ title }}</h1>
   <details>
-    <summary>
-      <pre :aria-label="clickToOpenTip" :title="clickToOpenTip">
-⬇️ useTitle</pre
-      >
+    <summary
+      :aria-label="summaryAccessibilityLabel"
+      :title="summaryAccessibilityLabel"
+    >
+      <pre>useTitle</pre>
     </summary>
     <h2>Demo of useTitle</h2>
     <input type="text" v-model="title" />
@@ -13,7 +14,11 @@
 
 <script setup lang="ts">
 import { useTitle } from "@vueuse/core";
-const clickToOpenTip = "Click to open or close the demo";
+import { inject } from "vue";
+import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
+
+const summaryAccessibilityLabel = inject(summaryAccessibilityLabelKey);
+
 const title = useTitle();
 </script>
 

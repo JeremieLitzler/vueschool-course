@@ -1,9 +1,61 @@
 :root {
+  --light-main: #fafafa;
+  --theme-color: #3eaf7c;
+
+  --theme-color-shade-10: #389e70;
+  --theme-color-shade-20: #328c63;
+  --theme-color-shade-30: #2b7a57;
+  --theme-color-shade-40: #25694a;
+  --theme-color-shade-50: #1f583e;
+  --theme-color-shade-60: #194632;
+  --theme-color-shade-70: #133425;
+  --theme-color-shade-80: #0c2319;
+  --theme-color-shade-90: #06110c;
+  --theme-color-shade-100: #000000;
+
+  --theme-color-tint-10: #51b789;
+  --theme-color-tint-20: #65bf96;
+  --theme-color-tint-30: #78c7a3;
+  --theme-color-tint-40: #8bcfb0;
+  --theme-color-tint-50: #9fd7be;
+  --theme-color-tint-60: #b2dfcb;
+  --theme-color-tint-70: #c5e7d8;
+  --theme-color-tint-80: #d8efe5;
+  --theme-color-tint-90: #ecf7f2;
+  --theme-color-tint-100: #ffffff;
+
+  --dark-main: #252525;
+  --accent-dark: hsl(from var(--theme-color) h calc(s - 30%) l);
+
+  --btn-bd-size: 2px;
+}
+:root[color-scheme="light"] {
+  --main-bg-color: var(--light-main);
+  --text-color: var(--dark-main);
+  --btn-bg-color: var(--theme-color);
+  --btn-text-color: var(--light-main);
+  --btn-bd-color: var(--theme-color-30);
+  --btn-bd-color: var(--theme-color-30);
+  --details-bd-color: #09095e;
+  --details-text-color: var(--dark-main);
+}
+
+:root[color-scheme="dark"] {
+  --main-bg-color: var(--dark-main);
+  --text-color: var(--light-main);
+  --btn-bg-color: var(--theme-color);
+  --btn-text-color: var(--dark-main);
+  --btn-bd-color: var(--light-main);
+  --details-text-color: var(--dark-main);
+}
+
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,31 +78,37 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-size: 1rem;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  text-align: center;
 }
 
 button {
+  background-color: var(--theme-color);
+  color: var(--light-main);
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: var(--btn-bd-size) solid var(--btn-bg-color);
   padding: 0.6em 1.2em;
-  font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.5s;
 }
-button:hover {
-  border-color: #646cff;
-}
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:focus,
+button:hover {
+  border-style: dashed;
+  filter: brightness(95%);
+}
 .card {
   padding: 2em;
 }
@@ -59,18 +117,8 @@ button:focus-visible {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+a:hover {
+  color: #747bff;
 }

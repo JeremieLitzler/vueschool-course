@@ -1,6 +1,11 @@
 <template>
   <details>
-    <summary><pre>⬇️ useDark</pre></summary>
+    <summary
+      :aria-label="summaryAccessibilityLabel"
+      :title="summaryAccessibilityLabel"
+    >
+      <pre>useDark</pre>
+    </summary>
     <h2>Demo of useDark</h2>
     <pre>isDark = {{ isDark }}</pre>
     <button @click="toggleDark()">Toggle Dark mode</button>
@@ -15,14 +20,30 @@
     </p>
   </details>
   <details>
-    <summary><pre>⬇️ useColorMode</pre></summary>
+    <summary
+      :aria-label="summaryAccessibilityLabel"
+      :title="summaryAccessibilityLabel"
+    >
+      <pre>useColorMode</pre>
+    </summary>
     <h2>Demo of useColorMode</h2>
   </details>
 </template>
 
 <script setup lang="ts">
 import { useDark, useToggle } from "@vueuse/core";
+import { inject } from "vue";
+import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
 
-const isDark = useDark();
+const summaryAccessibilityLabel: string | undefined = inject(
+  summaryAccessibilityLabelKey
+);
+
+const isDark = useDark({
+  selector: "html",
+  attribute: "color-scheme",
+  valueDark: "dark",
+  valueLight: "light",
+});
 const toggleDark = useToggle(isDark);
 </script>
