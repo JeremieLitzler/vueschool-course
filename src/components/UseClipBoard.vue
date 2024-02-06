@@ -12,11 +12,13 @@
     <button @click="copyRefVar()">
       {{ copiedRefVar ? "Copied" : "Copy" }}
     </button>
+    <input type="text" placeholder="paste here to check" />
     <h3>By passing the value to copy function</h3>
     <input type="text" v-model="textToCopy2" />
     <button @click="copyArg(textToCopy2)">
       {{ copiedArg ? "Copied" : "Copy" }}
     </button>
+    <input type="text" placeholder="paste here to check" />
   </details>
 </template>
 

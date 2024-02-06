@@ -5,6 +5,7 @@ import UseClipBoard from "./components/UseClipBoard.vue";
 import UseTitle from "./components/UseTitle.vue";
 import UseDarkAndColorMode from "./components/UseDarkAndColorMode.vue";
 import ColorFilter from "./components/ColorFilter.vue";
+import OnKeyStroke from "./components/OnKeyStroke.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -29,6 +30,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use">
     <UseDarkAndColorMode />
+  </section>
+  <section class="use">
+    <OnKeyStroke />
   </section>
 </template>
 
