@@ -65,13 +65,8 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
-
-summary:hover,
-summary:focus {
-  border-bottom: 4px solid var(--theme-color-tint-10);
-}
 details {
-  margin-bottom: 1em;
+  padding: 1em;
 }
 details summary::-webkit-details-marker,
 details summary::marker {
@@ -86,6 +81,7 @@ details > summary {
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
+  padding: 0 0.5em;
 }
 details > summary::after {
   content: "⬇️ Click to open";
@@ -103,7 +99,6 @@ details[open] > summary {
 section.use {
   border: 1px solid gray;
   border-radius: 1em;
-  padding: 1em;
   margin-bottom: 1em;
 }
 
