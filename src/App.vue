@@ -7,6 +7,9 @@ import UseDarkAndColorMode from "./components/UseDarkAndColorMode.vue";
 import ColorFilter from "./components/ColorFilter.vue";
 import OnKeyStroke from "./components/OnKeyStroke.vue";
 import UseMagicKeys from "./components/UseMagicKeys.vue";
+import UseBattery from "./components/UseBattery.vue";
+import UseOnlineAndNetwork from "./components/UseOnlineAndNetwork.vue";
+import UseGeolocation from "./components/UseGeolocation.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -37,6 +40,15 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use">
     <UseMagicKeys />
+  </section>
+  <section class="use">
+    <UseBattery />
+  </section>
+  <section class="use">
+    <UseOnlineAndNetwork />
+  </section>
+  <section class="use">
+    <UseGeolocation />
   </section>
 </template>
 

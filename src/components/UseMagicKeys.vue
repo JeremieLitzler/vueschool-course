@@ -4,7 +4,7 @@
       :aria-label="summaryAccessibilityLabel"
       :title="summaryAccessibilityLabel"
     >
-      <pre>onKeyStroke</pre>
+      <pre>useMagicKeys</pre>
     </summary>
     <h2>Demo from Vueuse docs</h2>
     <p>Instructions: press any key simultaneously to update the Set below.</p>
