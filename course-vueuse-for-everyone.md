@@ -174,3 +174,11 @@ Finally, the composable makes available the `current` property which provides a 
 ### Device sensors with `useBattery`, `useOnline`, `useNetwork` and `useGeolocation`
 
 Those could be very useful, espacially the `useOnline` or `useNetwork` to notify the end-user that the network is unavailable.
+
+### `usePageLeave` and `useConfirmDialog`
+
+`usePageLeave` is great to use when someone is leaving the windows and that you want to retain him with an offering.
+
+Usually, you show a modal. But be careful not to fall for the basic example that is not accessible. Using the native `dialog` element, you will make it accessible more easily.
+
+But using Vue 3 and VueUse, how do you do it? See [this commit](https://github.com/JeremieLitzler/vueschool-course/commit/1f372e3056c746e5e58c865bf3740d459537a521#diff-dbbd8914be1f046ee8c0e831315b143634b53e464275239b00773ab9b12c2fb0).
