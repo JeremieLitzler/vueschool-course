@@ -66,20 +66,20 @@ Then `useToggle` binded to a button or a link element allows to toggle the value
 
 ```htm
 <template>
-    <pre>isDark = {{ isDark }}</pre>
-    <button @click="toggleDark()">Toggle Dark mode</button>
+  <pre>isDark = {{ isDark }}</pre>
+  <button @click="toggleDark()">Toggle Dark mode</button>
 </template>
 
 <script setup lang="ts">
-import { useDark, useToggle } from "@vueuse/core";
+  import { useDark, useToggle } from "@vueuse/core";
 
-const isDark = useDark({
-  selector: "html",
-  attribute: "color-scheme",
-  valueDark: "dark",
-  valueLight: "light",
-});
-const toggleDark = useToggle(isDark);
+  const isDark = useDark({
+    selector: "html",
+    attribute: "color-scheme",
+    valueDark: "dark",
+    valueLight: "light",
+  });
+  const toggleDark = useToggle(isDark);
 </script>
 ```
 
@@ -113,3 +113,64 @@ From the `useDark` call above, you can start with:
   --details-text-color: var(--dark-main);
 }
 ```
+
+### `onKeyStroke`
+
+This could be very useful to implement custom shortcuts logic in an application.
+
+Indeed, no matter what’s focused in your Vue.js application, the events still behave as expected.
+
+There is two main implementations:
+
+- when you allow the event to be repeated as you hold the key down:
+
+  ```typescript
+  onKeyStroke(["a", "A", "ArrowLeft"], () => {
+    // your logic
+  });
+  ```
+
+- when you don't want to ignore repeated events
+
+  ```typescript
+  onKeyStroke(
+    ["d", "D", "ArrowRight"],
+    () => {
+      // your logic
+    },
+    { dedupe: true }
+  );
+  ```
+
+Read [more in the Vueuse docs](https://vueuse.org/core/onKeyStroke). Also, about the key names, [see the MDN page](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values).
+
+### `useMagicKeys`
+
+It works similar to `onKeyStroke`, but the usage that could interest you is the combinaison of keys.
+
+Even if you can use it this way for single keys:
+
+```javascript
+const { a, b, c, d } = useMagicKeys();
+```
+
+You can also use it key combinaison
+
+```javascript
+const { a_s, a_w } = useMagicKeys();
+
+const a_s_pressed = ref(false);
+
+whenever(a_s, (pressed) => (a_s_pressed.value = pressed));
+//a_s_pressed remains true, even after the keys are released.
+
+const a_w_pressed = ref(false);
+watch(a_w, (pressed) => (a_w_pressed.value = pressed));
+//a_w_pressed returns to false,  after the keys are released.
+```
+
+Finally, the composable makes available the `current` property which provides a `Set` of maximum 6 keys pressed at once.
+
+### Device sensors with `useBattery`, `useOnline`, `useNetwork` and `useGeolocation`
+
+Those could be very useful, espacially the `useOnline` or `useNetwork` to notify the end-user that the network is unavailable.
