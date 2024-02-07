@@ -10,6 +10,8 @@ import UseMagicKeys from "./components/UseMagicKeys.vue";
 import UseBattery from "./components/UseBattery.vue";
 import UseOnlineAndNetwork from "./components/UseOnlineAndNetwork.vue";
 import UseGeolocation from "./components/UseGeolocation.vue";
+import UsePageLeave from "./components/UsePageLeave.vue";
+import UsePageLeaveWithNativeDialog from "./components/UsePageLeaveWithNativeDialog.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -50,6 +52,12 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   <section class="use">
     <UseGeolocation />
   </section>
+  <section class="use">
+    <UsePageLeave />
+  </section>
+  <section class="use">
+    <UsePageLeaveWithNativeDialog />
+  </section>
 </template>
 
 <style>
@@ -82,6 +90,7 @@ details > summary {
   align-items: center;
   flex-direction: row;
   padding: 0 0.5em;
+  border-radius: 0.5em;
 }
 details > summary::after {
   content: "⬇️ Click to open";
