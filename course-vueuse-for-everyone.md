@@ -182,3 +182,25 @@ Those could be very useful, espacially the `useOnline` or `useNetwork` to notify
 Usually, you show a modal. But be careful not to fall for the basic example that is not accessible. Using the native `dialog` element, you will make it accessible more easily.
 
 But using Vue 3 and VueUse, how do you do it? See [this commit](https://github.com/JeremieLitzler/vueschool-course/commit/1f372e3056c746e5e58c865bf3740d459537a521#diff-dbbd8914be1f046ee8c0e831315b143634b53e464275239b00773ab9b12c2fb0).
+
+### `usePointer`
+
+This one can be useful to draw on canvas element.
+
+### `useScroll`
+
+This is something I've built for WordPress websites using vanilla javascript.
+
+### `useInfiniteScroll`
+
+I can see using this with a list of transactions with a big amount of data.
+
+The key is to load just the right amount to avoid overflowing the user with data.
+
+### Media and VueUse
+
+VueUse comes with interesting composables that helps a lot with media including video and audio:
+
+- `useDisplayMedia`: used to share a screen.
+- `useUserMedia`: used to use microphone or use webcam.
+- `useMediaControls`: provides the controls to manage an audio or video playback.

@@ -23,7 +23,7 @@ It is as simple as telling the script tag the code is TypeScript with the `lang`
 
 ```typescript
 <script setup lang="ts">
-// your code
+  // your code
 </script>
 ```
 
@@ -42,8 +42,8 @@ defineEmits<{
     //adding the "@" helps to identify native event (one "@") and custom events (two "@").
     event: "@addEntry",
     //payload definition
-    entry: { entryMessage: string; emoji: Emoji | null },
-  ): void;//return type is always void
+    entry: { entryMessage: string; emoji: Emoji | null }
+  ): void; //return type is always void
 }>();
 ```
 
@@ -207,7 +207,7 @@ Then, you need to tell TypeScript the file exists:
     "src/**/*.vue",
     "src/**/*.ts",
     "vue-global-props.d.ts"
-  ],
+  ]
 }
 ```
 

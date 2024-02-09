@@ -22,17 +22,17 @@ For example:
 
 ```javascript
 let price = 24;
-console.log(typeof price);//outputs 'number'
-price = '24'
-console.log(typeof price);//outputs 'string'
+console.log(typeof price); //outputs 'number'
+price = "24";
+console.log(typeof price); //outputs 'string'
 ```
 
 - an object can be assigned any number of properties on the fly:
 
 ```javascript
 const lion = {
-    legs: 4,
-    teeth: 50,
+  legs: 4,
+  teeth: 50,
 };
 
 lion.runs = true;
@@ -50,7 +50,7 @@ Let's the previous example:
 
 ```typescript
 let price = 24;
-price = '24'//TypeScript doesn't allow this and would not allow the code to compile...
+price = "24"; //TypeScript doesn't allow this and would not allow the code to compile...
 ```
 
 Basically, TypeScript knows how the primitivily-typed variable was initialize.
@@ -74,7 +74,7 @@ It leaves no room to mistypes, even if it is more verbose.
 In plain JavaScript, defining an array gives this:
 
 ```javascript
-const veggies = ['Salad', 'Carrot', 'Tomatoes'];
+const veggies = ["Salad", "Carrot", "Tomatoes"];
 console.log(typeof veggies); //object
 ```
 
@@ -90,10 +90,10 @@ What does this print to the console?
 
 ```javascript
 function sum(a, b) {
-    return a + b
+  return a + b;
 }
 
-console.log(sum(1, '2'))
+console.log(sum(1, "2"));
 ```
 
 Yes, the string `12`.
@@ -103,12 +103,12 @@ TypeScript cannot know the type, which is `any` in the above example.
 Using TypeScript, you can change it to this:
 
 ```javascript
-function sum(a: number, b: number) : number {
-    return a + b;
+function sum(a: number, b: number): number {
+  return a + b;
 }
 
-console.log(sum(1, '2'));// doesn't work
-console.log(sum(1, 2));//logs 3
+console.log(sum(1, "2")); // doesn't work
+console.log(sum(1, 2)); //logs 3
 ```
 
 100% of the time, `sum` takes only numbers and return a number.
@@ -118,12 +118,12 @@ console.log(sum(1, 2));//logs 3
 It is still possible, but the syntax needs to be learned:
 
 ```typescript
-function sum({a, b} : {a: number, b: number}) {
-    return a + b;
+function sum({ a, b }: { a: number; b: number }) {
+  return a + b;
 }
 
-console.log(sum({a: 1, b: '2'}));// doesn't work
-console.log(sum({a: 1, b: 2}));//logs 3
+console.log(sum({ a: 1, b: "2" })); // doesn't work
+console.log(sum({ a: 1, b: 2 })); //logs 3
 ```
 
 ### What about function that don't return anything?
@@ -136,10 +136,10 @@ Similar to the null coalescing operator in C#, you can type a parameter as optio
 
 ```typescript
 function sayHello(name?: string) {
-    return name ? `Hello ${name}` : 'Hello stranger';
+  return name ? `Hello ${name}` : "Hello stranger";
 }
 
-console.log(sayHello())
+console.log(sayHello());
 console.log(sayHello("John"));
 ```
 
@@ -148,8 +148,8 @@ console.log(sayHello("John"));
 Union types means "_I am a variable that can any of multiple types_".
 
 ```typescript
-let aBoolOrString: string | boolean = "I am string..."
-aBoolOrString = true
+let aBoolOrString: string | boolean = "I am string...";
+aBoolOrString = true;
 ```
 
 Why would you want that?
@@ -160,7 +160,7 @@ For example, the following would not be valid:
 
 ```typescript
 function logId(id: string | number) {
-    console.log(id.toUpperCase());
+  console.log(id.toUpperCase());
 }
 ```
 
@@ -168,11 +168,11 @@ To fix it, it should be:
 
 ```typescript
 function logId(id: string | number) {
-    if (typeof id === 'string') {
-        console.log(id.toUpperCase());
-    } else {
-        console.log(id);
-    }
+  if (typeof id === "string") {
+    console.log(id.toUpperCase());
+  } else {
+    console.log(id);
+  }
 }
 ```
 
@@ -191,12 +191,10 @@ Yead, like me, you'd say: "_What is that?_"
 Well, basically, in TypeScript, you assign to a variable a Literal type: string, number, bool.
 
 ```typescript
-function setProductSize(size: 'small' | 'medium' | 'large') {
+function setProductSize(size: "small" | "medium" | "large") {}
 
-}
-
-setProductSize('huge'); // doesn't work
-setProductSize('small'); // works
+setProductSize("huge"); // doesn't work
+setProductSize("small"); // works
 ```
 
 ## Type Aliases in TypeScript
@@ -206,13 +204,11 @@ Type aliases are simply named types for Union types.
 If you take the example from the previous paragraph, you can end up with the following:
 
 ```typescript
-type Sizes = 'small' | 'medium' | 'large';
-function setProductSize(size: Sizes) {
+type Sizes = "small" | "medium" | "large";
+function setProductSize(size: Sizes) {}
 
-}
-
-setProductSize('huge'); // doesn't work
-setProductSize('small'); // works
+setProductSize("huge"); // doesn't work
+setProductSize("small"); // works
 ```
 
 It can particularly be interesting for objects:
@@ -246,8 +242,8 @@ If you take the previous `Car` type alias, the interface is the following:
 
 ```typescript
 interface Car {
-    brand: string,
-    price: number
+  brand: string;
+  price: number;
 }
 ```
 
@@ -257,53 +253,53 @@ What is the differences between Type aliases and Interfaces?
 
 ```typescript
 interface Car {
-    brand: string,
-    price: number,
-    // adding a new property as
-    horsePower?: number
+  brand: string;
+  price: number;
+  // adding a new property as
+  horsePower?: number;
 }
 ```
 
 2.  You can extend an interface
 
 ```typescript
-interface ElectricCar extends Car{
-    powerOutputKwh: number
+interface ElectricCar extends Car {
+  powerOutputKwh: number;
 }
 
 interface CarSalesService extends Car {
-    soldOn?: Date,
-    availableForSale: Date
+  soldOn?: Date;
+  availableForSale: Date;
 }
 interface Car {
-    brand: string,
-    price: number
+  brand: string;
+  price: number;
 }
-const renaultZoe : ElectricCar = {
-    brand: "Renault",
-    price: 10000,
-    powerOutputKwh: 65 // omitting this property would not be valid to TypeScript
-}
+const renaultZoe: ElectricCar = {
+  brand: "Renault",
+  price: 10000,
+  powerOutputKwh: 65, // omitting this property would not be valid to TypeScript
+};
 
-const renaultScenic : CarSalesService = {
-    brand: "Renault",
-    price: 10000,
-    availableForSale: new Date(Date.now())
-}
+const renaultScenic: CarSalesService = {
+  brand: "Renault",
+  price: 10000,
+  availableForSale: new Date(Date.now()),
+};
 ```
 
 You can use interfaces in functions very easily. Taking the above interface definition, you can define the following function:
 
 ```typescript
-function purchaseCar(car: Car) : Car {
-    console.log(car);
-    return car;
+function purchaseCar(car: Car): Car {
+  console.log(car);
+  return car;
 }
 
-purchasedCar = purchaseCar({brand: 'Ferrari', price: 1000000});
+purchasedCar = purchaseCar({ brand: "Ferrari", price: 1000000 });
 // outputs: { "brand": "Ferrari", "price": 1000000 }
 
-purchasedCar = purchaseCar({brand: 'Ferrari', pice: 1000000});
+purchasedCar = purchaseCar({ brand: "Ferrari", pice: 1000000 });
 // throw an error since 'pice' doesn't exist...
 ```
 
@@ -315,9 +311,9 @@ If we take the `Sizes` type alias from above, we could have the following enum:
 
 ```typescript
 enum Sizes {
-    small,// 0
-    medium,// 1
-    large,// 2
+  small, // 0
+  medium, // 1
+  large, // 2
 }
 ```
 
@@ -329,15 +325,15 @@ Also, if you need string enums instead of the implicit numeric enmus, you can do
 
 ```typescript
 enum Sizes {
-    small,// 0
-    medium,// 1
-    large,// 2
+  small, // 0
+  medium, // 1
+  large, // 2
 }
 
 enum SizesStr {
-    small = 'small',
-    medium = 'medium',
-    large = 'large',
+  small = "small",
+  medium = "medium",
+  large = "large",
 }
 
 console.log(Sizes.small); // log 0
@@ -352,25 +348,25 @@ The syntax ressembles very much to ES6 syntax:
 
 ```typescript
 enum EngineType {
-    diesel = 'diesel',
-    petrol = 'petrol',
-    electric = 'electric'
+  diesel = "diesel",
+  petrol = "petrol",
+  electric = "electric",
 }
 
 class Car {
-    // you must have a constructor, otherwise TypeScript will complain...
-    constructor(brand: string, price: number) {
-        this.brandName = brand;
-        this.priceTag = price;
-    }
+  // you must have a constructor, otherwise TypeScript will complain...
+  constructor(brand: string, price: number) {
+    this.brandName = brand;
+    this.priceTag = price;
+  }
 
-    brandName: string
-    priceTag: number
-    //the following two propertys are not mandatory in the constructor because:
-    // - one has a default value
-    // - the last is optional
-    numberOfWheels: number = 4
-    engineType?: EngineType
+  brandName: string;
+  priceTag: number;
+  //the following two propertys are not mandatory in the constructor because:
+  // - one has a default value
+  // - the last is optional
+  numberOfWheels: number = 4;
+  engineType?: EngineType;
 }
 
 const renaultCar = new Car("Renault", 10000);
@@ -382,39 +378,46 @@ Similar to interfaces, you extend classes. However, the parent must be declared 
 
 ```typescript
 enum EngineType {
-    diesel = 'diesel',
-    petrol = 'petrol',
-    electric = 'electric'
+  diesel = "diesel",
+  petrol = "petrol",
+  electric = "electric",
 }
 
 class Car {
-    brandName: string
-    priceTag: number
-    numberOfWheels: number = 4
-    engineType?: EngineType
+  brandName: string;
+  priceTag: number;
+  numberOfWheels: number = 4;
+  engineType?: EngineType;
 
-    constructor(brandName: string, priceTag: number) {
-        this.brandName = brandName;
-        this.priceTag = priceTag;
-    }
+  constructor(brandName: string, priceTag: number) {
+    this.brandName = brandName;
+    this.priceTag = priceTag;
+  }
 }
 
 class CarSalesService extends Car {
-    soldOn?: Date
-    availableForSale: Date
+  soldOn?: Date;
+  availableForSale: Date;
 
-    constructor(brandName: string, priceTag: number, availableForSale: Date) {
-        super(brandName, priceTag);
-        this.availableForSale = availableForSale;
-    }
+  constructor(brandName: string, priceTag: number, availableForSale: Date) {
+    super(brandName, priceTag);
+    this.availableForSale = availableForSale;
+  }
 
-    buy() : void {
-        console.log(`This ${this.brandName} costs €${this.priceTag} was released on ${this.availableForSale.toDateString()}`);
-    }
-
+  buy(): void {
+    console.log(
+      `This ${this.brandName} costs €${
+        this.priceTag
+      } was released on ${this.availableForSale.toDateString()}`
+    );
+  }
 }
 
-const renaultCar = new CarSalesService("Renault", 10000, new Date("2023-01-01"));
+const renaultCar = new CarSalesService(
+  "Renault",
+  10000,
+  new Date("2023-01-01")
+);
 renaultCar.engineType = EngineType.diesel;
 
 renaultCar.buy(); // logs "This Renault costs €10000 was released on Sun Jan 01 2023"
@@ -428,45 +431,49 @@ Here is an example of interface implementation:
 
 ```typescript
 enum EngineType {
-    diesel = 'diesel',
-    petrol = 'petrol',
-    electric = 'electric'
+  diesel = "diesel",
+  petrol = "petrol",
+  electric = "electric",
 }
 
-interface IAvailableToBuy{
-    howMuch() : string;
+interface IAvailableToBuy {
+  howMuch(): string;
 }
 
 class Vehicule {
-    brandName: string
-    priceTag: number
-    numberOfWheels: number = 4
-    engineType?: EngineType
+  brandName: string;
+  priceTag: number;
+  numberOfWheels: number = 4;
+  engineType?: EngineType;
 
-    constructor(brandName: string, priceTag: number) {
-        this.brandName = brandName;
-        this.priceTag = priceTag;
-    }
+  constructor(brandName: string, priceTag: number) {
+    this.brandName = brandName;
+    this.priceTag = priceTag;
+  }
 }
 
 class SalesService extends Vehicule implements IAvailableToBuy {
-    availableOn: Date
+  availableOn: Date;
 
-    constructor(brandName: string, priceTag: number, availableOn: Date) {
-        super(brandName, priceTag);
-        this.availableOn = availableOn;
-    }
+  constructor(brandName: string, priceTag: number, availableOn: Date) {
+    super(brandName, priceTag);
+    this.availableOn = availableOn;
+  }
 
-    howMuch() : string {
-        return `This ${this.brandName} costs €${this.priceTag}`;
-    }
+  howMuch(): string {
+    return `This ${this.brandName} costs €${this.priceTag}`;
+  }
 }
 
 function askPrice(salesService: IAvailableToBuy) {
-    console.log(salesService.howMuch());
+  console.log(salesService.howMuch());
 }
 
-const buyingRenaultCar = new SalesService("Renault", 10000, new Date("2023-01-01"));
+const buyingRenaultCar = new SalesService(
+  "Renault",
+  10000,
+  new Date("2023-01-01")
+);
 const ducatiMotocycle = new Vehicule("Ducati", 5000);
 ducatiMotocycle.numberOfWheels = 2;
 
@@ -500,13 +507,15 @@ TypeScript knows `theCanvas` is a DOM `Element` but it cannot guess it is more s
 Using `as` followed by the more specific type, you can assert the type for TypeScript:
 
 ```typescript
-const theCanvas = document.querySelector(".the-textarea") as HTMLTextAreaElement;
+const theCanvas = document.querySelector(
+  ".the-textarea"
+) as HTMLTextAreaElement;
 ```
 
 If you use JSX, we could use the alternate syntax :
 
 ```typescript
-const theCanvas = <HTMLTextAreaElement> document.querySelector(".the-textarea");
+const theCanvas = <HTMLTextAreaElement>document.querySelector(".the-textarea");
 ```
 
 In the playground, you will need to set `JSX` option to `None`. We'll learn more about this below.
@@ -518,16 +527,20 @@ In the playground, you will need to set `JSX` option to `None`. We'll learn more
 It is used in a usecase like the following:
 
 ```typescript
-function getNetPrice(price: number, discount: number, format: boolean): unknown {
-    let netPrice = price * (1 - discount);
-    return format ? `$${netPrice}` : netPrice;
+function getNetPrice(
+  price: number,
+  discount: number,
+  format: boolean
+): unknown {
+  let netPrice = price * (1 - discount);
+  return format ? `$${netPrice}` : netPrice;
 }
 
 const netPrice = getNetPrice(20, 10, true);
-netPrice.startsWith('$'); // throw an exception
+netPrice.startsWith("$"); // throw an exception
 
 const netPriceProperly = getNetPrice(20, 10, true) as string;
-netPriceProperly.startsWith('$'); // works fine
+netPriceProperly.startsWith("$"); // works fine
 ```
 
 It seems to me that setting the type properly is better than using type assertions.
@@ -540,14 +553,14 @@ Though the syntax is slightly different, it will look familiar:
 
 ```typescript
 // T can be named anything else. It doesn't matter.
-const clone = <T> (value: T): T => {
-    const json = JSON.stringify(value);
-    return JSON.parse(json);
-}
+const clone = <T>(value: T): T => {
+  const json = JSON.stringify(value);
+  return JSON.parse(json);
+};
 
-const books: string[] = ['Harry Potter', 'Jurrasic Park', 'Goodnight Moon'];
+const books: string[] = ["Harry Potter", "Jurrasic Park", "Goodnight Moon"];
 const bookCopies = clone<string[]>(books);
-bookCopies.push('Project Hail Mary');
+bookCopies.push("Project Hail Mary");
 ```
 
 Read [the docs](https://www.typescriptlang.org/docs/handbook/2/generics.html#generic-types) for more information.
@@ -561,63 +574,63 @@ We can also use it with Reference types:
 - with classes:
 
 ```typescript
-class Person{
-    firstName: string
-    lastName: string
+class Person {
+  firstName: string;
+  lastName: string;
 
-    constructor(firstName:string, lastName:string) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+  constructor(firstName: string, lastName: string) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
 }
 
-class  Company{
-    name: string
+class Company {
+  name: string;
 
-    constructor(name:string) {
-        this.name = name;
-    }
+  constructor(name: string) {
+    this.name = name;
+  }
 }
 
-function greetFromClass(entity: Person | Company){
-    //we check the instance type
-    if(entity instanceof Person){
-        console.log(`Hello ${entity.firstName} ${entity.lastName}`)
-    }else{
-        console.log(`Hello ${entity.name}`)
-    }
+function greetFromClass(entity: Person | Company) {
+  //we check the instance type
+  if (entity instanceof Person) {
+    console.log(`Hello ${entity.firstName} ${entity.lastName}`);
+  } else {
+    console.log(`Hello ${entity.name}`);
+  }
 }
 
-greetFromClass(new Person('Daniel', 'Kelly'))
-greetFromClass(new Company('Vue School'))
+greetFromClass(new Person("Daniel", "Kelly"));
+greetFromClass(new Company("Vue School"));
 ```
 
 - with interfaces:
 
 ```typescript
-greetFromClass(new Person('Daniel', 'Kelly'))
-greetFromClass(new Company('Vue School'))
+greetFromClass(new Person("Daniel", "Kelly"));
+greetFromClass(new Company("Vue School"));
 
-interface Person{
-    firstName: string
-    lastName: string
+interface Person {
+  firstName: string;
+  lastName: string;
 }
 
-interface Company{
-    name: string
+interface Company {
+  name: string;
 }
 
-function greetFromInterface(entity: Person | Company){
-    //we use the `in` operator to check a property exists
-    if("firstName" in entity){
-        console.log(`Hello ${entity.firstName} ${entity.lastName}`)
-    }else{
-        console.log(`Hello ${entity.name}`)
-    }
+function greetFromInterface(entity: Person | Company) {
+  //we use the `in` operator to check a property exists
+  if ("firstName" in entity) {
+    console.log(`Hello ${entity.firstName} ${entity.lastName}`);
+  } else {
+    console.log(`Hello ${entity.name}`);
+  }
 }
 
-greetFromInterface({firstName: 'Daniel', lastName: 'Kelly'})
-greetFromInterface({name: 'Vue School'})
+greetFromInterface({ firstName: "Daniel", lastName: "Kelly" });
+greetFromInterface({ name: "Vue School" });
 ```
 
 ## How to make TypeScript available locally
@@ -646,3 +659,7 @@ For example:
 You should try to start using in VueJS applications.
 
 I know I will.
+
+In case you need to use JavaScript, using the `allowJs` flag to `true` in the `tsconfig.json` file will allow to have a specific file to use JavaScript instead of TypeScript.
+
+Remember though: in a Vue component, the script setup must not use any TypeScript if the attribute `lang="ts"` isn't set.
