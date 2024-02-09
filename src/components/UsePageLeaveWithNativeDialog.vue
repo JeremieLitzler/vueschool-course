@@ -6,10 +6,7 @@
     >
       <pre>usePageLeave & native dialog element</pre>
     </summary>
-    Try to move your cursor out of the window...
-    <pre>
-Cursor hovering the browser window? {{ userHasLeftWindow ? "No" : "Yes" }}</pre
-    >
+    <h3>Try to move your cursor out of the window...</h3>
     <label>
       Want to see native dialog as cursor leaves windows? Check the box ➡️
       <input type="checkbox" v-model="callDemoUserHasLeftWindowDialog" />

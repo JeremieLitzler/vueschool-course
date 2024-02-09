@@ -9,7 +9,7 @@
     <h2>Color shades and tints (10% graduation)</h2>
     <label
       >Base color:
-      <input type="text" name="colorHexa" v-model="colorBase" />
+      <input type="color" name="colorHexa" v-model="colorBase" />
     </label>
     <div class="demo-box" :style="`background-color: ${colorBase};`">
       {{ colorBase }}
@@ -28,9 +28,11 @@
             <p>#{{ tint }}</p>
           </li>
         </ul>
-        <textarea name="root-css-shades">{{
-          cssRootVars(shades, "shade").join("\r")
-        }}</textarea>
+        <div class="css-vars-wrapper">
+          <textarea name="root-css-shades">{{
+            cssRootVars(shades, "shade").join("\r")
+          }}</textarea>
+        </div>
       </article>
     </section>
     <section>
@@ -47,9 +49,11 @@
             <p>#{{ shade }}</p>
           </li>
         </ul>
-        <textarea name="root-css-shades">{{
-          cssRootVars(tints, "tint").join("\r")
-        }}</textarea>
+        <div class="css-vars-wrapper">
+          <textarea name="root-css-shades">{{
+            cssRootVars(tints, "tint").join("\r")
+          }}</textarea>
+        </div>
       </article>
     </section>
     <p>
@@ -70,18 +74,20 @@
 import { ref, computed, inject } from "vue";
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
 
-const summaryAccessibilityLabel = inject(summaryAccessibilityLabelKey);
+const summaryAccessibilityLabel: string | undefined = inject(
+  summaryAccessibilityLabelKey
+);
 const colorBase = ref("#3eaf7c");
 const shades = computed(() => calculateShades(colorBase.value));
 const tints = computed(() => calculateTints(colorBase.value));
 
-const cssRootVars = (colors, type) => {
+const cssRootVars = (colors: string[], type: string) => {
   let filter = 0;
 
   const cssRootVars = colors.map((color) => {
     if (filter > 0) {
       const cssVar = `  --theme-color-${type}-${filter}: #${color};`;
-      console.log("cssRootVars > filter > 0", filter);
+      //console.log("cssRootVars > filter > 0", filter);
 
       filter += 10;
       return cssVar;
@@ -95,18 +101,23 @@ const cssRootVars = (colors, type) => {
   return cssRootVars;
 };
 // pad a hexadecimal string with zeros if it needs it
-function pad(number, length) {
-  var str = "" + number;
-  while (str.length < length) {
-    str = "0" + str;
+function pad(hexaStr: string, length: number) {
+  let newHexaStr: string = "" + hexaStr;
+  while (newHexaStr.length < length) {
+    newHexaStr = "0" + newHexaStr;
   }
-  return str;
+  return newHexaStr;
 }
 
 // convert a hex string into an object with red, green, blue numeric properties
 // '501214' => { red: 80, green: 18, blue: 20 }
-function hexToRGB(colorValue) {
-  const noHashColor = colorBase.value.replace("#", "");
+interface RgbColor {
+  red: number;
+  green: number;
+  blue: number;
+}
+function hexToRGB(colorValue: string): RgbColor {
+  const noHashColor = colorValue.replace("#", "");
   const redPart = noHashColor.substring(0, 2);
   const greenPart = noHashColor.substring(2, 4);
   const bluePart = noHashColor.substring(4, 6);
@@ -115,7 +126,7 @@ function hexToRGB(colorValue) {
     `${redPart} / ${greenPart} / ${bluePart}`
   );
 
-  const rbgColorObj = {
+  const rbgColorObj: RgbColor = {
     red: parseInt(redPart, 16),
     green: parseInt(greenPart, 16),
     blue: parseInt(bluePart, 16),
@@ -128,19 +139,35 @@ function hexToRGB(colorValue) {
 // convert an integer to a 2-char hex string
 // for sanity, round it and ensure it is between 0 and 255
 // 43 => '2b'
-function intToHex(rgbint) {
-  return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
+function intToHex(rgbint: number) {
+  console.log("Start intToHex...");
+
+  const mathRoundResult = Math.round(rgbint);
+  const mathMaxResult = Math.max(mathRoundResult, 0);
+  const mathMinResult = Math.min(mathMaxResult, 255);
+  const mathMinResultConvertion = mathMinResult.toString(16);
+  const paddingResult = pad(mathMinResultConvertion, 2);
+  console.log("result intToHex", {
+    mathRoundResult,
+    mathMaxResult,
+    mathMinResult,
+    mathMinResultConvertion,
+    paddingResult,
+  });
+  return paddingResult;
+  //original convertion...
+  //return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
 }
 
 // convert one of our rgb color objects to a full hex color string
 // { red: 80, green: 18, blue: 20 } => '501214'
-function rgbToHex(rgb) {
+function rgbToHex(rgb: RgbColor) {
   return intToHex(rgb.red) + intToHex(rgb.green) + intToHex(rgb.blue);
 }
 
 // shade one of our rgb color objects to a distance of i*10%
 // ({ red: 80, green: 18, blue: 20 }, 1) => { red: 72, green: 16, blue: 18 }
-function rgbShade(rgb, i) {
+function rgbShade(rgb: RgbColor, i: number) {
   return {
     red: rgb.red * (1 - 0.1 * i),
     green: rgb.green * (1 - 0.1 * i),
@@ -150,7 +177,7 @@ function rgbShade(rgb, i) {
 
 // tint one of our rgb color objects to a distance of i*10%
 // ({ red: 80, green: 18, blue: 20 }, 1) => { red: 98, green: 42, blue: 44 }
-function rgbTint(rgb, i) {
+function rgbTint(rgb: RgbColor, i: number) {
   const tint = {
     red: rgb.red + (255 - rgb.red) * i * 0.1,
     green: rgb.green + (255 - rgb.green) * i * 0.1,
@@ -164,25 +191,25 @@ function rgbTint(rgb, i) {
 // take a hex color string and produce a list of 10 tints or shades of that color
 // shadeOrTint should be either `rgbShade` or `rgbTint`, as defined above
 // this allows us to use `calculate` for both shade and tint
-function calculate(colorValue, shadeOrTint) {
+function calculate(colorValue: string, shadeOrTint: Function) {
   console.log("calculate > colorValue", colorValue);
 
-  var color = hexToRGB(colorValue);
+  const color: RgbColor = hexToRGB(colorValue);
   var shadeValues = [];
 
-  for (var i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {
     shadeValues[i] = rgbToHex(shadeOrTint(color, i));
   }
   return shadeValues;
 }
 
 // given a color value, return an array of ten shades in 10% increments
-function calculateShades(colorValue) {
+function calculateShades(colorValue: string) {
   return calculate(colorValue, rgbShade).concat("000000");
 }
 
 // given a color value, return an array of ten tints in 10% increments
-function calculateTints(colorValue) {
+function calculateTints(colorValue: string) {
   return calculate(colorValue, rgbTint).concat("ffffff");
 }
 </script>
@@ -211,10 +238,17 @@ function calculateTints(colorValue) {
   padding: 0;
   margin: 0;
 }
-.demo-box textarea {
-  width: 99%;
-  height: 10vh;
+.demo-box .css-vars-wrapper {
+  width: 100%;
+  margin: 0 auto;
+  height: 10em;
 }
+.css-vars-wrapper textarea {
+  margin-top: 1.25em;
+  height: 15vh;
+  width: 99.25%;
+}
+
 .color-box {
   height: 2em;
 }

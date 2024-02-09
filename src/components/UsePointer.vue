@@ -1,27 +1,24 @@
 <template>
-  <h1>{{ title }}</h1>
   <details>
     <summary
       :aria-label="summaryAccessibilityLabel"
       :title="summaryAccessibilityLabel"
     >
-      <pre>useTitle</pre>
+      <pre>usePointer</pre>
     </summary>
-    <h2>Demo of useTitle</h2>
-    <input type="text" v-model="title" />
+    <h3>What is <i>usePointer useful for?</i></h3>
+    <pre>{{ pointerObj }}</pre>
   </details>
 </template>
 
 <script setup lang="ts">
-import { useTitle } from "@vueuse/core";
 import { inject } from "vue";
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
-
 const summaryAccessibilityLabel: string | undefined = inject(
   summaryAccessibilityLabelKey
 );
 
-const title = useTitle();
+import { usePointer } from "@vueuse/core";
+const pointerObj = usePointer();
 </script>
-
 <style scoped></style>

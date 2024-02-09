@@ -34,15 +34,13 @@
   </details>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, inject } from "vue";
 import { onKeyStroke } from "@vueuse/core";
 
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
 
-const summaryAccessibilityLabel: string | undefined = inject(
-  summaryAccessibilityLabelKey
-);
+const summaryAccessibilityLabel = inject(summaryAccessibilityLabelKey);
 
 const translateX = ref(0);
 const translateY = ref(0);
