@@ -21,6 +21,7 @@ import UseRefHistory from "./components/UseRefHistory.vue";
 import UseLocalStorage from "./components/UseLocalStorage.vue";
 import UseFetch from "./components/UseFetch.vue";
 import UseBase64 from "./components/UseBase64.vue";
+import UseCycleList from "./components/UseCycleList.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -93,6 +94,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use" id="Use-Base-64">
     <UseBase64 />
+  </section>
+  <section class="use" id="Use-Cycle-List">
+    <UseCycleList />
   </section>
 </template>
 

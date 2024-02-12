@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
+import { /*ref,*/ inject } from "vue";
 // import { useX } from "@vueuse/core";
 
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
