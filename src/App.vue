@@ -79,7 +79,7 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   <section class="use">
     <UseTransition />
   </section>
-  <section class="use">
+  <section class="use" id="Use-Ref-History">
     <UseRefHistory />
   </section>
 </template>

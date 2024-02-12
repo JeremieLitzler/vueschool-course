@@ -76,6 +76,7 @@ const {
   redo: redoTodo,
 } = useRefHistory(todos, {
   deep: true,
+  capacity: 15, // set the maximum history depth
 });
 
 const addTodo = () => {
