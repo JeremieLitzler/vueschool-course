@@ -16,6 +16,7 @@ import UsePointer from "./components/UsePointer.vue";
 import UseRafFn from "./components/UseRafFn.vue";
 import UseTimeout from "./components/UseTimeout.vue";
 import UseTimestamp from "./components/UseTimestamp.vue";
+import UseTransition from "./components/UseTransition.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -73,6 +74,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use">
     <UseTimestamp />
+  </section>
+  <section class="use">
+    <UseTransition />
   </section>
 </template>
 

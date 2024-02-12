@@ -123,3 +123,7 @@ button:hover {
 a:hover {
   color: #747bff;
 }
+
+.btn-spaced {
+  margin-right: 1em;
+}

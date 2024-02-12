@@ -17,7 +17,8 @@
           {{ format }}
         </option>
       </select>
-      <pre>{{ formattedDateTime }}</pre>
+      <pre>From <i>useTimestamp</i>: {{ formattedDateTime }}</pre>
+      <pre>From <i>useNow</i>: {{ formattedDateTimeNow }}</pre>
     </article>
   </details>
 </template>
@@ -37,9 +38,10 @@ const secondsElapsedSinceLastRefresh = computed(() => {
   return Math.floor((currentTimestamp.value - start) / 1000);
 });
 
-const formats = ["D MMMM YYYY", "YYYY-MM-DD", "MMM DD, YYYY HH:mm"];
+const formats = ["D MMMM YYYY", "YYYY-MM-DD", "MMM DD, YYYY HH:mm", "HH:mm:ss"];
 const selected = ref(formats[0]);
 
 const formattedDateTime = useDateFormat(useTimestamp(), selected);
+const formattedDateTimeNow = useDateFormat(useNow(), selected);
 </script>
 <style scoped></style>
