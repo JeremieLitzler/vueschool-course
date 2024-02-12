@@ -19,6 +19,7 @@ import UseTimestamp from "./components/UseTimestamp.vue";
 import UseTransition from "./components/UseTransition.vue";
 import UseRefHistory from "./components/UseRefHistory.vue";
 import UseLocalStorage from "./components/UseLocalStorage.vue";
+import UseFetch from "./components/UseFetch.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -85,6 +86,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use" id="Use-Local-Storage">
     <UseLocalStorage />
+  </section>
+  <section class="use" id="Use-Fetch">
+    <UseFetch />
   </section>
 </template>
 
