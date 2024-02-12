@@ -15,6 +15,7 @@ import UsePageLeaveWithNativeDialog from "./components/UsePageLeaveWithNativeDia
 import UsePointer from "./components/UsePointer.vue";
 import UseRafFn from "./components/UseRafFn.vue";
 import UseTimeout from "./components/UseTimeout.vue";
+import UseTimestamp from "./components/UseTimestamp.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -69,6 +70,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use">
     <UseTimeout />
+  </section>
+  <section class="use">
+    <UseTimestamp />
   </section>
 </template>
 
