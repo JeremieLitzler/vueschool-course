@@ -18,6 +18,7 @@ import UseTimeout from "./components/UseTimeout.vue";
 import UseTimestamp from "./components/UseTimestamp.vue";
 import UseTransition from "./components/UseTransition.vue";
 import UseRefHistory from "./components/UseRefHistory.vue";
+import UseLocalStorage from "./components/UseLocalStorage.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -81,6 +82,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use" id="Use-Ref-History">
     <UseRefHistory />
+  </section>
+  <section class="use" id="Use-Local-Storage">
+    <UseLocalStorage />
   </section>
 </template>
 
