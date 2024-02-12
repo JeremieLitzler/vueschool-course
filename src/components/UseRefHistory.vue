@@ -68,7 +68,7 @@ const {
 });
 
 const newTodo = ref("");
-const todos = ref([]);
+const todos = ref<string[]>([]);
 
 const {
   history: historyTodos,
@@ -80,7 +80,7 @@ const {
 });
 
 const addTodo = () => {
-  todos.value.push(newTodo.value as string);
+  todos.value.push(newTodo.value);
   newTodo.value = "";
 };
 </script>
