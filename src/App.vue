@@ -13,6 +13,7 @@ import UseGeolocation from "./components/UseGeolocation.vue";
 import UsePageLeave from "./components/UsePageLeave.vue";
 import UsePageLeaveWithNativeDialog from "./components/UsePageLeaveWithNativeDialog.vue";
 import UsePointer from "./components/UsePointer.vue";
+import UseRafFn from "./components/UseRafFn.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -61,6 +62,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use">
     <UsePointer />
+  </section>
+  <section class="use">
+    <UseRafFn />
   </section>
 </template>
 
