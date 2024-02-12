@@ -4,7 +4,7 @@
       :aria-label="summaryAccessibilityLabel"
       :title="summaryAccessibilityLabel"
     >
-      <pre>useFetch</pre>
+      <pre>useFetch & computedAsync </pre>
     </summary>
     <article>
       <h3>Demo of <i>useFetch</i></h3>
@@ -12,6 +12,11 @@
       <pre v-if="error" style="color: red">{{ error }}</pre>
       <p v-else-if="isFetching" style="color: blue">Loading...</p>
       <pre v-else>{{ data }}</pre>
+    </article>
+    <article>
+      <h3>Demo of <i>computedAsync</i></h3>
+      <p v-if="loading" style="color: blue">Loading...</p>
+      <pre v-else>{{ post }}</pre>
     </article>
   </details>
 </template>
@@ -25,7 +30,7 @@ const summaryAccessibilityLabel: string | undefined = inject(
   summaryAccessibilityLabelKey
 );
 
-import { useFetch } from "@vueuse/core";
+import { useFetch, computedAsync } from "@vueuse/core";
 const id = ref(1);
 const url = computed(
   () => `https://jsonplaceholder.typicode.com/todos/${id.value}`
@@ -33,5 +38,16 @@ const url = computed(
 const { isFetching, data, error } = useFetch(url, {
   refetch: true,
 });
+
+const loading = ref(true);
+const urlApiPost = computed(
+  () => `https://jsonplaceholder.typicode.com/posts/${id.value}`
+);
+
+const post = computedAsync(async () => {
+  const res = await fetch(urlApiPost.value);
+  loading.value = false;
+  return res.json();
+}, null);
 </script>
 <style scoped></style>
