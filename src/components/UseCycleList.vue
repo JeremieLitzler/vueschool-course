@@ -22,20 +22,29 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from "vue";
-import { useCycleList } from "@vueuse/core";
-
+import { computed, inject } from "vue";
+import { useAppCycleList } from "../composables/useAppCycleList";
+import { useIntervalFn } from "@vueuse/core";
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
 
 const summaryAccessibilityLabel: string | undefined = inject(
   summaryAccessibilityLabelKey
 );
-
-const { state, next, prev } = useCycleList([
+const images = [
   "https://picsum.photos/id/237/300/200",
   "https://picsum.photos/id/23/300/200",
   "https://picsum.photos/id/7/300/200",
-]);
+];
+const { state, next, prev, goingForward } = useAppCycleList(images);
+
+useIntervalFn(() => next(), 3000);
+
+const direction = computed(() => {
+  if (goingForward.value) {
+    return { from: `translateX(100%)`, to: `translateX(-100%)` };
+  }
+  return { from: `translateX(-100%)`, to: `translateX(100%)` };
+});
 </script>
 <style scoped>
 .carousel {
@@ -54,9 +63,11 @@ img {
   transition: all 0.2s ease;
 }
 
-.v-enter-from,
+.v-enter-from {
+  transform: v-bind("direction.from");
+}
 .v-leave-to {
-  opacity: 0;
+  transform: v-bind("direction.to");
 }
 
 .controls {
