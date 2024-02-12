@@ -18,7 +18,6 @@
 
 <script setup lang="ts">
 import { ref, computed, inject } from "vue";
-import { useFetch } from "@vueuse/core";
 
 import { summaryAccessibilityLabelKey } from "../injectKeys.ts";
 
@@ -26,6 +25,7 @@ const summaryAccessibilityLabel: string | undefined = inject(
   summaryAccessibilityLabelKey
 );
 
+import { useFetch } from "@vueuse/core";
 const id = ref(1);
 const url = computed(
   () => `https://jsonplaceholder.typicode.com/todos/${id.value}`
