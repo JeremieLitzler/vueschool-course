@@ -9,7 +9,7 @@
             <a href="#">{{ thread.title }}</a>
           </p>
           <p class="text-faded text-xsmall">
-            By <a href="profile.html">{{ userById(thread.userId).name }}</a
+            By <a href="profile.html">{{ getUserById(thread.userId).name }}</a
             >, {{ thread.publishedAt }}.
           </p>
         </div>
@@ -23,13 +23,13 @@
 
           <img
             class="avatar-medium"
-            :src="userById(thread.userId).avatar"
-            :alt="`Avatar of ${userById(thread.userId).name}`"
+            :src="getUserById(thread.userId).avatar"
+            :alt="`Avatar of ${getUserById(thread.userId).name}`"
           />
 
           <div>
             <p class="text-xsmall">
-              <a href="profile.html">{{ userById(thread.userId).name }}</a>
+              <a href="profile.html">{{ getUserById(thread.userId).name }}</a>
             </p>
             <p class="text-xsmall text-faded">{{ thread.publishedAt }}</p>
           </div>
@@ -50,21 +50,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type Thread from "../types/Thread.ts";
-import type User from "../types/User.ts";
-
 import useSampleData from "../composables/useSampleData.ts";
+import useUser from "../composables/useUser";
 
-const { threadsData, usersData } = useSampleData();
+const { getUserById } = useUser();
+const { threadsData } = useSampleData();
 
 const threads = ref<Thread[]>(threadsData);
-const users = ref<User[]>(usersData);
-
-const userById = (userId: string | undefined): User => {
-  const matchingUser = users.value.find((user) => user.id === userId);
-  if (matchingUser === undefined) return {};
-
-  return matchingUser;
-};
 </script>
 
 <style scoped></style>
+../composables/useUser.ts
