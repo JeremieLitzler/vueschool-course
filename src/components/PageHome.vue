@@ -1,61 +1,69 @@
 <template>
-  <div class="container">
-    <div v-for="thread in threads" :key="thread.id" class="col-large push-top">
-      <h1>{{ thread.title }}</h1>
+  <div v-for="thread in threads" :key="thread.id" class="col-large push-top">
+    <h1>{{ thread.title }}</h1>
 
-      <div class="post-list">
-        <div class="post" v-for="postId in thread.posts" :key="postId">
-          <div class="user-info">
-            <a href="#" class="user-name">{{ userById(postById(postId).userId).name }}</a>
+    <div class="post-list">
+      <div class="post" v-for="postId in thread.posts" :key="postId">
+        <div class="user-info">
+          <a href="#" class="user-name">{{
+            userById(postById(postId).userId).name
+          }}</a>
 
-            <a href="#">
-              <img
-                class="avatar-large"
-                :src="userById(postById(postId).userId).avatar"
-                :alt="userById(postById(postId).userId).name"
-              />
-            </a>
+          <a href="#">
+            <img
+              class="avatar-large"
+              :src="userById(postById(postId).userId).avatar"
+              :alt="userById(postById(postId).userId).name"
+            />
+          </a>
 
-            <p class="desktop-only text-small">107 posts</p>
+          <p class="desktop-only text-small">107 posts</p>
+        </div>
+
+        <div class="post-content">
+          <div>
+            <p>
+              {{ postById(postId).text }}
+            </p>
           </div>
+        </div>
 
-          <div class="post-content">
-            <div>
-              <p>
-                {{ postById(postId).text }}
-              </p>
-            </div>
-          </div>
-
-          <div class="post-date text-faded">
-            {{ postById(postId).publishedAt }}
-          </div>
+        <div class="post-date text-faded">
+          {{ postById(postId).publishedAt }}
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import sourceData from '@/data.json'
-//Use reactive for objects or arrays
-//Use ref for other types (bool, primitives, ...)
-// => in this case, add ".value" to ref() variables.
-import { reactive /*ref*/ } from 'vue'
+<script setup lang="ts">
+import { ref } from "vue";
+import type Thread from "../types/Thread.ts";
+import type User from "../types/User.ts";
+import type Post from "../types/Post.ts";
 
-const threads = reactive(sourceData.threads)
-const posts = reactive(sourceData.posts)
-const users = reactive(sourceData.users)
+import useSampleData from "../composables/useSampleData.ts";
 
-function postById(postId) {
-  return posts.find((post) => post.id === postId)
-}
+const { threadsData, postsData, usersData } = useSampleData();
 
-function userById(userId) {
-  return users.find((user) => user.id === userId)
-}
+const threads = ref<Thread[]>(threadsData);
+const posts = ref<Post[]>(postsData);
+const users = ref<User[]>(usersData);
+
+const postById = (postId: string | undefined): Post => {
+  const matchingPost = posts.value.find((post: Post) => post.id === postId);
+  if (matchingPost === undefined) return {};
+
+  return matchingPost;
+};
+
+const userById = (userId: string | undefined): User => {
+  const matchingUser = users.value.find((user) => user.id === userId);
+  if (matchingUser === undefined) return {};
+
+  return matchingUser;
+};
 </script>
-
 <style scoped>
 .post-list {
   margin-top: 20px;
@@ -189,7 +197,7 @@ function userById(userId) {
   left: -25px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: '\f10e';
+  content: "\f10e";
   color: #263959;
 }
 
@@ -241,7 +249,7 @@ function userById(userId) {
   left: -20px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: '\f10e';
+  content: "\f10e";
   color: #263959;
 }
 
@@ -300,7 +308,7 @@ function userById(userId) {
   left: -25px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: '\f10e';
+  content: "\f10e";
   color: #263959;
 }
 
