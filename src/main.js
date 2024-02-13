@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
 
-import { routes } from "./routes";
+import { routes } from "./router";
 
 const router = createRouter({
   history: createWebHistory(),
