@@ -8,7 +8,7 @@ export const routes = [
     component: PageHomeVue,
   },
   {
-    path: "/thread/:id",
+    path: "/thread/show/:id",
     name: "ThreadShow",
     component: PageThreadShowVue,
     props: true,
