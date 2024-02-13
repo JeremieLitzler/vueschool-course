@@ -9,7 +9,7 @@ const homeRoute: RouteRecordRaw = {
   component: PageHome,
 };
 const threadShowRoute: RouteRecordRaw = {
-  path: "/thread/:id",
+  path: "/thread/show/:id",
   name: "ThreadShow",
   component: PageThreadShow, //() => import("../components/PageThreadShow.vue"),
   props: true,
