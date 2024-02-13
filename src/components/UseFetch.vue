@@ -50,4 +50,8 @@ const post = computedAsync(async () => {
   return res.json();
 }, null);
 </script>
-<style scoped></style>
+<style scoped>
+pre {
+  text-wrap: wrap;
+}
+</style>

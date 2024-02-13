@@ -23,6 +23,7 @@ import UseFetch from "./components/UseFetch.vue";
 import UseBase64 from "./components/UseBase64.vue";
 import UseCycleList from "./components/UseCycleList.vue";
 import UseAlertFavicon from "./components/UseAlertFavicon.vue";
+import UseArrayDifference from "./components/UseArrayDifference.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -101,6 +102,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   </section>
   <section class="use" id="Use-Alert-Favicon">
     <UseAlertFavicon />
+  </section>
+  <section class="use" id="Use-Alert-Favicon">
+    <UseArrayDifference />
   </section>
 </template>
 

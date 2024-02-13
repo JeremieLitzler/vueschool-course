@@ -12,7 +12,7 @@
       :style="`background-position: ${activePositionInterval}px 50%;`"
     ></div>
     <button @click="isActiveInterval ? pauseInterval() : resumeInterval()">
-      {{ isActiveInterval ? "Stop the man" : "Make the man walk with" }}
+      {{ isActiveInterval ? "Stop the man" : "Make the man walk" }}
     </button>
     <h3>Make the man walk with <i>useRafFn</i></h3>
     <div
@@ -20,7 +20,7 @@
       :style="`background-position: ${activePositionRaf}px 50%;`"
     ></div>
     <button @click="isActive ? pause() : resume()">
-      {{ isActive ? "Stop the man" : "Make the man walk with" }}
+      {{ isActive ? "Stop the man" : "Make the man walk" }}
     </button>
   </details>
 </template>

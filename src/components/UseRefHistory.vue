@@ -87,6 +87,7 @@ const addTodo = () => {
 <style scoped>
 section {
   display: flex;
+  flex-wrap: wrap;
 }
 section > article {
   margin: 1em;

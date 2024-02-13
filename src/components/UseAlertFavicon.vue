@@ -1,11 +1,19 @@
 <template>
-  <details>
+  <details id="useAlertFavicon">
     <summary
       :aria-label="summaryAccessibilityLabel"
       :title="summaryAccessibilityLabel"
     >
       <pre>useAlertFavicon</pre>
     </summary>
+    <article>
+      <p>
+        The <i>Alert</i> button will show an emoji every second in place of the
+        favicon
+      </p>
+      <p>The <i>Change</i> button will replace the favicon with another one</p>
+      <p>The <i>Cancel</i> will stop the favicon animation</p>
+    </article>
     <article>
       <h3>Demo 1 with defaults</h3>
       <button class="btn-spaced" @click="defaultAlert">Alert</button>
