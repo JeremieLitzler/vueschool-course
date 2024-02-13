@@ -3,7 +3,7 @@
     <div class="thread-list">
       <h2 class="list-title">Threads</h2>
 
-      <div class="thread" v-for="thread in threads" :key="thread.id">
+      <div class="thread" v-for="thread in props.threads" :key="thread.id">
         <div>
           <p>
             <a href="#">{{ thread.title }}</a>
@@ -48,15 +48,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import type Thread from "../types/Thread.ts";
-import useSampleData from "../composables/useSampleData.ts";
 import useUser from "../composables/useUser";
 
-const { getUserById } = useUser();
-const { threadsData } = useSampleData();
+const props = defineProps<{
+  threads: Thread[];
+}>();
 
-const threads = ref<Thread[]>(threadsData);
+const { getUserById } = useUser();
 </script>
 
 <style scoped></style>
