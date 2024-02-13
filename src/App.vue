@@ -1,18 +1,14 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
   <div class="container">
-    <page-home />
+    <router-view />
   </div>
 </template>
 
 <script>
-import PageHome from "./components/PageHome.vue";
-
 export default {
   name: "App",
-  components: {
-    PageHome,
-  },
+  components: {},
 };
 </script>
 

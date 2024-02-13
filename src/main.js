@@ -1,5 +1,14 @@
 import { createApp } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
+
 import App from "./App.vue";
+
+import { routes } from "./routes";
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...
@@ -9,6 +18,7 @@ const forumApp = createApp(App);
 
 // or use  a plugin...
 // forumApp.use(SomePlugin)
+forumApp.use(router);
 
 // Mount to the DOM the Vue app
 forumApp.mount("#app");
