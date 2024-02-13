@@ -24,6 +24,7 @@ import UseBase64 from "./components/UseBase64.vue";
 import UseCycleList from "./components/UseCycleList.vue";
 import UseAlertFavicon from "./components/UseAlertFavicon.vue";
 import UseArrayDifference from "./components/UseArrayDifference.vue";
+import UseLocalFileSystemAccess from "./components/UseLocalFileSystemAccess.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
@@ -103,8 +104,11 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   <section class="use" id="Use-Alert-Favicon">
     <UseAlertFavicon />
   </section>
-  <section class="use" id="Use-Alert-Favicon">
+  <section class="use" id="Use-Array-Difference">
     <UseArrayDifference />
+  </section>
+  <section class="use" id="Use-Local-File-System-Access">
+    <UseLocalFileSystemAccess />
   </section>
 </template>
 
