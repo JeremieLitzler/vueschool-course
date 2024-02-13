@@ -1,16 +1,20 @@
 import PageHomeVue from "@/components/PageHome.vue";
-import PageThreadShowVue from "@/components/PageThreadShow.vue";
 
 export const routes = [
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: PageHomeVue,
   },
   {
     path: "/thread/show/:id",
     name: "ThreadShow",
-    component: PageThreadShowVue,
+    component: () => import("@/components/PageThreadShow.vue"),
     props: true,
+  },
+  {
+    path: "/:patchMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/components/PageNotFound.vue"),
   },
 ];
