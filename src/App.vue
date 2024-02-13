@@ -22,12 +22,13 @@ import UseLocalStorage from "./components/UseLocalStorage.vue";
 import UseFetch from "./components/UseFetch.vue";
 import UseBase64 from "./components/UseBase64.vue";
 import UseCycleList from "./components/UseCycleList.vue";
+import UseAlertFavicon from "./components/UseAlertFavicon.vue";
 
 provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
 </script>
 
 <template>
-  <div>
+  <div class="icons">
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
@@ -98,6 +99,9 @@ provide(summaryAccessibilityLabelKey, "Click to open or close the demo");
   <section class="use" id="Use-Cycle-List">
     <UseCycleList />
   </section>
+  <section class="use" id="Use-Alert-Favicon">
+    <UseAlertFavicon />
+  </section>
 </template>
 
 <style>
@@ -154,5 +158,10 @@ section.use {
 summary {
   padding: 0.5em;
   /* border-radius: 1em 1em 100em 100em; */
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
 }
 </style>
