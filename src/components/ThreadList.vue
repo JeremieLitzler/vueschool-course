@@ -51,9 +51,14 @@
 import sourceData from "@/data.json";
 
 export default {
+  props: {
+    threads: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      threads: sourceData.threads,
       posts: sourceData.posts,
       users: sourceData.users,
     };
