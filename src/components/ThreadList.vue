@@ -52,8 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import type Thread from '../types/Thread.ts';
-import useUser from '../composables/useUser';
+import type Thread from '@/types/Thread.ts';
+import useUser from '@/composables/useUser';
 
 const props = defineProps<{
   threads: Thread[];
@@ -63,4 +63,4 @@ const { getUserById } = useUser();
 </script>
 
 <style scoped></style>
-../composables/useUser.ts
+@/composables/useUser.ts

@@ -1,5 +1,5 @@
-import type Thread from '../types/Thread.ts';
-import useSampleData from '../composables/useSampleData.ts';
+import type Thread from '@/types/Thread.ts';
+import useSampleData from '@/composables/useSampleData.ts';
 
 const { threadsData } = useSampleData();
 

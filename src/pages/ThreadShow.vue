@@ -46,10 +46,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type Thread from '../types/Thread.ts';
-import useSampleData from '../composables/useSampleData.ts';
-import usePost from '../composables/usePost';
-import useUser from '../composables/useUser';
+import type Thread from '@/types/Thread.ts';
+import useSampleData from '@/composables/useSampleData.ts';
+import usePost from '@/composables/usePost';
+import useUser from '@/composables/useUser';
 const { getPostById } = usePost();
 const { getUserById } = useUser();
 const { threadsData } = useSampleData();

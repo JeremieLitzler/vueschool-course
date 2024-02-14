@@ -1,5 +1,5 @@
-import useSampleData from "./useSampleData.ts";
-import type User from "../types/User.ts";
+import useSampleData from './useSampleData.ts';
+import type User from '@/types/User.ts';
 
 const { usersData } = useSampleData();
 

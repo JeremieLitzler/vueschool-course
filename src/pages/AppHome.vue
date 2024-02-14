@@ -4,10 +4,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import type Thread from "../types/Thread.ts";
-import useSampleData from "../composables/useSampleData.ts";
-import ThreadList from "./ThreadList.vue";
+import { ref } from 'vue';
+import type Thread from '@/types/Thread.ts';
+import useSampleData from '@/composables/useSampleData.ts';
+import ThreadList from '@/components/ThreadList.vue';
 
 const { threadsData } = useSampleData();
 
@@ -146,7 +146,7 @@ const threads = ref<Thread[]>(threadsData);
   left: -25px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: "\f10e";
+  content: '\f10e';
   color: #263959;
 }
 
@@ -198,7 +198,7 @@ const threads = ref<Thread[]>(threadsData);
   left: -20px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: "\f10e";
+  content: '\f10e';
   color: #263959;
 }
 
@@ -257,7 +257,7 @@ const threads = ref<Thread[]>(threadsData);
   left: -25px;
   font-size: 42px;
   font-family: FontAwesome;
-  content: "\f10e";
+  content: '\f10e';
   color: #263959;
 }
 

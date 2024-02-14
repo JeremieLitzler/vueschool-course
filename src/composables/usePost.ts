@@ -1,5 +1,5 @@
-import type Post from "../types/Post.ts";
-import useSampleData from "../composables/useSampleData.ts";
+import type Post from '@/types/Post.ts';
+import useSampleData from '@/composables/useSampleData.ts';
 
 const { postsData } = useSampleData();
 
