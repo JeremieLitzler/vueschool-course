@@ -28,6 +28,8 @@ export const routes = [
       next({
         name: "NotFound",
         params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the PageNotFound component.
+        query: to.query,
+        hash: to.hash,
       });
     },
   },
