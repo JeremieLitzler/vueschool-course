@@ -1,5 +1,13 @@
 <template>
-  <div class="col-large push-top">
+  <div v-if="!thread" class="col-full text-center">
+    <h1>Oops, the thread isn't valid</h1>
+    <p>
+      The thread (<b>ID: {{ id }}</b
+      >) doesn't exist.
+    </p>
+    <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
+  </div>
+  <div v-else class="col-large push-top">
     <h1>{{ thread.title }}</h1>
     <div class="post-list">
       <div class="post" v-for="postId in thread.posts" :key="postId">
