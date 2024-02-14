@@ -1,16 +1,16 @@
 import sourceData from "@/data.json";
-import PageHomeVue from "@/components/PageHome.vue";
+import AppHome from "@/pages/AppHome.vue";
 
 export const routes = [
   {
     path: "/",
     name: "Home",
-    component: PageHomeVue,
+    component: AppHome,
   },
   {
     path: "/thread/show/:id",
     name: "ThreadShow",
-    component: () => import("@/components/PageThreadShow.vue"),
+    component: () => import("@/pages/ThreadShow.vue"),
     props: true,
     beforeEnter: (to, from, next) => {
       //does the thread exists?
@@ -27,7 +27,7 @@ export const routes = [
       //next({ name: "NotFound" }); // <-- redirect with URL change
       next({
         name: "NotFound",
-        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the PageNotFound component.
+        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
       });
@@ -36,6 +36,6 @@ export const routes = [
   {
     path: "/:patchMatch(.*)*",
     name: "NotFound",
-    component: () => import("@/components/PageNotFound.vue"),
+    component: () => import("@/pages/NotFound.vue"),
   },
 ];
