@@ -9,38 +9,7 @@
   </div>
   <div v-else class="col-large push-top">
     <h1>{{ thread!.title }}</h1>
-
-    <div class="post-list">
-      <div class="post" v-for="postId in thread!.posts" :key="postId">
-        <div class="user-info">
-          <a href="#" class="user-name">{{
-            getUserById(getPostById(postId).userId).name
-          }}</a>
-
-          <a href="#">
-            <img
-              class="avatar-large"
-              :src="getUserById(getPostById(postId).userId).avatar"
-              :alt="getUserById(getPostById(postId).userId).name"
-            />
-          </a>
-
-          <p class="desktop-only text-small">107 posts</p>
-        </div>
-
-        <div class="post-content">
-          <div>
-            <p>
-              {{ getPostById(postId).text }}
-            </p>
-          </div>
-        </div>
-
-        <div class="post-date text-faded">
-          {{ getPostById(postId).publishedAt }}
-        </div>
-      </div>
-    </div>
+    <PostList :posts="threadPosts" />
   </div>
 </template>
 
@@ -49,12 +18,10 @@ import { ref, computed } from 'vue';
 import type Thread from '@/types/Thread.ts';
 import useSampleData from '@/composables/useSampleData.ts';
 import usePost from '@/composables/usePost';
-import useUser from '@/composables/useUser';
-const { getPostById } = usePost();
-const { getUserById } = useUser();
-const { threadsData } = useSampleData();
+import PostList from '@/components/PostList.vue';
 
-const threads = ref<Thread[]>(threadsData);
+const { getPostByThreaId } = usePost();
+const { threadsData } = useSampleData();
 
 const props = defineProps({
   id: {
@@ -62,6 +29,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+const threads = ref<Thread[]>(threadsData);
+const threadPosts = getPostByThreaId(props.id);
 
 const thread = computed((): Thread | undefined => {
   const match = threads.value.find(

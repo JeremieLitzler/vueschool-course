@@ -11,7 +11,16 @@ export default function usePost() {
     return matchingPost;
   };
 
+  const getPostByThreaId = (threadId: string | undefined): Post[] => {
+    const matches = postsData.filter(
+      (post: Post) => post.threadId === threadId
+    );
+
+    return matches;
+  };
+
   return {
     getPostById,
+    getPostByThreaId,
   };
 }

@@ -63,4 +63,3 @@ const { getUserById } = useUser();
 </script>
 
 <style scoped></style>
-@/composables/useUser.ts
