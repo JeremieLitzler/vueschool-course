@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw, Router, RouterOptions } from 'vue-router';
-import PageHome from '@/pages/AppHome.vue';
+import AppHome from '@/pages/AppHome.vue';
 import useThread from '@/composables/useThread';
+
 const HomeRoute: RouteRecordRaw = {
   path: '/',
   name: 'Home',
-  component: PageHome,
+  component: AppHome,
 };
 const ThreadShowRoute: RouteRecordRaw = {
   path: '/thread/show/:id',
@@ -29,14 +30,14 @@ const ThreadShowRoute: RouteRecordRaw = {
     });
   },
 };
-const PageNotFoundRoute: RouteRecordRaw = {
+const NotFoundRoute: RouteRecordRaw = {
   path: '/:patchMatch(.*)*',
   name: 'PageNotFound',
   component: () => import('@/pages/NotFound.vue'),
 };
 const routerOptions: RouterOptions = {
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [HomeRoute, ThreadShowRoute, PageNotFoundRoute],
+  routes: [HomeRoute, ThreadShowRoute, NotFoundRoute],
 };
 const router: Router = createRouter(routerOptions);
 
