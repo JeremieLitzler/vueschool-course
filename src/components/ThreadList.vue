@@ -20,8 +20,8 @@
 
         <div class="activity">
           <p class="replies-count">
-            {{ thread.posts.length }} repl{{
-              thread.posts.length > 1 ? "ies" : "y"
+            {{ thread.posts?.length }} repl{{
+              (thread.posts ? thread.posts.length : 0) > 1 ? 'ies' : 'y'
             }}
           </p>
 
@@ -52,8 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import type Thread from "../types/Thread.ts";
-import useUser from "../composables/useUser";
+import type Thread from '../types/Thread.ts';
+import useUser from '../composables/useUser';
 
 const props = defineProps<{
   threads: Thread[];

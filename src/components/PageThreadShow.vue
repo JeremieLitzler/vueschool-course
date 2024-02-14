@@ -1,5 +1,13 @@
 <template>
-  <div class="col-large push-top">
+  <div v-if="!thread" class="col-full text-center">
+    <h1>Oops, the thread isn't valid</h1>
+    <p>
+      The thread (<b>ID: {{ id }}</b
+      >) doesn't exist.
+    </p>
+    <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
+  </div>
+  <div v-else class="col-large push-top">
     <h1>{{ thread!.title }}</h1>
 
     <div class="post-list">
@@ -37,11 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import type Thread from "../types/Thread.ts";
-import useSampleData from "../composables/useSampleData.ts";
-import usePost from "../composables/usePost";
-import useUser from "../composables/useUser";
+import { ref, computed } from 'vue';
+import type Thread from '../types/Thread.ts';
+import useSampleData from '../composables/useSampleData.ts';
+import usePost from '../composables/usePost';
+import useUser from '../composables/useUser';
 const { getPostById } = usePost();
 const { getUserById } = useUser();
 const { threadsData } = useSampleData();
