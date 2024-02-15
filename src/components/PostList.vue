@@ -32,7 +32,6 @@
 
 <script>
 import sourceData from "@/data.json";
-import AppDate from "./AppDate.vue";
 
 export default {
   props: { posts: { required: true, type: Array } },
@@ -48,7 +47,6 @@ export default {
       return match;
     },
   },
-  components: { AppDate },
 };
 </script>
 
