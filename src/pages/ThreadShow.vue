@@ -34,7 +34,7 @@ const props = defineProps({
 });
 
 const threads = ref<Thread[]>(threadsData.value);
-let threadPosts = getPostsByThreaId(props.id);
+const threadPosts = getPostsByThreaId(props.id);
 
 const thread = computed((): Thread | undefined => {
   const match = threads.value.find(
@@ -49,7 +49,7 @@ const savePost = (entry: AddPostPayload) => {
   if (!entry.post.id) throw new Error('post.id cannot be undefined');
 
   threadPosts.value.push(entry.post);
-  //reactive is lost between the above and the below
+  //reactive is lost between the above (update a component's ref) and the below (call composable's method), I keep both for now
   addPost(entry.post);
   thread.value?.posts?.push(entry.post.id!);
 };
