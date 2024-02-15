@@ -22,6 +22,8 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
   //console.log('keys of dynamicImport', Object.keys(moduleImport));
   //console.log('type of dynamicImport.default', typeof moduleImport.default);
   //console.log('keys of dynamicImport', Object.keys(moduleImport.default));
+  //The following supposes the file name is PascalCased
+  //as the official Style Guide tells us.
   const componentName: string | undefined = componentPath
     .split('/')
     .pop()
