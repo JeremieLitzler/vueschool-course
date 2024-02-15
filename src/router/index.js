@@ -1,11 +1,18 @@
 import sourceData from "@/data.json";
-import AppHome from "@/pages/AppHome.vue";
+import TheForum from "@/pages/TheForum.vue";
+import TheHome from "@/pages/TheHome.vue";
 
 export const routes = [
   {
     path: "/",
-    name: "Home",
-    component: AppHome,
+    name: "TheHome",
+    component: TheHome,
+  },
+  {
+    path: "/forum/:id",
+    name: "TheForum",
+    component: TheForum,
+    props: true,
   },
   {
     path: "/thread/show/:id",
