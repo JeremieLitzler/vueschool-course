@@ -14,7 +14,7 @@
           </p>
           <p class="text-faded text-xsmall">
             By <a href="profile.html">{{ getUserById(thread.userId).name }}</a
-            >, {{ thread.publishedAt }}.
+            >, <app-date :timestamp="thread.publishedAt!" />.
           </p>
         </div>
 
@@ -35,7 +35,9 @@
             <p class="text-xsmall">
               <a href="profile.html">{{ getUserById(thread.userId).name }}</a>
             </p>
-            <p class="text-xsmall text-faded">{{ thread.publishedAt }}</p>
+            <p class="text-xsmall text-faded">
+              <app-date :timestamp="thread.publishedAt!" />
+            </p>
           </div>
         </div>
       </div>
@@ -54,6 +56,7 @@
 <script setup lang="ts">
 import type Thread from '@/types/Thread.ts';
 import useUser from '@/composables/useUser';
+import AppDate from './AppDate.vue';
 
 const props = defineProps<{
   threads: Thread[];
