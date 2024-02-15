@@ -19,7 +19,6 @@ const props = defineProps<{
 
 /**
  * Calculate the elapsed time
- * @param {number} timestamp The timestamp
  * @returns {string}
  * @see https://day.js.org/docs/en/customization/relative-time#docsNav
  */
@@ -29,7 +28,6 @@ const elapsedTime = computed(() => {
 /**
  * Format the date to readable date.
  *
- * @param {number} timestamp The timestamp
  * @returns {string}
  * @see https://day.js.org/docs/en/display/format#list-of-localized-formats
  */
