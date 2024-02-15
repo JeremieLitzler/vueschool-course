@@ -56,7 +56,6 @@
 <script setup lang="ts">
 import type Thread from '@/types/Thread.ts';
 import useUser from '@/composables/useUser';
-import AppDate from './AppDate.vue';
 
 const props = defineProps<{
   threads: Thread[];

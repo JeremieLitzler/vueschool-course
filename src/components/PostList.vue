@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import type Post from '@/types/Post.ts';
 import useUser from '@/composables/useUser';
-import AppDate from './AppDate.vue';
 
 const { getUserById } = useUser();
 
