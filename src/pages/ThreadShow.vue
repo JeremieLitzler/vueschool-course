@@ -26,7 +26,6 @@ export default {
     return {
       threads: sourceData.threads,
       posts: sourceData.posts,
-      newPostText: "",
     };
   },
   computed: {
