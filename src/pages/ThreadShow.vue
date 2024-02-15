@@ -1,5 +1,6 @@
 <template>
   <div class="col-large push-top">
+    <router-link :to="{ name: 'Home' }">Back</router-link>
     <h1>{{ thread.title }}</h1>
     <post-list :posts="threadPosts" />
     <post-editor :threadId="id" @add-post="savePost" />
