@@ -11,7 +11,7 @@ import ThreadList from '@/components/ThreadList.vue';
 
 const { threadsData } = useSampleData();
 
-const threads = ref<Thread[]>(threadsData);
+const threads = ref<Thread[]>(threadsData.value);
 </script>
 <style scoped>
 .post-list {

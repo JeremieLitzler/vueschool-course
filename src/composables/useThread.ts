@@ -5,7 +5,9 @@ const { threadsData } = useSampleData();
 
 export default function useThread() {
   const getThreadById = (threadId: string | undefined): Thread => {
-    const match = threadsData.find((post: Thread) => post.id === threadId);
+    const match = threadsData.value.find(
+      (post: Thread) => post.id === threadId
+    );
     if (match === undefined) return {};
 
     return match;
