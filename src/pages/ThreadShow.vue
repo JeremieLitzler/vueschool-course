@@ -49,7 +49,10 @@ const savePost = (entry: AddPostPayload) => {
   if (!entry.post.id) throw new Error('post.id cannot be undefined');
 
   threadPosts.value.push(entry.post);
-  //reactive is lost between the above (update a component's ref) and the below (call composable's method), I keep both for now
+  //reactive is lost between
+  // => the above (update a component's ref)
+  //and
+  // => the below (call composable's method), I keep both for now
   addPost(entry.post);
   thread.value?.posts?.push(entry.post.id!);
 };
