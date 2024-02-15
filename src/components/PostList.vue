@@ -23,22 +23,51 @@
         </div>
       </div>
 
-      <div class="post-date text-faded">
-        {{ post.publishedAt }}
+      <div
+        class="post-date text-faded"
+        :title="readableDate(post.publishedAt!)"
+      >
+        {{ elapsedTime(post.publishedAt!) }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import type Post from '@/types/Post.ts';
 import useUser from '@/composables/useUser';
+
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
 
 const { getUserById } = useUser();
 
 const props = defineProps<{
   posts: Post[];
 }>();
+
+/**
+ * Calculate the elapsed time
+ * @param {number} timestamp The timestamp
+ * @returns {string}
+ * @see https://day.js.org/docs/en/customization/relative-time#docsNav
+ */
+const elapsedTime = (timestamp: number) => {
+  return dayjs.unix(timestamp).fromNow();
+};
+/**
+ * Format the date to readable date.
+ *
+ * @param {number} timestamp The timestamp
+ * @returns {string}
+ * @see https://day.js.org/docs/en/display/format#list-of-localized-formats
+ */
+const readableDate = (timestamp: number) => {
+  return dayjs.unix(timestamp).format('ddd, MMM D, YYYY hh:mm');
+};
 </script>
 
 <style lang="css" scoped>
