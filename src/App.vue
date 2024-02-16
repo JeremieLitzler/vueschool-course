@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
-</script>
-
 <template>
   <header class="header" id="header">
     <a href="index.html" class="logo">
@@ -73,8 +69,10 @@ import { RouterLink, RouterView } from 'vue-router';
       </ul>
     </nav>
   </header>
-
-  <RouterView />
+  <div class="container"><router-view /></div>
 </template>
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router';
+</script>
 
 <style scoped></style>
