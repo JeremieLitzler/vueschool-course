@@ -2,7 +2,13 @@
   <div class="col-full">
     <div class="forum-list">
       <h2 class="list-title">
-        <a class="category-link" href="#">Forums</a>
+        <router-link
+          v-if="categoryId"
+          :to="{ name: 'CategoryShow', params: { id: props.categoryId } }"
+        >
+          {{ props.categoryName || 'Forums' }}
+        </router-link>
+        <span v-else>{{ props.categoryName || 'Forums' }}</span>
       </h2>
 
       <div class="forum-listing" v-for="forum in forums" :key="forum.id">
@@ -43,9 +49,16 @@
 <script setup lang="ts">
 import Forum from '@/types/Forum';
 
-defineProps<{
+interface ForumListProps {
   forums: Forum[];
-}>();
+  //tried https://vuejs.org/api/sfc-script-setup.html#default-props-values-when-using-type-declaration
+  //but another issue with ESLint and TypeScrit...
+  //So I used the || operator to set the default in the template.
+  categoryName?: string;
+  categoryId?: string;
+}
+
+const props = defineProps<ForumListProps>();
 
 const threadsLength = (forum: Forum) => {
   if (!forum.threads) return 0;

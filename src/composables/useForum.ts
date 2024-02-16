@@ -1,3 +1,5 @@
+import type { Ref } from 'vue';
+import { ref } from 'vue';
 import type Forum from '@/types/Forum';
 import useSampleData from '@/composables/useSampleData.ts';
 
@@ -11,7 +13,18 @@ export default function useForum() {
     return match;
   };
 
+  const getForumsByCategory = (
+    categoryId: string | undefined
+  ): Ref<Forum[]> => {
+    const matches = ref(
+      forumsData.value.filter((forum: Forum) => forum.categoryId === categoryId)
+    );
+
+    return matches;
+  };
+
   return {
     getForumById,
+    getForumsByCategory,
   };
 }

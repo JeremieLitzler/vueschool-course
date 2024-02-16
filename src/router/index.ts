@@ -8,6 +8,13 @@ const HomeRoute: RouteRecordRaw = {
   name: 'TheHome',
   component: AppHome,
 };
+const CategoryShowRoute: RouteRecordRaw = {
+  path: '/category/:id',
+  name: 'CategoryShow',
+  component: () => import('@/pages/CategoryShow.vue'),
+  props: true,
+};
+
 const ForumShowRoute: RouteRecordRaw = {
   path: '/forum/:id',
   name: 'ForumShow',
@@ -15,7 +22,7 @@ const ForumShowRoute: RouteRecordRaw = {
   props: true,
 };
 const ThreadShowRoute: RouteRecordRaw = {
-  path: '/thread/show/:id',
+  path: '/thread/:id',
   name: 'ThreadShow',
   component: () => import('@/pages/ThreadShow.vue'),
   props: true,
@@ -43,7 +50,13 @@ const NotFoundRoute: RouteRecordRaw = {
 };
 const routerOptions: RouterOptions = {
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [HomeRoute, ForumShowRoute, ThreadShowRoute, NotFoundRoute],
+  routes: [
+    HomeRoute,
+    CategoryShowRoute,
+    ForumShowRoute,
+    ThreadShowRoute,
+    NotFoundRoute,
+  ],
 };
 const router: Router = createRouter(routerOptions);
 

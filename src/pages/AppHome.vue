@@ -1,12 +1,14 @@
 <template>
   <h1>Welcome to the forum</h1>
-  <ForumList :forums="forumsData" />
+  <div class="col-full">
+    <CategoryList :categories="categoriesData" />
+  </div>
 </template>
 
 <script setup lang="ts">
 import useSampleData from '@/composables/useSampleData.ts';
-import ForumList from '@/components/ForumList.vue';
+import CategoryList from '@/components/CategoryList.vue';
 
-const { forumsData } = useSampleData();
+const { categoriesData } = useSampleData();
 </script>
 <style scoped></style>
