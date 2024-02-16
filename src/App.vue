@@ -3,78 +3,78 @@ import { RouterLink, RouterView } from 'vue-router';
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-      </nav>
+  <header class="header" id="header">
+    <a href="index.html" class="logo">
+      <img src="/img/svg/vueschool-logo.svg" />
+    </a>
+
+    <div class="btn-hamburger">
+      <!-- use .btn-humburger-active to open the menu -->
+      <div class="top bar"></div>
+      <div class="middle bar"></div>
+      <div class="bottom bar"></div>
     </div>
+
+    <!-- use .navbar-open to open nav -->
+    <nav class="navbar">
+      <ul>
+        <li class="navbar-user">
+          <a href="#">
+            <img
+              class="avatar-small"
+              src="https://pbs.twimg.com/profile_images/1188775562657091594/5mgkg44t_400x400.jpg"
+              alt=""
+            />
+            <span>
+              Alex Kyriakidis
+              <img
+                class="icon-profile"
+                src="/img/svg/arrow-profile.svg"
+                alt=""
+              />
+            </span>
+          </a>
+
+          <!-- dropdown menu -->
+          <!-- add class "active-drop" to show the dropdown -->
+          <div id="user-dropdown">
+            <div class="triangle-drop"></div>
+            <ul class="dropdown-menu">
+              <li class="dropdown-menu-item">
+                <a href="profile.html">View profile</a>
+              </li>
+              <li class="dropdown-menu-item"><a href="#">Log out</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+
+      <ul>
+        <li class="navbar-item">
+          <router-link :to="{ name: 'TheHome' }">Home</router-link>
+        </li>
+        <!-- <li class="navbar-item">
+          <a href="category.html">Category</a>
+        </li>
+        <li class="navbar-item">
+          <a href="forum.html">Forum</a>
+        </li>
+        <li class="navbar-item">
+          <a href="thread.html">Thread</a>
+        </li>
+        -->
+        <!-- Show these option only on mobile-->
+        <!-- <li class="navbar-item mobile-only">
+          <a href="profile.html">My Profile</a>
+        </li>
+        <li class="navbar-item mobile-only">
+          <a href="#">Logout</a>
+        </li> -->
+      </ul>
+    </nav>
   </header>
 
   <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  float: initial;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: black;
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  nav {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+<style scoped></style>

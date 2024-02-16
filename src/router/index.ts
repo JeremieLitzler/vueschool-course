@@ -5,7 +5,7 @@ import useThread from '@/composables/useThread';
 
 const HomeRoute: RouteRecordRaw = {
   path: '/',
-  name: 'Home',
+  name: 'TheHome',
   component: AppHome,
 };
 const ForumShowRoute: RouteRecordRaw = {
