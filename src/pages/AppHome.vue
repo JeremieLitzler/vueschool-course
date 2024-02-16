@@ -1,17 +1,13 @@
 <template>
   <h1>Welcome to the forum</h1>
-  <ThreadList :threads="threads" />
+  <ForumList :forums="forumsData" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type Thread from '@/types/Thread.ts';
 import useSampleData from '@/composables/useSampleData.ts';
-import ThreadList from '@/components/ThreadList.vue';
+import ForumList from '@/components/ForumList.vue';
 
-const { threadsData } = useSampleData();
-
-const threads = ref<Thread[]>(threadsData.value);
+const { forumsData } = useSampleData();
 </script>
 <style scoped>
 .post-list {
