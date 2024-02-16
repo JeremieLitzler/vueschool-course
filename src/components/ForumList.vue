@@ -17,9 +17,8 @@
 
         <div class="threads-count">
           <p>
-            <span class="count">{{ threadsLength(forum) }}</span> thread{{
-              hasManyThreads(forum) ? "s" : ""
-            }}
+            <span class="count">{{ threadsLength(forum) }}</span
+            >&nbsp;{{ hasManyThreads(forum) ? "threads" : "thread" }}
           </p>
         </div>
 
