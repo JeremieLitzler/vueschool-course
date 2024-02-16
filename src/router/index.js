@@ -1,5 +1,5 @@
 import sourceData from "@/data.json";
-import TheForum from "@/pages/TheForum.vue";
+import ForumShow from "@/pages/ForumShow.vue";
 import TheHome from "@/pages/TheHome.vue";
 
 export const routes = [
@@ -10,12 +10,12 @@ export const routes = [
   },
   {
     path: "/forum/:id",
-    name: "TheForum",
-    component: TheForum,
+    name: "ForumShow",
+    component: ForumShow,
     props: true,
   },
   {
-    path: "/thread/show/:id",
+    path: "/thread/:id",
     name: "ThreadShow",
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
