@@ -1,8 +1,6 @@
 <template>
   <h1>Welcome to the forum</h1>
-  <div class="col-full">
-    <CategoryList :categories="categories" />
-  </div>
+  <CategoryList :categories="categories" />
 </template>
 
 <script>
