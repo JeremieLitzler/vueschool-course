@@ -18,11 +18,11 @@
           <a href="#">
             <img
               class="avatar-small"
-              src="https://pbs.twimg.com/profile_images/1188775562657091594/5mgkg44t_400x400.jpg"
-              alt=""
+              :src="authUser.avatar"
+              :alt="`${authUser.name} profile picture`"
             />
             <span>
-              Alex Kyriakidis
+              {{ authUser.name }}
               <img
                 class="icon-profile"
                 src="../assets/img/svg/arrow-profile.svg"
@@ -73,10 +73,10 @@
 
 <script>
 export default {
-  setup() {
-    return {};
+  computed: {
+    authUser() {
+      return this.$store.getters.authUser;
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
