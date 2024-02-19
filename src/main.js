@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
+import store from "@/store";
 
 import App from "./App.vue";
 
@@ -45,7 +46,7 @@ requireComponent.keys().forEach((fileName) => {
 // or use  a plugin...
 // forumApp.use(SomePlugin)
 forumApp.use(router);
-
+forumApp.use(store);
 // Mount to the DOM the Vue app
 forumApp.mount("#app");
 

@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import sourceData from "@/data.json";
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
@@ -23,13 +22,13 @@ export default {
     PostList,
     PostEditor,
   },
-  data() {
-    return {
-      threads: sourceData.threads,
-      posts: sourceData.posts,
-    };
-  },
   computed: {
+    threads() {
+      return this.$store.state.threads;
+    },
+    posts() {
+      return this.$store.state.posts;
+    },
     thread() {
       const match = this.threads.find((thread) => thread.id === this.id);
       return match;

@@ -1,4 +1,4 @@
-import sourceData from "@/data.json";
+import store from "@/store";
 import TheHome from "@/pages/TheHome.vue";
 
 export const routes = [
@@ -14,7 +14,7 @@ export const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       //does the thread exists?
-      const exists = sourceData.categories.find(
+      const exists = store.state.categories.find(
         (item) => item.id === to.params.id
       );
       //if positive, contine
@@ -40,7 +40,9 @@ export const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       //does the thread exists?
-      const exists = sourceData.forums.find((item) => item.id === to.params.id);
+      const exists = store.state.forums.find(
+        (item) => item.id === to.params.id
+      );
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
       //threadExists ?? next()
@@ -64,7 +66,7 @@ export const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       //does the thread exists?
-      const exists = sourceData.threads.find(
+      const exists = store.state.threads.find(
         (item) => item.id === to.params.id
       );
       //if positive, contine

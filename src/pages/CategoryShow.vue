@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import sourceData from "@/data.json";
 import ForumList from "@/components/ForumList.vue";
 
 export default {
@@ -20,18 +19,16 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      categories: sourceData.categories,
-    };
-  },
   computed: {
+    categories() {
+      return this.$store.state.categories;
+    },
     category() {
       const match = this.categories.find((item) => item.id === this.id);
       return match;
     },
     categoryForums() {
-      return sourceData.forums.filter(
+      return this.$store.state.forums.filter(
         (forum) => forum.categoryId === this.category.id
       );
     },

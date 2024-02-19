@@ -4,19 +4,16 @@
 </template>
 
 <script>
-import sourceData from "@/data.json";
 import CategoryList from "@/components/CategoryList.vue";
 
-const categoriesData = sourceData.categories;
-console.log(categoriesData);
 export default {
-  data() {
-    return {
-      categories: categoriesData,
-    };
-  },
   components: {
     CategoryList,
+  },
+  computed: {
+    categories() {
+      return this.$store.state.categories;
+    },
   },
 };
 </script>
