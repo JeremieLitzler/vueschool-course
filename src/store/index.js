@@ -7,6 +7,10 @@ export default createStore({
     authUser: (state) => state.users.find((user) => user.id === state.authId),
     getUser: (state) => (userId) =>
       state.users.find((user) => user.id === userId),
+    postsByUserId: (state) => (userId) =>
+      state.posts.filter((post) => post.userId === userId),
+    threadsByUserId: (state) => (userId) =>
+      state.threads.filter((thread) => thread.userId === userId),
   },
   actions: {
     createPost({ commit }, post) {
