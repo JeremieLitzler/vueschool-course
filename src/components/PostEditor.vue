@@ -31,9 +31,7 @@ const emits = defineEmits<{
 const newPostText = ref('');
 
 const addPost = () => {
-  const postId = 'gggg' + Math.random();
   const post: Post = {
-    id: postId,
     text: newPostText.value,
     publishedAt: Math.floor(Date.now() / 1000),
     threadId: props.threadId,

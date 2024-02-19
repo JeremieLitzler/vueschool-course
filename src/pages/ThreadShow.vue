@@ -9,7 +9,7 @@
   </div>
   <div v-else class="col-large push-top">
     <h1>{{ thread!.title }}</h1>
-    <PostList :posts="threadPosts" />
+    <PostList :posts="threadPosts!" />
     <PostEditor :thread-id="props.id" @@add-post="savePost" />
   </div>
 </template>
@@ -20,12 +20,16 @@ import type Thread from '@/types/Thread.ts';
 import AddPostPayload from '@/types/AddPostPayload';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
+import useUUID from '@/composables/useUUID';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
+import Post from '@/types/Post';
 
 const { getPostsByThreaId, addPost } = usePostStore();
-const { threads } = useThreadStore();
+const { getThreadById, appendPostToThread } = useThreadStore();
+const { newUniqueId } = useUUID();
+
 const props = defineProps({
   id: {
     type: String,
@@ -33,27 +37,19 @@ const props = defineProps({
   },
 });
 
-const threadPosts = getPostsByThreaId(props.id);
+const threadPosts = computed((): Post[] | undefined =>
+  getPostsByThreaId(props.id)
+);
 
-const thread = computed((): Thread | undefined => {
-  const match = threads.find(
-    (threadItem: Thread) => threadItem.id === props.id
-  );
-  if (!match) return undefined;
-
-  return match;
-});
+const thread = computed((): Thread | undefined => getThreadById(props.id));
 
 const savePost = (entry: AddPostPayload) => {
-  if (!entry.post.id) throw new Error('post.id cannot be undefined');
-
-  threadPosts.value.push(entry.post);
-  //reactive is lost between
-  // => the above (update a component's ref)
-  //and
-  // => the below (call composable's method), I keep both for now
+  entry.post.id = newUniqueId;
   addPost(entry.post);
-  thread.value?.posts?.push(entry.post.id!);
+  appendPostToThread({
+    threadId: entry.post.threadId!,
+    postId: entry.post.id!,
+  });
 };
 </script>
 
