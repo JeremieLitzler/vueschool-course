@@ -2,13 +2,15 @@
   <div class="post-list">
     <div class="post" v-for="post in props.posts" :key="post.id">
       <div class="user-info">
-        <a href="#" class="user-name">{{ getUserById(post.userId).name }}</a>
+        <a href="#" class="user-name">{{
+          getUserById(post.userId).instance!.name
+        }}</a>
 
         <a href="#">
           <img
             class="avatar-large"
-            :src="getUserById(post.userId).avatar"
-            :alt="getUserById(post.userId).name"
+            :src="getUserById(post.userId).instance!.avatar"
+            :alt="getUserById(post.userId).instance!.name"
           />
         </a>
 

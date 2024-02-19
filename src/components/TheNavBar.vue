@@ -3,14 +3,16 @@
   <nav class="navbar">
     <ul>
       <li class="navbar-user">
-        <router-link :to="{ name: 'UserShow', params: { id: authUser.id } }">
+        <router-link
+          :to="{ name: 'UserShow', params: { id: authUser.instance!.id } }"
+        >
           <img
             class="avatar-small"
-            :src="authUser.avatar"
-            :alt="`${authUser.name} profile picture`"
+            :src="authUser.instance!.avatar"
+            :alt="`${authUser.instance!.name} profile picture`"
           />
           <span>
-            {{ authUser.name }}
+            {{ authUser.instance!.name }}
             <img
               class="icon-profile"
               src="../assets/img/svg/arrow-profile.svg"
@@ -26,7 +28,7 @@
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
               <router-link
-                :to="{ name: 'UserShow', params: { id: authUser.id } }"
+                :to="{ name: 'UserShow', params: { id: authUser.instance!.id } }"
                 >View profile</router-link
               >
             </li>

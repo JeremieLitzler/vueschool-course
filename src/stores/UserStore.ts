@@ -1,7 +1,9 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import useSampleData from '@/composables/useSampleData';
-import type User from '@/types/User';
+import { usePostStore } from './PostStore';
+import { useThreadStore } from './ThreadStore';
+import type GetUserExtended from '@/types/GetUserExtended';
 
 const { usersData } = useSampleData();
 export const useUserStore = defineStore('UserStore', () => {
@@ -10,14 +12,35 @@ export const useUserStore = defineStore('UserStore', () => {
   const authId = ref('38St7Q8Zi2N1SPa5ahzssq9kbyp1');
 
   //GETTERS
-  const getUserById = (userId: string | undefined): User => {
+
+  const hydrateUserExtented = (userId: string | undefined) => {
+    const { getPostsByUserId } = usePostStore();
+    const { getThreadsByUserId } = useThreadStore();
+    const posts = getPostsByUserId(userId);
+    const postsCount = posts.length;
+    const threads = getThreadsByUserId(userId);
+    const threadsCount = threads.length;
+    return {
+      posts,
+      postsCount,
+      threads,
+      threadsCount,
+    };
+  };
+  const getUserById = (userId: string | undefined): GetUserExtended => {
     const matchingUser = users.value.find((user) => user.id === userId);
     if (matchingUser === undefined) return {};
 
-    return matchingUser;
+    const extendedUser = hydrateUserExtented(userId);
+    console.log('extendedUser', extendedUser);
+
+    return {
+      instance: matchingUser,
+      ...extendedUser,
+    };
   };
 
-  const authUser = computed((): User => {
+  const authUser = computed((): GetUserExtended => {
     const result = getUserById(authId.value);
     console.log('authUser', result);
 
