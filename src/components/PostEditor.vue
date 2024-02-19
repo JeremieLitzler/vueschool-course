@@ -31,9 +31,8 @@ export default {
   },
   methods: {
     addPost() {
-      const postId = "gggg" + Math.random();
       const post = {
-        id: postId,
+        id: undefined,
         text: this.newPostText,
         publishedAt: Math.floor(Date.now() / 1000),
         threadId: this.threadId,
