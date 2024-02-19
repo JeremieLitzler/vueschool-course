@@ -5,6 +5,8 @@ export default createStore({
   state: { ...sourceData, authId: "38St7Q8Zi2N1SPa5ahzssq9kbyp1" },
   getters: {
     authUser: (state) => state.users.find((user) => user.id === state.authId),
+    getUser: (state) => (userId) =>
+      state.users.find((user) => user.id === userId),
   },
   actions: {
     createPost({ commit }, post) {

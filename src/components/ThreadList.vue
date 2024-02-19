@@ -11,7 +11,11 @@
             </RouterLink>
           </p>
           <p class="text-faded text-xsmall">
-            By <a href="profile.html">{{ userById(thread.userId).name }}</a
+            By
+            <router-link
+              :to="{ name: 'UserShow', params: { id: thread.userId } }"
+              >{{ userById(thread.userId).name }}</router-link
+            >
             >, <app-date :timestamp="thread.publishedAt" />.
           </p>
         </div>
@@ -31,7 +35,10 @@
 
           <div>
             <p class="text-xsmall">
-              <a href="profile.html">{{ userById(thread.userId).name }}</a>
+              <router-link
+                :to="{ name: 'UserShow', params: { id: thread.userId } }"
+                >{{ userById(thread.userId).name }}</router-link
+              >
             </p>
             <p class="text-xsmall text-faded">
               <app-date :timestamp="thread.publishedAt" />
