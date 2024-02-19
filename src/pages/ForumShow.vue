@@ -31,12 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import useForum from '@/composables/useForum';
-import useThread from '@/composables/useThread';
+import { useForumStore } from '@/stores/ForumStore';
+import { useThreadStore } from '@/stores/ThreadStore';
 import ThreadList from '@/components/ThreadList.vue';
 
-const { getForumById } = useForum();
-const { getThreadsByForumId } = useThread();
+const { getForumById } = useForumStore();
+const { getThreadsByForumId } = useThreadStore();
 
 const props = defineProps({
   id: {

@@ -9,12 +9,12 @@
 
 <script setup lang="ts">
 import ForumList from '@/components/ForumList.vue';
-import useForum from '@/composables/useForum';
-import useCategory from '@/composables/useCategory';
+import { useForumStore } from '@/stores/ForumStore';
+import { useCategoryStore } from '@/stores/CategoryStore';
 
 const { id: categoryId } = defineProps<{ id: string }>();
-const { getCategoryById } = useCategory();
-const { getForumsByCategory } = useForum();
+const { getCategoryById } = useCategoryStore();
+const { getForumsByCategory } = useForumStore();
 
 const category = getCategoryById(categoryId);
 const categoryForums = getForumsByCategory(category.id);

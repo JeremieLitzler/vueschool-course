@@ -1,14 +1,14 @@
 <template>
   <h1>Welcome to the forum</h1>
   <div class="col-full">
-    <CategoryList :categories="categoriesData" />
+    <CategoryList :categories="categories" />
   </div>
 </template>
 
 <script setup lang="ts">
-import useSampleData from '@/composables/useSampleData.ts';
+import { useCategoryStore } from '@/stores/CategoryStore';
 import CategoryList from '@/components/CategoryList.vue';
 
-const { categoriesData } = useSampleData();
+const { categories } = useCategoryStore();
 </script>
 <style scoped></style>

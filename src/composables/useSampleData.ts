@@ -1,11 +1,10 @@
-import { ref } from 'vue';
 import type Thread from '@/types/Thread.ts';
 import type User from '@/types/User.ts';
 import type Post from '@/types/Post.ts';
 import type Category from '@/types/Category.ts';
 import type Forum from '@/types/Forum.ts';
 
-const categoriesData = ref<Category[]>([
+const categoriesData: Category[] = [
   {
     forums: ['-KpOx5Y4AqRr3sB4Ybwj', '-KsjO4_W3W9Q2Z2UmuPr'],
     name: 'Feedback & Information',
@@ -30,9 +29,9 @@ const categoriesData = ref<Category[]>([
     slug: 'comedy',
     id: '-KvclpNRjpI5W-j0JQGU',
   },
-]);
+];
 
-const forumsData = ref<Forum[]>([
+const forumsData: Forum[] = [
   {
     categoryId: '-KpR7vRkiRPpbUd_TVAR',
     description: 'Important announcements about the forum.',
@@ -142,9 +141,9 @@ const forumsData = ref<Forum[]>([
     slug: 'miscellaneous',
     id: '-KvhkEl6F673igPtnbso',
   },
-]);
+];
 
-const postsData = ref<Post[]>([
+const postsData: Post[] = [
   {
     edited: {
       at: 1594037546,
@@ -865,9 +864,9 @@ const postsData = ref<Post[]>([
     userId: 'Miej9zSGMRZKDvMXzfxjVOyv3RF3',
     id: '-Kxx_kFpMHmonma6v_dW',
   },
-]);
+];
 
-const threadsData = ref<Thread[]>([
+const threadsData: Thread[] = [
   {
     contributors: [
       'FsCDAk9w8NeXEceLV87arpsXjnQ2',
@@ -1327,9 +1326,9 @@ const threadsData = ref<Thread[]>([
     userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2',
     id: '-KxxSnNltjgIvlwAjmW8',
   },
-]);
+];
 
-const usersData = ref<User[]>([
+const usersData: User[] = [
   {
     avatar: 'https://avatars3.githubusercontent.com/u/2327556?v=4&s=460',
     email: 'chrisvfritz@gmail.com',
@@ -1507,7 +1506,7 @@ const usersData = ref<User[]>([
     usernameLower: 'abusiveant',
     id: 'w9WeYrRVDaNNpxOkyVArjCKLSnD2',
   },
-]);
+];
 export default function useSampleData() {
   return {
     categoriesData,

@@ -1,13 +1,16 @@
 import type { Ref } from 'vue';
 import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import useSampleData from '@/composables/useSampleData';
 import type Thread from '@/types/Thread';
-import useSampleData from '@/composables/useSampleData.ts';
 
 const { threadsData } = useSampleData();
-
-export default function useThread() {
+export const useThreadStore = defineStore('ThreadStore', () => {
+  //STATE
+  const threads = ref(threadsData);
+  //GETTERS
   const getThreadById = (threadId: string | undefined): Thread => {
-    const match = threadsData.value.find(
+    const match = threads.value.find(
       (thread: Thread) => thread.id === threadId
     );
     if (match === undefined) return {};
@@ -17,14 +20,15 @@ export default function useThread() {
 
   const getThreadsByForumId = (forumId: string | undefined): Ref<Thread[]> => {
     const matches = ref(
-      threadsData.value.filter((thread: Thread) => thread.forumId === forumId)
+      threads.value.filter((thread: Thread) => thread.forumId === forumId)
     );
 
     return matches;
   };
 
   return {
+    threads,
     getThreadById,
     getThreadsByForumId,
   };
-}
+});

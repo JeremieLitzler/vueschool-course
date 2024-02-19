@@ -32,9 +32,9 @@
 
 <script setup lang="ts">
 import type Post from '@/types/Post.ts';
-import useUser from '@/composables/useUser';
+import { useUserStore } from '@/stores/UserStore';
 
-const { getUserById } = useUser();
+const { getUserById } = useUserStore();
 
 const props = defineProps<{
   posts: Post[];

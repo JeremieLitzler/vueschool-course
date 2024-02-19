@@ -3,10 +3,10 @@ import './assets/css/style.css';
 import './assets/css/main.css';
 
 import { createApp } from 'vue';
-import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
+import pinia from '@/stores/pinia';
 
 const app = createApp(App);
 
@@ -51,7 +51,7 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
   console.info(`Registered component <${componentName!}> globally.`);
 }
 
-app.use(createPinia());
+app.use(pinia);
 app.use(router);
 
 app.mount('#app');

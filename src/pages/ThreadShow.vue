@@ -15,17 +15,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import type Thread from '@/types/Thread.ts';
 import AddPostPayload from '@/types/AddPostPayload';
-import useSampleData from '@/composables/useSampleData.ts';
-import usePost from '@/composables/usePost';
+import { usePostStore } from '@/stores/PostStore';
+import { useThreadStore } from '@/stores/ThreadStore';
+
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
 
-const { getPostsByThreaId, addPost } = usePost();
-const { threadsData } = useSampleData();
-
+const { getPostsByThreaId, addPost } = usePostStore();
+const { threads } = useThreadStore();
 const props = defineProps({
   id: {
     type: String,
@@ -33,11 +33,10 @@ const props = defineProps({
   },
 });
 
-const threads = ref<Thread[]>(threadsData.value);
 const threadPosts = getPostsByThreaId(props.id);
 
 const thread = computed((): Thread | undefined => {
-  const match = threads.value.find(
+  const match = threads.find(
     (threadItem: Thread) => threadItem.id === props.id
   );
   if (!match) return undefined;

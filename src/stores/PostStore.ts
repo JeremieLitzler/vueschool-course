@@ -1,15 +1,17 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
+import { defineStore } from 'pinia';
+import useSampleData from '@/composables/useSampleData';
 import type Post from '@/types/Post.ts';
-import useSampleData from '@/composables/useSampleData.ts';
 
 const { postsData } = useSampleData();
+export const usePostStore = defineStore('PostStore', () => {
+  //STATE
+  const posts = ref(postsData);
 
-export default function usePost() {
+  //GETTERS
   const getPostById = (postId: string | undefined): Post => {
-    const matchingPost = postsData.value.find(
-      (post: Post) => post.id === postId
-    );
+    const matchingPost = posts.value.find((post: Post) => post.id === postId);
     if (matchingPost === undefined) return {};
 
     return matchingPost;
@@ -17,21 +19,22 @@ export default function usePost() {
 
   const getPostsByThreaId = (threadId: string | undefined): Ref<Post[]> => {
     const matches = ref(
-      postsData.value.filter((post: Post) => post.threadId === threadId)
+      posts.value.filter((post: Post) => post.threadId === threadId)
     );
 
     return matches;
   };
 
   const addPost = (post: Post) => {
-    console.log('calling addPost in usePost', post);
+    console.log('calling addPost in PostStore', post);
 
-    postsData.value.push(post);
+    posts.value.push(post);
   };
 
   return {
+    posts,
     getPostById,
     getPostsByThreaId,
     addPost,
   };
-}
+});

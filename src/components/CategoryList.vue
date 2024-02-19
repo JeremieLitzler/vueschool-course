@@ -10,10 +10,10 @@
 
 <script setup lang="ts">
 import Category from '@/types/Category';
-import useForum from '@/composables/useForum';
+import { useForumStore } from '@/stores/ForumStore';
 import ForumList from './ForumList.vue';
 
-const { getForumsByCategory } = useForum();
+const { getForumsByCategory } = useForumStore();
 defineProps<{ categories: Category[] }>();
 </script>
 
