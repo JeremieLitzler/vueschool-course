@@ -23,6 +23,14 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     return matches;
   };
 
+  const getThreadsByUserId = (userId: string | undefined): Thread[] => {
+    const matches = threads.filter(
+      (thread: Thread) => thread.userId === userId
+    );
+    return matches;
+  };
+
+  //ACTIONS
   const appendPostToThread = (request: AppendPostToThreadRequest) => {
     const thread = threads.find(
       (thread: Thread) => thread.id === request.threadId
@@ -37,6 +45,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     threads,
     getThreadById,
     getThreadsByForumId,
+    getThreadsByUserId,
     appendPostToThread,
   };
 });

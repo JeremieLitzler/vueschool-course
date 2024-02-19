@@ -12,7 +12,16 @@ const HomeRoute: RouteRecordRaw = {
   component: AppHome,
 };
 /**
- * Defines the Signle Category page route
+ * Defines the Single User page route
+ */
+const UserShowRoute: RouteRecordRaw = {
+  path: '/user/:id',
+  name: 'UserShow',
+  component: () => import('@/pages/UserShow.vue'),
+  props: true,
+};
+/**
+ * Defines the Single Category page route
  */
 const CategoryShowRoute: RouteRecordRaw = {
   path: '/category/:id',
@@ -21,7 +30,7 @@ const CategoryShowRoute: RouteRecordRaw = {
   props: true,
 };
 /**
- * Defines the Signle Forum page route
+ * Defines the Single Forum page route
  */
 const ForumShowRoute: RouteRecordRaw = {
   path: '/forum/:id',
@@ -30,7 +39,7 @@ const ForumShowRoute: RouteRecordRaw = {
   props: true,
 };
 /**
- * Defines the Signle Thread page route
+ * Defines the Single Thread page route
  */
 const { getThreadById } = useThreadStore(pinia);
 const ThreadShowRoute: RouteRecordRaw = {
@@ -70,6 +79,7 @@ const routerOptions: RouterOptions = {
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     HomeRoute,
+    UserShowRoute,
     CategoryShowRoute,
     ForumShowRoute,
     ThreadShowRoute,

@@ -22,6 +22,12 @@ export const usePostStore = defineStore('PostStore', () => {
     return matches;
   };
 
+  const getPostsByUserId = (userId: string | undefined): Post[] => {
+    const matches = posts.filter((post: Post) => post.userId === userId);
+    return matches;
+  };
+
+  //ACTIONS
   const addPost = (post: Post) => {
     console.log('calling addPost in PostStore', post);
 
@@ -32,6 +38,7 @@ export const usePostStore = defineStore('PostStore', () => {
     posts,
     getPostById,
     getPostsByThreaId,
+    getPostsByUserId,
     addPost,
   };
 });

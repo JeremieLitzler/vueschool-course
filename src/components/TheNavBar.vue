@@ -3,7 +3,7 @@
   <nav class="navbar">
     <ul>
       <li class="navbar-user">
-        <a href="#">
+        <router-link :to="{ name: 'UserShow', params: { id: authUser.id } }">
           <img
             class="avatar-small"
             :src="authUser.avatar"
@@ -17,7 +17,7 @@
               alt=""
             />
           </span>
-        </a>
+        </router-link>
 
         <!-- dropdown menu -->
         <!-- add class "active-drop" to show the dropdown -->
@@ -25,7 +25,10 @@
           <div class="triangle-drop"></div>
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
-              <a href="profile.html">View profile</a>
+              <router-link
+                :to="{ name: 'UserShow', params: { id: authUser.id } }"
+                >View profile</router-link
+              >
             </li>
             <li class="dropdown-menu-item"><a href="#">Log out</a></li>
           </ul>
