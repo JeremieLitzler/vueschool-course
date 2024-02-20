@@ -51,6 +51,9 @@ export default {
         body: this.body,
       });
     },
+    cancel() {
+      this.$emit("cancel");
+    },
   },
 };
 </script>
