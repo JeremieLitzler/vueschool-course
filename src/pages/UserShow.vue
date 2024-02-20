@@ -2,6 +2,7 @@
   <div class="flex-grid">
     <div class="col-3 push-top">
       <user-profile-card :user="user.instance!" />
+      <user-profile-card-editor :user="user.instance!" />
 
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
@@ -129,8 +130,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import PostList from '@/components/PostList.vue';
-import UserProfileCard from '@/components/UserProfileCard.vue';
 import { useUserStore } from '@/stores/UserStore';
+import UserProfileCard from '@/components/UserProfileCard.vue';
+import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 
 const props = defineProps<{ id: string }>();
 const { getUserById } = useUserStore();

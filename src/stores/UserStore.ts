@@ -4,6 +4,7 @@ import useSampleData from '@/composables/useSampleData';
 import { usePostStore } from './PostStore';
 import { useThreadStore } from './ThreadStore';
 import type GetUserExtended from '@/types/GetUserExtended';
+import User from '@/types/User';
 
 const { usersData } = useSampleData();
 export const useUserStore = defineStore('UserStore', () => {
@@ -48,10 +49,17 @@ export const useUserStore = defineStore('UserStore', () => {
   });
 
   //ACTIONS
+  const updateUser = (updatedUser: User) => {
+    const userIndex = users.value.findIndex(
+      (user) => user.id === updatedUser.id
+    );
+    users.value[userIndex] = updatedUser;
+  };
 
   return {
     users,
     authUser,
     getUserById,
+    updateUser,
   };
 });

@@ -11,4 +11,5 @@ export default interface User {
   twitter?: string;
   website?: string;
   bio?: string;
+  location?: string;
 }
