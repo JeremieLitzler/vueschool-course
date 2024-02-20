@@ -9,10 +9,10 @@ export const routes = [
   },
   //Authenticated edit user profile route
   {
-    path: "/account/edit/:id",
-    name: "UserConnectedShow",
+    path: "/account/edit",
+    name: "UserConnectedEdit",
     component: () => import("@/pages/UserShow.vue"),
-    props: true,
+    props: { edit: true },
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists
@@ -34,7 +34,7 @@ export const routes = [
     path: "/account",
     name: "UserConnectedShow",
     component: () => import("@/pages/UserShow.vue"),
-    props: true,
+    props: { edit: false },
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists

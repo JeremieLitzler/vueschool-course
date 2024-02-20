@@ -7,11 +7,6 @@
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
       </p>
-
-      <div v-if="isEditableProfile" class="text-center">
-        <hr />
-        <a href="edit-profile.html" class="btn-green btn-small">Edit Profile</a>
-      </div>
     </div>
 
     <div class="col-7 push-top">
@@ -149,9 +144,6 @@ export default {
     UserProfileCardEditor,
   },
   computed: {
-    isEditableProfile() {
-      return !this.id && this.$store.getters.authUser;
-    },
     user() {
       if (this.id) {
         return this.$store.getters.getUser(this.id);

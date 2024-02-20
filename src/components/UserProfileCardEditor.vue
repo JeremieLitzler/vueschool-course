@@ -112,6 +112,7 @@ export default {
   methods: {
     saveProfile() {
       this.$store.dispatch("updateUser", { ...this.editedUser });
+      this.$router.push({ name: "UserConnectedShow" });
     },
   },
 };

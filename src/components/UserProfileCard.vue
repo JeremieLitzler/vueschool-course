@@ -31,6 +31,14 @@
         user.website
       }}</a>
     </p>
+    <div v-if="isEditableProfile" class="text-center">
+      <hr />
+      <router-link
+        :to="{ name: 'UserConnectedEdit' }"
+        class="btn-green btn-small"
+        >Edit Profile</router-link
+      >
+    </div>
   </div>
 </template>
 
@@ -43,6 +51,12 @@ export default {
     },
   },
   computed: {
+    isEditableProfile() {
+      return (
+        this.$route.params.id === undefined &&
+        this.$store.getters.authUser !== undefined
+      );
+    },
     userPosts() {
       return this.$store.getters.postsByUserId(this.user.id);
     },
