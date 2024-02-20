@@ -3,7 +3,7 @@
   <nav class="navbar">
     <ul>
       <li class="navbar-user">
-        <router-link :to="{ name: 'UserConnectedShow' }">
+        <router-link :to="{ name: RouteName.AccountShow }">
           <img
             class="avatar-small"
             :src="authUser.avatar"
@@ -26,7 +26,7 @@
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
               <router-link
-                :to="{ name: 'UserShow', params: { id: authUser.id } }"
+                :to="{ name: RouteName.UserShow, params: { id: authUser.id } }"
                 >View profile</router-link
               >
             </li>
@@ -38,7 +38,7 @@
 
     <ul>
       <li class="navbar-item">
-        <router-link :to="{ name: 'TheHome' }">Home</router-link>
+        <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
       </li>
       <!-- <li class="navbar-item">
           <a href="category.html">Category</a>
@@ -62,7 +62,16 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
 export default {
+  data() {
+    return {
+      RouteName,
+    };
+  },
   computed: {
     authUser() {
       return this.$store.getters.authUser;

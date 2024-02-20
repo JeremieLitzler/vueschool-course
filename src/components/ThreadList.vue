@@ -6,14 +6,15 @@
       <div class="thread" v-for="thread in threads" :key="thread.id">
         <div>
           <p>
-            <RouterLink :to="{ name: 'ThreadShow', params: { id: thread.id } }"
+            <RouterLink
+              :to="{ name: RouteName.ThreadShow, params: { id: thread.id } }"
               >{{ thread.title }}
             </RouterLink>
           </p>
           <p class="text-faded text-xsmall">
             By
             <router-link
-              :to="{ name: 'UserShow', params: { id: thread.userId } }"
+              :to="{ name: RouteName.UserShow, params: { id: thread.userId } }"
               >{{ userById(thread.userId).name }}</router-link
             >
             >, <app-date :timestamp="thread.publishedAt" />.
@@ -36,7 +37,10 @@
           <div>
             <p class="text-xsmall">
               <router-link
-                :to="{ name: 'UserShow', params: { id: thread.userId } }"
+                :to="{
+                  name: RouteName.UserShow,
+                  params: { id: thread.userId },
+                }"
                 >{{ userById(thread.userId).name }}</router-link
               >
             </p>
@@ -59,12 +63,22 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     threads: {
       type: Array,
       required: true,
     },
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
   computed: {
     posts() {

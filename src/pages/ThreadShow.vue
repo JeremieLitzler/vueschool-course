@@ -1,6 +1,6 @@
 <template>
   <div class="col-large push-top">
-    <router-link :to="{ name: 'TheHome' }">Back</router-link>
+    <router-link :to="{ name: RouteName.TheHome }">Back</router-link>
     <h1>{{ thread.title }}</h1>
     <post-list :posts="threadPosts" />
     <post-editor :threadId="id" @add-post="savePost" />
@@ -11,12 +11,22 @@
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     id: {
       required: true,
       type: String,
     },
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
   components: {
     PostList,

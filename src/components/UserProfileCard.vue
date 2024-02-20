@@ -34,7 +34,7 @@
     <div v-if="isEditableProfile" class="text-center">
       <hr />
       <router-link
-        :to="{ name: 'UserConnectedEdit' }"
+        :to="{ name: RouteName.AccountEdit }"
         class="btn-green btn-small"
         >Edit Profile</router-link
       >
@@ -43,12 +43,22 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     user: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
   computed: {
     isEditableProfile() {

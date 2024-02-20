@@ -1,18 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import { useRouteName } from "@/composables/useRouteName";
 import store from "@/store";
 import TheHome from "@/pages/TheHome.vue";
 
+const { RouteName } = useRouteName();
 const routes = [
   {
     path: "/",
-    name: "TheHome",
+    name: RouteName.TheHome,
     component: TheHome,
   },
   //Authenticated edit user profile route
   {
     path: "/account/edit",
-    name: "UserConnectedEdit",
+    name: RouteName.AccountEdit,
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: true },
     meta: { toTop: true, smoothScroll: true },
@@ -22,7 +23,7 @@ const routes = [
       const authUser = store.getters.authUser;
       if (!authUser) {
         return next({
-          name: "NotAuthorized",
+          name: RouteName.NotAuthorized,
           params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
           query: to.query,
           hash: to.hash,
@@ -35,7 +36,7 @@ const routes = [
   //Authenticated user profile route
   {
     path: "/account",
-    name: "UserConnectedShow",
+    name: RouteName.AccountShow,
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: false },
     meta: { toTop: true, smoothScroll: true },
@@ -45,7 +46,7 @@ const routes = [
       const authUser = store.getters.authUser;
       if (!authUser) {
         return next({
-          name: "NotAuthorized",
+          name: RouteName.NotAuthorized,
           params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
           query: to.query,
           hash: to.hash,
@@ -58,7 +59,7 @@ const routes = [
   //User profile route
   {
     path: "/user/:id",
-    name: "UserShow",
+    name: RouteName.UserShow,
     component: () => import("@/pages/UserShow.vue"),
     props: true,
     beforeEnter: (to, from, next) => {
@@ -71,9 +72,9 @@ const routes = [
         return next();
       }
       //else redirect to not found
-      //next({ name: "NotFound" }); // <-- redirect with URL change
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
       next({
-        name: "NotFound",
+        name: RouteName.NotFound,
         params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -83,7 +84,7 @@ const routes = [
   //Category route
   {
     path: "/category/:id",
-    name: "CategoryShow",
+    name: RouteName.CategoryShow,
     component: () => import("@/pages/CategoryShow.vue"),
     props: true,
     beforeEnter: (to, from, next) => {
@@ -98,9 +99,9 @@ const routes = [
         return next();
       }
       //else redirect to not found
-      //next({ name: "NotFound" }); // <-- redirect with URL change
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
       next({
-        name: "NotFound",
+        name: RouteName.NotFound,
         params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -110,7 +111,7 @@ const routes = [
   //Forum route
   {
     path: "/forum/:id",
-    name: "ForumShow",
+    name: RouteName.ForumShow,
     component: () => import("@/pages/ForumShow.vue"),
     props: true,
     beforeEnter: (to, from, next) => {
@@ -125,9 +126,9 @@ const routes = [
         return next();
       }
       //else redirect to not found
-      //next({ name: "NotFound" }); // <-- redirect with URL change
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
       next({
-        name: "NotFound",
+        name: RouteName.NotFound,
         params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -137,7 +138,7 @@ const routes = [
   //Thread route
   {
     path: "/thread/:id",
-    name: "ThreadShow",
+    name: RouteName.ThreadShow,
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
     beforeEnter: (to, from, next) => {
@@ -152,9 +153,9 @@ const routes = [
         return next();
       }
       //else redirect to not found
-      //next({ name: "NotFound" }); // <-- redirect with URL change
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
       next({
-        name: "NotFound",
+        name: RouteName.NotFound,
         params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -164,13 +165,13 @@ const routes = [
   //Not authorized route
   {
     path: "/unauthorized",
-    name: "NotAuthorized",
+    name: RouteName.NotAuthorized,
     component: () => import("@/pages/NotAuthorized.vue"),
   },
   //No found route
   {
     path: "/:patchMatch(.*)*",
-    name: "NotFound",
+    name: RouteName.NotFound,
     component: () => import("@/pages/NotFound.vue"),
   },
 ];

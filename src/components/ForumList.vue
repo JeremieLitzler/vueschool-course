@@ -2,7 +2,9 @@
   <div class="col-full">
     <div class="forum-list">
       <h2 class="list-title">
-        <router-link :to="{ name: 'CategoryShow', params: { id: categoryId } }">
+        <router-link
+          :to="{ name: RouteName.CategoryShow, params: { id: categoryId } }"
+        >
           {{ categoryName }}
         </router-link>
       </h2>
@@ -10,7 +12,7 @@
         <div class="forum-details">
           <router-link
             class="text-xlarge"
-            :to="{ name: 'ForumShow', params: { id: forum.id } }"
+            :to="{ name: RouteName.ForumShow, params: { id: forum.id } }"
             >{{ forum.name }}</router-link
           >
           <p>{{ forum.description }}</p>
@@ -42,6 +44,10 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
 export default {
   props: {
     forums: {
@@ -56,6 +62,11 @@ export default {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
   methods: {
     threadsLength(forum) {

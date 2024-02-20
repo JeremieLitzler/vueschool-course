@@ -16,10 +16,19 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
 import TheNavBar from "./TheNavBar.vue";
 export default {
   components: {
     TheNavBar,
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
 };
 </script>

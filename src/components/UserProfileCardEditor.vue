@@ -83,6 +83,11 @@
 </template>
 
 <script>
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     user: {
@@ -112,7 +117,7 @@ export default {
   methods: {
     saveProfile() {
       this.$store.dispatch("updateUser", { ...this.editedUser });
-      this.$router.push({ name: "UserConnectedShow" });
+      this.$router.push({ name: RouteName.AccountShow });
     },
   },
 };

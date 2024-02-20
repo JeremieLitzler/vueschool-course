@@ -26,6 +26,9 @@ export default createStore({
     updateUser({ commit }, user) {
       commit("setUser", { updatedUser: user });
     },
+    createThred({ commit }, thread) {
+      commit("setThread", thread);
+    },
   },
   mutations: {
     setPost(state, { post }) {
@@ -40,6 +43,9 @@ export default createStore({
         (user) => user.id === updatedUser.id
       );
       state.users[userIndex] = updatedUser;
+    },
+    setThread(state, { thread }) {
+      state.threads.push(thread);
     },
   },
 });
