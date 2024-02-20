@@ -1,14 +1,14 @@
 <template>
   <div class="flex-grid">
     <div class="col-3 push-top">
-      <user-profile-card :user="user.instance!" />
-      <user-profile-card-editor :user="user.instance!" />
+      <user-profile-card v-if="!edit" :user="user.instance!" />
+      <user-profile-card-editor v-else :user="user.instance!" />
 
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
       </p>
 
-      <div class="text-center">
+      <div v-if="!isEditableProfile" class="text-center">
         <hr />
         <a href="edit-profile.html" class="btn-green btn-small">Edit Profile</a>
       </div>
@@ -134,7 +134,7 @@ import { useUserStore } from '@/stores/UserStore';
 import UserProfileCard from '@/components/UserProfileCard.vue';
 import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 
-const props = defineProps<{ id?: string }>();
+const props = defineProps<{ id?: string; edit?: boolean }>();
 const { getUserById, getAuthUser } = useUserStore();
 const user = computed(() => {
   console.log('getting user in UserShow > ', props.id);
@@ -143,5 +143,11 @@ const user = computed(() => {
     return getUserById(props.id);
   }
   return getAuthUser();
+});
+
+const isEditableProfile = computed(() => {
+  console.log('isEditableProfile > ', !props.id);
+
+  return !props.id && getAuthUser();
 });
 </script>
