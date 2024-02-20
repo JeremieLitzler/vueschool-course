@@ -1,4 +1,3 @@
-export default interface AppendPostToThreadRequest {
+export default interface AppendPostToThreadRequest extends AppendPostRequest {
   threadId: string;
-  postId: string;
 }

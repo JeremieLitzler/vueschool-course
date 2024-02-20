@@ -10,7 +10,7 @@ const { usersData } = useSampleData();
 export const useUserStore = defineStore('UserStore', () => {
   //STATE
   const users = ref(usersData);
-  const authId = ref('38St7Q8Zi2N1SPa5ahzssq9kbyp1');
+  const authId = ref('7uVPJS9GHoftN58Z2MXCYDqmNAh2');
 
   //GETTERS
   const hydrateUserExtented = (userId: string | undefined) => {

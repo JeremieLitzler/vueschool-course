@@ -1,8 +1,8 @@
 import { ref } from 'vue';
-// import type { Ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/composables/useSampleData';
 import type Post from '@/types/Post.ts';
+import useSampleData from '@/composables/useSampleData';
+import { useUserStore } from './UserStore';
 
 const { postsData } = useSampleData();
 export const usePostStore = defineStore('PostStore', () => {
@@ -31,8 +31,10 @@ export const usePostStore = defineStore('PostStore', () => {
 
   //ACTIONS
   const addPost = (post: Post) => {
-    console.log('calling addPost in PostStore', post);
-
+    //console.log('calling addPost in PostStore', post);
+    post.publishedAt = Math.floor(Date.now() / 1000);
+    const { getAuthUser } = useUserStore();
+    post.userId = getAuthUser().instance?.id;
     posts.value.push(post);
   };
 

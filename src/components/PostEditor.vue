@@ -20,6 +20,7 @@
 import { ref } from 'vue';
 import AddPostPayload from '@/types/AddPostPayload';
 import Post from '@/types/Post';
+import { useUserStore } from '@/stores/UserStore';
 
 const props = defineProps<{
   threadId: string;
@@ -28,14 +29,17 @@ const emits = defineEmits<{
   (event: '@add-post', entry: AddPostPayload): void;
 }>();
 
+const { getAuthUser } = useUserStore();
 const newPostText = ref('');
 
 const addPost = () => {
+  const authUser = getAuthUser();
+  if (!authUser) {
+    //TODO : handle not authentifcated user
+  }
   const post: Post = {
     text: newPostText.value,
-    publishedAt: Math.floor(Date.now() / 1000),
     threadId: props.threadId,
-    userId: '38St7Q8Zi2N1SPa5ahzssq9kbyp1',
   };
   emits('@add-post', { post });
 };
