@@ -3,7 +3,7 @@
   <nav class="navbar">
     <ul>
       <li class="navbar-user">
-        <router-link :to="{ name: 'UserShow', params: { id: authUser.id } }">
+        <router-link :to="{ name: 'UserConnectedShow' }">
           <img
             class="avatar-small"
             :src="authUser.avatar"

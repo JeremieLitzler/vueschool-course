@@ -1,14 +1,14 @@
 <template>
   <div class="flex-grid">
     <div class="col-3 push-top">
-      <user-profile-card :user="user" />
-      <user-profile-card-editor :user="user" />
+      <user-profile-card v-if="!edit" :user="user" />
+      <user-profile-card-editor v-else :user="user" />
 
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
       </p>
 
-      <div class="text-center">
+      <div v-if="isEditableProfile" class="text-center">
         <hr />
         <a href="edit-profile.html" class="btn-green btn-small">Edit Profile</a>
       </div>
@@ -137,8 +137,11 @@ export default {
   props: {
     id: {
       type: String,
-      required: true,
     },
+    edit: { type: Boolean, default: false },
+  },
+  data() {
+    return {};
   },
   components: {
     PostList,
@@ -146,14 +149,21 @@ export default {
     UserProfileCardEditor,
   },
   computed: {
+    isEditableProfile() {
+      return !this.id && this.$store.getters.authUser;
+    },
     user() {
-      return this.$store.getters.getUser(this.id);
+      if (this.id) {
+        return this.$store.getters.getUser(this.id);
+      }
+
+      return this.$store.getters.authUser;
     },
     userPosts() {
-      return this.$store.getters.postsByUserId(this.id);
+      return this.$store.getters.postsByUserId(this.user.id);
     },
     userThreads() {
-      return this.$store.getters.threadsByUserId(this.id);
+      return this.$store.getters.threadsByUserId(this.user.id);
     },
   },
 };

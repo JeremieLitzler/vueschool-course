@@ -7,6 +7,40 @@ export const routes = [
     name: "TheHome",
     component: TheHome,
   },
+  //Authenticated edit user profile route
+  {
+    path: "/account/edit/:id",
+    name: "UserConnectedShow",
+    component: () => import("@/pages/UserShow.vue"),
+    props: true,
+    beforeEnter: (to, from, next) => {
+      //TODO : implement auth guard
+      next();
+    },
+  },
+  //Authenticated user profile route
+  {
+    path: "/account",
+    name: "UserConnectedShow",
+    component: () => import("@/pages/UserShow.vue"),
+    props: true,
+    beforeEnter: (to, from, next) => {
+      //TODO : implement auth guard
+      const authUser = store.getters.authUser;
+      if (!authUser) {
+        return next({
+          name: "NotAuthorized",
+          params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+          query: to.query,
+          hash: to.hash,
+        });
+      }
+      //else redirect to not found
+      //next({ name: "NotFound" }); // <-- redirect with URL change
+      next();
+    },
+  },
+  //User profile route
   {
     path: "/user/:id",
     name: "UserShow",
@@ -31,6 +65,7 @@ export const routes = [
       });
     },
   },
+  //Category route
   {
     path: "/category/:id",
     name: "CategoryShow",
@@ -57,6 +92,7 @@ export const routes = [
       });
     },
   },
+  //Forum route
   {
     path: "/forum/:id",
     name: "ForumShow",
@@ -83,6 +119,7 @@ export const routes = [
       });
     },
   },
+  //Thread route
   {
     path: "/thread/:id",
     name: "ThreadShow",
@@ -109,6 +146,13 @@ export const routes = [
       });
     },
   },
+  //Not authorized route
+  {
+    path: "/unauthorized",
+    name: "NotAuthorized",
+    component: () => import("@/pages/NotAuthorized.vue"),
+  },
+  //No found route
   {
     path: "/:patchMatch(.*)*",
     name: "NotFound",
