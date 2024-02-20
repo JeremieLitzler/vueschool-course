@@ -15,6 +15,17 @@ export const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
+      //verify auht user exists
+      const authUser = store.getters.authUser;
+      if (!authUser) {
+        return next({
+          name: "NotAuthorized",
+          params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+          query: to.query,
+          hash: to.hash,
+        });
+      }
+      //continue since user is authorized
       next();
     },
   },
@@ -26,6 +37,7 @@ export const routes = [
     props: true,
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
+      //verify auht user exists
       const authUser = store.getters.authUser;
       if (!authUser) {
         return next({
@@ -35,8 +47,7 @@ export const routes = [
           hash: to.hash,
         });
       }
-      //else redirect to not found
-      //next({ name: "NotFound" }); // <-- redirect with URL change
+      //continue since user is authorized
       next();
     },
   },
