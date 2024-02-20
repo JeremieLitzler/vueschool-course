@@ -26,6 +26,7 @@ const AccountEditRoute: RouteRecordRaw = {
   name: RouteName.AccountEdit,
   component: () => import('@/pages/UserShow.vue'),
   props: { edit: true },
+  meta: { toTop: true, smoothScroll: true },
   beforeEnter: (to, _from, next) => {
     //TODO : implement auth guard
     //verify auht user exists
@@ -49,6 +50,7 @@ const AccountRoute: RouteRecordRaw = {
   path: '/account',
   name: RouteName.AccountShow,
   component: () => import('@/pages/UserShow.vue'),
+  meta: { toTop: true, smoothScroll: true },
   beforeEnter: (to, _from, next) => {
     //TODO : implement auth guard
     //verify auht user exists
@@ -134,17 +136,22 @@ const NotFoundRoute: RouteRecordRaw = {
   name: 'PageNotFound',
   component: () => import('@/pages/NotFound.vue'),
 };
-const scrollBehaviorGuard: RouterScrollBehavior = (
-  _to,
-  _from,
-  savedPosition
-) => {
-  return (
-    savedPosition ||
-    new Promise((resolve) => {
-      setTimeout(() => resolve({ top: 0, behavior: 'smooth' }), 500);
-    })
-  );
+/**
+ * Defines the "scroll to top behavior"
+ * @param to The destination route
+ * @returns A promise
+ */
+const scrollBehaviorGuard: RouterScrollBehavior = (to) => {
+  const scrollBehavior:
+    | { top?: number; behavior?: ScrollBehavior }
+    | undefined = {};
+
+  if (to.meta.toTop) scrollBehavior.top = 0;
+  if (to.meta.smoothScroll) scrollBehavior.behavior = 'smooth';
+
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(scrollBehavior), 500);
+  });
 };
 /**
  * Defines the RouterOptions
