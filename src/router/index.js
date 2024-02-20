@@ -1,7 +1,9 @@
+import { createRouter, createWebHistory } from "vue-router";
+
 import store from "@/store";
 import TheHome from "@/pages/TheHome.vue";
 
-export const routes = [
+const routes = [
   {
     path: "/",
     name: "TheHome",
@@ -13,6 +15,7 @@ export const routes = [
     name: "UserConnectedEdit",
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: true },
+    meta: { toTop: true, smoothScroll: true },
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists
@@ -35,6 +38,7 @@ export const routes = [
     name: "UserConnectedShow",
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: false },
+    meta: { toTop: true, smoothScroll: true },
     beforeEnter: (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists
@@ -170,3 +174,17 @@ export const routes = [
     component: () => import("@/pages/NotFound.vue"),
   },
 ];
+
+export default createRouter({
+  history: createWebHistory(),
+  routes,
+  scrollBehavior(to) {
+    //this restore the top position with 300 ms dely to avoid a visual bug since we have a transition active.
+    const scroll = {};
+    if (to.meta.toTop) scroll.top = 0;
+    if (to.meta.smoothScroll) scroll.behavior = "smooth";
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(scroll), 500);
+    });
+  },
+});

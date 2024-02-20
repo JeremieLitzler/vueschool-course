@@ -1,24 +1,8 @@
 import { createApp } from "vue";
-import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
+import router from "./router";
 
 import App from "./App.vue";
-
-import { routes } from "./router";
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    //this restore the top position with 300 ms dely to avoid a visual bug since we have a transition active.
-    return (
-      savedPosition ||
-      new Promise((resolve) => {
-        setTimeout(() => resolve({ top: 0, behavior: "smooth" }), 500);
-      })
-    );
-  },
-});
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...
