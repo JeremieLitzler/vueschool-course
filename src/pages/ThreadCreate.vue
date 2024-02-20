@@ -4,66 +4,32 @@
       Create new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <form @submit.prevent="saveThread">
-      <div class="form-group">
-        <label for="thread_title">Title:</label>
-        <input
-          v-model="title"
-          type="text"
-          id="thread_title"
-          class="form-input"
-          name="title"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="thread_content">Content:</label>
-        <textarea
-          v-model="body"
-          id="thread_content"
-          class="form-input"
-          name="content"
-          rows="8"
-          cols="140"
-        ></textarea>
-      </div>
-
-      <div class="btn-group">
-        <button @click="returnToForum" class="btn btn-ghost">Cancel</button>
-        <button class="btn btn-blue" type="submit" name="Publish">
-          Publish
-        </button>
-      </div>
-    </form>
+    <thread-editor @save="saveThread" @cancel="returnToForum" />
   </div>
 </template>
 
 <script>
+import ThreadEditor from "@/components/ThreadEditor.vue";
 import { useRouteName } from "@/composables/useRouteName";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
 
 export default {
-  props: { forumId: { type: String, required: true } },
-  data() {
-    return {
-      RouteName,
-      title: "",
-      body: "",
-    };
+  components: {
+    ThreadEditor,
   },
+  props: { forumId: { type: String, required: true } },
   computed: {
     forum() {
       return this.$store.getters.getForumById(this.forumId);
     },
   },
   methods: {
-    async saveThread() {
+    async saveThread(threadRequest) {
       const threadId = await this.$store.dispatch("createThread", {
+        ...threadRequest,
         forumId: this.forum.id,
-        title: this.title,
-        body: this.body,
       });
 
       this.$router.push({
