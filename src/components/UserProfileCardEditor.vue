@@ -75,7 +75,7 @@
       </div>
 
       <div class="btn-group space-between">
-        <button class="btn-ghost">Cancel</button>
+        <button @click="cancelEdit" class="btn-ghost">Cancel</button>
         <button type="submit" class="btn-blue">Save</button>
       </div>
     </form>
@@ -84,9 +84,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import User from '@/types/User';
 const { getUserById, updateUser } = useUserStore();
+const router = useRouter();
 
 const props = defineProps<{
   user: User;
@@ -95,8 +98,19 @@ const props = defineProps<{
 const user = computed(() => getUserById(props.user.id));
 const editedUser = { ...user.value.instance };
 
+const exitEditRoute = () => {
+  console.log('exitEditRoute', router);
+
+  router.push({ name: RouteName.AccountShow });
+};
+
 const saveProfile = () => {
   updateUser({ ...editedUser });
+  exitEditRoute();
+};
+
+const cancelEdit = () => {
+  exitEditRoute();
 };
 </script>
 

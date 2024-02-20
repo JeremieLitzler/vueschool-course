@@ -31,21 +31,35 @@
         user.instance!.website
       }}</a>
     </p>
+    <div v-if="isEditableProfile" class="text-center">
+      <hr />
+      <router-link
+        :to="{ name: RouteName.AccountEdit }"
+        class="btn-green btn-small"
+        >Edit Profile</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import User from '@/types/User';
-const { getUserById } = useUserStore();
+import { RouteName } from '@/enums/RouteName';
+const { getUserById, getAuthUser } = useUserStore();
 
 const props = defineProps<{
   user: User;
 }>();
 
 const user = computed(() => getUserById(props.user.id));
-console.log(user.value);
+const isEditableProfile = computed(() => {
+  const route = useRoute();
+  const result = route.params.id === undefined && getAuthUser() !== undefined;
+  return result;
+});
 </script>
 
 <style scoped></style>

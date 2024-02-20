@@ -4,12 +4,13 @@ import AppHome from '@/pages/AppHome.vue';
 import pinia from '@/stores/pinia';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
+import { RouteName } from '@/enums/RouteName';
 /**
  * Defines the Home page route
  */
 const HomeRoute: RouteRecordRaw = {
   path: '/',
-  name: 'TheHome',
+  name: RouteName.TheHome,
   component: AppHome,
 };
 /**
@@ -17,16 +18,16 @@ const HomeRoute: RouteRecordRaw = {
  */
 const AccountEditRoute: RouteRecordRaw = {
   path: '/account/edit',
-  name: 'AccountEdit',
+  name: RouteName.AccountEdit,
   component: () => import('@/pages/UserShow.vue'),
-  props: true,
+  props: { edit: true },
   beforeEnter: (to, _from, next) => {
     //TODO : implement auth guard
     //verify auht user exists
     const { getAuthUser } = useUserStore();
     if (!getAuthUser()) {
       return next({
-        name: 'NotAuthorized',
+        name: RouteName.NotAuthorized,
         params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -41,16 +42,15 @@ const AccountEditRoute: RouteRecordRaw = {
  */
 const AccountRoute: RouteRecordRaw = {
   path: '/account',
-  name: 'AccountShow',
+  name: RouteName.AccountShow,
   component: () => import('@/pages/UserShow.vue'),
-  props: true,
   beforeEnter: (to, _from, next) => {
     //TODO : implement auth guard
     //verify auht user exists
     const { getAuthUser } = useUserStore();
     if (!getAuthUser()) {
       return next({
-        name: 'NotAuthorized',
+        name: RouteName.NotAuthorized,
         params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
         query: to.query,
         hash: to.hash,
@@ -65,7 +65,7 @@ const AccountRoute: RouteRecordRaw = {
  */
 const UserShowRoute: RouteRecordRaw = {
   path: '/user/:id',
-  name: 'UserShow',
+  name: RouteName.UserShow,
   component: () => import('@/pages/UserShow.vue'),
   props: true,
 };
@@ -74,7 +74,7 @@ const UserShowRoute: RouteRecordRaw = {
  */
 const CategoryShowRoute: RouteRecordRaw = {
   path: '/category/:id',
-  name: 'CategoryShow',
+  name: RouteName.CategoryShow,
   component: () => import('@/pages/CategoryShow.vue'),
   props: true,
 };
@@ -83,7 +83,7 @@ const CategoryShowRoute: RouteRecordRaw = {
  */
 const ForumShowRoute: RouteRecordRaw = {
   path: '/forum/:id',
-  name: 'ForumShow',
+  name: RouteName.ForumShow,
   component: () => import('@/pages/ForumShow.vue'),
   props: true,
 };
@@ -93,7 +93,7 @@ const ForumShowRoute: RouteRecordRaw = {
 const { getThreadById } = useThreadStore(pinia);
 const ThreadShowRoute: RouteRecordRaw = {
   path: '/thread/:id',
-  name: 'ThreadShow',
+  name: RouteName.ThreadShow,
   component: () => import('@/pages/ThreadShow.vue'),
   props: true,
   beforeEnter: (to, _from, next) => {
@@ -106,7 +106,7 @@ const ThreadShowRoute: RouteRecordRaw = {
     //else redirect to not found
     //next({ name: "NotFound" }); // <-- redirect with URL change
     next({
-      name: 'NotFound',
+      name: RouteName.NotFound,
       params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
       query: to.query,
       hash: to.hash,

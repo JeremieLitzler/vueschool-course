@@ -7,11 +7,6 @@
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
       </p>
-
-      <div v-if="!isEditableProfile" class="text-center">
-        <hr />
-        <a href="edit-profile.html" class="btn-green btn-small">Edit Profile</a>
-      </div>
     </div>
 
     <div class="col-7 push-top">
@@ -143,11 +138,5 @@ const user = computed(() => {
     return getUserById(props.id);
   }
   return getAuthUser();
-});
-
-const isEditableProfile = computed(() => {
-  console.log('isEditableProfile > ', !props.id);
-
-  return !props.id && getAuthUser();
 });
 </script>
