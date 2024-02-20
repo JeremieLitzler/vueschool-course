@@ -135,7 +135,7 @@ const routes = [
       });
     },
   },
-  //Thread route
+  //Thread Show route
   {
     path: "/thread/:id",
     name: RouteName.ThreadShow,
@@ -161,6 +161,13 @@ const routes = [
         hash: to.hash,
       });
     },
+  },
+  //Thread Create route
+  {
+    path: "/forum/:forumId/thread/create",
+    name: RouteName.ThreadCreate,
+    component: () => import("@/pages/ThreadCreate.vue"),
+    props: true,
   },
   //Not authorized route
   {

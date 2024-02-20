@@ -13,7 +13,11 @@
         <h1>{{ forum.name }}</h1>
         <p class="text-lead">{{ forum.description }}</p>
       </div>
-      <a href="new-thread.html" class="btn-green btn-small">Start a thread</a>
+      <router-link
+        :to="{ name: RouteName.ThreadCreate, params: { forumId: forum.id } }"
+        class="btn-green btn-small"
+        >Start a thread</router-link
+      >
     </div>
   </div>
 
@@ -33,12 +37,22 @@
 <script>
 import ThreadList from "@/components/ThreadList.vue";
 
+import { useRouteName } from "@/composables/useRouteName";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     id: {
       required: true,
       type: String,
     },
+  },
+  data() {
+    return {
+      RouteName,
+    };
   },
   components: { ThreadList },
   computed: {

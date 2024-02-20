@@ -45,7 +45,7 @@ const { RouteName } = useRouteName();
 /* eslint-enable */
 
 export default {
-  props: { forum: { type: Object, required: true } },
+  props: { forumId: { type: String, required: true } },
   data() {
     return {
       RouteName,
@@ -53,8 +53,24 @@ export default {
       body: "",
     };
   },
+  computed: {
+    forum() {
+      return this.$store.getters.getForumById(this.forumId);
+    },
+  },
   methods: {
-    saveThread() {},
+    async saveThread() {
+      const threadId = await this.$store.dispatch("createThread", {
+        forumId: this.forum.id,
+        title: this.title,
+        body: this.body,
+      });
+
+      this.$router.push({
+        name: RouteName.ThreadShow,
+        params: { id: threadId },
+      });
+    },
   },
 };
 </script>
