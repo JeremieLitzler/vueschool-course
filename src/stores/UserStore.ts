@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import useSampleData from '@/composables/useSampleData';
 import { usePostStore } from './PostStore';
@@ -13,7 +13,6 @@ export const useUserStore = defineStore('UserStore', () => {
   const authId = ref('38St7Q8Zi2N1SPa5ahzssq9kbyp1');
 
   //GETTERS
-
   const hydrateUserExtented = (userId: string | undefined) => {
     const { getPostsByUserId } = usePostStore();
     const { getThreadsByUserId } = useThreadStore();
@@ -41,12 +40,12 @@ export const useUserStore = defineStore('UserStore', () => {
     };
   };
 
-  const authUser = computed((): GetUserExtended => {
+  const getAuthUser = (): GetUserExtended => {
     const result = getUserById(authId.value);
     console.log('authUser', result);
 
     return result;
-  });
+  };
 
   //ACTIONS
   const updateUser = (updatedUser: User) => {
@@ -58,7 +57,7 @@ export const useUserStore = defineStore('UserStore', () => {
 
   return {
     users,
-    authUser,
+    getAuthUser,
     getUserById,
     updateUser,
   };

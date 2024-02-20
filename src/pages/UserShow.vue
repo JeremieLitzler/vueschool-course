@@ -134,7 +134,14 @@ import { useUserStore } from '@/stores/UserStore';
 import UserProfileCard from '@/components/UserProfileCard.vue';
 import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 
-const props = defineProps<{ id: string }>();
-const { getUserById } = useUserStore();
-const user = computed(() => getUserById(props.id));
+const props = defineProps<{ id?: string }>();
+const { getUserById, getAuthUser } = useUserStore();
+const user = computed(() => {
+  console.log('getting user in UserShow > ', props.id);
+
+  if (props.id) {
+    return getUserById(props.id);
+  }
+  return getAuthUser();
+});
 </script>

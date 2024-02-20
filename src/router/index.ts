@@ -3,6 +3,7 @@ import type { RouteRecordRaw, Router, RouterOptions } from 'vue-router';
 import AppHome from '@/pages/AppHome.vue';
 import pinia from '@/stores/pinia';
 import { useThreadStore } from '@/stores/ThreadStore';
+import { useUserStore } from '@/stores/UserStore';
 /**
  * Defines the Home page route
  */
@@ -10,6 +11,54 @@ const HomeRoute: RouteRecordRaw = {
   path: '/',
   name: 'TheHome',
   component: AppHome,
+};
+/**
+ * Defines the account edit page route
+ */
+const AccountEditRoute: RouteRecordRaw = {
+  path: '/account/edit',
+  name: 'AccountEdit',
+  component: () => import('@/pages/UserShow.vue'),
+  props: true,
+  beforeEnter: (to, _from, next) => {
+    //TODO : implement auth guard
+    //verify auht user exists
+    const { getAuthUser } = useUserStore();
+    if (!getAuthUser()) {
+      return next({
+        name: 'NotAuthorized',
+        params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
+        query: to.query,
+        hash: to.hash,
+      });
+    }
+    //continue since user is authorized
+    next();
+  },
+};
+/**
+ * Defines the account page route
+ */
+const AccountRoute: RouteRecordRaw = {
+  path: '/account',
+  name: 'AccountShow',
+  component: () => import('@/pages/UserShow.vue'),
+  props: true,
+  beforeEnter: (to, _from, next) => {
+    //TODO : implement auth guard
+    //verify auht user exists
+    const { getAuthUser } = useUserStore();
+    if (!getAuthUser()) {
+      return next({
+        name: 'NotAuthorized',
+        params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
+        query: to.query,
+        hash: to.hash,
+      });
+    }
+    //continue since user is authorized
+    next();
+  },
 };
 /**
  * Defines the Single User page route
@@ -65,6 +114,14 @@ const ThreadShowRoute: RouteRecordRaw = {
   },
 };
 /**
+ * Defines the NotAuthorized route
+ */
+const NotAuthorizedRoute: RouteRecordRaw = {
+  path: '/unauthorized',
+  name: 'NotAuthorized',
+  component: () => import('@/pages/NotAuthorized.vue'),
+};
+/**
  * Defines the NotFound route
  */
 const NotFoundRoute: RouteRecordRaw = {
@@ -79,10 +136,13 @@ const routerOptions: RouterOptions = {
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     HomeRoute,
+    AccountEditRoute,
+    AccountRoute,
     UserShowRoute,
     CategoryShowRoute,
     ForumShowRoute,
     ThreadShowRoute,
+    NotAuthorizedRoute,
     NotFoundRoute,
   ],
 };

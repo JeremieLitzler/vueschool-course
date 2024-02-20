@@ -3,16 +3,14 @@
   <nav class="navbar">
     <ul>
       <li class="navbar-user">
-        <router-link
-          :to="{ name: 'UserShow', params: { id: authUser.instance!.id } }"
-        >
+        <router-link :to="{ name: 'AccountShow' }">
           <img
             class="avatar-small"
-            :src="authUser.instance!.avatar"
-            :alt="`${authUser.instance!.name} profile picture`"
+            :src="user.instance!.avatar"
+            :alt="`${user.instance!.name} profile picture`"
           />
           <span>
-            {{ authUser.instance!.name }}
+            {{ user.instance!.name }}
             <img
               class="icon-profile"
               src="../assets/img/svg/arrow-profile.svg"
@@ -27,8 +25,7 @@
           <div class="triangle-drop"></div>
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
-              <router-link
-                :to="{ name: 'UserShow', params: { id: authUser.instance!.id } }"
+              <router-link :to="{ name: 'AccountShow' }"
                 >View profile</router-link
               >
             </li>
@@ -64,5 +61,6 @@
 </template>
 <script setup lang="ts">
 import { useUserStore } from '@/stores/UserStore';
-const { authUser } = useUserStore();
+const { getAuthUser } = useUserStore();
+const user = getAuthUser();
 </script>
