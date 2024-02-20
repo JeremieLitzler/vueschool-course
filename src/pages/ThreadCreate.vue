@@ -29,7 +29,7 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-ghost">Cancel</button>
+        <button @click="returnToForum" class="btn btn-ghost">Cancel</button>
         <button class="btn btn-blue" type="submit" name="Publish">
           Publish
         </button>
@@ -69,6 +69,12 @@ export default {
       this.$router.push({
         name: RouteName.ThreadShow,
         params: { id: threadId },
+      });
+    },
+    returnToForum() {
+      this.$router.push({
+        name: RouteName.ForumShow,
+        params: { id: this.forum.id },
       });
     },
   },
