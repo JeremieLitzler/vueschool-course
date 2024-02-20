@@ -32,11 +32,8 @@ export default {
   methods: {
     addPost() {
       const post = {
-        id: undefined,
         text: this.newPostText,
-        publishedAt: Math.floor(Date.now() / 1000),
         threadId: this.threadId,
-        userId: "38St7Q8Zi2N1SPa5ahzssq9kbyp1",
       };
       this.$emit("add-post", { post });
       this.newPostText = "";

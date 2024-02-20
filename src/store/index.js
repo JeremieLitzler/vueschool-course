@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 import sourceData from "@/data.json";
 
 export default createStore({
-  state: { ...sourceData, authId: "38St7Q8Zi2N1SPa5ahzssq9kbyp1" },
+  state: { ...sourceData, authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2" },
   getters: {
     authUser: (state) => state.users.find((user) => user.id === state.authId),
     getUser: (state) => (userId) =>
@@ -13,8 +13,10 @@ export default createStore({
       state.threads.filter((thread) => thread.userId === userId),
   },
   actions: {
-    createPost({ commit }, post) {
+    createPost({ commit, getters }, post) {
       post.id = "gggg" + Math.random();
+      post.publishedAt = Math.floor(Date.now() / 1000);
+      post.userId = getters.authUser.id;
       commit("setPost", { post });
       commit("appendPostToThread", {
         postId: post.id,
