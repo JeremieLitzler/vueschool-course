@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import type { RouteRecordRaw, Router, RouterOptions } from 'vue-router';
+import type {
+  RouteRecordRaw,
+  Router,
+  RouterOptions,
+  RouterScrollBehavior,
+} from 'vue-router';
 import AppHome from '@/pages/AppHome.vue';
 import pinia from '@/stores/pinia';
 import { useThreadStore } from '@/stores/ThreadStore';
@@ -129,6 +134,18 @@ const NotFoundRoute: RouteRecordRaw = {
   name: 'PageNotFound',
   component: () => import('@/pages/NotFound.vue'),
 };
+const scrollBehaviorGuard: RouterScrollBehavior = (
+  _to,
+  _from,
+  savedPosition
+) => {
+  return (
+    savedPosition ||
+    new Promise((resolve) => {
+      setTimeout(() => resolve({ top: 0, behavior: 'smooth' }), 500);
+    })
+  );
+};
 /**
  * Defines the RouterOptions
  */
@@ -145,6 +162,7 @@ const routerOptions: RouterOptions = {
     NotAuthorizedRoute,
     NotFoundRoute,
   ],
+  scrollBehavior: scrollBehaviorGuard,
 };
 const router: Router = createRouter(routerOptions);
 
