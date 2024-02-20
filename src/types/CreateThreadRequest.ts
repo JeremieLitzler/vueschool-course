@@ -1,5 +1,5 @@
 interface CreateThreadRequest {
-  forumId: string;
+  forumId?: string;
   title: string;
   body: string;
 }
