@@ -5,7 +5,7 @@ export enum RouteName {
   CategoryShow = 'CategoryShow',
   ForumShow = 'ForumShow',
   ThreadShow = 'ThreadShow',
-  ThreadEdit = 'ThreadEdit',
+  ThreadCreate = 'ThreadCreate',
   //Behind auth pages
   AccountEdit = 'AccountEdit',
   AccountShow = 'AccountShow',

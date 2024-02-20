@@ -5,6 +5,7 @@ import { usePostStore } from './PostStore';
 import { useThreadStore } from './ThreadStore';
 import type GetUserExtended from '@/types/GetUserExtended';
 import User from '@/types/User';
+import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
 
 const { usersData } = useSampleData();
 export const useUserStore = defineStore('UserStore', () => {
@@ -55,10 +56,19 @@ export const useUserStore = defineStore('UserStore', () => {
     users.value[userIndex] = updatedUser;
   };
 
+  const appendThreadToUser = (request: AppendThreadToUserRequest) => {
+    const user = getUserById(request.userId);
+    if (!user) {
+      throw new Error(`User ID <${request.userId}> waas not found...`);
+    }
+    user?.threads!.push(request.thread);
+  };
+
   return {
     users,
     getAuthUser,
     getUserById,
     updateUser,
+    appendThreadToUser,
   };
 });

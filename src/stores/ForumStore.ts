@@ -26,9 +26,19 @@ export const useForumStore = defineStore('ForumStore', () => {
     return matches;
   };
 
+  //ACTIONS
+  const appendThreadToForum = (request: AppendThreadToForumRequest) => {
+    const forum = getForumById(request.forumId);
+    if (!forum) {
+      throw new Error(`Forum ID <${request.forumId}> waas not found...`);
+    }
+    forum?.threads!.push(request.threadId);
+  };
+
   return {
     forums,
     getForumById,
     getForumsByCategory,
+    appendThreadToForum,
   };
 });

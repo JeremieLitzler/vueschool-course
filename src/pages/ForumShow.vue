@@ -13,7 +13,11 @@
         <h1>{{ forum.name }}</h1>
         <p class="text-lead">{{ forum.description }}</p>
       </div>
-      <a href="new-thread.html" class="btn-green btn-small">Start a thread</a>
+      <router-link
+        :to="{ name: RouteName.ThreadCreate, params: { forumid: forum.id } }"
+        class="btn-green btn-small"
+        >Start a thread</router-link
+      >
     </div>
   </div>
 
@@ -34,6 +38,7 @@
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import ThreadList from '@/components/ThreadList.vue';
+import { RouteName } from '@/enums/RouteName';
 
 const { getForumById } = useForumStore();
 const { getThreadsByForumId } = useThreadStore();

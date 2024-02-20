@@ -10,17 +10,12 @@ import pinia from '@/stores/pinia';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
 import { RouteName } from '@/enums/RouteName';
-/**
- * Defines the Home page route
- */
+
 const HomeRoute: RouteRecordRaw = {
   path: '/',
   name: RouteName.TheHome,
   component: AppHome,
 };
-/**
- * Defines the account edit page route
- */
 const AccountEditRoute: RouteRecordRaw = {
   path: '/account/edit',
   name: RouteName.AccountEdit,
@@ -43,9 +38,6 @@ const AccountEditRoute: RouteRecordRaw = {
     next();
   },
 };
-/**
- * Defines the account page route
- */
 const AccountRoute: RouteRecordRaw = {
   path: '/account',
   name: RouteName.AccountShow,
@@ -67,36 +59,24 @@ const AccountRoute: RouteRecordRaw = {
     next();
   },
 };
-/**
- * Defines the Single User page route
- */
 const UserShowRoute: RouteRecordRaw = {
   path: '/user/:id',
   name: RouteName.UserShow,
   component: () => import('@/pages/UserShow.vue'),
   props: true,
 };
-/**
- * Defines the Single Category page route
- */
 const CategoryShowRoute: RouteRecordRaw = {
   path: '/category/:id',
   name: RouteName.CategoryShow,
   component: () => import('@/pages/CategoryShow.vue'),
   props: true,
 };
-/**
- * Defines the Single Forum page route
- */
 const ForumShowRoute: RouteRecordRaw = {
   path: '/forum/:id',
   name: RouteName.ForumShow,
   component: () => import('@/pages/ForumShow.vue'),
   props: true,
 };
-/**
- * Defines the Single Thread page route
- */
 const { getThreadById } = useThreadStore(pinia);
 const ThreadShowRoute: RouteRecordRaw = {
   path: '/thread/:id',
@@ -120,17 +100,17 @@ const ThreadShowRoute: RouteRecordRaw = {
     });
   },
 };
-/**
- * Defines the NotAuthorized route
- */
+const ThreadCreateRoute: RouteRecordRaw = {
+  path: '/forum/:forumid/thread/create',
+  name: RouteName.ThreadCreate,
+  component: () => import('@/pages/ThreadCreate.vue'),
+  props: true,
+};
 const NotAuthorizedRoute: RouteRecordRaw = {
   path: '/unauthorized',
   name: 'NotAuthorized',
   component: () => import('@/pages/NotAuthorized.vue'),
 };
-/**
- * Defines the NotFound route
- */
 const NotFoundRoute: RouteRecordRaw = {
   path: '/:patchMatch(.*)*',
   name: 'PageNotFound',
@@ -153,9 +133,7 @@ const scrollBehaviorGuard: RouterScrollBehavior = (to) => {
     setTimeout(() => resolve(scrollBehavior), 500);
   });
 };
-/**
- * Defines the RouterOptions
- */
+
 const routerOptions: RouterOptions = {
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -166,11 +144,13 @@ const routerOptions: RouterOptions = {
     CategoryShowRoute,
     ForumShowRoute,
     ThreadShowRoute,
+    ThreadCreateRoute,
     NotAuthorizedRoute,
     NotFoundRoute,
   ],
   scrollBehavior: scrollBehaviorGuard,
 };
+
 const router: Router = createRouter(routerOptions);
 
 export default router;

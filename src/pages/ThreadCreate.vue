@@ -39,15 +39,33 @@
 </template>
 
 <script setup lang="ts">
-import Forum from '@/types/Forum';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useForumStore } from '@/stores/ForumStore';
+import { useThreadStore } from '@/stores/ThreadStore';
+import { RouteName } from '@/enums/RouteName';
 
-const { forum } = defineProps<{ forum: Forum }>();
+const { getForumById } = useForumStore();
+const { createThread } = useThreadStore();
+const router = useRouter();
 
+const props = defineProps<{ forumid: string }>();
+const forum = getForumById(props.forumid);
 const title = ref('');
 const body = ref('');
 
-const saveThread = () => {};
+const saveThread = async () => {
+  const threadId = await createThread({
+    forumId: forum.id!,
+    title: title.value,
+    body: body.value,
+  });
+
+  router.push({
+    name: RouteName.ThreadShow,
+    params: { id: threadId },
+  });
+};
 </script>
 
 <style scoped></style>
