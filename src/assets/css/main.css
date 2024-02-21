@@ -35,11 +35,13 @@ a,
   }
 }
 
-.thread-title {
+.thread-title,
+.thread-meta {
   display: flex;
   align-items: center;
 }
 
-.thread-title a {
+.thread-title a,
+.thread-meta span {
   margin-left: auto;
 }

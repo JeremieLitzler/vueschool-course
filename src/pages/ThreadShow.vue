@@ -16,6 +16,16 @@
         >Edit the thread</router-link
       >
     </h1>
+    <section class="thread-meta">
+      <p>
+        By <a href="#" class="link-unstyled">{{ thread.author }}</a
+        >, <app-date :timestamp="thread.publishedAt" />.
+      </p>
+      <span class="hide-mobile text-faded text-small"
+        >{{ thread.repliesCount }} replies by
+        {{ thread.contributorsCount }} contributors</span
+      >
+    </section>
 
     <PostList :posts="threadPosts!" />
     <PostEditor :thread-id="props.id" @@add-post="savePost" />
@@ -24,7 +34,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type Thread from '@/types/Thread.ts';
 import AddPostPayload from '@/types/AddPostPayload';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
@@ -32,7 +41,8 @@ import useUUID from '@/helpers/uniqueIdHelper';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
-import Post from '@/types/Post';
+import type Post from '@/types/Post';
+import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import { RouteName } from '@/enums/RouteName';
 
 const { getPostsByThreaId, addPost } = usePostStore();
@@ -50,7 +60,9 @@ const threadPosts = computed((): Post[] | undefined =>
   getPostsByThreaId(props.id)
 );
 
-const thread = computed((): Thread | undefined => getThreadById(props.id));
+const thread = computed((): ThreadHydraded | undefined =>
+  getThreadById(props.id)
+);
 
 const savePost = (entry: AddPostPayload) => {
   entry.post.id = newUniqueId;

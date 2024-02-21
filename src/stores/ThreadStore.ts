@@ -10,6 +10,7 @@ import { useUserStore } from './UserStore';
 import { usePostStore } from './PostStore';
 
 import type Thread from '@/types/Thread';
+import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 
 const { threadsData } = useSampleData();
@@ -19,13 +20,25 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   //STATE
   const threads = ref(threadsData);
   //GETTERS
-  const getThreadById = (threadId: string | undefined): Thread => {
+  const getThreadById = (threadId: string | undefined): ThreadHydraded => {
     const match = threads.value.find(
       (thread: Thread) => thread.id === threadId
     );
-    if (match === undefined) return {};
+    if (match === undefined)
+      return { author: '', repliesCount: 0, contributorsCount: 0 };
 
-    return match;
+    return {
+      ...match,
+      get author() {
+        return useUserStore().getUserById(match.userId).instance!.name!;
+      },
+      get repliesCount() {
+        return match.posts!.length - 1; //the first post isn't counted hence the '-1'
+      },
+      get contributorsCount() {
+        return [...new Set(match!.contributors)].length;
+      },
+    };
   };
 
   const getThreadsByForumId = (forumId: string | undefined): Thread[] => {
