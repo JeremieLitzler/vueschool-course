@@ -2,15 +2,21 @@
   <div class="post-list">
     <div class="post" v-for="post in posts" :key="post.id">
       <div class="user-info">
-        <a href="#" class="user-name">{{ userById(post.userId).name }}</a>
+        <router-link
+          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
+          class="user-name"
+          >{{ userById(post.userId).name }}</router-link
+        >
 
-        <a href="#">
+        <router-link
+          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
+        >
           <img
             class="avatar-large"
             :src="userById(post.userId).avatar"
             :alt="userById(post.userId).name"
           />
-        </a>
+        </router-link>
 
         <p class="desktop-only text-small">{{ posts.length }}</p>
       </div>
@@ -31,8 +37,18 @@
 </template>
 
 <script>
+import { useRouteName } from "@/helpers/routeNameEnum";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: { posts: { required: true, type: Array } },
+  data() {
+    return {
+      RouteName,
+    };
+  },
   computed: {
     users() {
       return this.$store.state.users;
@@ -318,3 +334,4 @@ export default {
   flex: 1 1 83%;
 }
 </style>
+@/helpers/routeNameEnum @/helpers/routeNameEnum

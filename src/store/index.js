@@ -1,33 +1,31 @@
 import { createStore } from "vuex";
 import sourceData from "@/data.json";
-import useUUID from "@/composables/useUUID";
-import useDateHelper from "@/composables/useDateHelper";
+import useUUID from "@/helpers/uniqueIdHelper";
+import useDateHelper from "@/helpers/dateHelper";
+import useArraySearchHelper from "@/helpers/arraySearchHelper";
+import useArrayUpdateHelper from "@/helpers/arrayUpdateHelper";
+
 const { createId } = useUUID();
 const { nowTimeStamp } = useDateHelper();
+const { findById, findManyById } = useArraySearchHelper();
+const { setResource } = useArrayUpdateHelper();
 
 export default createStore({
   state: { ...sourceData, authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2" },
   getters: {
     //users
-    authUser: (state) => state.users.find((user) => user.id === state.authId),
-    getUser: (state) => (userId) =>
-      state.users.find((user) => user.id === userId),
+    authUser: (state) => findById(state.users, state.authId),
+    getUser: (state) => (userId) => findById(state.users, userId),
     //forums
-    getForumById: (state) => (forumId) =>
-      state.forums.find((forum) => forum.id === forumId),
+    getForumById: (state) => (forumId) => findById(state.forums, forumId),
     //posts
-    getPostById: (state) => (id) => state.posts.find((post) => post.id === id),
-    postsByUserId: (state) => (userId) =>
-      state.posts.filter((post) => post.userId === userId),
-    getThreadFirstPostBody: (state) => (thread) => {
-      const match = state.posts.find((post) => post.id === thread.posts[0]);
-      return match;
-    },
+    getPostById: (state) => (id) => findById(state.posts, id),
+    postsByUserId: (state) => (userId) => findManyById(state.posts, userId),
+    getThreadFirstPostBody: (state) => (thread) =>
+      findById(state.posts, thread.posts[0]),
     //threads
-    threadById: (state) => (id) =>
-      state.threads.find((thread) => thread.id === id),
-    threadsByUserId: (state) => (userId) =>
-      state.threads.filter((thread) => thread.userId === userId),
+    threadById: (state) => (id) => findById(state.threads, id),
+    threadsByUserId: (state) => (userId) => findManyById(state.threads, userId),
   },
   actions: {
     //users
@@ -116,12 +114,7 @@ export default createStore({
 
     //posts
     setPost(state, { post }) {
-      const index = state.posts.findIndex((element) => element.id === post.id);
-      if (post.id && index !== -1) {
-        state.posts[index] = post;
-      } else {
-        state.posts.push(post);
-      }
+      setResource(state.posts, post);
     },
     appendPostToThread(state, { postId, threadId }) {
       const thread = state.threads.find((thread) => thread.id === threadId);
@@ -131,14 +124,7 @@ export default createStore({
 
     //threads
     setThread(state, { thread }) {
-      const index = state.threads.findIndex(
-        (element) => element.id === thread.id
-      );
-      if (thread.id && index !== -1) {
-        state.threads[index] = thread;
-      } else {
-        state.threads.push(thread);
-      }
+      setResource(state.threads, thread);
     },
   },
 });

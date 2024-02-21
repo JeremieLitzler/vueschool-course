@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { useRouteName } from "@/composables/useRouteName";
+import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -122,3 +122,4 @@ export default {
   },
 };
 </script>
+@/helpers/routeNameEnum @/helpers/routeNameEnum

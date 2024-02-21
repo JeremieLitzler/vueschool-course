@@ -18,7 +18,7 @@
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
-import { useRouteName } from "@/composables/useRouteName";
+import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -65,3 +65,4 @@ export default {
 </script>
 
 <style scoped></style>
+@/helpers/routeNameEnum @/helpers/routeNameEnum

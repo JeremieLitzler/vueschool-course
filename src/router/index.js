@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useRouteName } from "@/composables/useRouteName";
+import { useRouteName } from "@/helpers/routeNameEnum";
 import store from "@/store";
 import TheHome from "@/pages/TheHome.vue";
 

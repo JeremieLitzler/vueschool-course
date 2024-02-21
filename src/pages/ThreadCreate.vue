@@ -10,7 +10,7 @@
 
 <script>
 import ThreadEditor from "@/components/ThreadEditor.vue";
-import { useRouteName } from "@/composables/useRouteName";
+import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -48,3 +48,4 @@ export default {
 </script>
 
 <style lang="scss" scoped></style>
+@/helpers/routeNameEnum @/helpers/routeNameEnum
