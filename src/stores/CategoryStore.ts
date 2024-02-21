@@ -1,9 +1,11 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/composables/useSampleData';
+import useSampleData from '@/helpers/sampleData';
+// import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import type Category from '@/types/Category';
 
 const { categoriesData } = useSampleData();
+// const { findById } = useArraySearchHelper();
 
 export const useCategoryStore = defineStore('CategoryStore', () => {
   //STATE

@@ -1,5 +1,7 @@
-import PostEdited from "./PostEdited";
-interface Post {
+// import UniqueEntity from '@/types/UniqueEntity';
+import PostEdited from '@/types/PostEdited';
+
+interface Post /*extends UniqueEntity*/ {
   id?: string;
   edited?: PostEdited;
   publishedAt?: number;

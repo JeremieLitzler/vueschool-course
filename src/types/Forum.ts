@@ -1,4 +1,5 @@
-export default interface Forum {
+// import UniqueEntity from '@/types/UniqueEntity';
+export default interface Forum /*extends UniqueEntity*/ {
   categoryId?: string;
   description?: string;
   lastPostId?: string;

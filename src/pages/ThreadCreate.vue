@@ -12,7 +12,7 @@
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
-import useAppendRouteHelper from '@/composables/useAppendRouteHelper';
+import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 
 const { getForumById } = useForumStore();
 const { createThread } = useThreadStore();
@@ -33,3 +33,4 @@ const saveThread = async (payload: ThreadBaseRequest) => {
 </script>
 
 <style scoped></style>
+@/composables/appendRouteHelper

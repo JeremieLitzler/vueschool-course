@@ -2,10 +2,13 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
-import useSampleData from '@/composables/useSampleData';
+import useSampleData from '@/helpers/sampleData';
+// import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from './UserStore';
 
 const { postsData } = useSampleData();
+// const { findById, findManyById } = useArraySearchHelper();
+
 export const usePostStore = defineStore('PostStore', () => {
   //STATE
   const posts = ref(postsData);

@@ -1,4 +1,6 @@
-export default interface User {
+// import UniqueEntity from '@/types/UniqueEntity';
+
+export default interface User /*extends UniqueEntity*/ {
   id?: string;
   avatar?: string;
   email?: string;

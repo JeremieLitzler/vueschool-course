@@ -2,8 +2,9 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { v4 as uuid } from 'uuid';
 
-import useSampleData from '@/composables/useSampleData';
-import useDateHelper from '@/composables/useDateHelper';
+import useSampleData from '@/helpers/sampleData';
+import useDateHelper from '@/helpers/dateHelper';
+// import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useForumStore } from './ForumStore';
 import { useUserStore } from './UserStore';
 import { usePostStore } from './PostStore';
@@ -12,6 +13,8 @@ import type Thread from '@/types/Thread';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 
 const { threadsData } = useSampleData();
+// const { findById, findManyById } = useArraySearchHelper();
+
 export const useThreadStore = defineStore('ThreadStore', () => {
   //STATE
   const threads = ref(threadsData);

@@ -18,7 +18,7 @@ import { computed } from 'vue';
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { usePostStore } from '@/stores/PostStore';
-import useAppendRouteHelper from '@/composables/useAppendRouteHelper';
+import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 
 const { toForumPage, toThreadPage } = useAppendRouteHelper();
 
@@ -39,3 +39,4 @@ const updateThread = async (payload: ThreadBaseRequest) => {
   toThreadPage(thread.id!);
 };
 </script>
+@/composables/appendRouteHelper

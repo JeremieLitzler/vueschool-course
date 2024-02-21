@@ -28,7 +28,7 @@ import type Thread from '@/types/Thread.ts';
 import AddPostPayload from '@/types/AddPostPayload';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
-import useUUID from '@/composables/useUUID';
+import useUUID from '@/helpers/uniqueIdHelper';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
@@ -63,3 +63,4 @@ const savePost = (entry: AddPostPayload) => {
 </script>
 
 <style scoped></style>
+@/helpers/uniqueIdHelper @/helpers/uniqueIdHelper

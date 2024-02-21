@@ -1,4 +1,6 @@
-interface Thread {
+// import UniqueEntity from '@/types/UniqueEntity';
+
+interface Thread /*extends UniqueEntity*/ {
   contributors?: string[];
   firstPostId?: string;
   forumId?: string;

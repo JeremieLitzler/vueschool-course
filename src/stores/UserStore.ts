@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/composables/useSampleData';
+import useSampleData from '@/helpers/sampleData';
+// import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { usePostStore } from './PostStore';
 import { useThreadStore } from './ThreadStore';
 import type GetUserExtended from '@/types/GetUserExtended';
@@ -8,6 +9,8 @@ import User from '@/types/User';
 import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
 
 const { usersData } = useSampleData();
+// const { findById } = useArraySearchHelper();
+
 export const useUserStore = defineStore('UserStore', () => {
   //STATE
   const users = ref(usersData);

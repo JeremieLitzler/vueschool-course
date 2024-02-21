@@ -1,10 +1,13 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/composables/useSampleData';
+import useSampleData from '@/helpers/sampleData';
+// import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import Forum from '@/types/Forum';
 
 const { forumsData } = useSampleData();
+// const { findById, findManyById } = useArraySearchHelper();
+
 export const useForumStore = defineStore('ForumStore', () => {
   //STATE
   const forums = ref(forumsData);

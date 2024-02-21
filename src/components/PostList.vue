@@ -2,17 +2,21 @@
   <div class="post-list">
     <div class="post" v-for="post in props.posts" :key="post.id">
       <div class="user-info">
-        <a href="#" class="user-name">{{
-          getUserById(post.userId).instance!.name
-        }}</a>
+        <router-link
+          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
+          class="user-name"
+          >{{ getUserById(post.userId).instance!.name }}</router-link
+        >
 
-        <a href="#">
+        <router-link
+          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
+        >
           <img
             class="avatar-large"
             :src="getUserById(post.userId).instance!.avatar"
             :alt="getUserById(post.userId).instance!.name"
           />
-        </a>
+        </router-link>
 
         <p class="desktop-only text-small">107 posts</p>
       </div>
@@ -35,6 +39,7 @@
 <script setup lang="ts">
 import type Post from '@/types/Post.ts';
 import { useUserStore } from '@/stores/UserStore';
+import { RouteName } from '@/enums/RouteName';
 
 const { getUserById } = useUserStore();
 
