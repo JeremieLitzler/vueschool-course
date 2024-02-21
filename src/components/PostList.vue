@@ -18,7 +18,9 @@
           />
         </router-link>
 
-        <p class="desktop-only text-small">{{ posts.length }}</p>
+        <p class="desktop-only text-small">
+          {{ userById(post.userId).postsCount }} posts
+        </p>
       </div>
 
       <div class="post-content">
@@ -49,15 +51,10 @@ export default {
       RouteName,
     };
   },
-  computed: {
-    users() {
-      return this.$store.state.users;
-    },
-  },
   methods: {
     userById(userId) {
-      const match = this.users.find((user) => user.id === userId);
-      //   console.log("userById", match);
+      const match = this.$store.getters.getUser(userId);
+      console.log("userById", match);
       return match;
     },
   },

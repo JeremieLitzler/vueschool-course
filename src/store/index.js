@@ -7,7 +7,7 @@ import useArrayUpdateHelper from "@/helpers/arrayUpdateHelper";
 
 const { createId } = useUUID();
 const { nowTimeStamp } = useDateHelper();
-const { findById, findManyById, findManyByProp } = useArraySearchHelper();
+const { findById, findManyByProp } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
 const appendChildToParentMutation = ({ parent, child }) => {
@@ -24,8 +24,27 @@ export default createStore({
   state: { ...sourceData, authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2" },
   getters: {
     //users
-    authUser: (state) => findById(state.users, state.authId),
-    getUser: (state) => (userId) => findById(state.users, userId),
+    getUser: (state, getters) => (userId) => {
+      return getters.hydrateUser(findById(state.users, userId));
+    },
+    authUser: (state, getters) => {
+      console.log(getters);
+      return getters.getUser(state.authId);
+    },
+    hydrateUser: (state, getters) => (user) => {
+      const hydrated = {
+        ...user,
+        get postsCount() {
+          return getters.postsByUserId(user.id).length;
+        },
+        get threadsCount() {
+          return getters.threadsByUserId(user.id).length;
+        },
+      };
+      //console.log(hydrated);
+      return hydrated;
+    },
+
     //forums
     getForumById: (state) => (forumId) => findById(state.forums, forumId),
     getThreadsByForumId: (state, getters) => (forumId) => {
@@ -35,7 +54,8 @@ export default createStore({
     },
     //posts
     getPostById: (state) => (id) => findById(state.posts, id),
-    postsByUserId: (state) => (userId) => findManyById(state.posts, userId),
+    postsByUserId: (state) => (userId) =>
+      findManyByProp(state.posts, "userId", userId),
     getThreadFirstPostBody: (state) => (thread) =>
       findById(state.posts, thread.posts[0]),
     //threads
@@ -43,7 +63,8 @@ export default createStore({
       const thread = findById(state.threads, id);
       return getters.hydrateThread(thread, getters);
     },
-    threadsByUserId: (state) => (userId) => findManyById(state.threads, userId),
+    threadsByUserId: (state) => (userId) =>
+      findManyByProp(state.threads, "userId", userId),
     hydrateThread: () => (thread, getters) => {
       return {
         ...thread,
