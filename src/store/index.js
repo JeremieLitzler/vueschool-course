@@ -10,6 +10,14 @@ const { nowTimeStamp } = useDateHelper();
 const { findById, findManyById } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
+const appendChildToParentMutation = ({ parent, child }) => {
+  return (state, { childId, parentId }) => {
+    const resource = findById(state[parent], parentId);
+    resource[child] = resource[child] || [];
+    resource[child].push(childId);
+  };
+};
+
 export default createStore({
   state: { ...sourceData, authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2" },
   getters: {
@@ -39,8 +47,8 @@ export default createStore({
       post.userId = getters.authUser.id;
       commit("setPost", { post });
       commit("appendPostToThread", {
-        postId: post.id,
-        threadId: post.threadId,
+        childId: post.id,
+        parentId: post.threadId,
       });
       return post;
     },
@@ -67,10 +75,10 @@ export default createStore({
         id,
       };
       commit("setThread", { thread });
-      commit("appendThreadToForum", { threadId: id, forumId });
+      commit("appendThreadToForum", { childId: id, parentId: forumId });
       commit("appendThreadToUser", {
-        threadId: id,
-        userId: getters.authUser.id,
+        childId: id,
+        parentId: getters.authUser.id,
       });
       dispatch("createPost", { threadId: id, postId, text: body });
       return id;
@@ -99,28 +107,25 @@ export default createStore({
       );
       state.users[userIndex] = updatedUser;
     },
-    appendThreadToUser(state, { threadId, userId }) {
-      const user = state.users.find((user) => user.id === userId);
-      user.threads = user.threads || [];
-      user.threads.push(threadId);
-    },
+    appendThreadToUser: appendChildToParentMutation({
+      parent: "users",
+      child: "threads",
+    }),
 
     //forums
-    appendThreadToForum(state, { threadId, forumId }) {
-      const forum = state.forums.find((forum) => forum.id === forumId);
-      forum.threads = forum.threads || [];
-      forum.threads.push(threadId);
-    },
+    appendThreadToForum: appendChildToParentMutation({
+      parent: "forums",
+      child: "threads",
+    }),
 
     //posts
     setPost(state, { post }) {
       setResource(state.posts, post);
     },
-    appendPostToThread(state, { postId, threadId }) {
-      const thread = state.threads.find((thread) => thread.id === threadId);
-      thread.posts = thread.posts || [];
-      thread.posts.push(postId);
-    },
+    appendPostToThread: appendChildToParentMutation({
+      parent: "threads",
+      child: "posts",
+    }),
 
     //threads
     setThread(state, { thread }) {
