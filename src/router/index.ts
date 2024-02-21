@@ -106,6 +106,28 @@ const ThreadCreateRoute: RouteRecordRaw = {
   component: () => import('@/pages/ThreadCreate.vue'),
   props: true,
 };
+const ThreadEditRoute: RouteRecordRaw = {
+  path: '/thread/:id/edit',
+  name: RouteName.ThreadEdit,
+  component: () => import('@/pages/ThreadEdit.vue'),
+  props: true,
+  beforeEnter: (to, _from, next) => {
+    //does the thread exists?
+    const threadExists = getThreadById(to.params.id as string);
+    //if positive, contine
+    if (threadExists) {
+      return next();
+    }
+    //else redirect to not found
+    //next({ name: "NotFound" }); // <-- redirect with URL change
+    next({
+      name: RouteName.NotFound,
+      params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
+      query: to.query,
+      hash: to.hash,
+    });
+  },
+};
 const NotAuthorizedRoute: RouteRecordRaw = {
   path: '/unauthorized',
   name: 'NotAuthorized',
@@ -145,6 +167,7 @@ const routerOptions: RouterOptions = {
     ForumShowRoute,
     ThreadShowRoute,
     ThreadCreateRoute,
+    ThreadEditRoute,
     NotAuthorizedRoute,
     NotFoundRoute,
   ],

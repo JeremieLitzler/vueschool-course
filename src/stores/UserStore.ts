@@ -33,7 +33,7 @@ export const useUserStore = defineStore('UserStore', () => {
     if (matchingUser === undefined) return {};
 
     const extendedUser = hydrateUserExtented(userId);
-    console.log('extendedUser', extendedUser);
+    //console.log('extendedUser', extendedUser);
 
     return {
       instance: matchingUser,
@@ -43,8 +43,7 @@ export const useUserStore = defineStore('UserStore', () => {
 
   const getAuthUser = (): GetUserExtended => {
     const result = getUserById(authId.value);
-    console.log('authUser', result);
-
+    //console.log('authUser', result);
     return result;
   };
 

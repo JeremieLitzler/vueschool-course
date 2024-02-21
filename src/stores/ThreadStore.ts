@@ -6,10 +6,10 @@ import useSampleData from '@/composables/useSampleData';
 import useDateHelper from '@/composables/useDateHelper';
 import { useForumStore } from './ForumStore';
 import { useUserStore } from './UserStore';
+import { usePostStore } from './PostStore';
 
 import type Thread from '@/types/Thread';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
-import { usePostStore } from './PostStore';
 
 const { threadsData } = useSampleData();
 export const useThreadStore = defineStore('ThreadStore', () => {
@@ -40,7 +40,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   };
 
   //ACTIONS
-  const createThread = (request: CreateThreadRequest) => {
+  const createThread = (request: ThreadCreateRequest) => {
     const id = uuid();
     const postId = uuid();
 
@@ -53,12 +53,42 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       id,
     };
 
-    threads.value.push(thread);
+    _setThread(thread);
     createThreadAddRelated(request, thread);
     return id;
   };
+  const updateThread = (request: ThreadUpdateRequest): Thread => {
+    //console.log("updatedThread > id ", id);
+    const thread = getThreadById(request.threadId);
+    //console.log("updatedThread > thread ", thread);
+    const updatedThread = {
+      ...thread,
+      title: request.title,
+    };
+
+    //console.log("updatedThread > ", updatedThread);
+
+    _setThread(updatedThread);
+    usePostStore().updatePost({
+      id: updatedThread.posts![0],
+      body: request.body,
+    });
+    return thread;
+  };
+
+  const _setThread = (thread: Thread) => {
+    const index = threads.value.findIndex(
+      (element) => element.id === thread.id
+    );
+    if (thread.id && index !== -1) {
+      threads.value[index] = thread;
+    } else {
+      threads.value.push(thread);
+    }
+  };
+
   const createThreadAddRelated = (
-    threadRequest: CreateThreadRequest,
+    threadRequest: ThreadCreateRequest,
     thread: Thread
   ) => {
     useForumStore().appendThreadToForum({
@@ -89,6 +119,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     getThreadsByForumId,
     getThreadsByUserId,
     createThread,
+    updateThread,
     appendPostToThread,
   };
 });

@@ -4,41 +4,31 @@
       Create new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <thread-editor @@save="saveThread" @@cancel="returnToForum" />
+    <thread-editor @@save="saveThread" @@cancel="toForumPage(forum.id!)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
-import { RouteName } from '@/enums/RouteName';
-import ThreadEditor from '@/components/ThreadEditor.vue';
+import useAppendRouteHelper from '@/composables/useAppendRouteHelper';
 
 const { getForumById } = useForumStore();
 const { createThread } = useThreadStore();
-const router = useRouter();
 const props = defineProps<{ forumid: string }>();
+
+const { toForumPage, toThreadPage } = useAppendRouteHelper();
 
 const forum = getForumById(props.forumid);
 
-const saveThread = async (payload: CreateThreadRequest) => {
+const saveThread = async (payload: ThreadBaseRequest) => {
   const threadId = await createThread({
     forumId: forum.id!,
     ...payload,
   });
 
-  router.push({
-    name: RouteName.ThreadShow,
-    params: { id: threadId },
-  });
-};
-
-const returnToForum = () => {
-  router.push({
-    name: RouteName.ForumShow,
-    params: { id: forum.id },
-  });
+  toThreadPage(threadId);
 };
 </script>
 

@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type Post from '@/types/Post.ts';
+import type Thread from '@/types/Thread';
 import useSampleData from '@/composables/useSampleData';
 import { useUserStore } from './UserStore';
 
@@ -29,20 +30,44 @@ export const usePostStore = defineStore('PostStore', () => {
     return matches;
   };
 
+  const getThreadFirstPostBody = (thread: Thread) => {
+    const match = posts.value.find((post) => post.id === thread.posts![0]);
+    return match;
+  };
   //ACTIONS
   const addPost = (post: Post) => {
     //console.log('calling addPost in PostStore', post);
     post.publishedAt = Math.floor(Date.now() / 1000);
     const { getAuthUser } = useUserStore();
     post.userId = getAuthUser().instance?.id;
-    posts.value.push(post);
+    _setPost(post);
   };
 
+  const updatePost = (request: PostUpdateRequest) => {
+    //console.log("updatePost > id ", id);
+
+    const post = getPostById(request.id);
+    //console.log("updatePost > post ", post);
+    const updatedPost = { ...post, text: request.body };
+    //console.log("updatePost > updatedPost ", updatedPost);
+    _setPost(updatedPost);
+  };
+
+  const _setPost = (post: Post) => {
+    const index = posts.value.findIndex((element) => element.id === post.id);
+    if (post.id && index !== -1) {
+      posts.value![index] = post;
+    } else {
+      posts.value!.push(post);
+    }
+  };
   return {
     posts,
     getPostById,
     getPostsByThreaId,
     getPostsByUserId,
+    getThreadFirstPostBody,
     addPost,
+    updatePost,
   };
 });

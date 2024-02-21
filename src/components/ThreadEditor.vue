@@ -3,7 +3,7 @@
     <div class="form-group">
       <label for="thread_title">Title:</label>
       <input
-        v-model="title"
+        v-model="form.title"
         type="text"
         id="thread_title"
         class="form-input"
@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="thread_content">Content:</label>
       <textarea
-        v-model="body"
+        v-model="form.body"
         id="thread_content"
         class="form-input"
         name="content"
@@ -32,17 +32,22 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import ThreadEditorPageProps from '@/types/ThreadEditorPageProps';
+
+const props = withDefaults(defineProps<ThreadEditorPageProps>(), {
+  title: '',
+  body: '',
+});
 
 const emits = defineEmits<{
-  (event: '@save', entry: CreateThreadRequest): void;
+  (event: '@save', entry: ThreadBaseRequest): void;
   (event: '@cancel'): void;
 }>();
 
-const title = ref('');
-const body = ref('');
+const form = ref({ title: props.title, body: props.body });
 
 const save = () => {
-  emits('@save', { title: title.value, body: body.value });
+  emits('@save', { title: form.value.title, body: form.value.body });
 };
 const cancel = () => {
   emits('@cancel');

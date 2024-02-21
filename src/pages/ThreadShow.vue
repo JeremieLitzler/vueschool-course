@@ -9,6 +9,12 @@
   </div>
   <div v-else class="col-large push-top">
     <h1>{{ thread!.title }}</h1>
+    <router-link
+      :to="{ name: RouteName.ThreadEdit, params: { id } }"
+      class="btn-green btn-small"
+      >Edit the thread</router-link
+    >
+
     <PostList :posts="threadPosts!" />
     <PostEditor :thread-id="props.id" @@add-post="savePost" />
   </div>
@@ -25,6 +31,7 @@ import useUUID from '@/composables/useUUID';
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
 import Post from '@/types/Post';
+import { RouteName } from '@/enums/RouteName';
 
 const { getPostsByThreaId, addPost } = usePostStore();
 const { getThreadById, appendPostToThread } = useThreadStore();
