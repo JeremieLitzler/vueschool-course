@@ -1,12 +1,14 @@
 <template>
   <div class="col-large push-top">
     <router-link :to="{ name: RouteName.TheHome }">Back</router-link>
-    <h1>{{ thread.title }}</h1>
-    <router-link
-      :to="{ name: RouteName.ThreadEdit, params: { id } }"
-      class="btn-green btn-small"
-      >Edit the thread</router-link
-    >
+    <h1 class="thread-title">
+      {{ thread.title }}
+      <router-link
+        :to="{ name: RouteName.ThreadEdit, params: { id } }"
+        class="btn-green btn-small"
+        >Edit the thread</router-link
+      >
+    </h1>
     <post-list :posts="threadPosts" />
     <post-editor :threadId="id" @add-post="savePost" />
   </div>

@@ -34,3 +34,12 @@ a,
     padding: 0 2rem; */
   }
 }
+
+.thread-title {
+  display: flex;
+  align-items: center;
+}
+
+.thread-title a {
+  margin-left: auto;
+}

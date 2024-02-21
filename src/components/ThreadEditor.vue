@@ -25,7 +25,9 @@
 
     <div class="btn-group">
       <button @click="$emit('cancel')" class="btn btn-ghost">Cancel</button>
-      <button class="btn btn-blue" type="submit" name="Publish">Publish</button>
+      <button class="btn btn-blue" type="submit" name="Publish">
+        {{ threadExists ? "Update" : "Publish" }}
+      </button>
     </div>
   </form>
 </template>
@@ -49,6 +51,11 @@ export default {
         body: this.body,
       },
     };
+  },
+  computed: {
+    threadExists() {
+      return !!this.title;
+    },
   },
   methods: {
     save() {
