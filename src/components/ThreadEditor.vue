@@ -3,7 +3,7 @@
     <div class="form-group">
       <label for="thread_title">Title:</label>
       <input
-        v-model="title"
+        v-model="form.title"
         type="text"
         id="thread_title"
         class="form-input"
@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="thread_content">Content:</label>
       <textarea
-        v-model="body"
+        v-model="form.body"
         id="thread_content"
         class="form-input"
         name="content"
@@ -37,18 +37,23 @@ const { RouteName } = useRouteName();
 /* eslint-enable */
 
 export default {
+  props: {
+    title: { type: String, default: "" },
+    body: { type: String, default: "" },
+  },
   data() {
     return {
       RouteName,
-      title: "",
-      body: "",
+      form: {
+        title: this.title,
+        body: this.body,
+      },
     };
   },
   methods: {
     save() {
       this.$emit("save", {
-        title: this.title,
-        body: this.body,
+        ...this.form,
       });
     },
     cancel() {

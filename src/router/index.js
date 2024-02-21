@@ -169,6 +169,13 @@ const routes = [
     component: () => import("@/pages/ThreadCreate.vue"),
     props: true,
   },
+  //Thread Edit route
+  {
+    path: "/thread/:id/edit",
+    name: RouteName.ThreadEdit,
+    component: () => import("@/pages/ThreadEdit.vue"),
+    props: true,
+  },
   //Not authorized route
   {
     path: "/unauthorized",

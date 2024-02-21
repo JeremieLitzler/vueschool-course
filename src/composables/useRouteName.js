@@ -7,6 +7,7 @@ export function useRouteName() {
     ForumShow: "ForumShow",
     ThreadShow: "ThreadShow",
     ThreadCreate: "ThreadCreate",
+    ThreadEdit: "ThreadEdit",
     //Behind auth pages
     AccountEdit: "AccountEdit",
     AccountShow: "AccountShow",
