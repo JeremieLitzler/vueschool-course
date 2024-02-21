@@ -60,9 +60,9 @@ export default {
       return this.$store.state.forums.find((forum) => forum.id === this.id);
     },
     forumThreads() {
-      return this.$store.state.threads.filter(
-        (thread) => thread.forumId === this.id
-      );
+      const threads = this.$store.getters.getThreadsByForumId(this.id);
+      console.log("forumThreads", threads);
+      return threads;
     },
   },
 };

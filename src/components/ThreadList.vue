@@ -23,8 +23,8 @@
 
         <div class="activity">
           <p class="replies-count">
-            {{ thread.posts.length }} repl{{
-              thread.posts.length > 1 ? "ies" : "y"
+            {{ thread.repliesCount }} repl{{
+              thread.repliesCount > 1 ? "ies" : "y"
             }}
           </p>
 

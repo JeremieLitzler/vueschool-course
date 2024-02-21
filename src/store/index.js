@@ -7,14 +7,16 @@ import useArrayUpdateHelper from "@/helpers/arrayUpdateHelper";
 
 const { createId } = useUUID();
 const { nowTimeStamp } = useDateHelper();
-const { findById, findManyById } = useArraySearchHelper();
+const { findById, findManyById, findManyByProp } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
 const appendChildToParentMutation = ({ parent, child }) => {
   return (state, { childId, parentId }) => {
     const resource = findById(state[parent], parentId);
     resource[child] = resource[child] || [];
-    resource[child].push(childId);
+    if (!resource[child].includes(childId)) {
+      resource[child].push(childId);
+    }
   };
 };
 
@@ -26,14 +28,36 @@ export default createStore({
     getUser: (state) => (userId) => findById(state.users, userId),
     //forums
     getForumById: (state) => (forumId) => findById(state.forums, forumId),
+    getThreadsByForumId: (state, getters) => (forumId) => {
+      return findManyByProp(state.threads, "forumId", forumId).map((thread) =>
+        getters.hydrateThread(thread, getters)
+      );
+    },
     //posts
     getPostById: (state) => (id) => findById(state.posts, id),
     postsByUserId: (state) => (userId) => findManyById(state.posts, userId),
     getThreadFirstPostBody: (state) => (thread) =>
       findById(state.posts, thread.posts[0]),
     //threads
-    threadById: (state) => (id) => findById(state.threads, id),
+    threadById: (state, getters) => (id) => {
+      const thread = findById(state.threads, id);
+      return getters.hydrateThread(thread, getters);
+    },
     threadsByUserId: (state) => (userId) => findManyById(state.threads, userId),
+    hydrateThread: () => (thread, getters) => {
+      return {
+        ...thread,
+        get author() {
+          return getters.getUser(thread.userId).name;
+        },
+        get repliesCount() {
+          return thread.posts.length - 1; //the first post isn't counted hence the '-1'
+        },
+        get contributorsCount() {
+          return [...new Set(thread.contributors)].length;
+        },
+      };
+    },
   },
   actions: {
     //users
@@ -50,6 +74,11 @@ export default createStore({
         childId: post.id,
         parentId: post.threadId,
       });
+      commit("appendContributorToThread", {
+        childId: getters.authUser.id,
+        parentId: post.threadId,
+      });
+
       return post;
     },
     updatePost({ commit, getters }, { id, body }) {
@@ -131,5 +160,9 @@ export default createStore({
     setThread(state, { thread }) {
       setResource(state.threads, thread);
     },
+    appendContributorToThread: appendChildToParentMutation({
+      parent: "threads",
+      child: "contributors",
+    }),
   },
 });

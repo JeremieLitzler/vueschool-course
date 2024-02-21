@@ -9,6 +9,16 @@
         >Edit the thread</router-link
       >
     </h1>
+    <section class="thread-meta">
+      <p>
+        By <a href="#" class="link-unstyled">{{ thread.author }}</a
+        >, <app-date :timestamp="thread.publishedAt" />.
+      </p>
+      <span class="hide-mobile text-faded text-small"
+        >{{ thread.repliesCount }} replies by
+        {{ thread.contributorsCount }} contributors</span
+      >
+    </section>
     <post-list :posts="threadPosts" />
     <post-editor :threadId="id" @add-post="savePost" />
   </div>
@@ -40,14 +50,11 @@ export default {
     PostEditor,
   },
   computed: {
-    threads() {
-      return this.$store.state.threads;
-    },
     posts() {
       return this.$store.state.posts;
     },
     thread() {
-      const match = this.threads.find((thread) => thread.id === this.id);
+      const match = this.$store.getters.threadById(this.id);
       return match;
     },
     threadPosts() {
