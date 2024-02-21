@@ -25,13 +25,15 @@
 
     <div class="btn-group">
       <button @click="cancel" class="btn btn-ghost">Cancel</button>
-      <button class="btn btn-blue" type="submit" name="Publish">Publish</button>
+      <button class="btn btn-blue" type="submit" name="Publish">
+        {{ threadExists ? 'Update' : 'Publish' }}
+      </button>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ThreadEditorPageProps from '@/types/ThreadEditorPageProps';
 
 const props = withDefaults(defineProps<ThreadEditorPageProps>(), {
@@ -45,6 +47,7 @@ const emits = defineEmits<{
 }>();
 
 const form = ref({ title: props.title, body: props.body });
+const threadExists = computed(() => !!form.value.title);
 
 const save = () => {
   emits('@save', { title: form.value.title, body: form.value.body });

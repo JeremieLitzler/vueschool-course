@@ -8,12 +8,14 @@
     <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
   </div>
   <div v-else class="col-large push-top">
-    <h1>{{ thread!.title }}</h1>
-    <router-link
-      :to="{ name: RouteName.ThreadEdit, params: { id } }"
-      class="btn-green btn-small"
-      >Edit the thread</router-link
-    >
+    <h1 class="thread-title">
+      {{ thread!.title }}
+      <router-link
+        :to="{ name: RouteName.ThreadEdit, params: { id } }"
+        class="btn-green btn-small"
+        >Edit the thread</router-link
+      >
+    </h1>
 
     <PostList :posts="threadPosts!" />
     <PostEditor :thread-id="props.id" @@add-post="savePost" />
