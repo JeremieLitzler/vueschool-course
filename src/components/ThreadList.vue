@@ -23,8 +23,8 @@
 
         <div class="activity">
           <p class="replies-count">
-            {{ thread.posts?.length }} repl{{
-              (thread.posts ? thread.posts.length : 0) > 1 ? 'ies' : 'y'
+            {{ thread.repliesCount }} repl{{
+              thread.repliesCount > 1 ? 'ies' : 'y'
             }}
           </p>
 
@@ -60,11 +60,11 @@
 </template>
 
 <script setup lang="ts">
-import type Thread from '@/types/Thread.ts';
+import ThreadHydraded from '@/types/ThreadHydraded';
 import { useUserStore } from '@/stores/UserStore';
 
 const props = defineProps<{
-  threads: Thread[];
+  threads: ThreadHydraded[];
 }>();
 
 const { getUserById } = useUserStore();

@@ -27,25 +27,16 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     if (match === undefined)
       return { author: '', repliesCount: 0, contributorsCount: 0 };
 
-    return {
-      ...match,
-      get author() {
-        return useUserStore().getUserById(match.userId).instance!.name!;
-      },
-      get repliesCount() {
-        return match.posts!.length - 1; //the first post isn't counted hence the '-1'
-      },
-      get contributorsCount() {
-        return [...new Set(match!.contributors)].length;
-      },
-    };
+    return _hydrateThread(match);
   };
 
-  const getThreadsByForumId = (forumId: string | undefined): Thread[] => {
+  const getThreadsByForumId = (
+    forumId: string | undefined
+  ): ThreadHydraded[] => {
     const matches = threads.value.filter(
       (thread: Thread) => thread.forumId === forumId
     );
-    return matches;
+    return matches.map((thread) => _hydrateThread(thread));
   };
 
   const getThreadsByUserId = (userId: string | undefined): Thread[] => {
@@ -53,6 +44,20 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       (thread: Thread) => thread.userId === userId
     );
     return matches;
+  };
+  const _hydrateThread = (thread: Thread): ThreadHydraded => {
+    return {
+      ...thread,
+      get author() {
+        return useUserStore().getUserById(thread.userId).instance!.name!;
+      },
+      get repliesCount() {
+        return thread.posts!.length - 1; //the first post isn't counted hence the '-1'
+      },
+      get contributorsCount() {
+        return [...new Set(thread!.contributors)].length;
+      },
+    };
   };
 
   //ACTIONS
