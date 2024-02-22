@@ -82,12 +82,10 @@ export default {
   },
   async created() {
     this.$store.dispatch("fetchSomething");
-    const nonAsyncPromises = [];
     const thread = await this.$store.dispatch("fetchThread", { id: this.id });
-    const userPromise = this.$store.dispatch("fetchUser", {
+    const firstUserPromise = this.$store.dispatch("fetchUser", {
       id: thread.userId,
     });
-    nonAsyncPromises.push(userPromise);
 
     const posts = await this.$store.dispatch("fetchPosts", {
       ids: thread.posts,
@@ -97,7 +95,7 @@ export default {
       ids: users,
     });
 
-    await Promise.all([extraUserPromises, userPromise]);
+    await Promise.all([extraUserPromises, firstUserPromise]);
     this.$store.dispatch("fetchSomething");
   },
 };
