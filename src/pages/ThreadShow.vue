@@ -89,15 +89,15 @@ export default {
     });
     nonAsyncPromises.push(userPromise);
 
-    thread.posts.forEach(async (postId) => {
-      const post = await this.$store.dispatch("fetchPost", { id: postId });
-      const userPromise = this.$store.dispatch("fetchUser", {
-        id: post.userId,
-      });
-      nonAsyncPromises.push(userPromise);
+    const posts = await this.$store.dispatch("fetchPosts", {
+      ids: thread.posts,
+    });
+    const users = posts.map((post) => post.userId);
+    const extraUserPromises = this.$store.dispatch("fetchUsers", {
+      ids: users,
     });
 
-    await Promise.all(nonAsyncPromises);
+    await Promise.all([extraUserPromises, userPromise]);
     this.$store.dispatch("fetchSomething");
   },
 };

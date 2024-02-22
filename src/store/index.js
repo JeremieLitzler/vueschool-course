@@ -115,9 +115,16 @@ export default createStore({
         });
       });
     },
+    fetchItems({ dispatch }, { source, ids }) {
+      const fetchs = ids.map((id) => dispatch("fetchItem", { source, id }));
+      return Promise.all(fetchs);
+    },
     //users
     fetchUser({ dispatch }, { id }) {
       return dispatch("fetchItem", { source: "users", id });
+    },
+    fetchUsers({ dispatch }, { ids }) {
+      return dispatch("fetchItems", { source: "users", ids });
     },
     updateUser({ commit }, user) {
       commit("setItem", { source: "users", item: user });
@@ -125,6 +132,9 @@ export default createStore({
     //posts
     fetchPost({ dispatch }, { id }) {
       return dispatch("fetchItem", { source: "posts", id });
+    },
+    fetchPosts({ dispatch }, { ids }) {
+      return dispatch("fetchItems", { source: "posts", ids });
     },
     createPost({ commit, getters }, post) {
       post.id = post.id ?? createId();
@@ -154,6 +164,9 @@ export default createStore({
     //threads
     fetchThread({ dispatch }, { id }) {
       return dispatch("fetchItem", { source: "threads", id });
+    },
+    fetchThreads({ dispatch }, { ids }) {
+      return dispatch("fetchItems", { source: "threads", ids });
     },
     createThread({ commit, dispatch, getters }, { title, body, forumId }) {
       const id = createId();
