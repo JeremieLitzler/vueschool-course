@@ -47,7 +47,6 @@ import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
 import type AddPostPayload from '@/types/AddPostPayload';
 import type Post from '@/types/Post';
-import type User from '@/types/User';
 import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import { RouteName } from '@/enums/RouteName';
 
@@ -77,20 +76,16 @@ const savePost = (entry: AddPostPayload) => {
 
 onMounted(async () => {
   useCommonStore().updateFetching();
-  const unfinishedPromises: Promise<User>[] = [];
   //fetch requested thread
   const thread = await useThreadStore().fetchThread(id);
   //... and its author
-  const userPromise = useUserStore().fetchUser(thread.userId!);
-  unfinishedPromises.push(userPromise);
-  //... and finally, its posts
-  thread.posts!.forEach(async (postId) => {
-    const post = await usePostStore().fetchPost(postId);
-    // along with the author of each post
-    useUserStore().fetchUser(post.userId!);
-    unfinishedPromises.push(userPromise);
-  });
-  await Promise.all(unfinishedPromises);
+  const firstUserPromise = useUserStore().fetchUser(thread.userId!);
+  //... and its posts
+  const posts = await usePostStore().fetchPosts(thread.posts!);
+  const userIds = posts.map((post) => post.userId!);
+  // and finally the posts's authors
+  const extraUserPromise = useUserStore().fetchUsers(userIds);
+  await Promise.all([firstUserPromise, extraUserPromise]);
   useCommonStore().updateFetching();
 });
 </script>

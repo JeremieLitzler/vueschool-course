@@ -58,7 +58,13 @@ export const useUserStore = defineStore('UserStore', () => {
       id,
     });
   };
-
+  const fetchUsers = (ids: string[]): Promise<Awaited<User>[]> => {
+    return useCommonStore().fetchItems<User>({
+      ids,
+      source: users,
+      collection: FirestoreCollection.Users,
+    });
+  };
   const updateUser = (updatedUser: User) => {
     const userIndex = users.value.findIndex(
       (user) => user.id === updatedUser.id
@@ -87,6 +93,7 @@ export const useUserStore = defineStore('UserStore', () => {
     getAuthUser,
     getUserById,
     fetchUser,
+    fetchUsers,
     updateUser,
     setUser,
     appendThreadToUser,

@@ -4,7 +4,8 @@ import useFirebase from '@/helpers/fireBaseConnector';
 import type GenericMutationRequest from '@/types/GenericMutationRequest';
 import type GenericFetchRequest from '@/types/GenericFetchRequest';
 import type WithId from '@/types/WithId';
-import GenericFindRequest from '@/types/GenericFindRequest';
+import type GenericFindRequest from '@/types/GenericFindRequest';
+import type ManyGenericFetchRequest from '@/types/ManyGenericFetchRequest';
 
 export const useCommonStore = defineStore('CommonStore', () => {
   //STATE
@@ -29,6 +30,16 @@ export const useCommonStore = defineStore('CommonStore', () => {
     }
 
     return _makeFetch({ ...request });
+  };
+
+  const fetchItems = <T extends WithId>({
+    source,
+    collection,
+    ids,
+  }: ManyGenericFetchRequest<T>): Promise<Awaited<T>[]> => {
+    const fetchs = ids.map((id) => fetchItem<T>({ id, source, collection }));
+    const result = Promise.all(fetchs);
+    return result;
   };
 
   const _makeFetch = <T extends WithId>({
@@ -80,5 +91,6 @@ export const useCommonStore = defineStore('CommonStore', () => {
     fetching,
     updateFetching,
     fetchItem,
+    fetchItems,
   };
 });

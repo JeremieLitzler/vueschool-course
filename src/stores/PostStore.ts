@@ -47,7 +47,13 @@ export const usePostStore = defineStore('PostStore', () => {
       id,
     });
   };
-
+  const fetchPosts = (ids: string[]): Promise<Awaited<Post>[]> => {
+    return useCommonStore().fetchItems<Post>({
+      ids,
+      source: posts,
+      collection: FirestoreCollection.Posts,
+    });
+  };
   const addPost = (post: Post) => {
     //console.log('calling addPost in PostStore', post);
     post.publishedAt = Math.floor(Date.now() / 1000);
@@ -84,6 +90,7 @@ export const usePostStore = defineStore('PostStore', () => {
     getThreadFirstPostBody,
     //actions
     fetchPost,
+    fetchPosts,
     addPost,
     updatePost,
     setPost,
