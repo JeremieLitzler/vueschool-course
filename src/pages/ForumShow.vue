@@ -61,7 +61,7 @@ export default {
     },
     forumThreads() {
       const threads = this.$store.getters.getThreadsByForumId(this.id);
-      console.log("forumThreads", threads);
+      //console.log("forumThreads", threads);
       return threads;
     },
   },
