@@ -3,6 +3,14 @@ import store from "@/store";
 import router from "./router";
 
 import App from "./App.vue";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/config/firebase";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+app();
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...
