@@ -10,7 +10,7 @@ import { firebaseConfig } from "@/config/firebase";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-app();
+app;
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...
