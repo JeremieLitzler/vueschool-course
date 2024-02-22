@@ -18,7 +18,10 @@
           />
         </router-link>
 
-        <p class="desktop-only text-small">107 posts</p>
+        <p class="desktop-only text-small">
+          {{ getUserById(post.userId).postsCount }}
+          post{{ getUserById(post.userId).postsCount! > 1 ? 's' : '' }}
+        </p>
       </div>
 
       <div class="post-content">
