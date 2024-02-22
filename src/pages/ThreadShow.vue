@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "@/config/firebase";
-import { getFirestore, doc, onSnapshot } from "firebase/firestore";
-const firebaseApp = initializeApp(firebaseConfig);
+// import { initializeApp } from "firebase/app";
+// import { firebaseConfig } from "@/config/firebase";
+// import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+// const firebaseApp = initializeApp(firebaseConfig);
 
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
@@ -80,38 +80,16 @@ export default {
       this.$store.dispatch("createPost", post);
     },
   },
-  created() {
-    this.$store.dispatch("updateFetching");
-    const db = getFirestore(firebaseApp);
-    //fetch thread
-    onSnapshot(doc(db, "threads", this.id), (responseDoc) => {
-      //console.log("from firestore > responseDoc: ", responseDoc);
-      //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-      //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-      const thread = { ...responseDoc.data(), id: responseDoc.id };
-      //console.log("from firestore > thread:", thread);
-      this.$store.commit("setThread", { thread });
-      this.$store.dispatch("updateFetching");
-      //fetch user
-      onSnapshot(doc(db, "users", thread.userId), (responseDoc) => {
-        this.$store.dispatch("updateUser", {
-          ...responseDoc.data(),
-          id: responseDoc.id,
-        });
-      });
-      thread.posts.forEach((postId) => {
-        //fetch posts
-        onSnapshot(doc(db, "posts", postId), (responseDoc) => {
-          const post = { ...responseDoc.data(), id: responseDoc.id };
-          this.$store.commit("setPost", { post });
-          //fetch each use per post
-          onSnapshot(doc(db, "users", post.userId), (responseDoc) => {
-            this.$store.dispatch("updateUser", {
-              ...responseDoc.data(),
-              id: responseDoc.id,
-            });
-          });
-        });
+  async created() {
+    const thread = await this.$store.dispatch("fetchThread", { id: this.id });
+    this.$store.dispatch("fetchUser", {
+      id: thread.userId,
+    });
+
+    thread.posts.forEach(async (postId) => {
+      const post = await this.$store.dispatch("fetchPost", { id: postId });
+      this.$store.dispatch("fetchUser", {
+        id: post.userId,
       });
     });
   },

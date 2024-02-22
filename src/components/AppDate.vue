@@ -25,7 +25,7 @@ export default {
      * @see https://day.js.org/docs/en/customization/relative-time#docsNav
      */
     elapsedTime() {
-      return dayjs.unix(this.timestamp).fromNow();
+      return dayjs.unix(this.timestamp).fromNow() ?? this.timestamp;
     },
     /**
      * Format the timestamp to readable date.
