@@ -96,7 +96,7 @@ const props = defineProps<{
 }>();
 
 const user = computed(() => getUserById(props.user.id));
-const editedUser = { ...user.value.instance };
+const editedUser = { ...user.value.instance! };
 
 const exitEditRoute = () => {
   //console.log('exitEditRoute', router);

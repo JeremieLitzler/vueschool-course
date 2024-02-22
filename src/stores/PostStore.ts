@@ -6,7 +6,7 @@ import type Thread from '@/types/Thread';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
-import useFirebase from '@/helpers/fireBaseConnector';
+import { FirestoreCollection } from '@/enums/FirestoreCollection';
 
 // const { postsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -18,7 +18,7 @@ export const usePostStore = defineStore('PostStore', () => {
   //GETTERS
   const getPostById = (postId: string | undefined): Post => {
     const matchingPost = posts.value.find((post: Post) => post.id === postId);
-    if (matchingPost === undefined) return {};
+    if (matchingPost === undefined) return { id: '' };
 
     return matchingPost;
   };
@@ -41,22 +41,10 @@ export const usePostStore = defineStore('PostStore', () => {
   };
   //ACTIONS
   const fetchPost = (id: string): Promise<Post> => {
-    useCommonStore().updateFetching();
-    console.log(`🚨fetching a post (ID: ${id}) on firebase 🚨`);
-    return new Promise((resolve) => {
-      useFirebase().onSnapshot(
-        useFirebase().doc(useFirebase().db, 'posts', id),
-        (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const post = { ...responseDoc.data(), id: responseDoc.id };
-          console.log('from firestore > post:', post);
-          setPost(post);
-          useCommonStore().updateFetching();
-          resolve(post);
-        }
-      );
+    return useCommonStore().fetchItem<Post>({
+      source: posts,
+      collection: FirestoreCollection.Posts,
+      id,
     });
   };
 

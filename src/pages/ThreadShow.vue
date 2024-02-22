@@ -1,48 +1,53 @@
 <template>
-  <div v-if="!thread" class="col-full text-center">
-    <h1>Oops, the thread isn't valid</h1>
-    <p>
-      The thread (<b>ID: {{ id }}</b
-      >) doesn't exist.
-    </p>
-    <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
-  </div>
-  <div v-else class="col-large push-top">
-    <h1 class="thread-title">
-      {{ thread?.title }}
-      <router-link
-        :to="{ name: RouteName.ThreadEdit, params: { id } }"
-        class="btn-green btn-small"
-        >Edit the thread</router-link
-      >
-    </h1>
-    <section class="thread-meta">
+  <section v-if="loading" class="loading">Loading the thread...</section>
+  <section v-else>
+    <div v-if="!thread" class="col-full text-center">
+      <h1>Oops, the thread isn't valid</h1>
       <p>
-        By <a href="#" class="link-unstyled">{{ thread?.author }}</a
-        >, <app-date :timestamp="thread?.publishedAt" />.
+        The thread (<b>ID: {{ id }}</b
+        >) doesn't exist.
       </p>
-      <span class="hide-mobile text-faded text-small"
-        >{{ thread?.repliesCount }} replies by
-        {{ thread?.contributorsCount }} contributors</span
-      >
-    </section>
+      <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
+    </div>
+    <div v-else class="col-large push-top">
+      <h1 class="thread-title">
+        {{ thread?.title }}
+        <router-link
+          :to="{ name: RouteName.ThreadEdit, params: { id } }"
+          class="btn-green btn-small"
+          >Edit the thread</router-link
+        >
+      </h1>
+      <section class="thread-meta">
+        <p>
+          By <a href="#" class="link-unstyled">{{ thread?.author }}</a
+          >, <app-date :timestamp="thread?.publishedAt" />.
+        </p>
+        <span class="hide-mobile text-faded text-small"
+          >{{ thread?.repliesCount }} replies by
+          {{ thread?.contributorsCount }} contributors</span
+        >
+      </section>
 
-    <PostList :posts="threadPosts!" />
-    <PostEditor :thread-id="id" @@add-post="savePost" />
-  </div>
+      <PostList :posts="threadPosts!" />
+      <PostEditor :thread-id="id" @@add-post="savePost" />
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import AddPostPayload from '@/types/AddPostPayload';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
+import { useCommonStore } from '@/stores/CommonStore';
 import useUUID from '@/helpers/uniqueIdHelper';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
+import type AddPostPayload from '@/types/AddPostPayload';
 import type Post from '@/types/Post';
+import type User from '@/types/User';
 import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import { RouteName } from '@/enums/RouteName';
 
@@ -57,8 +62,8 @@ const { id } = defineProps({
   },
 });
 
+const loading = computed(() => useCommonStore().fetching);
 const threadPosts = computed((): Post[] | undefined => getPostsByThreaId(id));
-
 const thread = computed((): ThreadHydraded | undefined => getThreadById(id));
 
 const savePost = (entry: AddPostPayload) => {
@@ -71,16 +76,22 @@ const savePost = (entry: AddPostPayload) => {
 };
 
 onMounted(async () => {
+  useCommonStore().updateFetching();
+  const unfinishedPromises: Promise<User>[] = [];
   //fetch requested thread
   const thread = await useThreadStore().fetchThread(id);
   //... and its author
-  useUserStore().fetchUser(thread.userId!);
+  const userPromise = useUserStore().fetchUser(thread.userId!);
+  unfinishedPromises.push(userPromise);
   //... and finally, its posts
   thread.posts!.forEach(async (postId) => {
     const post = await usePostStore().fetchPost(postId);
     // along with the author of each post
     useUserStore().fetchUser(post.userId!);
+    unfinishedPromises.push(userPromise);
   });
+  await Promise.all(unfinishedPromises);
+  useCommonStore().updateFetching();
 });
 </script>
 

@@ -1,7 +1,7 @@
-// import UniqueEntity from '@/types/UniqueEntity';
+import WithId from '@/types/WithId';
 
-export default interface User /*extends UniqueEntity*/ {
-  id?: string;
+export default interface User extends WithId {
+  // id?: string;
   avatar?: string;
   email?: string;
   lastVisitAt?: number;

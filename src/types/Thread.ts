@@ -1,6 +1,6 @@
-// import UniqueEntity from '@/types/UniqueEntity';
+import WithId from '@/types/WithId';
 
-interface Thread /*extends UniqueEntity*/ {
+export default interface Thread extends WithId {
   contributors?: string[];
   firstPostId?: string;
   forumId?: string;
@@ -11,7 +11,5 @@ interface Thread /*extends UniqueEntity*/ {
   slug?: string;
   title?: string;
   userId?: string;
-  id?: string;
+  // id?: string;
 }
-
-export default Thread;

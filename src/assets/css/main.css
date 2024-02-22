@@ -27,12 +27,6 @@ a,
     display: flex;
     place-items: center;
   }
-
-  #app {
-    /* display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem; */
-  }
 }
 
 .thread-title,
@@ -44,4 +38,10 @@ a,
 .thread-title a,
 .thread-meta span {
   margin-left: auto;
+}
+
+.loading {
+  text-align: center;
+  font-size: 4rem;
+  font-weight: bold;
 }

@@ -9,11 +9,11 @@ import { useCommonStore } from '@/stores/CommonStore';
 import { useForumStore } from '@/stores/ForumStore';
 import { useUserStore } from '@/stores/UserStore';
 import { usePostStore } from '@/stores/PostStore';
-import useFirebase from '@/helpers/fireBaseConnector';
 
 import type Thread from '@/types/Thread';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
+import { FirestoreCollection } from '@/enums/FirestoreCollection';
 
 // const { threadsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -27,7 +27,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       (thread: Thread) => thread.id === threadId
     );
     if (match === undefined)
-      return { author: '', repliesCount: 0, contributorsCount: 0 };
+      return { id: '', author: '', repliesCount: 0, contributorsCount: 0 };
 
     return _hydrateThread(match);
   };
@@ -64,22 +64,10 @@ export const useThreadStore = defineStore('ThreadStore', () => {
 
   //ACTIONS
   const fetchThread = (id: string): Promise<Thread> => {
-    useCommonStore().updateFetching();
-    console.log(`🚨fetching a thread (ID: ${id}) on firebase 🚨`);
-    return new Promise((resolve) => {
-      useFirebase().onSnapshot(
-        useFirebase().doc(useFirebase().db, 'threads', id),
-        (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const thread = { ...responseDoc.data(), id: responseDoc.id };
-          console.log('from firestore > thread:', thread);
-          setThread(thread);
-          useCommonStore().updateFetching();
-          resolve(thread);
-        }
-      );
+    return useCommonStore().fetchItem<Thread>({
+      source: threads,
+      collection: FirestoreCollection.Threads,
+      id,
     });
   };
   const createThread = (request: ThreadCreateRequest) => {

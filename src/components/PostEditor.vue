@@ -38,6 +38,7 @@ const addPost = () => {
     //TODO : handle not authentifcated user
   }
   const post: Post = {
+    id: '',
     text: newPostText.value,
     threadId: props.threadId,
   };

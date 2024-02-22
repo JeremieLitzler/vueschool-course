@@ -1,8 +1,8 @@
-// import UniqueEntity from '@/types/UniqueEntity';
 import PostEdited from '@/types/PostEdited';
+import WithId from './WithId';
 
-interface Post /*extends UniqueEntity*/ {
-  id?: string;
+interface Post extends WithId {
+  // id?: string;
   edited?: PostEdited;
   publishedAt?: number;
   text?: string;

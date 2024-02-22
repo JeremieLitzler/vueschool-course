@@ -7,7 +7,7 @@ import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import type GetUserExtended from '@/types/GetUserExtended';
-import useFirebase from '@/helpers/fireBaseConnector';
+import { FirestoreCollection } from '@/enums/FirestoreCollection';
 
 // const { findById } = useArraySearchHelper();
 
@@ -52,22 +52,10 @@ export const useUserStore = defineStore('UserStore', () => {
 
   //ACTIONS
   const fetchUser = (id: string): Promise<User> => {
-    useCommonStore().updateFetching();
-    console.log(`🚨fetching a user (ID: ${id}) on firebase 🚨`);
-    return new Promise((resolve) => {
-      useFirebase().onSnapshot(
-        useFirebase().doc(useFirebase().db, 'users', id),
-        (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const user = { ...responseDoc.data(), id: responseDoc.id };
-          console.log('from firestore > user:', user);
-          setUser(user);
-          useCommonStore().updateFetching();
-          resolve(user);
-        }
-      );
+    return useCommonStore().fetchItem<User>({
+      source: users,
+      collection: FirestoreCollection.Users,
+      id,
     });
   };
 
