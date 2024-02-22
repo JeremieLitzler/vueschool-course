@@ -81,20 +81,26 @@ export default {
     },
   },
   async created() {
+    this.$store.dispatch("fetchSomething");
+    const nonAsyncPromises = [];
     const thread = await this.$store.dispatch("fetchThread", { id: this.id });
-    this.$store.dispatch("fetchUser", {
+    const userPromise = this.$store.dispatch("fetchUser", {
       id: thread.userId,
     });
+    nonAsyncPromises.push(userPromise);
 
     thread.posts.forEach(async (postId) => {
       const post = await this.$store.dispatch("fetchPost", { id: postId });
-      this.$store.dispatch("fetchUser", {
+      const userPromise = this.$store.dispatch("fetchUser", {
         id: post.userId,
       });
+      nonAsyncPromises.push(userPromise);
     });
+
+    await Promise.all(nonAsyncPromises);
+    this.$store.dispatch("fetchSomething");
   },
 };
 </script>
 
 <style scoped></style>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

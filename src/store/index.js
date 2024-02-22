@@ -10,25 +10,6 @@ const { nowTimeStamp } = useDateHelper();
 const { findById, findManyByProp } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
-// const fetchResource =
-//   (id) =>
-//   ({ collection, mutation }) => {
-//     return ({ commit, dispatch }) => {
-//       dispatch("fetchSomething");
-//       console.log(`🚨fetching a thread (ID: ${id}) on firebase 🚨`);
-//       return onSnapshot(doc(db, collection, id), (responseDoc) => {
-//         //console.log("from firestore > responseDoc: ", responseDoc);
-//         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-//         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-//         const data = { ...responseDoc.data(), id: responseDoc.id };
-//         //console.log("from firestore > thread:", thread);
-//         commit(mutation, { data });
-//         dispatch("fetchSomething");
-//         return data;
-//       });
-//     };
-//   };
-
 const appendChildToParentMutation = ({ parent, child }) => {
   return (state, { childId, parentId }) => {
     const resource = findById(state[parent], parentId);
@@ -114,45 +95,36 @@ export default createStore({
     },
   },
   actions: {
-    fetchSomething({ commit }) {
+    fetchSomething({ state, commit }) {
+      console.log("fetching is", state.fetching);
       commit("setFetching");
     },
-    //users
-    fetchUser({ commit, dispatch }, { id }) {
-      dispatch("fetchSomething");
-      console.log(`🚨fetching a user (ID: ${id}) on firebase 🚨`);
+    fetchItem({ commit }, { source, id }) {
+      console.log(
+        `🚨fetching a item (source: ${source}, id: ${id}) on firebase 🚨`
+      );
       return new Promise((resolve) => {
-        onSnapshot(doc(db, "users", id), (responseDoc) => {
+        onSnapshot(doc(db, source, id), (responseDoc) => {
           //console.log("from firestore > responseDoc: ", responseDoc);
           //console.log("from firestore > responseDoc.data: ", responseDoc.data());
           //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const user = { ...responseDoc.data(), id: responseDoc.id };
-          console.log("from firestore > user:", user);
-          commit("setUser", { user });
-          dispatch("fetchSomething");
-          resolve(user);
+          const item = { ...responseDoc.data(), id: responseDoc.id };
+          console.log("from firestore > user:", item);
+          commit("setItem", { source, item });
+          resolve(item);
         });
       });
+    },
+    //users
+    fetchUser({ dispatch }, { id }) {
+      return dispatch("fetchItem", { source: "users", id });
     },
     updateUser({ commit }, user) {
       commit("setUser", { user });
     },
     //posts
-    fetchPost({ commit, dispatch }, { id }) {
-      dispatch("fetchSomething");
-      console.log(`🚨fetching a post (ID: ${id}) on firebase 🚨`);
-      return new Promise((resolve) => {
-        onSnapshot(doc(db, "posts", id), (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const post = { ...responseDoc.data(), id: responseDoc.id };
-          console.log("from firestore > post:", post);
-          commit("setPost", { post });
-          dispatch("fetchSomething");
-          resolve(post);
-        });
-      });
+    fetchPost({ dispatch }, { id }) {
+      return dispatch("fetchItem", { source: "posts", id });
     },
     createPost({ commit, getters }, post) {
       post.id = post.id ?? createId();
@@ -180,21 +152,8 @@ export default createStore({
       commit("setPost", { post: updatedPost });
     },
     //threads
-    fetchThread({ commit, dispatch }, { id }) {
-      dispatch("fetchSomething");
-      console.log(`🚨fetching a thread (ID: ${id}) on firebase 🚨`);
-      return new Promise((resolve) => {
-        onSnapshot(doc(db, "threads", id), (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const thread = { ...responseDoc.data(), id: responseDoc.id };
-          console.log("from firestore > thread:", thread);
-          commit("setThread", { thread });
-          dispatch("fetchSomething");
-          resolve(thread);
-        });
-      });
+    fetchThread({ dispatch }, { id }) {
+      return dispatch("fetchItem", { source: "threads", id });
     },
     createThread({ commit, dispatch, getters }, { title, body, forumId }) {
       const id = createId();
@@ -236,6 +195,9 @@ export default createStore({
   mutations: {
     setFetching(state) {
       state.fetching = !state.fetching;
+    },
+    setItem(state, { source, item }) {
+      setResource(state[source], item);
     },
     //users
     setUser(state, { user }) {
