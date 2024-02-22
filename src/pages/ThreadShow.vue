@@ -71,10 +71,14 @@ const savePost = (entry: AddPostPayload) => {
 };
 
 onMounted(async () => {
+  //fetch requested thread
   const thread = await useThreadStore().fetchThread(id);
+  //... and its author
   useUserStore().fetchUser(thread.userId!);
+  //... and finally, its posts
   thread.posts!.forEach(async (postId) => {
     const post = await usePostStore().fetchPost(postId);
+    // along with the author of each post
     useUserStore().fetchUser(post.userId!);
   });
 });
