@@ -19,7 +19,14 @@
         </router-link>
 
         <p class="desktop-only text-small">
-          {{ userById(post.userId).postsCount }} posts
+          {{ userById(post.userId).postsCount }} post{{
+            userById(post.userId).postsCount > 1 ? "s" : ""
+          }}
+        </p>
+        <p class="desktop-only text-small">
+          {{ userById(post.userId).threadsCount }} thread{{
+            userById(post.userId).threadsCount > 1 ? "s" : ""
+          }}
         </p>
       </div>
 
