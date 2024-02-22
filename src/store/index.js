@@ -109,7 +109,7 @@ export default createStore({
           //console.log("from firestore > responseDoc.data: ", responseDoc.data());
           //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
           const item = { ...responseDoc.data(), id: responseDoc.id };
-          console.log("from firestore > user:", item);
+          console.log(`got from firestore > in ${source}:`, item);
           commit("setItem", { source, item });
           resolve(item);
         });
