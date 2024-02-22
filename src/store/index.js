@@ -120,7 +120,7 @@ export default createStore({
       return dispatch("fetchItem", { source: "users", id });
     },
     updateUser({ commit }, user) {
-      commit("setUser", { user });
+      commit("setItem", { source: "users", item: user });
     },
     //posts
     fetchPost({ dispatch }, { id }) {
@@ -130,7 +130,7 @@ export default createStore({
       post.id = post.id ?? createId();
       post.publishedAt = nowTimeStamp;
       post.userId = getters.authUser.id;
-      commit("setPost", { post });
+      commit("setItem", { source: "posts", item: post });
       commit("appendPostToThread", {
         childId: post.id,
         parentId: post.threadId,
@@ -149,7 +149,7 @@ export default createStore({
       //console.log("updatePost > post ", post);
       const updatedPost = { ...post, text: body };
       //console.log("updatePost > updatedPost ", updatedPost);
-      commit("setPost", { post: updatedPost });
+      commit("setItem", { source: "posts", item: updatedPost });
     },
     //threads
     fetchThread({ dispatch }, { id }) {
@@ -167,7 +167,7 @@ export default createStore({
         userId: getters.authUser.id,
         id,
       };
-      commit("setThread", { thread });
+      commit("setItem", { source: "threads", item: thread });
       commit("appendThreadToForum", { childId: id, parentId: forumId });
       commit("appendThreadToUser", {
         childId: id,
@@ -187,7 +187,7 @@ export default createStore({
 
       //console.log("updatedThread > ", updatedThread);
 
-      commit("setThread", { thread: updatedThread });
+      commit("setItem", { source: "threads", item: updatedThread });
       dispatch("updatePost", { id: updatedThread.posts[0], body });
       return thread;
     },
@@ -200,9 +200,6 @@ export default createStore({
       setResource(state[source], item);
     },
     //users
-    setUser(state, { user }) {
-      setResource(state.users, user);
-    },
     appendThreadToUser: appendChildToParentMutation({
       parent: "users",
       child: "threads",
@@ -215,18 +212,12 @@ export default createStore({
     }),
 
     //posts
-    setPost(state, { post }) {
-      setResource(state.posts, post);
-    },
     appendPostToThread: appendChildToParentMutation({
       parent: "threads",
       child: "posts",
     }),
 
     //threads
-    setThread(state, { thread }) {
-      setResource(state.threads, thread);
-    },
     appendContributorToThread: appendChildToParentMutation({
       parent: "threads",
       child: "contributors",
