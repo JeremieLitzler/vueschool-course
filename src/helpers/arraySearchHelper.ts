@@ -1,9 +1,9 @@
 import Identifier from '@/types/UniqueEntity';
 
 const findById = (resources: Identifier[], id: string) => {
-  console.log(resources);
+  //console.log(resources);
   const match = resources.find((element) => element.id === id);
-  console.log(match);
+  //console.log(match);
   return match;
 };
 

@@ -15,7 +15,7 @@ import ForumList from './ForumList.vue';
 
 const { getForumsByCategory } = useForumStore();
 const { categories } = defineProps<{ categories: Category[] }>();
-console.log(`RouteName.TheHome > CategoryList`, categories);
+//console.log(`RouteName.TheHome > CategoryList`, categories);
 </script>
 
 <style scoped></style>
