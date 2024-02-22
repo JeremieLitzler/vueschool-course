@@ -102,12 +102,12 @@ export default createStore({
       return post;
     },
     updatePost({ commit, getters }, { id, body }) {
-      console.log("updatePost > id ", id);
+      //console.log("updatePost > id ", id);
 
       const post = getters.getPostById(id);
-      console.log("updatePost > post ", post);
+      //console.log("updatePost > post ", post);
       const updatedPost = { ...post, text: body };
-      console.log("updatePost > updatedPost ", updatedPost);
+      //console.log("updatePost > updatedPost ", updatedPost);
       commit("setPost", { post: updatedPost });
     },
     //threads
@@ -115,7 +115,7 @@ export default createStore({
       const id = createId();
       const postId = createId();
 
-      console.log("threadId", id);
+      //console.log("threadId", id);
       const thread = {
         forumId: forumId,
         publishedAt: nowTimeStamp,
