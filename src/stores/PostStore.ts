@@ -4,7 +4,9 @@ import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
 // import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
-import { useUserStore } from './UserStore';
+import { useUserStore } from '@/stores/UserStore';
+import { useCommonStore } from '@/stores/CommonStore';
+import useFirebase from '@/helpers/fireBaseConnector';
 
 // const { postsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -38,6 +40,26 @@ export const usePostStore = defineStore('PostStore', () => {
     return match;
   };
   //ACTIONS
+  const fetchPost = (id: string): Promise<Post> => {
+    useCommonStore().updateFetching();
+    console.log(`🚨fetching a post (ID: ${id}) on firebase 🚨`);
+    return new Promise((resolve) => {
+      useFirebase().onSnapshot(
+        useFirebase().doc(useFirebase().db, 'posts', id),
+        (responseDoc) => {
+          //console.log("from firestore > responseDoc: ", responseDoc);
+          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
+          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
+          const post = { ...responseDoc.data(), id: responseDoc.id };
+          console.log('from firestore > post:', post);
+          setPost(post);
+          useCommonStore().updateFetching();
+          resolve(post);
+        }
+      );
+    });
+  };
+
   const addPost = (post: Post) => {
     //console.log('calling addPost in PostStore', post);
     post.publishedAt = Math.floor(Date.now() / 1000);
@@ -65,11 +87,15 @@ export const usePostStore = defineStore('PostStore', () => {
     }
   };
   return {
+    //state
     posts,
+    //getters
     getPostById,
     getPostsByThreaId,
     getPostsByUserId,
     getThreadFirstPostBody,
+    //actions
+    fetchPost,
     addPost,
     updatePost,
     setPost,
