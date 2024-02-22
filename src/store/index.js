@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import sourceData from "@/data.json";
+// import sourceData from "@/data.json";
 import useUUID from "@/helpers/uniqueIdHelper";
 import useDateHelper from "@/helpers/dateHelper";
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
@@ -20,9 +20,23 @@ const appendChildToParentMutation = ({ parent, child }) => {
   };
 };
 
+// import { initializeApp } from "firebase/app";
+// import { firebaseConfig } from "@/config/firebase";
+// import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+// const firebaseApp = initializeApp(firebaseConfig);
+
 export default createStore({
-  state: { ...sourceData, authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2" },
+  state: {
+    users: [],
+    categories: [],
+    forums: [],
+    threads: [],
+    posts: [],
+    authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2",
+    fetching: false,
+  },
   getters: {
+    isFetching: (state) => state.fetching,
     //users
     getUser: (state, getters) => (userId) => {
       return getters.hydrateUser(findById(state.users, userId));
@@ -34,10 +48,10 @@ export default createStore({
       const hydrated = {
         ...user,
         get postsCount() {
-          return getters.postsByUserId(user.id).length;
+          return getters.postsByUserId(user?.id).length;
         },
         get threadsCount() {
-          return getters.threadsByUserId(user.id).length;
+          return getters.threadsByUserId(user?.id).length;
         },
       };
       //console.log(hydrated);
@@ -68,18 +82,21 @@ export default createStore({
       return {
         ...thread,
         get author() {
-          return getters.getUser(thread.userId).name;
+          return getters.getUser(thread?.userId)?.name;
         },
         get repliesCount() {
-          return thread.posts.length - 1; //the first post isn't counted hence the '-1'
+          return thread?.posts.length - 1; //the first post isn't counted hence the '-1'
         },
         get contributorsCount() {
-          return [...new Set(thread.contributors)].length;
+          return [...new Set(thread?.contributors)].length;
         },
       };
     },
   },
   actions: {
+    updateFetching({ commit }) {
+      commit("setFetching");
+    },
     //users
     updateUser({ commit }, user) {
       commit("setUser", { updatedUser: user });
@@ -149,12 +166,12 @@ export default createStore({
     },
   },
   mutations: {
+    setFetching(state) {
+      state.fetching = !state.fetching;
+    },
     //users
     setUser(state, { updatedUser }) {
-      const userIndex = state.users.findIndex(
-        (user) => user.id === updatedUser.id
-      );
-      state.users[userIndex] = updatedUser;
+      setResource(state.users, updatedUser);
     },
     appendThreadToUser: appendChildToParentMutation({
       parent: "users",

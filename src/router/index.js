@@ -141,26 +141,26 @@ const routes = [
     name: RouteName.ThreadShow,
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
-    beforeEnter: (to, from, next) => {
-      //does the thread exists?
-      const exists = store.state.threads.find(
-        (item) => item.id === to.params.id
-      );
-      //if positive, contine
-      //see https://stackoverflow.com/a/62426354
-      //threadExists ?? next()
-      if (exists) {
-        return next();
-      }
-      //else redirect to not found
-      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
-      next({
-        name: RouteName.NotFound,
-        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
-        query: to.query,
-        hash: to.hash,
-      });
-    },
+    // beforeEnter: (to, from, next) => {
+    //   //does the thread exists?
+    //   const exists = store.state.threads.find(
+    //     (item) => item.id === to.params.id
+    //   );
+    //   //if positive, contine
+    //   //see https://stackoverflow.com/a/62426354
+    //   //threadExists ?? next()
+    //   if (exists) {
+    //     return next();
+    //   }
+    //   //else redirect to not found
+    //   //next({ name: RouteName.NotFound }); // <-- redirect with URL change
+    //   next({
+    //     name: RouteName.NotFound,
+    //     params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+    //     query: to.query,
+    //     hash: to.hash,
+    //   });
+    // },
   },
   //Thread Create route
   {

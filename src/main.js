@@ -48,6 +48,7 @@ requireComponent.keys().forEach((fileName) => {
 // forumApp.use(SomePlugin)
 forumApp.use(router);
 forumApp.use(store);
+
 // Mount to the DOM the Vue app
 forumApp.mount("#app");
 

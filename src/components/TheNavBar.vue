@@ -2,7 +2,7 @@
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
     <ul>
-      <li class="navbar-user">
+      <li v-if="authUser" class="navbar-user">
         <router-link :to="{ name: RouteName.AccountShow }">
           <img
             class="avatar-small"
@@ -25,10 +25,13 @@
           <div class="triangle-drop"></div>
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
-              <router-link
-                :to="{ name: RouteName.UserShow, params: { id: authUser.id } }"
+              <!-- <router-link
+                :to="{
+                  name: RouteName.UserShow,
+                  params: { id: authUser != null ? authUser.id : '' },
+                }"
                 >View profile</router-link
-              >
+              > -->
             </li>
             <li class="dropdown-menu-item"><a href="#">Log out</a></li>
           </ul>

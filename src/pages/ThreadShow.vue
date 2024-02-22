@@ -1,30 +1,42 @@
 <template>
   <div class="col-large push-top">
     <router-link :to="{ name: RouteName.TheHome }">Back</router-link>
-    <h1 class="thread-title">
-      {{ thread.title }}
-      <router-link
-        :to="{ name: RouteName.ThreadEdit, params: { id } }"
-        class="btn-green btn-small"
-        >Edit the thread</router-link
-      >
-    </h1>
-    <section class="thread-meta">
-      <p>
-        By <a href="#" class="link-unstyled">{{ thread.author }}</a
-        >, <app-date :timestamp="thread.publishedAt" />.
-      </p>
-      <span class="hide-mobile text-faded text-small"
-        >{{ thread.repliesCount }} replies by
-        {{ thread.contributorsCount }} contributors</span
-      >
+    <section v-if="$store.getters.isFetching" class="loading">
+      Loading...
     </section>
-    <post-list :posts="threadPosts" />
-    <post-editor :threadId="id" @add-post="savePost" />
+    <section v-else>
+      <h1 class="thread-title">
+        {{ thread.title }}
+        <router-link
+          :to="{ name: RouteName.ThreadEdit, params: { id } }"
+          class="btn-green btn-small"
+          >Edit the thread</router-link
+        >
+      </h1>
+      <section class="thread-meta">
+        <p>
+          By <a href="#" class="link-unstyled">{{ thread.author }}</a
+          >, <app-date :timestamp="thread.publishedAt" />.
+        </p>
+        <span class="hide-mobile text-faded text-small"
+          >{{ thread.repliesCount }}
+          replies by
+          {{ thread.contributorsCount }}
+          contributors</span
+        >
+      </section>
+      <post-list :posts="threadPosts" />
+      <post-editor :threadId="id" @add-post="savePost" />
+    </section>
   </div>
 </template>
 
 <script>
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/config/firebase";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+const firebaseApp = initializeApp(firebaseConfig);
+
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
@@ -67,6 +79,41 @@ export default {
     savePost({ post }) {
       this.$store.dispatch("createPost", post);
     },
+  },
+  created() {
+    this.$store.dispatch("updateFetching");
+    const db = getFirestore(firebaseApp);
+    //fetch thread
+    onSnapshot(doc(db, "threads", this.id), (responseDoc) => {
+      //console.log("from firestore > responseDoc: ", responseDoc);
+      //console.log("from firestore > responseDoc.data: ", responseDoc.data());
+      //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
+      const thread = { ...responseDoc.data(), id: responseDoc.id };
+      //console.log("from firestore > thread:", thread);
+      this.$store.commit("setThread", { thread });
+      this.$store.dispatch("updateFetching");
+      //fetch user
+      onSnapshot(doc(db, "users", thread.userId), (responseDoc) => {
+        this.$store.dispatch("updateUser", {
+          ...responseDoc.data(),
+          id: responseDoc.id,
+        });
+      });
+      thread.posts.forEach((postId) => {
+        //fetch posts
+        onSnapshot(doc(db, "posts", postId), (responseDoc) => {
+          const post = { ...responseDoc.data(), id: responseDoc.id };
+          this.$store.commit("setPost", { post });
+          //fetch each use per post
+          onSnapshot(doc(db, "users", post.userId), (responseDoc) => {
+            this.$store.dispatch("updateUser", {
+              ...responseDoc.data(),
+              id: responseDoc.id,
+            });
+          });
+        });
+      });
+    });
   },
 };
 </script>

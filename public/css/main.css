@@ -45,3 +45,9 @@ a,
 .thread-meta span {
   margin-left: auto;
 }
+
+.loading {
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+}
