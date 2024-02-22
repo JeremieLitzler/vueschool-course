@@ -22,6 +22,10 @@
           {{ getUserById(post.userId).postsCount }}
           post{{ getUserById(post.userId).postsCount! > 1 ? 's' : '' }}
         </p>
+        <p class="desktop-only text-small">
+          {{ getUserById(post.userId).threadsCount }}
+          thread{{ getUserById(post.userId).threadsCount! > 1 ? 's' : '' }}
+        </p>
       </div>
 
       <div class="post-content">
