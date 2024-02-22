@@ -6,11 +6,11 @@
         <router-link :to="{ name: 'AccountShow' }">
           <img
             class="avatar-small"
-            :src="user.instance!.avatar"
-            :alt="`${user.instance!.name} profile picture`"
+            :src="user?.instance?.avatar"
+            :alt="`${user?.instance?.name} profile picture`"
           />
           <span>
-            {{ user.instance!.name }}
+            {{ user?.instance?.name }}
             <img
               class="icon-profile"
               src="../assets/img/svg/arrow-profile.svg"

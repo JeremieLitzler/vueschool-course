@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/helpers/sampleData';
+// import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { usePostStore } from './PostStore';
 import { useThreadStore } from './ThreadStore';
@@ -8,12 +8,12 @@ import type GetUserExtended from '@/types/GetUserExtended';
 import User from '@/types/User';
 import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
 
-const { usersData } = useSampleData();
+// const { usersData } = useSampleData();
 // const { findById } = useArraySearchHelper();
 
 export const useUserStore = defineStore('UserStore', () => {
   //STATE
-  const users = ref(usersData);
+  const users = ref<User[]>([]);
   const authId = ref('7uVPJS9GHoftN58Z2MXCYDqmNAh2');
 
   //GETTERS
@@ -32,7 +32,7 @@ export const useUserStore = defineStore('UserStore', () => {
     };
   };
   const getUserById = (userId: string | undefined): GetUserExtended => {
-    const matchingUser = users.value.find((user) => user.id === userId);
+    const matchingUser = users.value.find((user) => user.id! === userId);
     if (matchingUser === undefined) return {};
 
     const extendedUser = hydrateUserExtented(userId);
@@ -66,11 +66,20 @@ export const useUserStore = defineStore('UserStore', () => {
     user?.threads!.push(request.thread);
   };
 
+  const setUser = (user: User) => {
+    const index = users.value.findIndex((element) => element.id === user.id);
+    if (user.id && index !== -1) {
+      users.value![index] = user;
+    } else {
+      users.value!.push(user);
+    }
+  };
   return {
     users,
     getAuthUser,
     getUserById,
     updateUser,
+    setUser,
     appendThreadToUser,
   };
 });

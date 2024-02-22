@@ -5,7 +5,7 @@
         <router-link
           :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
           class="user-name"
-          >{{ getUserById(post.userId).instance!.name }}</router-link
+          >{{ getUserById(post.userId)?.instance?.name }}</router-link
         >
 
         <router-link
@@ -13,18 +13,18 @@
         >
           <img
             class="avatar-large"
-            :src="getUserById(post.userId).instance!.avatar"
-            :alt="getUserById(post.userId).instance!.name"
+            :src="getUserById(post.userId)?.instance?.avatar"
+            :alt="getUserById(post.userId)?.instance?.name"
           />
         </router-link>
 
         <p class="desktop-only text-small">
-          {{ getUserById(post.userId).postsCount }}
-          post{{ getUserById(post.userId).postsCount! > 1 ? 's' : '' }}
+          {{ getUserById(post.userId)?.postsCount }}
+          post{{ getUserById(post.userId)?.postsCount! > 1 ? 's' : '' }}
         </p>
         <p class="desktop-only text-small">
           {{ getUserById(post.userId).threadsCount }}
-          thread{{ getUserById(post.userId).threadsCount! > 1 ? 's' : '' }}
+          thread{{ getUserById(post.userId)?.threadsCount! > 1 ? 's' : '' }}
         </p>
       </div>
 

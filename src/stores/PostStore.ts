@@ -2,16 +2,16 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
-import useSampleData from '@/helpers/sampleData';
+// import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from './UserStore';
 
-const { postsData } = useSampleData();
+// const { postsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
 
 export const usePostStore = defineStore('PostStore', () => {
   //STATE
-  const posts = ref(postsData);
+  const posts = ref<Post[]>([]);
 
   //GETTERS
   const getPostById = (postId: string | undefined): Post => {
@@ -43,7 +43,7 @@ export const usePostStore = defineStore('PostStore', () => {
     post.publishedAt = Math.floor(Date.now() / 1000);
     const { getAuthUser } = useUserStore();
     post.userId = getAuthUser().instance?.id;
-    _setPost(post);
+    setPost(post);
   };
 
   const updatePost = (request: PostUpdateRequest) => {
@@ -53,10 +53,10 @@ export const usePostStore = defineStore('PostStore', () => {
     //console.log("updatePost > post ", post);
     const updatedPost = { ...post, text: request.body };
     //console.log("updatePost > updatedPost ", updatedPost);
-    _setPost(updatedPost);
+    setPost(updatedPost);
   };
 
-  const _setPost = (post: Post) => {
+  const setPost = (post: Post) => {
     const index = posts.value.findIndex((element) => element.id === post.id);
     if (post.id && index !== -1) {
       posts.value![index] = post;
@@ -72,5 +72,6 @@ export const usePostStore = defineStore('PostStore', () => {
     getThreadFirstPostBody,
     addPost,
     updatePost,
+    setPost,
   };
 });

@@ -1,16 +1,16 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { defineStore } from 'pinia';
-import useSampleData from '@/helpers/sampleData';
+// import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import Forum from '@/types/Forum';
 
-const { forumsData } = useSampleData();
+// const { forumsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
 
 export const useForumStore = defineStore('ForumStore', () => {
   //STATE
-  const forums = ref(forumsData);
+  const forums = ref<Forum[]>([]);
   const getForumById = (forumId: string | undefined): Forum => {
     const match = forums.value.find((forum: Forum) => forum.id === forumId);
     if (match === undefined) return {};
@@ -23,7 +23,7 @@ export const useForumStore = defineStore('ForumStore', () => {
     categoryId: string | undefined
   ): Ref<Forum[]> => {
     const matches = ref(
-      forumsData.filter((forum: Forum) => forum.categoryId === categoryId)
+      forums.value.filter((forum: Forum) => forum.categoryId === categoryId)
     );
 
     return matches;

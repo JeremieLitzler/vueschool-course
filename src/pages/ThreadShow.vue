@@ -9,7 +9,7 @@
   </div>
   <div v-else class="col-large push-top">
     <h1 class="thread-title">
-      {{ thread!.title }}
+      {{ thread?.title }}
       <router-link
         :to="{ name: RouteName.ThreadEdit, params: { id } }"
         class="btn-green btn-small"
@@ -18,12 +18,12 @@
     </h1>
     <section class="thread-meta">
       <p>
-        By <a href="#" class="link-unstyled">{{ thread.author }}</a
-        >, <app-date :timestamp="thread.publishedAt" />.
+        By <a href="#" class="link-unstyled">{{ thread?.author }}</a
+        >, <app-date :timestamp="thread?.publishedAt" />.
       </p>
       <span class="hide-mobile text-faded text-small"
-        >{{ thread.repliesCount }} replies by
-        {{ thread.contributorsCount }} contributors</span
+        >{{ thread?.repliesCount }} replies by
+        {{ thread?.contributorsCount }} contributors</span
       >
     </section>
 
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import AddPostPayload from '@/types/AddPostPayload';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
@@ -72,6 +72,50 @@ const savePost = (entry: AddPostPayload) => {
     postId: entry.post.id!,
   });
 };
+
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '@/config/firebase';
+import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
+import Thread from '@/types/Thread';
+import { useCommonStore } from '@/stores/CommonStore';
+import { useUserStore } from '@/stores/UserStore';
+const firebaseApp = initializeApp(firebaseConfig);
+
+onMounted(() => {
+  const db = getFirestore(firebaseApp);
+  useCommonStore().updateFetching();
+  //fetch thread
+  onSnapshot(doc(db, 'threads', props.id), (responseDoc) => {
+    //console.log("from firestore > responseDoc: ", responseDoc);
+    //console.log("from firestore > responseDoc.data: ", responseDoc.data());
+    //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
+    const thread: Thread = { ...responseDoc.data(), id: responseDoc.id };
+    //console.log("from firestore > thread:", thread);
+    useThreadStore().setThread(thread);
+    //fetch user
+    onSnapshot(doc(db, 'users', thread.userId!), (responseDoc) => {
+      useUserStore().setUser({
+        ...responseDoc.data(),
+        id: responseDoc.id,
+      });
+    });
+    thread?.posts?.forEach((postId) => {
+      //fetch posts
+      onSnapshot(doc(db, 'posts', postId), (responseDoc) => {
+        const post: Post = { ...responseDoc.data(), id: responseDoc.id };
+        usePostStore().setPost(post);
+        //fetch each use per post
+        onSnapshot(doc(db, 'users', post.userId!), (responseDoc) => {
+          useUserStore().setUser({
+            ...responseDoc.data(),
+            id: responseDoc.id,
+          });
+          useCommonStore().updateFetching();
+        });
+      });
+    });
+  });
+});
 </script>
 
 <style scoped></style>

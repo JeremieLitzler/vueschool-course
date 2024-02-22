@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { v4 as uuid } from 'uuid';
 
-import useSampleData from '@/helpers/sampleData';
+// import useSampleData from '@/helpers/sampleData';
 import useDateHelper from '@/helpers/dateHelper';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useForumStore } from './ForumStore';
@@ -13,12 +13,12 @@ import type Thread from '@/types/Thread';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 
-const { threadsData } = useSampleData();
+// const { threadsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
 
 export const useThreadStore = defineStore('ThreadStore', () => {
   //STATE
-  const threads = ref(threadsData);
+  const threads = ref<Thread[]>([]);
   //GETTERS
   const getThreadById = (threadId: string | undefined): ThreadHydraded => {
     const match = threads.value.find(
@@ -49,13 +49,13 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     return {
       ...thread,
       get author() {
-        return useUserStore().getUserById(thread.userId).instance!.name!;
+        return useUserStore().getUserById(thread.userId)?.instance?.name!;
       },
       get repliesCount() {
         return thread.posts!.length - 1; //the first post isn't counted hence the '-1'
       },
       get contributorsCount() {
-        return [...new Set(thread!.contributors)].length;
+        return [...new Set(thread?.contributors)].length;
       },
     };
   };
@@ -74,7 +74,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       id,
     };
 
-    _setThread(thread);
+    setThread(thread);
     createThreadAddRelated(request, thread);
     return id;
   };
@@ -89,7 +89,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
 
     //console.log("updatedThread > ", updatedThread);
 
-    _setThread(updatedThread);
+    setThread(updatedThread);
     usePostStore().updatePost({
       id: updatedThread.posts![0],
       body: request.body,
@@ -97,7 +97,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     return thread;
   };
 
-  const _setThread = (thread: Thread) => {
+  const setThread = (thread: Thread) => {
     const index = threads.value.findIndex(
       (element) => element.id === thread.id
     );
@@ -129,7 +129,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   const appendPostToThread = (request: AppendPostToThreadRequest) => {
     const thread = getThreadById(request.threadId);
     if (!thread) {
-      throw new Error(`Thread ID <${request.threadId}> waas not found...`);
+      throw new Error(`Thread ID <${request.threadId}> was not found...`);
     }
     thread?.posts!.push(request.postId);
   };
@@ -140,6 +140,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     getThreadsByForumId,
     getThreadsByUserId,
     createThread,
+    setThread,
     updateThread,
     appendPostToThread,
   };

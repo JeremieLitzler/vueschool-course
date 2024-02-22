@@ -1,8 +1,8 @@
 <template>
   <div class="flex-grid">
     <div class="col-3 push-top">
-      <user-profile-card v-if="!edit" :user="user.instance!" />
-      <user-profile-card-editor v-else :user="user.instance!" />
+      <user-profile-card v-if="!edit" :user="user?.instance!" />
+      <user-profile-card-editor v-else :user="user?.instance!" />
 
       <p class="text-xsmall text-faded text-center">
         Member since june 2003, last visited 4 hours ago
@@ -12,7 +12,7 @@
     <div class="col-7 push-top">
       <div class="profile-header">
         <span class="text-lead">
-          {{ user.instance!.name }}'s recent activity
+          {{ user?.instance?.name }}'s recent activity
         </span>
         <a href="#">See only started threads?</a>
       </div>
@@ -120,7 +120,7 @@
             </div>
           </div>
         </div> -->
-      <post-list :posts="user.posts!" />
+      <post-list :posts="user?.posts!" />
     </div>
   </div>
 </template>
