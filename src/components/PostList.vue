@@ -61,7 +61,7 @@ export default {
   methods: {
     userById(userId) {
       const match = this.$store.getters.getUser(userId);
-      console.log("userById", match);
+      //console.log("userById", match);
       return match;
     },
   },

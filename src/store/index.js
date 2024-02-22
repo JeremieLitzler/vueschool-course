@@ -28,7 +28,6 @@ export default createStore({
       return getters.hydrateUser(findById(state.users, userId));
     },
     authUser: (state, getters) => {
-      console.log(getters);
       return getters.getUser(state.authId);
     },
     hydrateUser: (state, getters) => (user) => {

@@ -31,7 +31,7 @@ export default {
   computed: {
     thread() {
       const match = this.$store.getters.threadById(this.id);
-      console.log("thread> ", match);
+      //console.log("thread> ", match);
       return match;
     },
     firstPostBody() {

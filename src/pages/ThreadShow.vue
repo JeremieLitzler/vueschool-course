@@ -59,7 +59,7 @@ export default {
     },
     threadPosts() {
       const matches = this.posts.filter((post) => post.threadId === this.id);
-      console.log("threadPosts", matches);
+      //console.log("threadPosts", matches);
       return matches;
     },
   },
