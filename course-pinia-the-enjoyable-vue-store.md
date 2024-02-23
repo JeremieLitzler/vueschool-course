@@ -49,9 +49,9 @@ Finally, exporting a store to be used is very similar to composables as you will
 That gives you:
 
 ```javascript
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useProductStore = defineStore('ProductStore', {
+export const useProductStore = defineStore("ProductStore", {
   //state
   //actions
   //getters
@@ -75,10 +75,10 @@ It is done differently to Vuex, where it was an object. With Pinia, it is a func
 It is a simple as composables:
 
 ```javascript
-  import { useProductStore } from "./stores/ProductStore";
-  //This is a must to make destructured properties of the store reactive.
-  import {storeToRefs} from "pinia";
-  const { products } = storeToRefs(useProductStore());
+import { useProductStore } from "./stores/ProductStore";
+//This is a must to make destructured properties of the store reactive.
+import { storeToRefs } from "pinia";
+const { products } = storeToRefs(useProductStore());
 ```
 
 ## Making a Pinia action asynchronous
@@ -97,11 +97,11 @@ actions: {
 Patching allows to group several identical mutations into one.
 
 ```javascript
-    cartStore.$patch(state => {
-      for (let index = 0; index < count; index++) {
-        state.items.push(product);
-      }
-    });
+cartStore.$patch((state) => {
+  for (let index = 0; index < count; index++) {
+    state.items.push(product);
+  }
+});
 ```
 
 However, it is better to use an action that calls the implicite mutations, just like with Vuex.
@@ -156,7 +156,6 @@ And in the component, you use the getter like so:
 <script setup>
   import { useCartStore } from "../stores/CartStore";
   const cartStore = useCartStore();
-
 </script>
 <template>
   <div class="cart-count absolute">{{ cartStore.count }}</div>
@@ -194,7 +193,7 @@ In the component, it is used like this:
 
 ## Using a store in another store
 
-It is exactly the same as in the template:
+It is exactly the same as in the component:
 
 ```javascript
 import { useAuthUserStore } from './AuthUserStore';
@@ -230,24 +229,26 @@ Using the helper function `mapActions`, you simply provide the store and the nam
 
 ```htm
 <script>
-// imports
-import { useAuthUserStore } from "@/stores/AuthUserStore";
-import { mapState, mapActions } from "pinia";
+  // imports
+  import { useAuthUserStore } from "@/stores/AuthUserStore";
+  import { mapState, mapActions } from "pinia";
 
-export default {
-  computed: {
-    ...mapState(useAuthUserStore, {
-      user: "username",
-    }),
-  },
-  methods: {
-    ...mapActions(useAuthUserStore,
-    //using an object is nicer to customize the name of the action in the template
-    {
-      toTwitter: "visitTwitterProfile",
-    }),
-  },
-};
+  export default {
+    computed: {
+      ...mapState(useAuthUserStore, {
+        user: "username",
+      }),
+    },
+    methods: {
+      ...mapActions(
+        useAuthUserStore,
+        //using an object is nicer to customize the name of the action in the template
+        {
+          toTwitter: "visitTwitterProfile",
+        }
+      ),
+    },
+  };
 </script>
 
 <template>
@@ -260,7 +261,7 @@ export default {
 You will need to use `acceptHMR` from `pinia` package and add the following at the end of each store:
 
 ```javascript
-import { defineStore, acceptHMRUpdate } from 'pinia';
+import { defineStore, acceptHMRUpdate } from "pinia";
 // use the following on each store by updating 'useMyStore'
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useMyStore, import.meta.hot));
@@ -279,16 +280,16 @@ When you call an action and you want to another action triggered, you can do so 
     after is the hook after the action returns or resolves
     onError is the hook if the action throws or rejects
  */
-  cartStore.$onAction(({name, store, args, after, onError }) => {
-    if (name === "addToCart"){
-      after(() => {
-        console.log("onAction", args[0]);
-      });
-      onError((err) => {
-        console.error("onError", err);
-      })
-    }
-  })
+cartStore.$onAction(({ name, store, args, after, onError }) => {
+  if (name === "addToCart") {
+    after(() => {
+      console.log("onAction", args[0]);
+    });
+    onError((err) => {
+      console.error("onError", err);
+    });
+  }
+});
 ```
 
 ### What are potential usecases of subscribing to actions
@@ -304,9 +305,7 @@ Read [more in the docs](https://pinia.vuejs.org/core-concepts/actions.html#Subsc
 It is possible using `$subscribe` function:
 
 ```javascript
-  cartStore.$subscribe((mutation, state) => {
-
-  })
+cartStore.$subscribe((mutation, state) => {});
 ```
 
 ### What are potential usecases of subscribing to state
@@ -329,7 +328,7 @@ This files contains a function that holds the logic of the plugin. For a Pinia p
 For example, in a plugin providing undo and redo functions, you finish the function by returning the functions into an object.
 
 ```javascript
-import { ref, reactive } from 'vue';
+import { ref, reactive } from "vue";
 
 export function PiniaHistoryPlugin({ pinia, app, store, options }) {
   const cartHistory = reactive([]);
@@ -342,21 +341,21 @@ export function PiniaHistoryPlugin({ pinia, app, store, options }) {
   const undo = () => {
     //Cannot undo if the history has only the initial value
     if (cartHistory.length === 1) {
-      console.log('Nothing to undo...');
+      console.log("Nothing to undo...");
       return;
     }
 
-    console.log('Undoing to previous state mutation...');
+    console.log("Undoing to previous state mutation...");
     doingHistory.value = true;
     futureCart.push(cartHistory.pop());
     store.$state = JSON.parse(cartHistory.at(-1));
     doingHistory.value = false;
   };
   const redo = () => {
-    console.log('Redoing to previous state mutation...');
+    console.log("Redoing to previous state mutation...");
     const latestState = futureCart.pop();
     if (!latestState) {
-      console.log('No redo possible because the future is empty...');
+      console.log("No redo possible because the future is empty...");
       return;
     }
     doingHistory.value = true;
@@ -386,19 +385,16 @@ To use the plugin, you will need:
 - to register it in `main.js`
 
 ```javascript
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import App from './App.vue';
-import { PiniaHistoryPlugin } from '@/plugins/PiniaHistoryPlugin';
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import App from "./App.vue";
+import { PiniaHistoryPlugin } from "@/plugins/PiniaHistoryPlugin";
 
 const pinia = createPinia();
 pinia.use(PiniaHistoryPlugin);
 
 // Init App
-createApp(App)
-  .use(pinia)
-  .use(FontAwesomePlugin)
-  .mount('#app');
+createApp(App).use(pinia).use(FontAwesomePlugin).mount("#app");
 ```
 
 - to call the methods returned by the plugin as if they were properties of the store. I am pretty sure that, if you needed to pass on parameters to a function, you could simply apply the same technique as the dynamic getters.
@@ -406,9 +402,9 @@ createApp(App)
 If you needed to enable the plugin for certain stores only, you simply add a custom property to the store's options:
 
 ```javascript
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useMyStore = defineStore('MyStore', {
+export const useMyStore = defineStore("MyStore", {
   enabledPlugin: true,
   //state
   state: () => {
@@ -428,7 +424,7 @@ export const useMyStore = defineStore('MyStore', {
 Then use the options' property in the plugin to exist if the property isn't true:
 
 ```javascript
-import { reactive } from 'vue';
+import { reactive } from "vue";
 
 export function MyPiniaPlugin({ pinia, app, store, options }) {
   if (!options.enabledPlugin) return;
@@ -455,7 +451,6 @@ export function MyPiniaPlugin({ pinia, app, store, options }) {
     method2,
   };
 }
-
 ```
 
 Read [more in the docs](https://pinia.vuejs.org/core-concepts/plugins.html).
@@ -475,4 +470,4 @@ What did I learn that is better in Pinia:
 - it is easy to extend
 - it is easy to manage undo and redo thanks state subscription.
 
-Thanks to the VueSchool team for the course and the geate examples. 
+Thanks to the VueSchool team for the course and the geate examples.

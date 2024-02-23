@@ -64,6 +64,8 @@ PS1: The payload isn't required.
 
 PS2: [Name the event well and use kebab-case in the child component](https://learnvue.co/articles/vue-best-practices#_2-use-kebab-case-for-events) **_AND_** the parent's template to avoid headaches!
 
+PS3: as a best practice, you can wrap all arguments into a single object payload: `{post, thread, user}` so that you don't have to remmember the argument order and so you can use the object destructuring. However, if you use TypeScript, it will be be easier to know the interface of the custom event.
+
 ## Lifecycle Hooks
 
 See [the course](https://vueschool.io/lessons/understanding-the-vuejs-lifecycle-hooks) about that.

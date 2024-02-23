@@ -1,5 +1,22 @@
 # Fundamentals
 
+## Understanding the Lifecycle Hooks in Vue.js
+
+Find the diagram of the lifecycle [here](https://vuejs.org/guide/essentials/lifecycle.html).
+
+Also, find the lifecycle hook list in [the official docs](https://vuejs.org/api/composition-api-lifecycle.html) to visualize the existing hooks.
+
+This documentation explains the hooks in Vue 3 and the Composition API.
+
+For the Options API, see [this other documentation](https://vuejs.org/api/options-lifecycle.html).
+
+A few comments:
+
+- it is important to note that in the `beforeCreate` hook, the reactivity isn't in place yet. So you can update any data then.
+- on `mounted` gives access to `this.$el`, which the DOM element where the app resides.
+
+The order is : `beforeCreate > created > beforeMount > mounted > beforeUnmount > unmounted`
+
 ## Double mustaches
 
 We can evaluate one expression in a `{{ ... }}`.
@@ -53,14 +70,14 @@ For example, this component declares a prop `notificationType`:
 
 ```javascript
 let NotificationMessageComponent = {
-  template: '#notification-message-template',
+  template: "#notification-message-template",
   props: {
     notificationType: {
       type: String,
-      default: 'info',
+      default: "info",
     },
   },
-}
+};
 ```
 
 Using it the following way won't work to add the `error` class, but will use the default value.

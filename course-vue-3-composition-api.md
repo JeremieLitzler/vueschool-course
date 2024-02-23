@@ -45,14 +45,13 @@ A variable in the setup method is not reactive by default.
 Using `ref`, you can tell Vue it is.
 
 ```javascript
-  import { ref } from "vue";
-    export default {
-      setup() {
-        const name = ref("The Snazzy Burger");
-        return { name };
-      }
-    }
-
+import { ref } from "vue";
+export default {
+  setup() {
+    const name = ref("The Snazzy Burger");
+    return { name };
+  },
+};
 ```
 
 Without using `ref`, you could not edit `name` in Vue DevTools.
@@ -74,14 +73,14 @@ Non-primitives are objects and arrays.
 You can use `ref`, but you also have `reactive` method.
 
 ```javascript
-    import { ref, reactive } from "vue";
-    export default {
-      setup() {
-        const appName = ref("The Snazzy Burger");
-        const meal = reactive({name: "Hamburger", price: 5});
-        return { appName, meal };
-      }
-    }
+import { ref, reactive } from "vue";
+export default {
+  setup() {
+    const appName = ref("The Snazzy Burger");
+    const meal = reactive({ name: "Hamburger", price: 5 });
+    return { appName, meal };
+  },
+};
 ```
 
 One advantage of `reactive` is that it elimates the need to use `.value`.
@@ -124,10 +123,10 @@ watch(cart, (newCart, oldCart) => console.log(newCart, oldCart));
 
 ```javascript
 watch(
-    //create a copy of the reactive array
-    () => [...cart],
-    //newCart amd oldCart point to different references
-    (newCart, oldCart) => console.log(newCart, oldCart)
+  //create a copy of the reactive array
+  () => [...cart],
+  //newCart amd oldCart point to different references
+  (newCart, oldCart) => console.log(newCart, oldCart)
 );
 ```
 
@@ -144,23 +143,26 @@ This is true for `ref` or `reactive`.
 For example, with `watch`, we write:
 
 ```javascript
-  import { watch } from "vue";
-    export default {
-      setup() {
-        const hideCartOnAddItem = watch(() => [...cart], (newCart, oldCart) => alert(newCart.join('\n')));
-      }
-    }
+import { watch } from "vue";
+export default {
+  setup() {
+    const hideCartOnAddItem = watch(
+      () => [...cart],
+      (newCart, oldCart) => alert(newCart.join("\n"))
+    );
+  },
+};
 ```
 
 For example, with `watchEffect`, we write:
 
 ```javascript
-  import { watchEffect } from "vue";
-    export default {
-      setup() {
-        const hideCartOnAddItem = watchEffect(() => alert(cart.join('\n')));
-      }
-    }
+import { watchEffect } from "vue";
+export default {
+  setup() {
+    const hideCartOnAddItem = watchEffect(() => alert(cart.join("\n")));
+  },
+};
 ```
 
 So when to use either one? In the example, above `watch`.
@@ -185,7 +187,7 @@ PS: I'd create an utility file to list the names of those types of variables to 
 Note: you cannot inject a variable not provided by a parent. However, `inject` takes a second argument to prevent broken code.
 
 ```javascript
-const currencySymbol = inject('currencySymbol', ref("$"));
+const currencySymbol = inject("currencySymbol", ref("$"));
 ```
 
 ## Using lifecycle hooks in Composition API
@@ -229,13 +231,13 @@ The convention is to:
 For example:
 
 ```javascript
-import { ref } from 'vue';
+import { ref } from "vue";
 
 export default function usePost() {
   const posts = ref([]);
 
   const fetchAll = async () => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
     posts.value = await response.json();
   };
 
@@ -255,18 +257,17 @@ The following breaks the organisation of the code. The logical concerns within t
 ```javascript
 //fetchUser is dependant on the fetchPost, so we wait it resolves.
 fetchPost(route.params.id).then(() => {
-    fetchUser(post.value.userId);
-  });
-
+  fetchUser(post.value.userId);
+});
 ```
 
 ### Using `async` self-invokin anonymous function
 
 ```javascript
-  (async () => {
-    await fetchPost(route.params.id);
-    fetchUser(post.value.userId);
-  })();//the final () is the call of the function.
+(async () => {
+  await fetchPost(route.params.id);
+  fetchUser(post.value.userId);
+})(); //the final () is the call of the function.
 ```
 
 ### Use a `watch`
@@ -274,20 +275,21 @@ fetchPost(route.params.id).then(() => {
 To keep the logical concerns together, you can use a `watch`:
 
 ```javascript
-  const { item: post, fetchOne: fetchPost } = useResource('posts');
+const { item: post, fetchOne: fetchPost } = useResource("posts");
 
-  const route = useRoute();
-  fetchPost(route.params.id);
+const route = useRoute();
+fetchPost(route.params.id);
 
-  const { item: user, fetchOne: fetchUser } = useResource('users');
+const { item: user, fetchOne: fetchUser } = useResource("users");
 
-  watch(
-    //when the post changes...
-    () => ({...post.value}),
-    //call the user api
-    () => {
-    fetchUser(post.value.userId)
-  })
+watch(
+  //when the post changes...
+  () => ({ ...post.value }),
+  //call the user api
+  () => {
+    fetchUser(post.value.userId);
+  }
+);
 ```
 
 ### Use of `suspense`
@@ -317,18 +319,18 @@ The usage is the following:
 </script>
 ```
 
-To work, you will need to use thte `suspense` component higher up in the components tree, e.g. `App.vue`:
+To work, you will need to use the `suspense` component higher up in the components tree, e.g. `App.vue`:
 
 ```htm
 <!-- in the template of App.vue -->
 
 <suspense>
-    <template #default>
-        <router-view></router-view>
-    </template>
-    <template #fallback>
-        <p>Loading...</p>
-    </template>
+  <template #default>
+    <router-view></router-view>
+  </template>
+  <template #fallback>
+    <p>Loading...</p>
+  </template>
 </suspense>
 ```
 
@@ -338,15 +340,15 @@ But with `router-view`, it is more like this:
 <!-- in the template of App.vue -->
 
 <router-view v-slot="{ Component }">
-    <template v-if="Component">
-        <suspense>
-            <template #default>
-                <component :is="Component"></component>
-            </template>
-            <template #fallback>
-                <p>Loading...</p>
-            </template>
-        </suspense>
-    </template>
+  <template v-if="Component">
+    <suspense>
+      <template #default>
+        <component :is="Component"></component>
+      </template>
+      <template #fallback>
+        <p>Loading...</p>
+      </template>
+    </suspense>
+  </template>
 </router-view>
 ```

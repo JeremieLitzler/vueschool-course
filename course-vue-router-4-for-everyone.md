@@ -74,15 +74,15 @@ Therefore, we'll use `a` elements for external links and `router-link` for inter
 This is commun practice. You create a `router` under `src` where you add `inde.js` with the setup of the router.
 
 ```javascript
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
 
-import HomeVue from '../views/Home.vue';
-import AboutVue from '../views/About.vue';
+import HomeVue from "../views/Home.vue";
+import AboutVue from "../views/About.vue";
 
 const routes = [
   //routes go here
-  { path: '/', name: 'Home', component: HomeVue },
-  { path: '/about', name: 'About', component: AboutVue },
+  { path: "/", name: "Home", component: HomeVue },
+  { path: "/about", name: "About", component: AboutVue },
 ];
 
 const router = createRouter({
@@ -131,11 +131,11 @@ With lazy loading, you define a route with a dynamic import:
 ```javascript
 var routes = [
   {
-    path: '/brazil',
-    name: 'brazil',
-    component: () => import('@/views/Brazil.vue'),
-  }
-]
+    path: "/brazil",
+    name: "brazil",
+    component: () => import("@/views/Brazil.vue"),
+  },
+];
 ```
 
 The result is in the `dist` folder:
@@ -148,11 +148,12 @@ With Vuecli, it uses a similar technique but using a Webpack comment to name the
 ```javascript
 var routes = [
   {
-    path: '/brazil',
-    name: 'brazil',
-    component: () => import(/* webpackChunkName: "brazil" */ '@/views/Brazil.vue'),
-  }
-]
+    path: "/brazil",
+    name: "brazil",
+    component: () =>
+      import(/* webpackChunkName: "brazil" */ "@/views/Brazil.vue"),
+  },
+];
 ```
 
 ## Custimizing the router link active class
@@ -230,28 +231,28 @@ For example, a route would be defined at follows:
 
 ```javascript
 const routes = [
-      {
-    path: '/destination-details/:id/:slug',
+  {
+    path: "/destination-details/:id/:slug",
     name: routesNames.destinationShow,
-    component: () => import('@/views/DestinationShow.vue'),
+    component: () => import("@/views/DestinationShow.vue"),
     props: (route) => ({ slug: route.params.slug }),
   },
-]
+];
 ```
 
 It would be use the following way in the component:
 
 ```htm
 <script setup>
-    import useSourceData from "@/composables/useSourceData";
+  import useSourceData from "@/composables/useSourceData";
 
   const props = defineProps({
-      slug:{
-        type: String,
-        required: true
-      }
-    })
-    const { destination } = useSourceData(props.slug);
+    slug: {
+      type: String,
+      required: true,
+    },
+  });
+  const { destination } = useSourceData(props.slug);
 </script>
 ```
 
@@ -268,19 +269,19 @@ For example, a `DestinationDetails` component containing a list of `ExperienceDe
 
 ```javascript
 const routes = [
-  { path: '/', name: 'home', component: HomeVue },
+  { path: "/", name: "home", component: HomeVue },
   {
     //parent route
-    path: '/destination-details/:id/:slug',
+    path: "/destination-details/:id/:slug",
     name: routesNames.destinationShow,
-    component: () => import('@/views/DestinationShow.vue'),
+    component: () => import("@/views/DestinationShow.vue"),
     props: (route) => ({ id: parseInt(route.params.id) }),
     children: [
       {
         //child route with only the extra segment needed.
-        path: ':experienceSlug',
-        name: 'experience-details',
-        component: () => import('@/views/ExperienceShow.vue'),
+        path: ":experienceSlug",
+        name: "experience-details",
+        component: () => import("@/views/ExperienceShow.vue"),
         props: (route) => ({
           id: parseInt(route.params.id),
           experienceSlug: route.params.experienceSlug,
@@ -289,7 +290,6 @@ const routes = [
     ],
   },
 ];
-
 ```
 
 ## Going back
@@ -333,11 +333,11 @@ You simply declare a route `catch all` using the Vue 3 syntax (more flexible and
 ```javascript
 const routes = [
   {
-    path: '/:pathMatch(.*)*',
-    name: 'notfound',
+    path: "/:pathMatch(.*)*",
+    name: "notfound",
     component: NotFoundVue,
   },
-]
+];
 ```
 
 In Vue 2, it was simplier to understand but gave us less flexibility:
@@ -345,11 +345,11 @@ In Vue 2, it was simplier to understand but gave us less flexibility:
 ```javascript
 const routes = [
   {
-    path: '*',
-    name: 'notfound',
+    path: "*",
+    name: "notfound",
     component: NotFoundVue,
   },
-]
+];
 ```
 
 ## Navigation Guards
@@ -361,11 +361,11 @@ For example, we define a route like the following:
 ```javascript
 const routes = [
   //routes go here
-  { path: '/', name: 'home', component: HomeVue },
+  { path: "/", name: "home", component: HomeVue },
   {
-    path: '/destination-details/:id/:slug',
+    path: "/destination-details/:id/:slug",
     name: routesNames.destinationShow,
-    component: () => import('@/views/DestinationShow.vue'),
+    component: () => import("@/views/DestinationShow.vue"),
   },
 ];
 ```
@@ -391,16 +391,16 @@ We define it on the appropriate event. In the example, **before** we **enter** t
     },
 ```
 
-If you want to keep the tURL intact even if it is wrong, you will need to add the following to return statement:
+If you want to keep the URL intact even if it is wrong, you will need to add the following to return statement:
 
 ```javascript
-        return {
-          name: 'notfound',
-          //allows keeping the URL intact while rendering a different page
-          params: { pathMatch: to.path.split('/').slice(1) },
-          query: to.query,
-          hash: to.hash,
-        };
+return {
+  name: "notfound",
+  //allows keeping the URL intact while rendering a different page
+  params: { pathMatch: to.path.split("/").slice(1) },
+  query: to.query,
+  hash: to.hash,
+};
 ```
 
 ## Handle scroll
@@ -418,12 +418,43 @@ const router = createRouter({
     return (
       savedPosition ||
       new Promise((resolve) => {
-        setTimeout(() => resolve({ top: 0, behavior: 'smooth' }), 300);
+        setTimeout(() => resolve({ top: 0, behavior: "smooth" }), 300);
       })
     );
   },
 });
+```
 
+The above applies to all routes. But what if you want to apply it conditionally?
+
+Using `meta` on a given route, you can execute the scroll to top only if the route has some meta data set.
+
+For example:
+
+- in the route definition:
+
+```javascript
+{
+  path: "/account/edit",
+  name: "UserConnectedEdit",
+  component: () => import("@/pages/UserShow.vue"),
+  meta: { toTop: true, smoothScroll: true },
+}
+```
+
+- in the `createRouter` options:
+
+```javascript
+scrollBehavior(to) {
+    //this restore the top position with 300 ms dely to avoid a visual bug since we have a transition active.
+    const scroll = {};
+    if (to.meta.toTop) scroll.top = 0;
+    if (to.meta.smoothScroll) scroll.behavior = "smooth";
+
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(scroll), 500);
+    });
+  },
 ```
 
 ## Route Meta fields
@@ -439,7 +470,7 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !window.user) {
     // Load a login page
     return {
-      name: 'login',
+      name: "login",
     };
   }
 
@@ -453,35 +484,34 @@ Using the push method on the router instance on the login page, for example, we 
 
   ```javascript
   //script to handle the login (FAKE)
-    import { ref } from 'vue';
-    import { useRouter } from 'vue-router';
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
 
-    const router = useRouter();
+  const router = useRouter();
 
-    const username = ref("");
-    const password = ref("");
+  const username = ref("");
+  const password = ref("");
 
-    const loginUser = () => {
-      window.userLogged = `{user: ${username.value}, password: ${password.value}}`;
-      router.push({name: 'protected'});
-    }
+  const loginUser = () => {
+    window.userLogged = `{user: ${username.value}, password: ${password.value}}`;
+    router.push({ name: "protected" });
+  };
   ```
 
 - for the the logout:
 
   ```javascript
   //script of the protected area page
-    import { useRouter } from 'vue-router';
-    const router = useRouter();
+  import { useRouter } from "vue-router";
+  const router = useRouter();
 
   //data of user to display in the view
-    const username = window.user;
+  const username = window.user;
 
-    const logoutUser  = () => {
-      window.user = undefined;
-      router.push({name: 'home'});
-    }
-
+  const logoutUser = () => {
+    window.user = undefined;
+    router.push({ name: "home" });
+  };
   ```
 
 ## Router Query Params
@@ -499,7 +529,7 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !window.userLogged) {
     // Load a login page
     return {
-      name: 'login',
+      name: "login",
       //add the query string "redirect" with the requested path
       query: { redirect: to.fullPath },
     };
@@ -583,7 +613,7 @@ For example, the following defines a `LeftSideBar` component used in the `Dashbo
 You can then add the `router-view` as follow in `App.vue` to make available in the application:
 
 ```htm
-    <router-view class="view left-sidebar" name="LefSideBar"></router-view>
+<router-view class="view left-sidebar" name="LefSideBar"></router-view>
 ```
 
 The `name` attribut is important: the value must match the key in the `components` object of the route using the component.
@@ -701,13 +731,13 @@ Finally, making the parameter optional without making it repeatable, use `?`:
 Using the `addRoute` method of the `router` instance, you add a route on the fly:
 
 ```javascript
-  const addDynamicRoute = () => {
-    router.addRoute({
-      name: "dynamic",
-      path: "/dynamic",
-      component: () => import("@/views/UserLogin.vue")
-    });
-  }
+const addDynamicRoute = () => {
+  router.addRoute({
+    name: "dynamic",
+    path: "/dynamic",
+    component: () => import("@/views/UserLogin.vue"),
+  });
+};
 ```
 
 The caveat is: you cannot use the name of the route until you are sure it is available.
@@ -726,5 +756,5 @@ So using the path:
 Similarly, you can remove routes:
 
 ```javascript
-    router.removeRoute("dynamic");
+router.removeRoute("dynamic");
 ```
