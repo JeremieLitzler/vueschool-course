@@ -6,11 +6,11 @@
         <router-link :to="{ name: 'AccountShow' }">
           <img
             class="avatar-small"
-            :src="user?.instance?.avatar"
-            :alt="`${user?.instance?.name} profile picture`"
+            :src="user?.avatar"
+            :alt="`${user?.name} profile picture`"
           />
           <span>
-            {{ user?.instance?.name }}
+            {{ user?.name }}
             <img
               class="icon-profile"
               src="../assets/img/svg/arrow-profile.svg"
@@ -61,6 +61,6 @@
 </template>
 <script setup lang="ts">
 import { useUserStore } from '@/stores/UserStore';
-const { getAuthUser } = useUserStore();
-const user = getAuthUser();
+const { fetchUser, authId } = useUserStore();
+const user = await fetchUser(authId);
 </script>

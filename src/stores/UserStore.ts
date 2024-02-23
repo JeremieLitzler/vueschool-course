@@ -89,6 +89,7 @@ export const useUserStore = defineStore('UserStore', () => {
     }
   };
   return {
+    authId,
     users,
     getAuthUser,
     getUserById,
