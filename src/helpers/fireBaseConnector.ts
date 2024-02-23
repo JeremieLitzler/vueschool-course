@@ -6,6 +6,8 @@ import {
   onSnapshot,
   getDocs,
   collection,
+  writeBatch,
+  arrayUnion,
 } from 'firebase/firestore';
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -17,5 +19,7 @@ export default function useFirebase() {
     onSnapshot,
     getDocs,
     collection,
+    writeBatch,
+    arrayUnion,
   };
 }

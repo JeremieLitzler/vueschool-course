@@ -2,13 +2,12 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
-// import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
+import useFirebase from '@/helpers/fireBaseConnector';
 
-// const { postsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
 
 export const usePostStore = defineStore('PostStore', () => {
@@ -54,11 +53,27 @@ export const usePostStore = defineStore('PostStore', () => {
       collection: FirestoreCollection.Posts,
     });
   };
-  const addPost = (post: Post) => {
+  const addPost = async (post: Post) => {
     //console.log('calling addPost in PostStore', post);
     post.publishedAt = Math.floor(Date.now() / 1000);
     const { getAuthUser } = useUserStore();
     post.userId = getAuthUser().instance?.id;
+    const postRef = useFirebase().doc(
+      useFirebase().collection(useFirebase().db, 'posts')
+    );
+    const threadRef = useFirebase().doc(
+      useFirebase().db,
+      'threads',
+      post.threadId!
+    );
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .set(postRef, post)
+      .update(threadRef, {
+        posts: useFirebase().arrayUnion(postRef.id),
+        contributors: useFirebase().arrayUnion(useUserStore().authId),
+      })
+      .commit();
     setPost(post);
   };
 
