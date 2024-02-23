@@ -36,7 +36,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     const item = _findItemInLocalStore<T>({ ...request });
     if (item) {
       console.log(
-        `⚡found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase⚡`
+        `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
       );
       return new Promise((resolve) => resolve(item as T));
     }
@@ -73,7 +73,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     console.log(`store has ${targetStore.value.length} items`);
 
     if (targetStore.value.length > 0) {
-      console.log(`⚡ found categories in store ⚡`);
+      console.log(`🍍 found categories in store 🍍`);
       return new Promise((resolve) => {
         resolve(targetStore.value);
       });
