@@ -20,9 +20,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
    * Update the flag fetching the data
    */
   const updateFetching = () => {
-    console.log('fetching was', fetching.value);
+    // console.log('fetching was', fetching.value);
     fetching.value = !fetching.value;
-    console.log('fetching is', fetching.value);
+    // console.log('fetching is', fetching.value);
   };
   /**
    * Fetch an item in the store first, otherwise in firestore given a collection and an id.
@@ -66,10 +66,12 @@ export const useCommonStore = defineStore('CommonStore', () => {
    * @param param0 A GenericFetchRequestAll of T having at least the property 'id'
    * @returns A Promise of an array of T
    */
-  const fetchAllItems = <T>({
+  const fetchAllItems = <T extends WithId>({
     targetStore,
     collection,
   }: GenericFetchRequestAll<T>): Promise<T[]> => {
+    console.log(`store has ${targetStore.value.length} items`);
+
     if (targetStore.value.length > 0) {
       console.log(`⚡ found categories in store ⚡`);
       return new Promise((resolve) => {
@@ -88,9 +90,10 @@ export const useCommonStore = defineStore('CommonStore', () => {
             const item = { id: doc.id, ...doc.data() };
             //console.log("category created: ", category);
             //commit("setItem", { source: "categories", item: item });
+            _setItem({ targetStore, item });
             return item as T;
           });
-          console.log(`got from firestore > in ${collection}:`, items);
+          //console.log(`got from firestore > in ${collection}:`, items);
           resolve(items);
         });
     });
@@ -119,8 +122,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
           //console.log("from firestore > responseDoc.data: ", responseDoc.data());
           //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
           const item = { ...responseDoc.data(), id: responseDoc.id };
-          console.log(`returned from firestore > from ${collection}:`, item);
-          setItem({ targetStore: targetStore, item });
+          // console.log(`returned from firestore > from ${collection}:`, item);
+          _setItem({ targetStore: targetStore, item });
           resolve(item as T);
         }
       );
@@ -142,17 +145,18 @@ export const useCommonStore = defineStore('CommonStore', () => {
   };
   /**
    * Set an item in a targetStore.
+   * Note: Not exposed to the outside.
    *
    * @param mutationReq A GenericMutationRequest of T having at least the property 'id'
    */
-  const setItem = <T extends WithId>({
+  const _setItem = <T extends WithId>({
     targetStore,
     item,
   }: GenericMutationRequest<T>) => {
     const index = targetStore.value.findIndex(
       (element: T) => element.id === item.id
     );
-    if (item['id'] && index !== -1) {
+    if (item.id && index !== -1) {
       targetStore.value[index] = item;
     } else {
       targetStore.value.push(item);
