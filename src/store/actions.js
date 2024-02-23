@@ -14,6 +14,8 @@ import {
   onSnapshot,
   getDocs,
   collection,
+  writeBatch,
+  arrayUnion,
 } from "firebase/firestore";
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -127,28 +129,45 @@ export default {
   fetchPosts({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "posts", ids });
   },
-  createPost({ commit, getters }, post) {
+  async createPost({ state, commit, getters }, post) {
     post.id = post.id ?? createId();
     post.publishedAt = nowTimeStamp;
     post.userId = getters.authUser.id;
-    commit("setItem", { source: "posts", item: post });
+
+    const postRef = doc(collection(db, "posts"));
+    const threadRef = doc(db, "threads", post.threadId);
+    await writeBatch(db)
+      .set(postRef, post)
+      .update(threadRef, {
+        posts: arrayUnion(postRef.id),
+        contributors: arrayUnion(state.authId),
+      })
+      .commit();
+
+    commit("setItem", { source: "posts", item: { ...post, id: postRef.id } });
     commit("appendPostToThread", {
-      childId: post.id,
+      childId: postRef.id,
       parentId: post.threadId,
     });
     commit("appendContributorToThread", {
-      childId: getters.authUser.id,
+      childId: state.authId,
       parentId: post.threadId,
     });
 
     return post;
   },
-  updatePost({ commit, getters }, { id, body }) {
+  async updatePost({ commit, getters }, { id, body }) {
     //console.log("updatePost > id ", id);
-
     const post = getters.getPostById(id);
     //console.log("updatePost > post ", post);
     const updatedPost = { ...post, text: body };
+
+    const postRef = doc(db, "posts", id);
+    await writeBatch(db)
+      .update(postRef, {
+        ...updatedPost,
+      })
+      .commit();
     //console.log("updatePost > updatedPost ", updatedPost);
     commit("setItem", { source: "posts", item: updatedPost });
   },
