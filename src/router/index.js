@@ -87,11 +87,10 @@ const routes = [
     name: RouteName.CategoryShow,
     component: () => import("@/pages/CategoryShow.vue"),
     props: true,
-    beforeEnter: (to, from, next) => {
-      //does the thread exists?
-      const exists = store.state.categories.find(
-        (item) => item.id === to.params.id
-      );
+    beforeEnter: async (to, from, next) => {
+      const exists = await store.dispatch("fetchCategory", {
+        id: to.params.id,
+      });
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
       //threadExists ?? next()
@@ -115,7 +114,6 @@ const routes = [
     component: () => import("@/pages/ForumShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
-      //does the thread exists?
       //console.log("beforeEnter > /forum/:id > id", to.params.id);
       const exists = await store.dispatch("fetchForum", { id: to.params.id });
       //console.log("beforeEnter > /forum/:id", exists);
@@ -141,26 +139,23 @@ const routes = [
     name: RouteName.ThreadShow,
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
-    // beforeEnter: (to, from, next) => {
-    //   //does the thread exists?
-    //   const exists = store.state.threads.find(
-    //     (item) => item.id === to.params.id
-    //   );
-    //   //if positive, contine
-    //   //see https://stackoverflow.com/a/62426354
-    //   //threadExists ?? next()
-    //   if (exists) {
-    //     return next();
-    //   }
-    //   //else redirect to not found
-    //   //next({ name: RouteName.NotFound }); // <-- redirect with URL change
-    //   next({
-    //     name: RouteName.NotFound,
-    //     params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
-    //     query: to.query,
-    //     hash: to.hash,
-    //   });
-    // },
+    beforeEnter: async (to, from, next) => {
+      const exists = await store.dispatch("fetchThread", { id: to.params.id });
+      //if positive, contine
+      //see https://stackoverflow.com/a/62426354
+      //threadExists ?? next()
+      if (exists) {
+        return next();
+      }
+      //else redirect to not found
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
+      next({
+        name: RouteName.NotFound,
+        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+        query: to.query,
+        hash: to.hash,
+      });
+    },
   },
   //Thread Create route
   {
@@ -168,6 +163,25 @@ const routes = [
     name: RouteName.ThreadCreate,
     component: () => import("@/pages/ThreadCreate.vue"),
     props: true,
+    beforeEnter: async (to, from, next) => {
+      const exists = await store.dispatch("fetchForum", {
+        id: to.params.forumId,
+      });
+      //if positive, contine
+      //see https://stackoverflow.com/a/62426354
+      //threadExists ?? next()
+      if (exists) {
+        return next();
+      }
+      //else redirect to not found
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
+      next({
+        name: RouteName.NotFound,
+        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+        query: to.query,
+        hash: to.hash,
+      });
+    },
   },
   //Thread Edit route
   {
@@ -175,6 +189,23 @@ const routes = [
     name: RouteName.ThreadEdit,
     component: () => import("@/pages/ThreadEdit.vue"),
     props: true,
+    beforeEnter: async (to, from, next) => {
+      const exists = await store.dispatch("fetchThread", { id: to.params.id });
+      //if positive, contine
+      //see https://stackoverflow.com/a/62426354
+      //threadExists ?? next()
+      if (exists) {
+        return next();
+      }
+      //else redirect to not found
+      //next({ name: RouteName.NotFound }); // <-- redirect with URL change
+      next({
+        name: RouteName.NotFound,
+        params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
+        query: to.query,
+        hash: to.hash,
+      });
+    },
   },
   //Not authorized route
   {

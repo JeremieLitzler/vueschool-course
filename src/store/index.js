@@ -135,6 +135,9 @@ export default createStore({
       return Promise.all(fetchs);
     },
     //users
+    fetchAuthUser({ state, dispatch }) {
+      return dispatch("fetchItem", { source: "users", id: state.authId });
+    },
     fetchUser({ dispatch }, { id }) {
       return dispatch("fetchItem", { source: "users", id });
     },
@@ -145,6 +148,9 @@ export default createStore({
       commit("setItem", { source: "users", item: user });
     },
     //categories
+    fetchCategory({ dispatch }, { id }) {
+      return dispatch("fetchItem", { source: "categories", id });
+    },
     fetchAllCategories({ state, commit }) {
       if (state.categories.length > 0) {
         console.log(`🍍 found categories in store 🍍`);

@@ -80,6 +80,10 @@ export default {
       return this.$store.getters.authUser;
     },
   },
+  async beforeCreate() {
+    this.$store.dispatch("fetchSomething");
+    await this.$store.dispatch("fetchAuthUser");
+    this.$store.dispatch("fetchSomething");
+  },
 };
 </script>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

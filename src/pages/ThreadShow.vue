@@ -1,6 +1,9 @@
 <template>
   <div class="col-large push-top">
-    <router-link :to="{ name: RouteName.TheHome }">Back</router-link>
+    <router-link
+      :to="{ name: RouteName.ForumShow, params: { id: thread.forumId } }"
+      >⬅️ Back to Forum</router-link
+    >
     <section v-if="$store.getters.isFetching" class="loading">
       Loading...
     </section>

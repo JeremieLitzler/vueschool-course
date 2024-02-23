@@ -1,15 +1,21 @@
 <template>
   <div class="col-full push-top">
+    <router-link :to="{ name: RouteName.TheHome }">⬅️ Back to Home</router-link>
+
     <h1>
       {{ category.name }}
     </h1>
   </div>
 
-  <ForumList :forums="categoryForums" />
+  <ForumList :categoryId="category.id" :forums="categoryForums" />
 </template>
 
 <script>
 import ForumList from "@/components/ForumList.vue";
+import { useRouteName } from "@/helpers/routeNameEnum";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
 
 export default {
   components: { ForumList },
@@ -18,6 +24,9 @@ export default {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return { RouteName };
   },
   computed: {
     categories() {
@@ -32,6 +41,19 @@ export default {
         (forum) => forum.categoryId === this.category.id
       );
     },
+  },
+  async beforeCreate() {
+    //console.log("CategoryShow > created > categoryId >", this.id);
+    this.$store.dispatch("fetchSomething");
+    const category = await this.$store.dispatch("fetchCategory", {
+      id: this.$route.params.id,
+    });
+    //console.log("CategoryShow > created > category", category);
+    await this.$store.dispatch("fetchForums", {
+      ids: category.forums,
+    });
+
+    this.$store.dispatch("fetchSomething");
   },
 };
 </script>
