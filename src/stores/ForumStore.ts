@@ -4,6 +4,8 @@ import { defineStore } from 'pinia';
 // import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import Forum from '@/types/Forum';
+import { FirestoreCollection } from '@/enums/FirestoreCollection';
+import { useCommonStore } from './CommonStore';
 
 // const { forumsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -13,7 +15,7 @@ export const useForumStore = defineStore('ForumStore', () => {
   const forums = ref<Forum[]>([]);
   const getForumById = (forumId: string | undefined): Forum => {
     const match = forums.value.find((forum: Forum) => forum.id === forumId);
-    if (match === undefined) return {};
+    if (match === undefined) return { id: '' };
 
     return match;
   };
@@ -30,6 +32,13 @@ export const useForumStore = defineStore('ForumStore', () => {
   };
 
   //ACTIONS
+  const fetchForums = (ids: string[]) => {
+    return useCommonStore().fetchSomeItems<Forum>({
+      ids,
+      targetStore: forums,
+      collection: FirestoreCollection.Forums,
+    });
+  };
   const appendThreadToForum = (request: AppendThreadToForumRequest) => {
     const forum = getForumById(request.forumId);
     if (!forum) {
@@ -42,6 +51,7 @@ export const useForumStore = defineStore('ForumStore', () => {
     forums,
     getForumById,
     getForumsByCategory,
+    fetchForums,
     appendThreadToForum,
   };
 });

@@ -65,7 +65,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   //ACTIONS
   const fetchThread = (id: string): Promise<Thread> => {
     return useCommonStore().fetchItem<Thread>({
-      source: threads,
+      targetStore: threads,
       collection: FirestoreCollection.Threads,
       id,
     });

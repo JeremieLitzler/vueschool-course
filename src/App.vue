@@ -1,9 +1,15 @@
 <template>
-  <!-- <section v-if="fetchingSomething" class="loading">Loading...</section> -->
-  <!-- <section v-else> -->
-  <the-header />
-  <div class="container"><router-view /></div>
-  <!-- </section> -->
+  <suspense>
+    <template #fallback>
+      <section class="loading">Loading...</section>
+    </template>
+    <template #default>
+      <section>
+        <the-header />
+        <div class="container"><router-view /></div>
+      </section>
+    </template>
+  </suspense>
 </template>
 <script setup lang="ts">
 // import { computed } from 'vue';

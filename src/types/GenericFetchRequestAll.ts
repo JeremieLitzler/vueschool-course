@@ -1,7 +1,6 @@
 import GenericStoreRequest from '@/types/GenericStoreRequest';
 
-export default interface ManyGenericFetchRequest<T>
+export default interface GenericFetchRequestAll<T>
   extends GenericStoreRequest<T> {
-  ids: string[];
   collection: string;
 }

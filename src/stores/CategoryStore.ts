@@ -3,6 +3,8 @@ import { defineStore } from 'pinia';
 // import useSampleData from '@/helpers/sampleData';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import type Category from '@/types/Category';
+import { useCommonStore } from '@/stores/CommonStore';
+import { FirestoreCollection } from '@/enums/FirestoreCollection';
 
 // const { categoriesData } = useSampleData();
 // const { findById } = useArraySearchHelper();
@@ -21,5 +23,12 @@ export const useCategoryStore = defineStore('CategoryStore', () => {
     return match;
   };
 
-  return { categories, getCategoryById };
+  //ACTIONS
+  const fetchAllCategories = (): Promise<Category[]> => {
+    return useCommonStore().fetchAllItems<Category>({
+      targetStore: categories,
+      collection: FirestoreCollection.Categories,
+    });
+  };
+  return { categories, getCategoryById, fetchAllCategories };
 });

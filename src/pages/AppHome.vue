@@ -5,12 +5,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup async lang="ts">
 import { useCategoryStore } from '@/stores/CategoryStore';
+import { useCommonStore } from '@/stores/CommonStore';
 import CategoryList from '@/components/CategoryList.vue';
+import { useForumStore } from '@/stores/ForumStore';
 // import { RouteName } from '@/enums/RouteName';
 
-const { categories } = useCategoryStore();
+useCommonStore().updateFetching();
+const categories = await useCategoryStore().fetchAllCategories();
+const forumIds = categories.flatMap(({ forums }) => forums!);
+await useForumStore().fetchForums(forumIds);
+useCommonStore().updateFetching();
 //console.log(RouteName.TheHome, categories);
 </script>
-<style scoped></style>

@@ -42,15 +42,15 @@ export const usePostStore = defineStore('PostStore', () => {
   //ACTIONS
   const fetchPost = (id: string): Promise<Post> => {
     return useCommonStore().fetchItem<Post>({
-      source: posts,
+      targetStore: posts,
       collection: FirestoreCollection.Posts,
       id,
     });
   };
-  const fetchPosts = (ids: string[]): Promise<Awaited<Post>[]> => {
-    return useCommonStore().fetchItems<Post>({
+  const fetchPosts = (ids: string[]): Promise<Post[]> => {
+    return useCommonStore().fetchSomeItems<Post>({
       ids,
-      source: posts,
+      targetStore: posts,
       collection: FirestoreCollection.Posts,
     });
   };

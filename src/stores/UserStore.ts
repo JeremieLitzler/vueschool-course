@@ -53,15 +53,15 @@ export const useUserStore = defineStore('UserStore', () => {
   //ACTIONS
   const fetchUser = (id: string): Promise<User> => {
     return useCommonStore().fetchItem<User>({
-      source: users,
+      targetStore: users,
       collection: FirestoreCollection.Users,
       id,
     });
   };
   const fetchUsers = (ids: string[]): Promise<Awaited<User>[]> => {
-    return useCommonStore().fetchItems<User>({
+    return useCommonStore().fetchSomeItems<User>({
       ids,
-      source: users,
+      targetStore: users,
       collection: FirestoreCollection.Users,
     });
   };
