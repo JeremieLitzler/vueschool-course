@@ -1,38 +1,39 @@
 <template>
-  <section v-if="loading" class="loading">Loading the thread...</section>
-  <section v-else>
-    <div v-if="!thread" class="col-full text-center">
-      <h1>Oops, the thread isn't valid</h1>
+  <div v-if="!thread" class="col-full text-center">
+    <h1>Oops, the thread isn't valid</h1>
+    <p>
+      The thread (<b>ID: {{ id }}</b
+      >) doesn't exist.
+    </p>
+    <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
+  </div>
+  <div v-else class="col-large push-top">
+    <router-link
+      :to="{ name: RouteName.ForumShow, params: { id: thread?.forumId } }"
+      >⬅️ Back to Forum</router-link
+    >
+    <h1 class="thread-title">
+      {{ thread?.title }}
+      <router-link
+        :to="{ name: RouteName.ThreadEdit, params: { id } }"
+        class="btn-green btn-small"
+        >Edit the thread</router-link
+      >
+    </h1>
+    <section class="thread-meta">
       <p>
-        The thread (<b>ID: {{ id }}</b
-        >) doesn't exist.
+        By <a href="#" class="link-unstyled">{{ thread?.author }}</a
+        >, <app-date :timestamp="thread?.publishedAt" />.
       </p>
-      <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
-    </div>
-    <div v-else class="col-large push-top">
-      <h1 class="thread-title">
-        {{ thread?.title }}
-        <router-link
-          :to="{ name: RouteName.ThreadEdit, params: { id } }"
-          class="btn-green btn-small"
-          >Edit the thread</router-link
-        >
-      </h1>
-      <section class="thread-meta">
-        <p>
-          By <a href="#" class="link-unstyled">{{ thread?.author }}</a
-          >, <app-date :timestamp="thread?.publishedAt" />.
-        </p>
-        <span class="hide-mobile text-faded text-small"
-          >{{ thread?.repliesCount }} replies by
-          {{ thread?.contributorsCount }} contributors</span
-        >
-      </section>
+      <span class="hide-mobile text-faded text-small"
+        >{{ thread?.repliesCount }} replies by
+        {{ thread?.contributorsCount }} contributors</span
+      >
+    </section>
 
-      <PostList :posts="threadPosts!" />
-      <PostEditor :thread-id="id" @@add-post="savePost" />
-    </div>
-  </section>
+    <PostList :posts="threadPosts!" />
+    <PostEditor :thread-id="id" @@add-post="savePost" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -61,7 +62,6 @@ const { id } = defineProps({
   },
 });
 
-const loading = computed(() => useCommonStore().fetching);
 const threadPosts = computed((): Post[] | undefined => getPostsByThreaId(id));
 const thread = computed((): ThreadHydraded | undefined => getThreadById(id));
 

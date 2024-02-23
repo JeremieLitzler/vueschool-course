@@ -7,7 +7,10 @@
         <li><a href="/category.html">Discussions</a></li>
         <li class="active"><a href="#">Cooking</a></li>
       </ul> -->
-
+    <router-link
+      :to="{ name: RouteName.CategoryShow, params: { id: forum.categoryId } }"
+      >⬅️ Back to the Category</router-link
+    >
     <div class="forum-header">
       <div class="forum-details">
         <h1>{{ forum.name }}</h1>

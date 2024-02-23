@@ -13,8 +13,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue';
+<script setup async lang="ts">
+import { ref, computed } from 'vue';
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { usePostStore } from '@/stores/PostStore';
@@ -24,7 +24,7 @@ const { toForumPage, toThreadPage } = useAppendRouteHelper();
 
 const { id } = defineProps<{ id: string }>();
 
-const thread = computed(() => useThreadStore().getThreadById(id));
+const thread = ref(await useThreadStore().fetchThread(id));
 
 const firstPostBody = computed(() => {
   const post = usePostStore().getThreadFirstPostBody(thread.value);

@@ -22,11 +22,18 @@ export const useCategoryStore = defineStore('CategoryStore', () => {
   };
 
   //ACTIONS
+  const fetchCategory = (id: string): Promise<Category> => {
+    return useCommonStore().fetchItem<Category>({
+      targetStore: categories,
+      collection: FirestoreCollection.Categories,
+      id,
+    });
+  };
   const fetchAllCategories = (): Promise<Category[]> => {
     return useCommonStore().fetchAllItems<Category>({
       targetStore: categories,
       collection: FirestoreCollection.Categories,
     });
   };
-  return { categories, getCategoryById, fetchAllCategories };
+  return { categories, getCategoryById, fetchCategory, fetchAllCategories };
 });

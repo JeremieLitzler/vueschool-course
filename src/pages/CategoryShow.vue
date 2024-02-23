@@ -1,5 +1,6 @@
 <template>
   <div class="col-full push-top">
+    <router-link :to="{ name: RouteName.TheHome }">⬅️ Back to Home</router-link>
     <h1>
       {{ category.name }}
     </h1>
@@ -7,20 +8,20 @@
   <ForumList :forums="categoryForums" />
 </template>
 
-<script setup lang="ts">
+<script setup async lang="ts">
 import ForumList from '@/components/ForumList.vue';
 import { useForumStore } from '@/stores/ForumStore';
 import { useCategoryStore } from '@/stores/CategoryStore';
-// import { RouteName } from '@/enums/RouteName';
+import { useCommonStore } from '@/stores/CommonStore';
+import { RouteName } from '@/enums/RouteName';
 
-const { id: categoryId } = defineProps<{ id: string }>();
-const { getCategoryById } = useCategoryStore();
-const { getForumsByCategory } = useForumStore();
+const { id } = defineProps<{ id: string }>();
 
-const category = getCategoryById(categoryId);
+useCommonStore().updateFetching();
+const category = await useCategoryStore().fetchCategory(id);
 //console.log(RouteName.CategoryShow, category);
 
-const categoryForums = getForumsByCategory(category.id);
+const categoryForums = await useForumStore().fetchForums(category.forums!);
 //console.log(RouteName.CategoryShow, categoryForums.value);
 </script>
 

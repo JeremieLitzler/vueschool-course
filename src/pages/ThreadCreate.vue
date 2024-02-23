@@ -8,19 +8,18 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup async lang="ts">
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 
-const { getForumById } = useForumStore();
 const { createThread } = useThreadStore();
 const props = defineProps<{ forumid: string }>();
 
 const { toForumPage, toThreadPage } = useAppendRouteHelper();
 
-const forum = getForumById(props.forumid);
+const forum = await useForumStore().fetchForum(props.forumid);
 
 const saveThread = async (payload: ThreadBaseRequest) => {
   const threadId = await createThread({
