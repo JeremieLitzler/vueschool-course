@@ -158,5 +158,13 @@ export default {
       return this.$store.getters.threadsByUserId(this.user.id);
     },
   },
+  async beforeCreate() {
+    //get the authUser
+    //const user =
+    await this.$store.dispatch("fetchAuthUser");
+    //get the posts
+
+    //get the threads
+  },
 };
 </script>

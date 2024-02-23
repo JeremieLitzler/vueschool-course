@@ -53,10 +53,11 @@ export default {
   },
   //users
   fetchAuthUser({ state, dispatch }) {
-    return dispatch("fetchItem", { source: "users", id: state.authId });
+    return dispatch("fetchUser", { id: state.authId });
   },
-  fetchUser({ dispatch }, { id }) {
-    return dispatch("fetchItem", { source: "users", id });
+  async fetchUser({ dispatch }, { id }) {
+    const user = await dispatch("fetchItem", { source: "users", id });
+    return dispatch("hydrateUser", user);
   },
   fetchUsers({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "users", ids });
@@ -64,6 +65,23 @@ export default {
   updateUser({ commit }, user) {
     commit("setItem", { source: "users", item: user });
   },
+  hydrateUser:
+    async ({ dispatch }) =>
+    (user) => {
+      console.log("calling hydrateUser in actions");
+      const posts = dispatch("fetchPosts", { ids: user?.posts });
+      const threads = dispatch("fetchThreads", { ids: user?.threads });
+      console.log("posts / threads", posts, threads);
+      const hydrated = {
+        ...user,
+        postsCount: posts.length,
+        posts,
+        threadsCount: threads.length,
+        threads,
+      };
+      //console.log(hydrated);
+      return hydrated;
+    },
   //categories
   fetchCategory({ dispatch }, { id }) {
     return dispatch("fetchItem", { source: "categories", id });

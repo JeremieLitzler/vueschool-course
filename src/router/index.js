@@ -17,10 +17,10 @@ const routes = [
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: true },
     meta: { toTop: true, smoothScroll: true },
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists
-      const authUser = store.getters.authUser;
+      const authUser = await store.dispatch("fetchAuthUser");
       if (!authUser) {
         return next({
           name: RouteName.NotAuthorized,
@@ -40,10 +40,10 @@ const routes = [
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: false },
     meta: { toTop: true, smoothScroll: true },
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       //TODO : implement auth guard
       //verify auht user exists
-      const authUser = store.getters.authUser;
+      const authUser = await store.dispatch("fetchAuthUser");
       if (!authUser) {
         return next({
           name: RouteName.NotAuthorized,
