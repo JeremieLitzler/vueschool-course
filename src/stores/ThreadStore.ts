@@ -70,6 +70,14 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       id,
     });
   };
+  const fetchThreads = async (ids: string[]) => {
+    const threadsFetched = await useCommonStore().fetchSomeItems<Thread>({
+      ids,
+      targetStore: threads,
+      collection: FirestoreCollection.Threads,
+    });
+    return threadsFetched.map((thread) => _hydrateThread(thread));
+  };
   const createThread = (request: ThreadCreateRequest) => {
     const id = uuid();
     const postId = uuid();
@@ -152,6 +160,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     getThreadsByUserId,
     //actions
     fetchThread,
+    fetchThreads,
     createThread,
     setThread,
     updateThread,

@@ -32,6 +32,13 @@ export const useForumStore = defineStore('ForumStore', () => {
   };
 
   //ACTIONS
+  const fetchForum = (id: string): Promise<Forum> => {
+    return useCommonStore().fetchItem<Forum>({
+      targetStore: forums,
+      collection: FirestoreCollection.Forums,
+      id,
+    });
+  };
   const fetchForums = (ids: string[]) => {
     return useCommonStore().fetchSomeItems<Forum>({
       ids,
@@ -51,6 +58,7 @@ export const useForumStore = defineStore('ForumStore', () => {
     forums,
     getForumById,
     getForumsByCategory,
+    fetchForum,
     fetchForums,
     appendThreadToForum,
   };

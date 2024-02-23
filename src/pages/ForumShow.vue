@@ -22,7 +22,7 @@
   </div>
 
   <div class="col-full push-top">
-    <thread-list :threads="forumThreads" />
+    <thread-list :threads="threads!" />
 
     <!-- <div class="pagination">
         <button class="btn-circle" disabled>
@@ -34,24 +34,27 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup async lang="ts">
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
+import { useCommonStore } from '@/stores/CommonStore';
+import { useUserStore } from '@/stores/UserStore';
 import ThreadList from '@/components/ThreadList.vue';
 import { RouteName } from '@/enums/RouteName';
 
-const { getForumById } = useForumStore();
-const { getThreadsByForumId } = useThreadStore();
-
-const props = defineProps({
+const { id } = defineProps({
   id: {
     type: String,
     required: true,
   },
 });
 
-const forum = getForumById(props.id);
-const forumThreads = getThreadsByForumId(props.id);
+useCommonStore().updateFetching();
+const forum = await useForumStore().fetchForum(id);
+const threads = await useThreadStore().fetchThreads(forum.threads!);
+const userIds = threads.flatMap(({ userId }) => userId!);
+await useUserStore().fetchUsers(userIds);
+useCommonStore().updateFetching();
 </script>
 
 <style scoped></style>
