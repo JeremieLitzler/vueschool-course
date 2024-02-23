@@ -109,7 +109,7 @@ export default createStore({
     fetchItem({ state, commit }, { source, id }) {
       const item = findById(state[source], id);
       if (item) {
-        console.log(`⚡ found item in store (source: ${source}, id: ${id}) ⚡`);
+        console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
         return new Promise((resolve) => {
           resolve(item);
         });
@@ -147,7 +147,7 @@ export default createStore({
     //categories
     fetchAllCategories({ state, commit }) {
       if (state.categories.length > 0) {
-        console.log(`⚡ found categories in store ⚡`);
+        console.log(`🍍 found categories in store 🍍`);
         return new Promise((resolve) => {
           resolve(state.categories);
         });
