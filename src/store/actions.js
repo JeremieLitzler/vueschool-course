@@ -12,6 +12,7 @@ import {
   getFirestore,
   doc,
   onSnapshot,
+  getDoc,
   getDocs,
   collection,
   writeBatch,
@@ -144,7 +145,11 @@ export default {
       })
       .commit();
 
-    commit("setItem", { source: "posts", item: { ...post, id: postRef.id } });
+    const newPost = await getDoc(postRef);
+    commit("setItem", {
+      source: "posts",
+      item: { ...newPost.data(), id: postRef.id },
+    });
     commit("appendPostToThread", {
       childId: postRef.id,
       parentId: post.threadId,
