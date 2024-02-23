@@ -36,8 +36,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted } from 'vue';
+<script setup async lang="ts">
+import { computed } from 'vue';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
@@ -51,8 +51,8 @@ import type Post from '@/types/Post';
 import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import { RouteName } from '@/enums/RouteName';
 
-const { getPostsByThreaId, addPost } = usePostStore();
-const { getThreadById, appendPostToThread } = useThreadStore();
+const { addPost } = usePostStore();
+const { appendPostToThread } = useThreadStore();
 const { newUniqueId } = useUUID();
 
 const { id } = defineProps({
@@ -62,8 +62,28 @@ const { id } = defineProps({
   },
 });
 
-const threadPosts = computed((): Post[] | undefined => getPostsByThreaId(id));
-const thread = computed((): ThreadHydraded | undefined => getThreadById(id));
+useCommonStore().updateFetching();
+//fetch requested thread
+const threadFetch = await useThreadStore().fetchThread(id);
+//... and its author
+const firstUserPromise = useUserStore().fetchUser(threadFetch.userId!);
+//... and its posts
+const posts = await usePostStore().fetchPosts(threadFetch.posts!);
+const userIds = posts.map((post) => post.userId!);
+// and finally the posts's authors
+const extraUserPromise = useUserStore().fetchUsers(userIds);
+await Promise.all([firstUserPromise, extraUserPromise]);
+useCommonStore().updateFetching();
+
+const thread = computed((): ThreadHydraded | undefined =>
+  useThreadStore().getThreadById(id)
+);
+//TODO Broken reactivity on the posts...
+//when I add a new post, it is inserted into firestore
+//but the UI doesn't show it
+const threadPosts = computed((): Post[] | undefined =>
+  usePostStore().getPostsByThreaId(id)
+);
 
 const savePost = (entry: AddPostPayload) => {
   entry.post.id = newUniqueId;
@@ -73,22 +93,6 @@ const savePost = (entry: AddPostPayload) => {
     postId: entry.post.id!,
   });
 };
-
-onMounted(async () => {
-  useCommonStore().updateFetching();
-  //fetch requested thread
-  const thread = await useThreadStore().fetchThread(id);
-  //... and its author
-  const firstUserPromise = useUserStore().fetchUser(thread.userId!);
-  //... and its posts
-  const posts = await usePostStore().fetchPosts(thread.posts!);
-  const userIds = posts.map((post) => post.userId!);
-  // and finally the posts's authors
-  const extraUserPromise = useUserStore().fetchUsers(userIds);
-  await Promise.all([firstUserPromise, extraUserPromise]);
-  useCommonStore().updateFetching();
-});
 </script>
 
 <style scoped></style>
-@/helpers/uniqueIdHelper @/helpers/uniqueIdHelper

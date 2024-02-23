@@ -43,6 +43,7 @@ const addPost = () => {
     threadId: props.threadId,
   };
   emits('@add-post', { post });
+  newPostText.value = '';
 };
 </script>
 

@@ -74,7 +74,8 @@ export const usePostStore = defineStore('PostStore', () => {
         contributors: useFirebase().arrayUnion(useUserStore().authId),
       })
       .commit();
-    setPost(post);
+    const newPost = await useFirebase().getDoc(postRef);
+    setPost({ ...newPost.data(), id: postRef.id });
   };
 
   const updatePost = (request: PostUpdateRequest) => {
