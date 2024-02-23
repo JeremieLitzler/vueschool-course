@@ -15,7 +15,7 @@
             By
             <router-link
               :to="{ name: RouteName.UserShow, params: { id: thread.userId } }"
-              >{{ userById(thread.userId).name }}</router-link
+              >{{ userById(thread.userId)?.name }}</router-link
             >
             >, <app-date :timestamp="thread.publishedAt" />.
           </p>
@@ -30,8 +30,8 @@
 
           <img
             class="avatar-medium"
-            :src="userById(thread.userId).avatar"
-            :alt="`Avatar of ${userById(thread.userId).name}`"
+            :src="userById(thread.userId)?.avatar"
+            :alt="`Avatar of ${userById(thread.userId)?.name}`"
           />
 
           <div>
@@ -41,7 +41,7 @@
                   name: RouteName.UserShow,
                   params: { id: thread.userId },
                 }"
-                >{{ userById(thread.userId).name }}</router-link
+                >{{ userById(thread.userId)?.name }}</router-link
               >
             </p>
             <p class="text-xsmall text-faded">

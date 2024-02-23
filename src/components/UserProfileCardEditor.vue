@@ -3,8 +3,8 @@
     <form @submit.prevent="saveProfile">
       <p class="text-center">
         <img
-          :src="user.avatar"
-          :alt="`${user.name} profile picture`"
+          :src="user?.avatar"
+          :alt="`${user?.name} profile picture`"
           class="avatar-xlarge img-update"
         />
       </p>

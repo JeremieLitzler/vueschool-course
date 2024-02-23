@@ -116,15 +116,15 @@ export default createStore({
       }
 
       return new Promise((resolve) => {
-        console.log(
-          `🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`
-        );
+        //console.log(`🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`);
+        console.log(`🚨 fetching a item on firebase 🚨`);
         onSnapshot(doc(db, source, id), (responseDoc) => {
           //console.log("from firestore > responseDoc: ", responseDoc);
           //console.log("from firestore > responseDoc.data: ", responseDoc.data());
           //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
           const item = { ...responseDoc.data(), id: responseDoc.id };
-          console.log(`got from firestore > in ${source}:`, item);
+          //console.log(`got from firestore > in ${source}:`, item);
+          console.log(`got item from firestore`);
           commit("setItem", { source, item });
           resolve(item);
         });
@@ -175,6 +175,10 @@ export default createStore({
     fetchForums({ dispatch }, { ids }) {
       return dispatch("fetchItems", { source: "forums", ids });
     },
+    fetchForum({ dispatch }, { id }) {
+      return dispatch("fetchItem", { source: "forums", id });
+    },
+
     //posts
     fetchPost({ dispatch }, { id }) {
       return dispatch("fetchItem", { source: "posts", id });

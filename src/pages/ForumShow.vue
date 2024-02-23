@@ -10,11 +10,14 @@
 
     <div class="forum-header">
       <div class="forum-details">
-        <h1>{{ forum.name }}</h1>
-        <p class="text-lead">{{ forum.description }}</p>
+        <h1>{{ forum?.name }}</h1>
+        <p class="text-lead">{{ forum?.description }}</p>
       </div>
       <router-link
-        :to="{ name: RouteName.ThreadCreate, params: { forumId: forum.id } }"
+        :to="{
+          name: RouteName.ThreadCreate,
+          params: { forumId: forum.id ?? '' },
+        }"
         class="btn-green btn-small"
         >Start a thread</router-link
       >
@@ -57,13 +60,29 @@ export default {
   components: { ThreadList },
   computed: {
     forum() {
-      return this.$store.state.forums.find((forum) => forum.id === this.id);
+      return this.$store.getters.getForumById(this.id);
     },
     forumThreads() {
       const threads = this.$store.getters.getThreadsByForumId(this.id);
       //console.log("forumThreads", threads);
       return threads;
     },
+  },
+  async beforeCreate() {
+    //console.log("ForumShow > created > forumId >", this.id);
+    this.$store.dispatch("fetchSomething");
+    const forum = await this.$store.dispatch("fetchForum", {
+      id: this.$route.params.id,
+    });
+    //console.log("ForumShow > created > forum", forum);
+    const threads = await this.$store.dispatch("fetchThreads", {
+      ids: forum.threads,
+    });
+    //console.log("ForumShow > created > forumThreads", threads);
+    const userIds = threads.flatMap(({ userId }) => userId);
+    //console.log("ForumShow > created > userIds", userIds);
+    await this.$store.dispatch("fetchUsers", { ids: userIds });
+    this.$store.dispatch("fetchSomething");
   },
 };
 </script>

@@ -114,11 +114,11 @@ const routes = [
     name: RouteName.ForumShow,
     component: () => import("@/pages/ForumShow.vue"),
     props: true,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       //does the thread exists?
-      const exists = store.state.forums.find(
-        (item) => item.id === to.params.id
-      );
+      //console.log("beforeEnter > /forum/:id > id", to.params.id);
+      const exists = await store.dispatch("fetchForum", { id: to.params.id });
+      //console.log("beforeEnter > /forum/:id", exists);
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
       //threadExists ?? next()

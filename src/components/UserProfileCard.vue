@@ -2,21 +2,21 @@
   <div class="profile-card">
     <p class="text-center">
       <img
-        :src="user.avatar"
-        :alt="`${user.name} profile picture`"
+        :src="user?.avatar"
+        :alt="`${user?.name} profile picture`"
         class="avatar-xlarge"
       />
     </p>
 
-    <h1 class="title">{{ user.username }}</h1>
+    <h1 class="title">{{ user?.username }}</h1>
 
-    <p class="text-lead">{{ user.name }}</p>
+    <p class="text-lead">{{ user?.name }}</p>
 
     <p class="text-justify">
-      {{ user.bio || "No bio specified" }}
+      {{ user?.bio || "No bio specified" }}
     </p>
 
-    <span class="online">{{ user.name }} is online</span>
+    <span class="online">{{ user?.name }} is online</span>
 
     <div class="stats">
       <span>{{ userPostsCount }} posts</span>
@@ -25,10 +25,10 @@
 
     <hr />
 
-    <p v-if="user.website" class="text-large text-center">
+    <p v-if="user?.website" class="text-large text-center">
       <i class="fa fa-globe"></i>
-      <a :href="user.website" target="_blank" rel="noopener">{{
-        user.website
+      <a :href="user?.website" target="_blank" rel="noopener">{{
+        user?.website
       }}</a>
     </p>
     <div v-if="isEditableProfile" class="text-center">
