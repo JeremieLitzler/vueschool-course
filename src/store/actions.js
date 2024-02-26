@@ -1,4 +1,5 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
+import useFirebaseHelper from "@/helpers/firebaseHelper";
 
 const { findById } = useArraySearchHelper();
 
@@ -148,20 +149,35 @@ export default {
     await dispatch("createPost", { threadId: threadRef.id, text: body });
     return threadRef.id;
   },
-  async updateThread({ commit, dispatch, getters }, { title, body, id }) {
+  async updateThread({ commit, getters }, { title, body, id }) {
     //console.log("updatedThread > id ", id);
     const thread = getters.threadById(id);
-    //console.log("updatedThread > thread ", thread);
-    const updatedThread = {
-      ...thread,
-      title,
-    };
+    console.log("updateThread > thread", thread);
+    const threadRef = doc(db, "threads", thread.id);
+    const postRef = doc(db, "posts", thread.posts[0]);
+    await writeBatch(db)
+      .set(threadRef, thread)
+      .update(threadRef, {
+        title,
+      })
+      .update(postRef, {
+        text: body,
+      })
+      .commit();
 
-    //console.log("updatedThread > ", updatedThread);
+    const newThread = await getDoc(threadRef);
+    const newPost = await getDoc(postRef);
 
-    commit("setItem", { source: "threads", item: updatedThread });
-    dispatch("updatePost", { id: updatedThread.posts[0], body });
-    return thread;
+    commit("setItem", {
+      source: "threads",
+      item: { ...newThread.data(), id: newThread.id },
+    });
+    commit("setItem", {
+      source: "threads",
+      item: { ...newPost.data(), id: newPost.id },
+    });
+
+    return useFirebaseHelper().docToResource(thread);
   },
   //posts
   fetchPost({ dispatch }, { id }) {

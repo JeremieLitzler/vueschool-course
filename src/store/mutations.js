@@ -1,6 +1,6 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 import useArrayUpdateHelper from "@/helpers/arrayUpdateHelper";
-
+import useFirebaseHelper from "@/helpers/firebaseHelper";
 const { findById } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
@@ -28,7 +28,7 @@ export default {
   setItem(state, { source, item }) {
     console.log("state + source", state, source);
     console.log("state[source]", state[source]);
-    setResource(state[source], item);
+    setResource(state[source], useFirebaseHelper().docToResource(item));
     console.log(`set item in ${source}`, item);
   },
   //users
