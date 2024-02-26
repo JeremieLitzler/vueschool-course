@@ -18,6 +18,7 @@ import {
   writeBatch,
   arrayUnion,
 } from "firebase/firestore";
+import firebaseService from "@/services/firebaseService";
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
@@ -132,7 +133,8 @@ export default {
   },
   async createPost({ state, commit, getters }, post) {
     post.id = post.id ?? createId();
-    post.publishedAt = nowTimeStamp;
+    post.publishedAt = firebaseService().getServerTimeStamp();
+    console.log("createPost > post.publishedAt", post.publishedAt);
     post.userId = getters.authUser.id;
 
     const postRef = doc(collection(db, "posts"));
