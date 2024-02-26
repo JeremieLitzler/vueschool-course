@@ -86,6 +86,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       publishedAt: firebaseService().getServerTimeStamp(),
       title: request.title,
       userId: useUserStore().getAuthUser().instance!.id,
+      posts: [],
     };
 
     const threadRef = useFirebase().doc(

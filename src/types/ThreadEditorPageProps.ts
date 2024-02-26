@@ -1,4 +1,4 @@
 export default interface ThreadEditorPageProps {
-  title: string;
-  body: string;
+  title?: string;
+  body?: string;
 }
