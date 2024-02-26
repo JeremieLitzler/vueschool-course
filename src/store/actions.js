@@ -1,9 +1,5 @@
-import useUUID from "@/helpers/uniqueIdHelper";
-import useDateHelper from "@/helpers/dateHelper";
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 
-const { createId } = useUUID();
-const { nowTimeStamp } = useDateHelper();
 const { findById } = useArraySearchHelper();
 
 import { initializeApp } from "firebase/app";
@@ -123,7 +119,65 @@ export default {
   fetchForum({ dispatch }, { id }) {
     return dispatch("fetchItem", { source: "forums", id });
   },
+  //threads
+  fetchThread({ dispatch }, { id }) {
+    return dispatch("fetchItem", { source: "threads", id });
+  },
+  fetchThreads({ dispatch }, { ids }) {
+    console.log(`fetchItem > getting`, ids);
+    return dispatch("fetchItems", { source: "threads", ids });
+  },
+  async createThread({ commit, dispatch, getters }, { title, body, forumId }) {
+    //console.log("threadId", id);
+    const thread = {
+      forumId: forumId,
+      publishedAt: firebaseService().getServerTimeStamp(),
+      title: title,
+      userId: getters.authUser.id,
+    };
 
+    const threadRef = doc(collection(db, "threads"));
+    const forumRef = doc(db, "forums", thread.forumId);
+    const userRef = doc(db, "users", getters.authUser.id);
+    await writeBatch(db)
+      .set(threadRef, thread)
+      .update(forumRef, {
+        threads: arrayUnion(threadRef.id),
+      })
+      .update(userRef, {
+        threads: arrayUnion(threadRef.id),
+      })
+      .commit();
+
+    const newThread = await getDoc(threadRef);
+
+    commit("setItem", {
+      source: "threads",
+      item: { ...newThread.data(), id: threadRef.id },
+    });
+    commit("appendThreadToForum", { childId: threadRef.id, parentId: forumId });
+    commit("appendThreadToUser", {
+      childId: threadRef.id,
+      parentId: getters.authUser.id,
+    });
+    await dispatch("createPost", { threadId: threadRef.id, text: body });
+    return threadRef.id;
+  },
+  async updateThread({ commit, dispatch, getters }, { title, body, id }) {
+    //console.log("updatedThread > id ", id);
+    const thread = getters.threadById(id);
+    //console.log("updatedThread > thread ", thread);
+    const updatedThread = {
+      ...thread,
+      title,
+    };
+
+    //console.log("updatedThread > ", updatedThread);
+
+    commit("setItem", { source: "threads", item: updatedThread });
+    dispatch("updatePost", { id: updatedThread.posts[0], body });
+    return thread;
+  },
   //posts
   fetchPost({ dispatch }, { id }) {
     return dispatch("fetchItem", { source: "posts", id });
@@ -132,7 +186,6 @@ export default {
     return dispatch("fetchItems", { source: "posts", ids });
   },
   async createPost({ state, commit, getters }, post) {
-    post.id = post.id ?? createId();
     post.publishedAt = firebaseService().getServerTimeStamp();
     console.log("createPost > post.publishedAt", post.publishedAt);
     post.userId = getters.authUser.id;
@@ -177,48 +230,5 @@ export default {
       .commit();
     //console.log("updatePost > updatedPost ", updatedPost);
     commit("setItem", { source: "posts", item: updatedPost });
-  },
-  //threads
-  fetchThread({ dispatch }, { id }) {
-    return dispatch("fetchItem", { source: "threads", id });
-  },
-  fetchThreads({ dispatch }, { ids }) {
-    return dispatch("fetchItems", { source: "threads", ids });
-  },
-  createThread({ commit, dispatch, getters }, { title, body, forumId }) {
-    const id = createId();
-    const postId = createId();
-
-    //console.log("threadId", id);
-    const thread = {
-      forumId: forumId,
-      publishedAt: nowTimeStamp,
-      title: title,
-      userId: getters.authUser.id,
-      id,
-    };
-    commit("setItem", { source: "threads", item: thread });
-    commit("appendThreadToForum", { childId: id, parentId: forumId });
-    commit("appendThreadToUser", {
-      childId: id,
-      parentId: getters.authUser.id,
-    });
-    dispatch("createPost", { threadId: id, postId, text: body });
-    return id;
-  },
-  async updateThread({ commit, dispatch, getters }, { title, body, id }) {
-    //console.log("updatedThread > id ", id);
-    const thread = getters.threadById(id);
-    //console.log("updatedThread > thread ", thread);
-    const updatedThread = {
-      ...thread,
-      title,
-    };
-
-    //console.log("updatedThread > ", updatedThread);
-
-    commit("setItem", { source: "threads", item: updatedThread });
-    dispatch("updatePost", { id: updatedThread.posts[0], body });
-    return thread;
   },
 };

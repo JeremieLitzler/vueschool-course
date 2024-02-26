@@ -16,7 +16,6 @@
             <router-link
               :to="{ name: RouteName.UserShow, params: { id: thread.userId } }"
               >{{ userById(thread.userId)?.name }}</router-link
-            >
             >, <app-date :timestamp="thread.publishedAt" />.
           </p>
         </div>
@@ -104,4 +103,3 @@ export default {
 </script>
 
 <style lang="scss" scoped></style>
-@/helpers/routeNameEnum @/helpers/routeNameEnum
