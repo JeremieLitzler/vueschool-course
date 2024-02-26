@@ -1,5 +1,5 @@
-import type Post from '@/types/Post';
+import type PostAddRequest from '@/types/PostAddRequest';
 
 export default interface AddPostPayload {
-  post: Post;
+  post: PostAddRequest;
 }

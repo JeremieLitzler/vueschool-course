@@ -2,6 +2,8 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
+import type PostAddToFirebaseRequest from '@/types/PostAddToFirebaseRequest';
+import type PostAddRequest from '@/types/PostAddRequest';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
@@ -54,11 +56,11 @@ export const usePostStore = defineStore('PostStore', () => {
       collection: FirestoreCollection.Posts,
     });
   };
-  const addPost = async (post: Post) => {
-    //console.log('calling addPost in PostStore', post);
-    post.publishedAt = firebaseService().getServerTimeStamp();
-    const { getAuthUser } = useUserStore();
-    post.userId = getAuthUser().instance?.id;
+  const addPost = async (post: PostAddRequest) => {
+    console.log('calling addPost in PostStore', post);
+    const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
+    postFirebaseRequest.publishedAt = firebaseService().getServerTimeStamp();
+    postFirebaseRequest.userId = useUserStore().getAuthUser().instance?.id!;
     const postRef = useFirebase().doc(
       useFirebase().collection(useFirebase().db, 'posts')
     );
@@ -69,14 +71,18 @@ export const usePostStore = defineStore('PostStore', () => {
     );
     await useFirebase()
       .writeBatch(useFirebase().db)
-      .set(postRef, post)
+      .set(postRef, { ...postFirebaseRequest })
       .update(threadRef, {
         posts: useFirebase().arrayUnion(postRef.id),
         contributors: useFirebase().arrayUnion(useUserStore().authId),
       })
       .commit();
-    const newPost = await useFirebase().getDoc(postRef);
-    setPost({ ...newPost.data(), id: postRef.id });
+    console.log('addPost < postRef', postRef);
+
+    const newPostRef = await useFirebase().getDoc(postRef);
+    const newPost = { ...newPostRef.data(), id: postRef.id };
+    setPost(newPost);
+    return newPost as Post;
   };
 
   const updatePost = (request: PostUpdateRequest) => {

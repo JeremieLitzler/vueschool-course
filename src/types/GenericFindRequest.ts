@@ -1,6 +1,6 @@
 import GenericStoreRequest from './GenericStoreRequest';
-import WithId from './WithId';
+import WithId from '@/types/WithId';
 
-export default interface GenericFindRequest<T>
+export default interface GenericFindRequest<T extends WithId>
   extends GenericStoreRequest<T>,
     WithId {}

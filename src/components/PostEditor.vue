@@ -19,8 +19,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import AddPostPayload from '@/types/AddPostPayload';
-import Post from '@/types/Post';
 import { useUserStore } from '@/stores/UserStore';
+import PostAddRequest from '@/types/PostAddRequest';
 
 const props = defineProps<{
   threadId: string;
@@ -37,8 +37,7 @@ const addPost = () => {
   if (!authUser) {
     //TODO : handle not authentifcated user
   }
-  const post: Post = {
-    id: '',
+  const post: PostAddRequest = {
     text: newPostText.value,
     threadId: props.threadId,
   };

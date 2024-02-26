@@ -42,7 +42,6 @@ import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
-import useUUID from '@/helpers/uniqueIdHelper';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
@@ -53,7 +52,6 @@ import { RouteName } from '@/enums/RouteName';
 
 const { addPost } = usePostStore();
 const { appendPostToThread } = useThreadStore();
-const { newUniqueId } = useUUID();
 
 const { id } = defineProps({
   id: {
@@ -68,7 +66,9 @@ const threadFetch = await useThreadStore().fetchThread(id);
 //... and its author
 const firstUserPromise = useUserStore().fetchUser(threadFetch.userId!);
 //... and its posts
-const posts = await usePostStore().fetchPosts(threadFetch.posts!);
+const posts = await usePostStore().fetchPosts(
+  threadFetch.posts ? threadFetch.posts! : []
+);
 const userIds = posts.map((post) => post.userId!);
 // and finally the posts's authors
 const extraUserPromise = useUserStore().fetchUsers(userIds);
@@ -85,12 +85,11 @@ const threadPosts = computed((): Post[] | undefined =>
   usePostStore().getPostsByThreaId(id)
 );
 
-const savePost = (entry: AddPostPayload) => {
-  entry.post.id = newUniqueId;
-  addPost(entry.post);
+const savePost = async (entry: AddPostPayload) => {
+  const post = await addPost({ ...entry.post });
   appendPostToThread({
-    threadId: entry.post.threadId!,
-    postId: entry.post.id!,
+    threadId: post.threadId!,
+    postId: post.id!,
   });
 };
 </script>

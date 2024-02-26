@@ -1,9 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { v4 as uuid } from 'uuid';
 
 // import useSampleData from '@/helpers/sampleData';
-import useDateHelper from '@/helpers/dateHelper';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useForumStore } from '@/stores/ForumStore';
@@ -14,6 +12,8 @@ import type Thread from '@/types/Thread';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
+import useFirebase from '@/helpers/fireBaseConnector';
+import firebaseService from '@/services/firebaseService';
 
 // const { threadsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -54,7 +54,9 @@ export const useThreadStore = defineStore('ThreadStore', () => {
         return useUserStore().getUserById(thread.userId)?.instance?.name!;
       },
       get repliesCount() {
-        return thread.posts!.length - 1; //the first post isn't counted hence the '-1'
+        if (!thread?.posts) return 0;
+
+        return thread?.posts!.length - 1; //the first post isn't counted hence the '-1'
       },
       get contributorsCount() {
         return [...new Set(thread?.contributors)].length;
@@ -78,22 +80,44 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     });
     return threadsFetched.map((thread) => _hydrateThread(thread));
   };
-  const createThread = (request: ThreadCreateRequest) => {
-    const id = uuid();
-    const postId = uuid();
-
+  const createThread = async (request: ThreadCreateRequest) => {
     const thread = {
       forumId: request.forumId,
-      posts: [postId],
-      publishedAt: useDateHelper().nowTimeStamp,
+      publishedAt: firebaseService().getServerTimeStamp(),
       title: request.title,
       userId: useUserStore().getAuthUser().instance!.id,
-      id,
     };
 
-    setThread(thread);
-    createThreadAddRelated(request, thread);
-    return id;
+    const threadRef = useFirebase().doc(
+      useFirebase().collection(useFirebase().db, 'threads')
+    );
+    const forumRef = useFirebase().doc(
+      useFirebase().db,
+      'forums',
+      thread.forumId!
+    );
+    const userRef = useFirebase().doc(
+      useFirebase().db,
+      'users',
+      thread.userId!
+    );
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .set(threadRef, thread)
+      .update(forumRef, {
+        threads: useFirebase().arrayUnion(threadRef.id),
+      })
+      .update(userRef, {
+        threads: useFirebase().arrayUnion(threadRef.id),
+      })
+      .commit();
+    const newThread = await useFirebase().getDoc(threadRef);
+    setThread({ ...newThread.data(), id: threadRef.id });
+    createThreadAddRelated(request, {
+      ...newThread.data(),
+      id: threadRef.id,
+    } as Thread);
+    return threadRef.id;
   };
   const updateThread = (request: ThreadUpdateRequest): Thread => {
     //console.log("updatedThread > id ", id);
@@ -129,6 +153,8 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     threadRequest: ThreadCreateRequest,
     thread: Thread
   ) => {
+    console.log('createThreadAddRelated', thread);
+
     useForumStore().appendThreadToForum({
       threadId: thread.id!,
       forumId: thread.forumId!,
@@ -139,7 +165,6 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     });
     usePostStore().addPost({
       threadId: thread.id,
-      id: thread.posts![0],
       text: threadRequest.body,
     });
   };
