@@ -1,11 +1,9 @@
-import Post from './Post';
-import Thread from './Thread';
-import User from './User';
+import Post from '@/types/Post';
+import Thread from '@/types/Thread';
+import User from '@/types/User';
 
-export default interface GetUserExtented {
-  instance?: User;
+export default interface GetUserExtented extends User {
   posts?: Post[];
-  postsCount?: number;
-  threads?: Thread[];
   threadsCount?: number;
+  threadsList?: Thread[];
 }

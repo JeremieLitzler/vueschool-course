@@ -5,7 +5,7 @@
         <router-link
           :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
           class="user-name"
-          >{{ getUserById(post.userId)?.instance?.name }}</router-link
+          >{{ getUserById(post.userId)?.name }}</router-link
         >
 
         <router-link
@@ -13,8 +13,8 @@
         >
           <img
             class="avatar-large"
-            :src="getUserById(post.userId)?.instance?.avatar"
-            :alt="getUserById(post.userId)?.instance?.name"
+            :src="getUserById(post.userId)?.avatar"
+            :alt="getUserById(post.userId)?.name"
           />
         </router-link>
 

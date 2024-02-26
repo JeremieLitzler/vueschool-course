@@ -3,8 +3,8 @@
     <form @submit.prevent="saveProfile">
       <p class="text-center">
         <img
-          :src="user.instance!.avatar"
-          :alt="`${user.instance!.name} profile picture`"
+          :src="user.avatar"
+          :alt="`${user.name} profile picture`"
           class="avatar-xlarge img-update"
         />
       </p>
@@ -96,7 +96,7 @@ const props = defineProps<{
 }>();
 
 const user = computed(() => getUserById(props.user.id));
-const editedUser = { ...user.value.instance! };
+const editedUser = { ...user.value };
 
 const exitEditRoute = () => {
   //console.log('exitEditRoute', router);

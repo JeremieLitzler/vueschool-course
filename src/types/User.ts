@@ -14,4 +14,6 @@ export default interface User extends WithId {
   website?: string;
   bio?: string;
   location?: string;
+  postsCount?: number;
+  threads?: string[];
 }

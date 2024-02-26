@@ -16,7 +16,7 @@
             By
             <router-link
               :to="{ name: 'UserShow', params: { id: thread.userId } }"
-              >{{ getUserById(thread.userId).instance!.name }}</router-link
+              >{{ getUserById(thread.userId).name }}</router-link
             >, <app-date :timestamp="thread.publishedAt!" />.
           </p>
         </div>
@@ -30,15 +30,15 @@
 
           <img
             class="avatar-medium"
-            :src="getUserById(thread.userId).instance!.avatar"
-            :alt="`Avatar of ${getUserById(thread.userId).instance!.name}`"
+            :src="getUserById(thread.userId).avatar"
+            :alt="`Avatar of ${getUserById(thread.userId).name}`"
           />
 
           <div>
             <p class="text-xsmall">
               <router-link
                 :to="{ name: 'UserShow', params: { id: thread.userId } }"
-                >{{ getUserById(thread.userId).instance!.name }}</router-link
+                >{{ getUserById(thread.userId).name }}</router-link
               >
             </p>
             <p class="text-xsmall text-faded">

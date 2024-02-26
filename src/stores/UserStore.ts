@@ -3,8 +3,6 @@ import { defineStore } from 'pinia';
 import User from '@/types/User';
 import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
-import { usePostStore } from '@/stores/PostStore';
-import { useThreadStore } from '@/stores/ThreadStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import type GetUserExtended from '@/types/GetUserExtended';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
@@ -17,31 +15,27 @@ export const useUserStore = defineStore('UserStore', () => {
   const authId = ref('7uVPJS9GHoftN58Z2MXCYDqmNAh2');
 
   //GETTERS
-  const hydrateUserExtented = (userId: string | undefined) => {
-    const { getPostsByUserId } = usePostStore();
-    const { getThreadsByUserId } = useThreadStore();
-    const posts = getPostsByUserId(userId);
-    const postsCount = posts.length;
-    const threads = getThreadsByUserId(userId);
-    const threadsCount = threads.length;
-    return {
-      posts,
-      postsCount,
-      threads,
-      threadsCount,
+  const _hydrateUser = (user: User) => {
+    const hydratedUser = {
+      ...user,
+      get postsCount() {
+        return user.postsCount || 0;
+      },
+      get threadsCount() {
+        return user.threads?.length || 0;
+      },
     };
+    console.log('fetchUser > hydratedUser ', hydratedUser);
+    return hydratedUser;
   };
   const getUserById = (userId: string | undefined): GetUserExtended => {
     const matchingUser = users.value.find((user) => user.id! === userId);
-    if (matchingUser === undefined) return {};
+    if (matchingUser === undefined) return { id: '' };
 
-    const extendedUser = hydrateUserExtented(userId);
+    const extendedUser = _hydrateUser(matchingUser);
     //console.log('extendedUser', extendedUser);
 
-    return {
-      instance: matchingUser,
-      ...extendedUser,
-    };
+    return extendedUser;
   };
 
   const getAuthUser = (): GetUserExtended => {
@@ -77,7 +71,7 @@ export const useUserStore = defineStore('UserStore', () => {
     if (!user) {
       throw new Error(`User ID <${request.userId}> waas not found...`);
     }
-    user?.threads!.push(request.thread);
+    user?.threads!.push(request.thread.id);
   };
 
   const setUser = (user: User) => {

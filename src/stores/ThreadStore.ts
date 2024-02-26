@@ -51,7 +51,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     return {
       ...thread,
       get author() {
-        return useUserStore().getUserById(thread.userId)?.instance?.name!;
+        return useUserStore().getUserById(thread.userId)?.name!;
       },
       get repliesCount() {
         if (!thread?.posts) return 0;
@@ -85,7 +85,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       forumId: request.forumId,
       publishedAt: firebaseService().getServerTimeStamp(),
       title: request.title,
-      userId: useUserStore().getAuthUser().instance!.id,
+      userId: useUserStore().getAuthUser().id,
       posts: [],
     };
 

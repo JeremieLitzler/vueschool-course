@@ -60,7 +60,7 @@ export const usePostStore = defineStore('PostStore', () => {
     console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
     postFirebaseRequest.publishedAt = firebaseService().getServerTimeStamp();
-    postFirebaseRequest.userId = useUserStore().getAuthUser().instance?.id!;
+    postFirebaseRequest.userId = useUserStore().getAuthUser().id!;
     const postRef = useFirebase().doc(
       useFirebase().collection(useFirebase().db, 'posts')
     );
