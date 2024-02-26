@@ -173,7 +173,7 @@ export default {
       item: { ...newThread.data(), id: newThread.id },
     });
     commit("setItem", {
-      source: "threads",
+      source: "posts",
       item: { ...newPost.data(), id: newPost.id },
     });
 
