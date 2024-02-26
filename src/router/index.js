@@ -42,7 +42,7 @@ const routes = [
     meta: { toTop: true, smoothScroll: true },
     beforeEnter: async (to, from, next) => {
       //TODO : implement auth guard
-      //verify auht user exists
+      //verify auth user exists
       const authUser = await store.dispatch("fetchAuthUser");
       if (!authUser) {
         return next({
@@ -62,12 +62,10 @@ const routes = [
     name: RouteName.UserShow,
     component: () => import("@/pages/UserShow.vue"),
     props: true,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: async (to, from, next) => {
       //does the thread exists?
-      const exists = store.state.users.find((item) => item.id === to.params.id);
-      //if positive, contine
-      //see https://stackoverflow.com/a/62426354
-      //threadExists ?? next()
+      const exists = await store.dispatch("fetchUser", { id: to.params.id });
+      console.log("beforeEnter > /user/:id", exists, to.params.id);
       if (exists) {
         return next();
       }

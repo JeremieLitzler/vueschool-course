@@ -19,8 +19,8 @@
     <span class="online">{{ user?.name }} is online</span>
 
     <div class="stats">
-      <span>{{ userPostsCount }} posts</span>
-      <span>{{ userThreadsCount }} threads</span>
+      <span>{{ user?.postsCount }} posts</span>
+      <span>{{ user?.threadsCount }} threads</span>
     </div>
 
     <hr />
@@ -72,12 +72,6 @@ export default {
     },
     userThreads() {
       return this.$store.getters.threadsByUserId(this.user.id);
-    },
-    userPostsCount() {
-      return this.userPosts.length;
-    },
-    userThreadsCount() {
-      return this.userThreads.length;
     },
   },
 };

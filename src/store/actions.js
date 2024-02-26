@@ -13,6 +13,7 @@ import {
   collection,
   writeBatch,
   arrayUnion,
+  increment,
 } from "firebase/firestore";
 import firebaseService from "@/services/firebaseService";
 const firebaseApp = initializeApp(firebaseConfig);
@@ -57,7 +58,8 @@ export default {
   },
   async fetchUser({ dispatch }, { id }) {
     const user = await dispatch("fetchItem", { source: "users", id });
-    return dispatch("hydrateUser", user);
+    console.log("fetchUser > id ", user, id);
+    return user;
   },
   fetchUsers({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "users", ids });
@@ -65,23 +67,6 @@ export default {
   updateUser({ commit }, user) {
     commit("setItem", { source: "users", item: user });
   },
-  hydrateUser:
-    async ({ dispatch }) =>
-    (user) => {
-      console.log("calling hydrateUser in actions");
-      const posts = dispatch("fetchPosts", { ids: user?.posts });
-      const threads = dispatch("fetchThreads", { ids: user?.threads });
-      console.log("posts / threads", posts, threads);
-      const hydrated = {
-        ...user,
-        postsCount: posts.length,
-        posts,
-        threadsCount: threads.length,
-        threads,
-      };
-      //console.log(hydrated);
-      return hydrated;
-    },
   //categories
   fetchCategory({ dispatch }, { id }) {
     return dispatch("fetchItem", { source: "categories", id });
@@ -192,11 +177,15 @@ export default {
 
     const postRef = doc(collection(db, "posts"));
     const threadRef = doc(db, "threads", post.threadId);
+    const userRef = doc(db, "users", post.userId);
     await writeBatch(db)
       .set(postRef, post)
       .update(threadRef, {
         posts: arrayUnion(postRef.id),
         contributors: arrayUnion(state.authId),
+      })
+      .update(userRef, {
+        postsCount: increment(1),
       })
       .commit();
 

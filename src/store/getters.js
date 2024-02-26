@@ -5,23 +5,25 @@ export default {
   isFetching: (state) => state.fetching,
   //users
   getUser: (state, getters) => (userId) => {
-    return getters.hydrateUser(findById(state.users, userId));
+    const user = findById(state.users, userId);
+    console.log("getUser > id", userId, user);
+    return getters.hydrateUser(user);
   },
   authUser: (state, getters) => {
     return getters.getUser(state.authId);
   },
-  hydrateUser: (state, getters) => (user) => {
-    const hydrated = {
+  hydrateUser: () => (user) => {
+    const hydratedUser = {
       ...user,
       get postsCount() {
-        return getters.postsByUserId(user?.id).length;
+        return user.postsCount || 0;
       },
       get threadsCount() {
-        return getters.threadsByUserId(user?.id).length;
+        return user.threads?.length || 0;
       },
     };
-    //console.log(hydrated);
-    return hydrated;
+    console.log("fetchUser > hydratedUser ", hydratedUser);
+    return hydratedUser;
   },
   //categories
   getCategories: (state) => state.categories,
