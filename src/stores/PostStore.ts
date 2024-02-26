@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import useFirebase from '@/helpers/fireBaseConnector';
+import firebaseService from '@/services/firebaseService';
 
 // const { findById, findManyById } = useArraySearchHelper();
 
@@ -55,7 +56,7 @@ export const usePostStore = defineStore('PostStore', () => {
   };
   const addPost = async (post: Post) => {
     //console.log('calling addPost in PostStore', post);
-    post.publishedAt = Math.floor(Date.now() / 1000);
+    post.publishedAt = firebaseService().getServerTimeStamp();
     const { getAuthUser } = useUserStore();
     post.userId = getAuthUser().instance?.id;
     const postRef = useFirebase().doc(
