@@ -1,6 +1,6 @@
 <template>
   <div class="col-full">
-    <form @submit.prevent="addPost">
+    <form @submit.prevent="savePost">
       <div class="form-group">
         <textarea
           v-model="newPostText"
@@ -10,39 +10,60 @@
         />
       </div>
       <div class="form-actions">
-        <button class="btn-blue">Submit post</button>
+        <button class="btn-blue">{{ buttonText }}</button>
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import AddPostPayload from '@/types/AddPostPayload';
+import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
-import PostAddRequest from '@/types/PostAddRequest';
+import type PostEditorProps from '@/types/PostEditorProps';
+import type PostAddRequest from '@/types/PostAddRequest';
+import type PostUpdateRequest from '@/types/PostUpdateRequest';
 
-const props = defineProps<{
-  threadId: string;
-}>();
+const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
+  sourcePost: undefined,
+});
+
 const emits = defineEmits<{
-  (event: '@add-post', entry: AddPostPayload): void;
+  (event: '@add-post', entry: PostAddRequest): void;
+  (event: '@update-post', entry: PostUpdateRequest): void;
 }>();
 
-const { getAuthUser } = useUserStore();
-const newPostText = ref('');
+console.log('props > sourcePost', sourcePost);
 
-const addPost = () => {
-  const authUser = getAuthUser();
+const newPostText = ref(sourcePost?.text ?? null);
+const postIsEdited = computed(() => {
+  const result = sourcePost !== undefined;
+  console.log('postIsEdited computed', result);
+
+  return result;
+});
+
+const buttonText = computed(() =>
+  !postIsEdited.value ? 'Submit post' : 'Update post'
+);
+const savePost = () => {
+  const authUser = useUserStore().getAuthUser();
   if (!authUser) {
     //TODO : handle not authentifcated user
   }
-  const post: PostAddRequest = {
-    text: newPostText.value,
-    threadId: props.threadId,
-  };
-  emits('@add-post', { post });
-  newPostText.value = '';
+
+  if (postIsEdited.value) {
+    const request: PostUpdateRequest = {
+      body: newPostText.value!,
+      id: sourcePost?.id!,
+    };
+    emits('@update-post', request);
+  } else {
+    const request: PostAddRequest = {
+      text: newPostText.value!,
+      threadId: threadId!,
+    };
+    emits('@add-post', request);
+  }
 };
 </script>
 

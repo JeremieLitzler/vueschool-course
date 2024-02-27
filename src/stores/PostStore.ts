@@ -4,12 +4,14 @@ import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
 import type PostAddToFirebaseRequest from '@/types/PostAddToFirebaseRequest';
 import type PostAddRequest from '@/types/PostAddRequest';
+import type PostUpdateRequest from '@/types/PostUpdateRequest';
 // import useArraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
+import useFirebaseHelper from '@/helpers/firebaseHelper';
 
 // const { findById, findManyById } = useArraySearchHelper();
 
@@ -85,13 +87,22 @@ export const usePostStore = defineStore('PostStore', () => {
     return newPost as Post;
   };
 
-  const updatePost = (request: PostUpdateRequest) => {
-    //console.log("updatePost > id ", id);
+  const updatePost = async (request: PostUpdateRequest) => {
+    console.log('updatePost > request ', request);
+    const postRef = useFirebase().doc(useFirebase().db, 'posts', request.id);
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .update(postRef, {
+        text: request.body,
+      })
+      .update(postRef, {
+        text: request.body,
+      })
+      .commit();
 
-    const post = getPostById(request.id);
-    //console.log("updatePost > post ", post);
-    const updatedPost = { ...post, text: request.body };
-    //console.log("updatePost > updatedPost ", updatedPost);
+    const updatedPost = useFirebaseHelper().docToResource(
+      await useFirebase().getDoc(postRef)
+    );
     setPost(updatedPost);
   };
 

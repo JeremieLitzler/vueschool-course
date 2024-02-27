@@ -32,7 +32,7 @@
     </section>
 
     <PostList :posts="threadPosts!" />
-    <PostEditor :thread-id="id" @@add-post="savePost" />
+    <PostEditor :thread-id="id" :source-post="null" @@add-post="savePost" />
   </div>
 </template>
 
@@ -45,13 +45,10 @@ import { useCommonStore } from '@/stores/CommonStore';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
-import type AddPostPayload from '@/types/AddPostPayload';
 import type Post from '@/types/Post';
 import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import { RouteName } from '@/enums/RouteName';
-
-const { addPost } = usePostStore();
-const { appendPostToThread } = useThreadStore();
+import PostAddRequest from '@/types/PostAddRequest';
 
 const { id } = defineProps({
   id: {
@@ -85,9 +82,9 @@ const threadPosts = computed((): Post[] | undefined =>
   usePostStore().getPostsByThreaId(id)
 );
 
-const savePost = async (entry: AddPostPayload) => {
-  const post = await addPost({ ...entry.post });
-  appendPostToThread({
+const savePost = async (entry: PostAddRequest) => {
+  const post = await usePostStore().addPost({ ...entry });
+  useThreadStore().appendPostToThread({
     threadId: post.threadId!,
     postId: post.id!,
   });
