@@ -12,6 +12,7 @@ export default createStore({
     posts: [],
     authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2",
     fetching: false,
+    firestoreUnsubscribes: [],
   },
   getters,
   actions,

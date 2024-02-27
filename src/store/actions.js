@@ -21,9 +21,13 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 export default {
-  fetchSomething({ state, commit }) {
+  fetchSomething({ commit }) {
     //console.log("fetching is", state.fetching);
     commit("setFetching");
+  },
+  async runAndResetFirestoreUnsubs({ state, commit }) {
+    state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());
+    commit("resetFirestoreUnsubs");
   },
   fetchItem({ state, commit }, { source, id }) {
     const item = findById(state[source], id);
@@ -37,7 +41,7 @@ export default {
     return new Promise((resolve) => {
       //console.log(`🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`);
       // console.log(`🚨 fetching a item on firebase 🚨`);
-      onSnapshot(doc(db, source, id), (responseDoc) => {
+      const unsubscribe = onSnapshot(doc(db, source, id), (responseDoc) => {
         //console.log("from firestore > responseDoc: ", responseDoc);
         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
@@ -47,6 +51,7 @@ export default {
         commit("setItem", { source, item });
         resolve(item);
       });
+      commit("appendUnsubscribe", { unsubscribe });
     });
   },
   fetchItems({ dispatch }, { source, ids }) {

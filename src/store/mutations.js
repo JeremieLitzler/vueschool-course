@@ -50,4 +50,10 @@ export default {
     parent: "threads",
     child: "contributors",
   }),
+  appendUnsubscribe(state, { unsubscribe }) {
+    state.firestoreUnsubscribes.push(unsubscribe);
+  },
+  resetFirestoreUnsubs(state) {
+    state.firestoreUnsubscribes.splice(0, state.firestoreUnsubscribes.length);
+  },
 };

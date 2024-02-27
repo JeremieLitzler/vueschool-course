@@ -219,7 +219,7 @@ const routes = [
   },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to) {
@@ -232,3 +232,9 @@ export default createRouter({
     });
   },
 });
+
+router.beforeEach(() => {
+  store.dispatch("runAndResetFirestoreUnsubs");
+});
+
+export default router;
