@@ -14,6 +14,7 @@ import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
+import useFirebaseHelper from '@/helpers/firebaseHelper';
 
 // const { threadsData } = useSampleData();
 // const { findById, findManyById } = useArraySearchHelper();
@@ -120,23 +121,37 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     } as Thread);
     return threadRef.id;
   };
-  const updateThread = (request: ThreadUpdateRequest): Thread => {
+  const updateThread = async (
+    request: ThreadUpdateRequest
+  ): Promise<Thread> => {
     //console.log("updatedThread > id ", id);
     const thread = getThreadById(request.threadId);
-    //console.log("updatedThread > thread ", thread);
-    const updatedThread = {
-      ...thread,
-      title: request.title,
-    };
+    const threadRef = useFirebase().doc(useFirebase().db, 'threads', thread.id);
+    const postRef = useFirebase().doc(
+      useFirebase().db,
+      'posts',
+      thread.posts![0]
+    );
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .update(threadRef, {
+        title: request.title,
+      })
+      .update(postRef, {
+        text: request.body,
+      })
+      .commit();
 
-    //console.log("updatedThread > ", updatedThread);
+    const updatedThread = useFirebaseHelper().docToResource(
+      await useFirebase().getDoc(threadRef)
+    );
+    const updatedPost = useFirebaseHelper().docToResource(
+      await useFirebase().getDoc(postRef)
+    );
 
     setThread(updatedThread);
-    usePostStore().updatePost({
-      id: updatedThread.posts![0],
-      body: request.body,
-    });
-    return thread;
+    usePostStore().setPost(updatedPost);
+    return updatedThread as Thread;
   };
 
   const setThread = (thread: Thread) => {

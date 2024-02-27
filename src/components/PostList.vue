@@ -1,41 +1,8 @@
 <template>
   <div class="post-list">
     <div class="post" v-for="post in props.posts" :key="post.id">
-      <div class="user-info">
-        <router-link
-          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
-          class="user-name"
-          >{{ getUserById(post.userId)?.name }}</router-link
-        >
-
-        <router-link
-          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
-        >
-          <img
-            class="avatar-large"
-            :src="getUserById(post.userId)?.avatar"
-            :alt="getUserById(post.userId)?.name"
-          />
-        </router-link>
-
-        <p class="desktop-only text-small">
-          {{ getUserById(post.userId)?.postsCount }}
-          post{{ getUserById(post.userId)?.postsCount! > 1 ? 's' : '' }}
-        </p>
-        <p class="desktop-only text-small">
-          {{ getUserById(post.userId).threadsCount }}
-          thread{{ getUserById(post.userId)?.threadsCount! > 1 ? 's' : '' }}
-        </p>
-      </div>
-
-      <div class="post-content">
-        <div>
-          <p>
-            {{ post.text }}
-          </p>
-        </div>
-      </div>
-
+      <post-list-item-user :user="getUserById(post.userId)" />
+      <post-list-item-body :body="post.text!" />
       <div class="post-date text-faded">
         <app-date :timestamp="post.publishedAt!" />
       </div>
@@ -44,9 +11,10 @@
 </template>
 
 <script setup lang="ts">
+import PostListItemUser from '@/components/PostListItemUser.vue';
+import PostListItemBody from '@/components/PostListItemBody.vue';
 import type Post from '@/types/Post.ts';
 import { useUserStore } from '@/stores/UserStore';
-import { RouteName } from '@/enums/RouteName';
 
 const { getUserById } = useUserStore();
 
