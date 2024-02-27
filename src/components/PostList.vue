@@ -1,43 +1,8 @@
 <template>
   <div class="post-list">
     <div class="post" v-for="post in posts" :key="post.id">
-      <div class="user-info">
-        <router-link
-          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
-          class="user-name"
-          >{{ userById(post.userId).name }}</router-link
-        >
-
-        <router-link
-          :to="{ name: RouteName.UserShow, params: { id: post.userId } }"
-        >
-          <img
-            class="avatar-large"
-            :src="userById(post.userId).avatar"
-            :alt="userById(post.userId).name"
-          />
-        </router-link>
-
-        <p class="desktop-only text-small">
-          {{ userById(post.userId).postsCount }} post{{
-            userById(post.userId).postsCount > 1 ? "s" : ""
-          }}
-        </p>
-        <p class="desktop-only text-small">
-          {{ userById(post.userId).threadsCount }} thread{{
-            userById(post.userId).threadsCount > 1 ? "s" : ""
-          }}
-        </p>
-      </div>
-
-      <div class="post-content">
-        <div>
-          <p>
-            {{ post.text }}
-          </p>
-        </div>
-      </div>
-
+      <post-list-item-user :user="userById(post.userId)" />
+      <post-list-item-body :body="post.text" />
       <div class="post-date text-faded">
         <app-date :timestamp="post.publishedAt" />
       </div>
@@ -46,18 +11,14 @@
 </template>
 
 <script>
-import { useRouteName } from "@/helpers/routeNameEnum";
-/* eslint-disable */
-const { RouteName } = useRouteName();
-/* eslint-enable */
-
+import PostListItemBody from "@/components/PostListItemBody.vue";
+import PostListItemUser from "@/components/PostListItemUser.vue";
 export default {
-  props: { posts: { required: true, type: Array } },
-  data() {
-    return {
-      RouteName,
-    };
+  components: {
+    PostListItemBody,
+    PostListItemUser,
   },
+  props: { posts: { required: true, type: Array } },
   methods: {
     userById(userId) {
       const match = this.$store.getters.getUser(userId);
