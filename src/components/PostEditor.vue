@@ -34,7 +34,7 @@ export default {
       return this.newPostText;
     },
     buttonText() {
-      return !this.postIsEdited ? "Submit post" : "Edit post";
+      return !this.postIsEdited ? "Submit post" : "Update post";
     },
   },
   methods: {
