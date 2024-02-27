@@ -169,7 +169,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     threadRequest: ThreadCreateRequest,
     thread: Thread
   ) => {
-    console.log('createThreadAddRelated', thread);
+    //console.log('createThreadAddRelated', thread);
 
     useForumStore().appendThreadToForum({
       threadId: thread.id!,

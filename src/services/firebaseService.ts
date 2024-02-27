@@ -16,7 +16,7 @@ import //getFirestore,
 export default function firebaseService() {
   const getServerTimeStamp = () => {
     const value = Timestamp.fromDate(new Date());
-    console.log('getServerTimeStamp', value);
+    //console.log('getServerTimeStamp', value);
     return value;
   };
 

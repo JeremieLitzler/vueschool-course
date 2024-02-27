@@ -70,7 +70,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     targetStore,
     collection,
   }: GenericFetchRequestAll<T>): Promise<T[]> => {
-    console.log(`store has ${targetStore.value.length} items`);
+    //console.log(`store has ${targetStore.value.length} items`);
 
     if (targetStore.value.length > 0) {
       console.log(`🍍 found categories in store 🍍`);
@@ -78,7 +78,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
         resolve(targetStore.value);
       });
     }
-    console.log(`🚨 fetching categories from firestore 🚨`);
+    //console.log(`🚨 fetching categories from firestore 🚨`);
     return new Promise((resolve) => {
       useFirebase()
         .getDocs(useFirebase().collection(useFirebase().db, collection))

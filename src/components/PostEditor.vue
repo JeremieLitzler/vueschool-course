@@ -24,7 +24,7 @@ import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
 
 const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
-  sourcePost: undefined,
+  sourcePost: null,
 });
 
 const emits = defineEmits<{
@@ -36,7 +36,7 @@ console.log('props > sourcePost', sourcePost);
 
 const newPostText = ref(sourcePost?.text ?? null);
 const postIsEdited = computed(() => {
-  const result = sourcePost !== undefined;
+  const result = sourcePost !== null;
   console.log('postIsEdited computed', result);
 
   return result;

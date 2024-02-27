@@ -59,7 +59,7 @@ export const usePostStore = defineStore('PostStore', () => {
     });
   };
   const addPost = async (post: PostAddRequest) => {
-    console.log('calling addPost in PostStore', post);
+    //console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
     postFirebaseRequest.publishedAt = firebaseService().getServerTimeStamp();
     postFirebaseRequest.userId = useUserStore().getAuthUser().id!;
@@ -79,7 +79,7 @@ export const usePostStore = defineStore('PostStore', () => {
         contributors: useFirebase().arrayUnion(useUserStore().authId),
       })
       .commit();
-    console.log('addPost < postRef', postRef);
+    //console.log('addPost < postRef', postRef);
 
     const newPostRef = await useFirebase().getDoc(postRef);
     const newPost = { ...newPostRef.data(), id: postRef.id };
@@ -88,7 +88,7 @@ export const usePostStore = defineStore('PostStore', () => {
   };
 
   const updatePost = async (request: PostUpdateRequest) => {
-    console.log('updatePost > request ', request);
+    //console.log('updatePost > request ', request);
     const postRef = useFirebase().doc(useFirebase().db, 'posts', request.id);
     await useFirebase()
       .writeBatch(useFirebase().db)

@@ -25,7 +25,7 @@ export const useUserStore = defineStore('UserStore', () => {
         return user.threads?.length || 0;
       },
     };
-    console.log('fetchUser > hydratedUser ', hydratedUser);
+    // console.log('fetchUser > hydratedUser ', hydratedUser);
     return hydratedUser;
   };
   const getUserById = (userId: string | undefined): GetUserExtended => {
