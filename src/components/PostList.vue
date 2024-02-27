@@ -2,7 +2,7 @@
   <div class="post-list">
     <div class="post" v-for="post in posts" :key="post.id">
       <post-list-item-user :user="userById(post.userId)" />
-      <post-list-item-body :body="post.text" />
+      <post-list-item-body :post="post" />
       <div class="post-date text-faded">
         <app-date :timestamp="post.publishedAt" />
       </div>
@@ -299,4 +299,3 @@ export default {
   flex: 1 1 83%;
 }
 </style>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

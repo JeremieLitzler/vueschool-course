@@ -1,26 +1,53 @@
 <template>
   <div class="post-content">
     <a
+      @click.prevent="toggleEditMode(post.id)"
       href="#"
       style="margin-left: auto"
       class="link-unstyled"
       title="Make a change"
-      ><i>Edit</i></a
+      ><i>{{ linkText }}</i></a
     >
     <div>
-      <p>
-        {{ body }}
+      <post-editor
+        v-if="postEdited === post.id"
+        :post="post"
+        @update-post="savePost"
+      />
+      <p v-else>
+        {{ post.text }}
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import PostEditor from "./PostEditor.vue";
 export default {
+  components: { PostEditor },
   props: {
-    body: {
-      type: String,
+    post: {
+      type: Object,
       required: true,
+    },
+  },
+  data() {
+    return {
+      postEdited: null,
+    };
+  },
+  computed: {
+    linkText() {
+      return this.postEdited === this.post.id ? "Cancel" : "Edit";
+    },
+  },
+  methods: {
+    toggleEditMode(postId) {
+      this.postEdited = postId === this.postEdited ? null : postId;
+    },
+    savePost({ post }) {
+      this.$store.dispatch("updatePost", { ...post, id: this.post.id });
+      this.postEdited = null;
     },
   },
 };

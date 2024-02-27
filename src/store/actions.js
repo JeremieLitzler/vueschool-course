@@ -165,19 +165,21 @@ export default {
       })
       .commit();
 
-    const newThread = await getDoc(threadRef);
-    const newPost = await getDoc(postRef);
+    const newThread = useFirebaseHelper().docToResource(
+      await getDoc(threadRef)
+    );
+    const newPost = useFirebaseHelper().docToResource(await getDoc(postRef));
 
     commit("setItem", {
       source: "threads",
-      item: { ...newThread.data(), id: newThread.id },
+      item: newThread,
     });
     commit("setItem", {
       source: "posts",
-      item: { ...newPost.data(), id: newPost.id },
+      item: newPost,
     });
 
-    return useFirebaseHelper().docToResource(thread);
+    return newThread;
   },
   //posts
   fetchPost({ dispatch }, { id }) {
@@ -221,18 +223,17 @@ export default {
 
     return post;
   },
-  async updatePost({ commit, getters }, { id, body }) {
-    //console.log("updatePost > id ", id);
-    const post = getters.getPostById(id);
-    //console.log("updatePost > post ", post);
-    const updatedPost = { ...post, text: body };
-
+  async updatePost({ commit }, { id, text }) {
     const postRef = doc(db, "posts", id);
     await writeBatch(db)
       .update(postRef, {
-        ...updatedPost,
+        text,
       })
       .commit();
+
+    const updatedPost = useFirebaseHelper().docToResource(
+      await getDoc(postRef)
+    );
     //console.log("updatePost > updatedPost ", updatedPost);
     commit("setItem", { source: "posts", item: updatedPost });
   },

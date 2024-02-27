@@ -10,7 +10,7 @@
         />
       </div>
       <div class="form-actions">
-        <button class="btn-blue">Submit post</button>
+        <button class="btn-blue">{{ buttonText }}</button>
       </div>
     </form>
   </div>
@@ -19,24 +19,36 @@
 <script>
 export default {
   props: {
-    threadId: {
-      type: String,
-      required: true,
+    post: {
+      type: Object,
+      default: () => ({ text: "" }),
     },
   },
   data() {
     return {
-      newPostText: "",
+      newPostText: this.post?.text ?? null,
     };
+  },
+  computed: {
+    postIsEdited() {
+      return this.newPostText;
+    },
+    buttonText() {
+      return !this.postIsEdited ? "Submit post" : "Edit post";
+    },
   },
   methods: {
     addPost() {
       const post = {
         text: this.newPostText,
-        threadId: this.threadId,
+        threadId: this.post.threadId,
       };
-      this.$emit("add-post", { post });
-      this.newPostText = "";
+      if (this.postIsEdited) {
+        this.$emit("update-post", { post });
+      } else {
+        this.$emit("add-post", { post });
+      }
+      this.newPostText = null;
     },
   },
 };
