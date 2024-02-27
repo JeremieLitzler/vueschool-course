@@ -1,6 +1,6 @@
 <template>
   <div class="col-full">
-    <form @submit.prevent="addPost">
+    <form @submit.prevent="savePost">
       <div class="form-group">
         <textarea
           v-model="newPostText"
@@ -19,6 +19,10 @@
 <script>
 export default {
   props: {
+    threadId: {
+      type: String,
+      default: null,
+    },
     post: {
       type: Object,
       default: () => ({ text: "" }),
@@ -31,22 +35,21 @@ export default {
   },
   computed: {
     postIsEdited() {
-      return this.newPostText;
+      return this.post?.text;
     },
     buttonText() {
       return !this.postIsEdited ? "Submit post" : "Update post";
     },
   },
   methods: {
-    addPost() {
-      const post = {
-        text: this.newPostText,
-        threadId: this.post.threadId,
-      };
+    savePost() {
       if (this.postIsEdited) {
-        this.$emit("update-post", { post });
+        this.$emit("update-post", { text: this.newPostText, id: this.post.id });
       } else {
-        this.$emit("add-post", { post });
+        this.$emit("add-post", {
+          text: this.newPostText,
+          threadId: this.threadId,
+        });
       }
       this.newPostText = null;
     },

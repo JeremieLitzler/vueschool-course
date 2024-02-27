@@ -35,11 +35,6 @@
 </template>
 
 <script>
-// import { initializeApp } from "firebase/app";
-// import { firebaseConfig } from "@/config/firebase";
-// import { getFirestore, doc, onSnapshot } from "firebase/firestore";
-// const firebaseApp = initializeApp(firebaseConfig);
-
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
@@ -79,8 +74,8 @@ export default {
     },
   },
   methods: {
-    savePost({ post }) {
-      this.$store.dispatch("createPost", post);
+    savePost(payload) {
+      this.$store.dispatch("createPost", { ...payload });
     },
   },
   async created() {

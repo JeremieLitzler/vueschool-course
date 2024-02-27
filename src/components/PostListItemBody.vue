@@ -45,8 +45,8 @@ export default {
     toggleEditMode(postId) {
       this.postEdited = postId === this.postEdited ? null : postId;
     },
-    savePost({ post }) {
-      this.$store.dispatch("updatePost", { ...post, id: this.post.id });
+    savePost(payload) {
+      this.$store.dispatch("updatePost", { ...payload });
       this.postEdited = null;
     },
   },

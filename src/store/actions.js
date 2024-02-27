@@ -189,6 +189,7 @@ export default {
     return dispatch("fetchItems", { source: "posts", ids });
   },
   async createPost({ state, commit, getters }, post) {
+    console.log("'createPost > post", post);
     post.publishedAt = firebaseService().getServerTimeStamp();
     console.log("createPost > post.publishedAt", post.publishedAt);
     post.userId = getters.authUser.id;
