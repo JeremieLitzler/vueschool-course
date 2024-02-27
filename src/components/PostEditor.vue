@@ -36,7 +36,7 @@ export default {
   computed: {
     postIsEdited() {
       const result = this.post?.text !== null;
-      console.log("postIsEdited > ", result);
+      //console.log("postIsEdited > ", result);
       return result;
     },
     buttonText() {
@@ -57,7 +57,7 @@ export default {
     },
   },
   created() {
-    console.log("loading PostEditor... with post =", this.post);
+    //console.log("loading PostEditor... with post =", this.post);
   },
 };
 </script>
