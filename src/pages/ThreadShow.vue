@@ -85,9 +85,9 @@ export default {
       id: thread.userId,
     });
 
-    console.log("ThreadShow > created > thread", thread);
-    console.log("ThreadShow > created > thread.value", thread.value);
-    console.log("ThreadShow > created > postIds", thread.posts);
+    //console.log("ThreadShow > created > thread", thread);
+    //console.log("ThreadShow > created > thread.value", thread.value);
+    //console.log("ThreadShow > created > postIds", thread.posts);
     const posts = await this.$store.dispatch("fetchPosts", {
       ids: thread.posts,
     });

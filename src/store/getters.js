@@ -6,7 +6,7 @@ export default {
   //users
   getUser: (state, getters) => (userId) => {
     const user = findById(state.users, userId);
-    console.log("getUser > id", userId, user);
+    //console.log("getUser > id", userId, user);
     return getters.hydrateUser(user);
   },
   authUser: (state, getters) => {
@@ -22,7 +22,7 @@ export default {
         return user.threads?.length || 0;
       },
     };
-    console.log("fetchUser > hydratedUser ", hydratedUser);
+    // console.log("fetchUser > hydratedUser ", hydratedUser);
     return hydratedUser;
   },
   //categories

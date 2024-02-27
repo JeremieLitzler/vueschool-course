@@ -28,17 +28,17 @@ const tempFileName = `${__dirname}/data-temp.json`;
 // JSON To Firestore
 async function jsonToFirestore() {
   try {
-    console.log("Initialzing Firebase");
+    //console.log("Initialzing Firebase");
     const firestore = await initializeFirebaseApp(
       serviceAccount,
       firebaseConfig.databaseURL
     );
-    console.log("Firebase Initialized");
+    //console.log("Firebase Initialized");
 
     await restore(firestore, tempFileName);
-    console.log("Upload Success");
+    //console.log("Upload Success");
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 

@@ -1,5 +1,5 @@
 const setResource = (resources, resource) => {
-  console.log(`resources: ${resources} > ressource`, resource);
+  //console.log(`resources: ${resources} > ressource`, resource);
   const index = resources.findIndex((element) => element.id === resource.id);
   //console.log("resource", resource);
   if (resource.id && index !== -1) {

@@ -6,15 +6,11 @@ const { setResource } = useArrayUpdateHelper();
 
 const appendChildToParentMutation = ({ parent, child }) => {
   return (state, { childId, parentId }) => {
-    console.log(`appendChildToParentMutation > state`, state);
-    console.log(
-      `appendChildToParentMutation > with parent = ${parent} and child = ${child}`
-    );
-    console.log(
-      `appendChildToParentMutation > with parentId = ${parentId} and childId = ${childId}`
-    );
+    //console.log(`appendChildToParentMutation > state`, state);
+    //console.log(`appendChildToParentMutation > with parent = ${parent} and child = ${child}`);
+    //console.log(`appendChildToParentMutation > with parentId = ${parentId} and childId = ${childId}`);
     const resource = findById(state[parent], parentId);
-    console.log(`appendChildToParentMutation > resource`, resource);
+    //console.log(`appendChildToParentMutation > resource`, resource);
     resource[child] = resource[child] || [];
     if (!resource[child].includes(childId)) {
       resource[child].push(childId);
@@ -26,10 +22,10 @@ export default {
     state.fetching = !state.fetching;
   },
   setItem(state, { source, item }) {
-    console.log("state + source", state, source);
-    console.log("state[source]", state[source]);
+    //console.log("state + source", state, source);
+    //console.log("state[source]", state[source]);
     setResource(state[source], useFirebaseHelper().docToResource(item));
-    console.log(`set item in ${source}`, item);
+    //console.log(`set item in ${source}`, item);
   },
   //users
   appendThreadToUser: appendChildToParentMutation({

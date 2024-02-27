@@ -22,13 +22,13 @@ const db = getFirestore(firebaseApp);
 
 export default {
   fetchSomething({ state, commit }) {
-    console.log("fetching is", state.fetching);
+    //console.log("fetching is", state.fetching);
     commit("setFetching");
   },
   fetchItem({ state, commit }, { source, id }) {
     const item = findById(state[source], id);
     if (item) {
-      console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
+      // console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
       return new Promise((resolve) => {
         resolve(item);
       });
@@ -36,14 +36,14 @@ export default {
 
     return new Promise((resolve) => {
       //console.log(`🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`);
-      console.log(`🚨 fetching a item on firebase 🚨`);
+      // console.log(`🚨 fetching a item on firebase 🚨`);
       onSnapshot(doc(db, source, id), (responseDoc) => {
         //console.log("from firestore > responseDoc: ", responseDoc);
         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
         const item = { ...responseDoc.data(), id: responseDoc.id };
         //console.log(`got from firestore > in ${source}:`, item);
-        console.log(`got item from firestore`);
+        // console.log(`got item from firestore`);
         commit("setItem", { source, item });
         resolve(item);
       });
@@ -59,7 +59,7 @@ export default {
   },
   async fetchUser({ dispatch }, { id }) {
     const user = await dispatch("fetchItem", { source: "users", id });
-    console.log("fetchUser > id ", user, id);
+    //console.log("fetchUser > id ", user, id);
     return user;
   },
   fetchUsers({ dispatch }, { ids }) {
@@ -79,7 +79,7 @@ export default {
         resolve(state.categories);
       });
     }
-    console.log(`🚨 fetching categories from firestore 🚨`);
+    //console.log(`🚨 fetching categories from firestore 🚨`);
     return new Promise((resolve) => {
       const collectionName = "categories";
       getDocs(collection(db, collectionName)).then((querySnapshot) => {
@@ -110,7 +110,7 @@ export default {
     return dispatch("fetchItem", { source: "threads", id });
   },
   fetchThreads({ dispatch }, { ids }) {
-    console.log(`fetchItem > getting`, ids);
+    //console.log(`fetchItem > getting`, ids);
     return dispatch("fetchItems", { source: "threads", ids });
   },
   async createThread({ commit, dispatch, getters }, { title, body, forumId }) {
@@ -152,7 +152,7 @@ export default {
   async updateThread({ commit, getters }, { title, body, id }) {
     //console.log("updatedThread > id ", id);
     const thread = getters.threadById(id);
-    console.log("updateThread > thread", thread);
+    //console.log("updateThread > thread", thread);
     const threadRef = doc(db, "threads", thread.id);
     const postRef = doc(db, "posts", thread.posts[0]);
     await writeBatch(db)
@@ -189,9 +189,9 @@ export default {
     return dispatch("fetchItems", { source: "posts", ids });
   },
   async createPost({ state, commit, getters }, post) {
-    console.log("'createPost > post", post);
+    //console.log("'createPost > post", post);
     post.publishedAt = firebaseService().getServerTimeStamp();
-    console.log("createPost > post.publishedAt", post.publishedAt);
+    //console.log("createPost > post.publishedAt", post.publishedAt);
     post.userId = getters.authUser.id;
 
     const postRef = doc(collection(db, "posts"));

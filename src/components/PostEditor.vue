@@ -25,7 +25,7 @@ export default {
     },
     post: {
       type: Object,
-      default: () => ({ text: "" }),
+      default: () => ({ text: null }),
     },
   },
   data() {
@@ -35,7 +35,9 @@ export default {
   },
   computed: {
     postIsEdited() {
-      return this.post?.text;
+      const result = this.post?.text !== null;
+      console.log("postIsEdited > ", result);
+      return result;
     },
     buttonText() {
       return !this.postIsEdited ? "Submit post" : "Update post";
@@ -53,6 +55,9 @@ export default {
       }
       this.newPostText = null;
     },
+  },
+  created() {
+    console.log("loading PostEditor... with post =", this.post);
   },
 };
 </script>

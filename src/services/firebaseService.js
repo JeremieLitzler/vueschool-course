@@ -17,7 +17,7 @@ const db = getFirestore(firebaseApp);
 export default function firebaseService() {
   const getServerTimeStamp = () => {
     const value = serverTimestamp();
-    console.log("getServerTimeStamp", value);
+    //console.log("getServerTimeStamp", value);
     return value;
   };
   const fetchItem = ({ source, id, commit }) => {
@@ -39,9 +39,9 @@ export default function firebaseService() {
 
   const addThread = async ({ thread }) => {
     const threadRef = doc(collection(db, "threads"));
-    console.log("addThread > forumId", thread.forumId);
+    //console.log("addThread > forumId", thread.forumId);
     const forumRef = doc(db, "forums", thread.forumId);
-    console.log("addThread > forumRef", forumRef);
+    //console.log("addThread > forumRef", forumRef);
     await writeBatch(db)
       .set(threadRef, thread)
       .update(forumRef, {
@@ -50,15 +50,15 @@ export default function firebaseService() {
       .commit();
 
     const newThread = await getDoc(threadRef);
-    console.log("addThread > newThread", newThread);
+    //console.log("addThread > newThread", newThread);
     return { id: threadRef.id, newThread: newThread.data() };
   };
 
   const addPost = async ({ post, userAuthId }) => {
     const postRef = doc(collection(db, "posts"));
-    console.log("addPost > threadId", post.threadId);
+    //console.log("addPost > threadId", post.threadId);
     const threadRef = doc(db, "threads", post.threadId);
-    console.log("addPost > threadRef", threadRef);
+    //console.log("addPost > threadRef", threadRef);
 
     await writeBatch(db)
       .set(postRef, post)
@@ -69,7 +69,7 @@ export default function firebaseService() {
       .commit();
 
     const newPost = await getDoc(postRef);
-    console.log("addPost > newPost", newPost);
+    //console.log("addPost > newPost", newPost);
     return { id: postRef.id, newPost: newPost.data() };
   };
 
