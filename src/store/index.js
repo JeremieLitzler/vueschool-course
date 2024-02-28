@@ -7,11 +7,12 @@ export default createStore({
   state: {
     users: [],
     categories: [],
+    calledFetchAllCategories: false,
     forums: [],
     threads: [],
     posts: [],
     authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2",
-    fetching: false,
+    appIsReady: false,
     firestoreUnsubscribes: [],
   },
   getters,

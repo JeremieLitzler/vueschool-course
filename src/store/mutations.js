@@ -18,8 +18,8 @@ const appendChildToParentMutation = ({ parent, child }) => {
   };
 };
 export default {
-  setFetching(state) {
-    state.fetching = !state.fetching;
+  setAppIsReady(state) {
+    state.appIsReady = true;
   },
   setItem(state, { source, item }) {
     //console.log("state + source", state, source);
@@ -58,5 +58,8 @@ export default {
   resetFirestoreUnsubs(state) {
     state.firestoreUnsubscribes.splice(0, state.firestoreUnsubscribes.length);
     //console.log("called resetFirestoreUnsubs");
+  },
+  setCalledFetchAllCategories(state) {
+    state.calledFetchAllCategories = true;
   },
 };

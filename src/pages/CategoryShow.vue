@@ -44,7 +44,7 @@ export default {
   },
   async beforeCreate() {
     //console.log("CategoryShow > created > categoryId >", this.id);
-    //this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("notifyAppIsReady");
     const category = await this.$store.dispatch("fetchCategory", {
       id: this.$route.params.id,
     });
@@ -53,7 +53,7 @@ export default {
       ids: category.forums,
     });
 
-    //this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("notifyAppIsReady");
   },
 };
 </script>

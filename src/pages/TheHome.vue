@@ -1,5 +1,8 @@
 <template>
-  <section v-if="$store.getters.isFetching" class="loading">Loading...</section>
+  <app-loading-state
+    v-if="!$store.getters.isAppIsReady"
+    message="Loading the forums... Please wait ⌛"
+  />
   <section v-else>
     <h1 class="push-top">Welcome to the forum</h1>
     <CategoryList :categories="categories" />
@@ -19,7 +22,6 @@ export default {
     },
   },
   async beforeCreate() {
-    //this.$store.dispatch("fetchSomething");
     const categories = await this.$store.dispatch("fetchAllCategories");
     const forumIds = categories.flatMap(({ forums }) => forums);
     //console.log("categories > forums", forumIds);
@@ -27,9 +29,7 @@ export default {
       ids: forumIds,
     });
 
-    //this.$store.dispatch("fetchSomething");
+    this.$store.dispatch("notifyAppIsReady");
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -21,9 +21,9 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 export default {
-  fetchSomething({ /*state*/ commit }) {
+  notifyAppIsReady({ commit }) {
     //console.log("fetching is", state.fetching);
-    commit("setFetching");
+    commit("setAppIsReady");
     //console.log("fetching became", state.fetching);
   },
   async runAndResetFirestoreUnsubs({ state, commit }) {
@@ -79,7 +79,7 @@ export default {
     return dispatch("fetchItem", { source: "categories", id });
   },
   fetchAllCategories({ state, commit }) {
-    if (state.categories.length > 0) {
+    if (state.categories.length > 0 && state.calledFetchAllCategories) {
       console.log(`🍍 found categories in store 🍍`);
       return new Promise((resolve) => {
         resolve(state.categories);
@@ -100,6 +100,7 @@ export default {
         });
         //console.log(`got from firestore > in ${collectionName}:`, categories);
 
+        commit("setCalledFetchAllCategories");
         resolve(categories);
       });
     });

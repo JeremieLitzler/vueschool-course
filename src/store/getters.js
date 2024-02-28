@@ -2,7 +2,7 @@ import useArraySearchHelper from "@/helpers/arraySearchHelper";
 const { findById, findManyByProp } = useArraySearchHelper();
 
 export default {
-  isFetching: (state) => state.fetching,
+  isAppIsReady: (state) => state.appIsReady,
   //users
   getUser: (state, getters) => (userId) => {
     const user = findById(state.users, userId);
