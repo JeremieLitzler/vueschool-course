@@ -111,22 +111,15 @@ export const useCommonStore = defineStore('CommonStore', () => {
     id,
     collection,
   }: GenericFetchRequest<T>): Promise<T> => {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       console.log(
         `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
       );
-      useFirebase().onSnapshot(
-        useFirebase().doc(useFirebase().db, collection, id),
-        (responseDoc) => {
-          //console.log("from firestore > responseDoc: ", responseDoc);
-          //console.log("from firestore > responseDoc.data: ", responseDoc.data());
-          //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-          const item = { ...responseDoc.data(), id: responseDoc.id };
-          // console.log(`returned from firestore > from ${collection}:`, item);
-          _setItem({ targetStore: targetStore, item });
-          resolve(item as T);
-        }
-      );
+      const itemRef = useFirebase().doc(useFirebase().db, collection, id);
+      const item = await useFirebase().getDoc(itemRef);
+      const result = { ...item.data(), id: item.id } as T;
+      _setItem({ targetStore: targetStore, item: result });
+      resolve(result);
     });
   };
   /**
