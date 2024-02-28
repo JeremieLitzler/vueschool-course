@@ -7,7 +7,7 @@
     </p>
     <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
   </div>
-  <div v-else class="col-large push-top">
+  <div v-else class="col-large push-top" :title="`Thread ID: ${thread.id}`">
     <router-link
       :to="{ name: RouteName.ForumShow, params: { id: thread?.forumId } }"
       >⬅️ Back to Forum</router-link

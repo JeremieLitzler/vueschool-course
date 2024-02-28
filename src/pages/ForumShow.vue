@@ -11,7 +11,7 @@
       :to="{ name: RouteName.CategoryShow, params: { id: forum.categoryId } }"
       >⬅️ Back to the Category</router-link
     >
-    <div class="forum-header">
+    <div class="forum-header" :title="`ID: ${forum.id}`">
       <div class="forum-details">
         <h1>{{ forum.name }}</h1>
         <p class="text-lead">{{ forum.description }}</p>
