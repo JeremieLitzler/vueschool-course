@@ -51,9 +51,12 @@ export default {
     child: "contributors",
   }),
   appendUnsubscribe(state, { unsubscribe }) {
+    console.log("calling appendUnsubscribe");
     state.firestoreUnsubscribes.push(unsubscribe);
+    console.log("called appendUnsubscribe");
   },
   resetFirestoreUnsubs(state) {
     state.firestoreUnsubscribes.splice(0, state.firestoreUnsubscribes.length);
+    console.log("called resetFirestoreUnsubs");
   },
 };

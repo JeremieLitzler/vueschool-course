@@ -21,9 +21,10 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 export default {
-  fetchSomething({ commit }) {
+  fetchSomething({ /*state*/ commit }) {
     //console.log("fetching is", state.fetching);
     commit("setFetching");
+    //console.log("fetching became", state.fetching);
   },
   async runAndResetFirestoreUnsubs({ state, commit }) {
     state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());

@@ -19,7 +19,7 @@ export default {
     },
   },
   async beforeCreate() {
-    this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("fetchSomething");
     const categories = await this.$store.dispatch("fetchAllCategories");
     const forumIds = categories.flatMap(({ forums }) => forums);
     //console.log("categories > forums", forumIds);
@@ -27,7 +27,7 @@ export default {
       ids: forumIds,
     });
 
-    this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("fetchSomething");
   },
 };
 </script>

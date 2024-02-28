@@ -11,9 +11,9 @@ export default {
   name: "App",
   components: { TheHeader },
   async beforeCreate() {
-    this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("fetchSomething");
     await this.$store.dispatch("fetchAuthUser");
-    this.$store.dispatch("fetchSomething");
+    //this.$store.dispatch("fetchSomething");
   },
   created() {
     //console.log("App.vue > Called created");
