@@ -235,6 +235,7 @@ const router = createRouter({
 
 router.beforeEach(() => {
   store.dispatch("runAndResetFirestoreUnsubs");
+  store.dispatch("resetAppIsReady");
 });
 
 export default router;

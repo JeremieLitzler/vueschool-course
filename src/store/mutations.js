@@ -18,8 +18,8 @@ const appendChildToParentMutation = ({ parent, child }) => {
   };
 };
 export default {
-  setAppIsReady(state) {
-    state.appIsReady = true;
+  setAppIsReady(state, { ready }) {
+    state.appIsReady = ready;
   },
   setItem(state, { source, item }) {
     //console.log("state + source", state, source);

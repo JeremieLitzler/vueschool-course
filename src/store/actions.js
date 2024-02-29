@@ -23,8 +23,11 @@ const db = getFirestore(firebaseApp);
 export default {
   notifyAppIsReady({ commit }) {
     //console.log("fetching is", state.fetching);
-    commit("setAppIsReady");
+    commit("setAppIsReady", { ready: true });
     //console.log("fetching became", state.fetching);
+  },
+  resetAppIsReady({ commit }) {
+    commit("setAppIsReady", { ready: false });
   },
   async runAndResetFirestoreUnsubs({ state, commit }) {
     state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());

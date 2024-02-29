@@ -1442,7 +1442,7 @@
       ]
     },
     {
-      "avatar": "/batman-pikachu.png",
+      "avatar": "https://vueschool-masterclass-vuecli.netlify.app/img/batman-pikachu.png",
       "bio": "I'm Batman!",
       "email": "man@batmail.com",
       "lastVisitAt": 1599978791,
