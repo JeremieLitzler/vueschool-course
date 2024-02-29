@@ -122,21 +122,24 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup async lang="ts">
 import { computed } from 'vue';
 import PostList from '@/components/PostList.vue';
 import { useUserStore } from '@/stores/UserStore';
+import { useCommonStore } from '@/stores/CommonStore';
 import UserProfileCard from '@/components/UserProfileCard.vue';
 import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 
 const props = defineProps<{ id?: string; edit?: boolean }>();
-const { getUserById, getAuthUser } = useUserStore();
+
 const user = computed(() => {
   //console.log('getting user in UserShow > ', props.id);
 
   if (props.id) {
-    return getUserById(props.id);
+    return useUserStore().getUserById(props.id);
   }
-  return getAuthUser();
+  return useUserStore().getAuthUser();
 });
+await useUserStore().fetchUser(props.id!);
+useCommonStore().updateFetching();
 </script>

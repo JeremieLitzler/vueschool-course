@@ -1,15 +1,17 @@
 <template>
-  <suspense>
-    <template #fallback>
-      <section class="loading">Loading...</section>
-    </template>
-    <template #default>
-      <section>
-        <the-header />
-        <div class="container"><router-view /></div>
-      </section>
-    </template>
-  </suspense>
+  <div class="container">
+    <suspense>
+      <template #fallback>
+        <section class="loading"><app-spinner /></section>
+      </template>
+      <template #default>
+        <section>
+          <the-header />
+          <router-view />
+        </section>
+      </template>
+    </suspense>
+  </div>
 </template>
 <script setup lang="ts">
 // import { computed } from 'vue';
@@ -20,4 +22,10 @@ import TheHeader from '@/components/TheHeader.vue';
 // const fetchingSomething = computed(() => useCommonStore().fetching);
 </script>
 
-<style scoped></style>
+<style scoped>
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

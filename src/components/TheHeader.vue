@@ -10,7 +10,6 @@
       <div class="middle bar"></div>
       <div class="bottom bar"></div>
     </div>
-
     <the-nav-bar />
   </header>
 </template>
