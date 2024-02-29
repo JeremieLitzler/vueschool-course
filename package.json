@@ -6,7 +6,7 @@
     "dev": "vue-cli-service serve --port 8080",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "db:seed": "firebase firestore:delete --all-collections --yes && node firestoreImport.js"
+    "db:seed": "firebase firestore:delete --all-collections --force && node firestoreImport.js"
   },
   "dependencies": {
     "core-js": "^3.8.3",
