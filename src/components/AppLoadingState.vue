@@ -1,6 +1,6 @@
 <template>
   <section class="loading">
-    {{ message }}
+    <app-spinner />
   </section>
 </template>
 

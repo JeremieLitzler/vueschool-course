@@ -1,8 +1,5 @@
 <template>
-  <app-loading-state
-    v-if="!$store.getters.isAppIsReady"
-    message="Loading the forum... Please wait ⌛"
-  />
+  <app-loading-state v-if="!$store.getters.isAppIsReady" />
   <section v-else>
     <div class="col-full push-top">
       <!-- <ul class="breadcrumbs">
@@ -95,4 +92,3 @@ export default {
 </script>
 
 <style lang="scss" scoped></style>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

@@ -1,5 +1,6 @@
 <template>
-  <div class="flex-grid">
+  <app-loading-state v-if="!$store.getters.isAppIsReady" />
+  <div v-else class="flex-grid">
     <div class="col-3 push-top">
       <user-profile-card v-if="!edit" :user="user" />
       <user-profile-card-editor v-else :user="user" />
@@ -158,13 +159,15 @@ export default {
       return this.$store.getters.threadsByUserId(this.user.id);
     },
   },
-  async beforeCreate() {
+  async created() {
     //get the authUser
     //const user =
-    await this.$store.dispatch("fetchAuthUser");
+    await this.$store.dispatch("fetchUser", { id: this.id });
     //get the posts
 
     //get the threads
+
+    this.$store.dispatch("notifyAppIsReady");
   },
 };
 </script>

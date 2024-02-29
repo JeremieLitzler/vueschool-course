@@ -47,7 +47,7 @@ a,
 }
 
 .loading {
-  text-align: center;
-  font-size: large;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

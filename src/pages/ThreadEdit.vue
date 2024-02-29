@@ -53,8 +53,8 @@ export default {
     },
     returnToForum() {
       this.$router.push({
-        name: RouteName.ForumShow,
-        params: { id: this.forum.id },
+        name: RouteName.ThreadShow,
+        params: { id: this.thread.id },
       });
     },
   },

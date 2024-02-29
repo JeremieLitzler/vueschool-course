@@ -10,13 +10,8 @@ import TheHeader from "@/components/TheHeader.vue";
 export default {
   name: "App",
   components: { TheHeader },
-  async beforeCreate() {
+  async created() {
     //this.$store.dispatch("notifyAppIsReady");
-    await this.$store.dispatch("fetchAuthUser");
-    //this.$store.dispatch("notifyAppIsReady");
-  },
-  created() {
-    //console.log("App.vue > Called created");
   },
   beforeMount() {
     //console.log("App.vue > Called beforeMount");

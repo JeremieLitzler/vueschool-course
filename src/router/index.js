@@ -233,8 +233,10 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(() => {
+router.beforeEach(async () => {
   store.dispatch("runAndResetFirestoreUnsubs");
+  await store.dispatch("fetchAuthUser");
+  //this.$store.dispatch("notifyAppIsReady");
   store.dispatch("resetAppIsReady");
 });
 

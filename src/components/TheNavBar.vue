@@ -9,6 +9,9 @@
             :src="authUser?.avatar"
             :alt="`${authUser?.name} profile picture`"
           />
+          <!-- <span style="color: aliceblue" v-if="$store.getters.isAppIsReady">
+            Connected user not loaded...</span
+          > -->
           <span>
             {{ authUser?.name }}
             <img
