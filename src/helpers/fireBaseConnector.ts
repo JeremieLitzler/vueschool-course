@@ -3,7 +3,6 @@ import { firebaseConfig } from '@/config/firebase';
 import {
   getFirestore,
   doc,
-  onSnapshot,
   getDoc,
   getDocs,
   collection,
@@ -17,7 +16,6 @@ export default function useFirebase() {
   return {
     db,
     doc,
-    onSnapshot,
     getDoc,
     getDocs,
     collection,
