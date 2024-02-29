@@ -1,13 +1,14 @@
 <template>
-  <div class="col-large push-top">
-    <router-link
-      :to="{ name: RouteName.ForumShow, params: { id: thread.forumId } }"
-      >⬅️ Back to Forum</router-link
-    >
-    <section v-if="$store.getters.isFetching" class="loading">
-      Loading...
-    </section>
-    <section v-else>
+  <app-loading-state
+    v-if="!$store.getters.isAppIsReady"
+    message="Loading the thread... Please wait ⌛"
+  />
+  <section v-else>
+    <div class="col-large push-top">
+      <router-link
+        :to="{ name: RouteName.ForumShow, params: { id: thread.forumId } }"
+        >⬅️ Back to Forum</router-link
+      >
       <h1 class="thread-title">
         {{ thread.title }}
         <router-link
@@ -30,8 +31,8 @@
       </section>
       <post-list :posts="threadPosts" />
       <post-editor :threadId="id" @add-post="savePost" />
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -61,7 +62,9 @@ export default {
   },
   computed: {
     posts() {
-      return this.$store.state.posts;
+      const posts = this.$store.state.posts;
+      //console.log("ThreadShow > computed > posts", posts);
+      return posts;
     },
     thread() {
       const match = this.$store.getters.threadById(this.id);
@@ -69,7 +72,7 @@ export default {
     },
     threadPosts() {
       const matches = this.posts.filter((post) => post.threadId === this.id);
-      //console.log("threadPosts", matches);
+      //console.log("ThreadShow > computed > threadPosts", matches);
       return matches;
     },
   },
@@ -79,25 +82,30 @@ export default {
     },
   },
   async created() {
-    this.$store.dispatch("fetchSomething");
-    const thread = await this.$store.dispatch("fetchThread", { id: this.id });
-    const firstUserPromise = this.$store.dispatch("fetchUser", {
-      id: thread.userId,
+    // console.log("ThreadShow > beforeCreate start");
+    // console.log(
+    //   "ThreadShow > beforeCreate > $route.params.id",
+    //   this.$route.params.id
+    // );
+    const thread = await this.$store.dispatch("fetchThread", {
+      id: this.$route.params.id,
     });
-
-    //console.log("ThreadShow > created > thread", thread);
-    //console.log("ThreadShow > created > thread.value", thread.value);
-    //console.log("ThreadShow > created > postIds", thread.posts);
+    // console.log("ThreadShow > thread", thread);
+    // await this.$store.dispatch("fetchUser", {
+    //   id: thread.userId,
+    // });
+    // console.log("ThreadShow > beforeCreate > postIds", thread.posts);
     const posts = await this.$store.dispatch("fetchPosts", {
       ids: thread.posts,
     });
+    // console.log("ThreadShow > beforeCreate > posts", posts);
     const users = posts.map((post) => post.userId);
-    const extraUserPromises = this.$store.dispatch("fetchUsers", {
+    await this.$store.dispatch("fetchUsers", {
       ids: users,
     });
+    // console.log("ThreadShow > beforeCreate > fetchUser called and done");
 
-    await Promise.all([extraUserPromises, firstUserPromise]);
-    this.$store.dispatch("fetchSomething");
+    this.$store.dispatch("notifyAppIsReady");
   },
 };
 </script>
