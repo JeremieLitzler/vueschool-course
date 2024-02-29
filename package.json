@@ -13,8 +13,8 @@
     "firebase": "^10.8.0",
     "pinia": "^2.1.7",
     "uuid": "^9.0.1",
-    "vue": "^3.3.11",
-    "vue-router": "^4.2.5"
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
