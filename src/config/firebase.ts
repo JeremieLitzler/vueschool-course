@@ -1,11 +1,11 @@
 const firebaseConfig = {
   //https://github.com/vitejs/vite/issues/1973
-  apiKey: import.meta.env.FIRESTORE_API_KEY,
-  authDomain: 'vueschool-forum-35ad5.firebaseapp.com',
-  projectId: 'vueschool-forum-35ad5',
-  storageBucket: 'vueschool-forum-35ad5.appspot.com',
-  messagingSenderId: '573844941700',
-  appId: '1:573844941700:web:ef74680e59414b9e754bd1',
+  apiKey: import.meta.env.VUE_APP_FIRESTORE_API_KEY,
+  authDomain: import.meta.env.VUE_APP_FIRESTORE_AUTH_DOMAIN,
+  projectId: import.meta.env.VUE_APP_FIRESTORE_PROJECT_ID,
+  storageBucket: import.meta.env.VUE_APP_FIRESTORE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VUE_APP_FIRESTORE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VUE_APP_FIRESTORE_APP_ID,
 };
 
 export { firebaseConfig };
