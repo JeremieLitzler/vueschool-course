@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.10",
-    "firebase": "^10.8.0",
+    "firebase": "^10.8.1",
     "pinia": "^2.1.7",
     "uuid": "^9.0.1",
     "vue": "^3.4.21",
