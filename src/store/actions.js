@@ -74,6 +74,25 @@ export default {
   fetchUsers({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "users", ids });
   },
+  async createUser({ commit }, { user }) {
+    user.email = user.email.toLowerCase();
+    const newUser = {
+      ...user,
+      bio: "",
+      postsCount: 0,
+      registeredAt: firebaseService().getServerTimeStamp(),
+      threads: [],
+      usernameLower: user.username.toLowerCase(),
+    };
+
+    const userRef = await doc(collection(db, "users"));
+    await writeBatch(db).set(userRef, newUser).commit();
+
+    const newUserDoc = useFirebaseHelper().docToResource(await getDoc(userRef));
+
+    commit("setItem", { source: "users", item: newUserDoc });
+    return newUserDoc;
+  },
   updateUser({ commit }, user) {
     commit("setItem", { source: "users", item: user });
   },

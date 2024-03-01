@@ -63,6 +63,11 @@
 </template>
 
 <script>
+import { useRouteName } from "@/helpers/routeNameEnum";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   data() {
     return {
@@ -76,8 +81,13 @@ export default {
     };
   },
   methods: {
-    register() {
-      console.log(this.form);
+    async register() {
+      console.log("Form>", this.form);
+      const user = await this.$store.dispatch("createUser", {
+        user: this.form,
+      });
+      console.log("Created user >", user);
+      this.$router.push({ name: RouteName.TheHome });
     },
   },
 };
