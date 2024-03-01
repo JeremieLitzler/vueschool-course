@@ -83,9 +83,12 @@ export default {
   methods: {
     async register() {
       console.log("Form>", this.form);
-      const user = await this.$store.dispatch("createUser", {
-        ...this.form,
-      });
+      const user = await this.$store.dispatch(
+        "registerUserWithEmailAndPassword",
+        {
+          ...this.form,
+        }
+      );
       console.log("Created user >", user);
       this.$router.push({ name: RouteName.TheHome });
     },

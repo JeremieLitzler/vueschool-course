@@ -17,6 +17,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 export default function firebaseService() {
+  const auth = getAuth(firebaseApp);
   const getServerTimeStamp = () => {
     const value = serverTimestamp();
     //console.log("getServerTimeStamp", value);
@@ -85,7 +86,6 @@ export default function firebaseService() {
   };
 
   const registerUser = async (user) => {
-    const auth = getAuth(firebaseApp);
     try {
       const registerResult = await createUserWithEmailAndPassword(
         auth,
@@ -100,12 +100,17 @@ export default function firebaseService() {
     }
   };
 
+  const getAuthUserId = () => {
+    return auth.currentUser?.uid;
+  };
   return {
+    auth,
     getServerTimeStamp,
     fetchItem,
     addThread,
     addPost,
     updatedPost,
     registerUser,
+    getAuthUserId,
   };
 }

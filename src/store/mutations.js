@@ -21,6 +21,9 @@ export default {
   setAppIsReady(state, { ready }) {
     state.appIsReady = ready;
   },
+  setAuthId(state, { authId }) {
+    state.authId = authId;
+  },
   setItem(state, { source, item }) {
     //console.log("state + source", state, source);
     //console.log("state[source]", state[source]);

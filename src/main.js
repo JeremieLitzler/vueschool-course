@@ -3,14 +3,14 @@ import store from "@/store";
 import router from "./router";
 
 import App from "./App.vue";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "@/config/firebase";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import firebaseService from "./services/firebaseService";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-app;
+//Firebase common logic
+firebaseService().auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    await store.dispatch("fetchAuthUser");
+  }
+});
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...

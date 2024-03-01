@@ -2,7 +2,8 @@
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
     <ul>
-      <li v-if="authUser" class="navbar-user">
+      <li v-if="!authUser" class="navbar-user">Sign-In</li>
+      <li v-else class="navbar-user">
         <router-link :to="{ name: RouteName.AccountShow }">
           <img
             class="avatar-small"

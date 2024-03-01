@@ -11,7 +11,7 @@ export default createStore({
     forums: [],
     threads: [],
     posts: [],
-    authId: "7uVPJS9GHoftN58Z2MXCYDqmNAh2",
+    authId: null,
     appIsReady: false,
     firestoreUnsubscribes: [],
   },

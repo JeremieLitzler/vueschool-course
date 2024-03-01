@@ -64,8 +64,14 @@ export default {
     return Promise.all(fetchs);
   },
   //users
-  fetchAuthUser({ state, dispatch }) {
-    return dispatch("fetchUser", { id: state.authId });
+  async fetchAuthUser({ commit, dispatch }) {
+    const userId = firebaseService().getAuthUserId();
+    if (userId === undefined) {
+      return new Promise((resolve) => resolve({}));
+    }
+    const user = await dispatch("fetchUser", { id: userId });
+    commit("setAuthId", { authId: userId });
+    return user;
   },
   async fetchUser({ dispatch }, { id }) {
     const user = await dispatch("fetchItem", { source: "users", id });
@@ -75,9 +81,29 @@ export default {
   fetchUsers({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "users", ids });
   },
-  async createUser({ commit }, { name, username, email, password, avatar }) {
+  async registerUserWithEmailAndPassword(
+    { dispatch },
+    { name, username, email, password, avatar }
+  ) {
     email = email.toLowerCase();
+    const registerResult = await firebaseService().registerUser({
+      email,
+      password,
+    });
+    console.log("actions > registerUserWithEmailAndPassword", registerResult);
+    const user = await dispatch("createUser", {
+      name,
+      username,
+      email,
+      avatar,
+      id: registerResult.user.uid,
+    });
+    // dispatch("fetchAuthUser");
+    return user;
+  },
+  async createUser({ commit }, { id, name, username, email, avatar }) {
     const newUser = {
+      id,
       name,
       username,
       email,
@@ -89,13 +115,10 @@ export default {
       usernameLower: username.toLowerCase(),
     };
 
-    const registerResult = await firebaseService().registerUser({
-      email,
-      password,
-    });
-    const userRef = doc(db, "users", registerResult.user.uid);
+    console.log("actions > createUser > id", id);
+    const userRef = doc(db, "users", id);
     await writeBatch(db)
-      .set(userRef, { id: registerResult.user.uid, ...newUser })
+      .set(userRef, { ...newUser })
       .commit();
 
     const newUserDoc = useFirebaseHelper().docToResource(await getDoc(userRef));
