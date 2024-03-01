@@ -64,9 +64,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type RegisterFormData from '@/types/RegisterFormData';
-
-const form = ref<RegisterFormData>({
+import type UserCreateRequest from '@/types/UserCreateRequest';
+import { useUserStore } from '@/stores/UserStore';
+import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+const { toHomePage } = useAppendRouteHelper();
+const form = ref<UserCreateRequest>({
   name: '',
   username: '',
   email: '',
@@ -74,8 +76,11 @@ const form = ref<RegisterFormData>({
   avatar: '',
 });
 
-const register = () => {
-  console.log(form.value);
+const register = async () => {
+  console.log('The form data >', form.value);
+  const user = await useUserStore().createUser({ ...form.value });
+  console.log('The created user >', user);
+  toHomePage();
 };
 </script>
 

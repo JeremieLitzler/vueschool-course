@@ -6,6 +6,10 @@ import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
 import { useCommonStore } from '@/stores/CommonStore';
 import type GetUserExtended from '@/types/GetUserExtended';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
+import UserCreateRequest from '@/types/UserCreateRequest';
+import firebaseService from '@/services/firebaseService';
+import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebaseHelper from '@/helpers/firebaseHelper';
 
 // const { findById } = useArraySearchHelper();
 
@@ -59,6 +63,33 @@ export const useUserStore = defineStore('UserStore', () => {
       collection: FirestoreCollection.Users,
     });
   };
+  const createUser = async (request: UserCreateRequest): Promise<User> => {
+    const emailLower = request.email.toLowerCase();
+    const newUser = {
+      ...request,
+      email: emailLower,
+      bio: '',
+      postsCount: 0,
+      registeredAt: firebaseService().getServerTimeStamp(),
+      threads: [],
+      usernameLower: request.username.toLowerCase(),
+    };
+
+    const userRef = await useFirebase().doc(
+      useFirebase().collection(useFirebase().db, 'users')
+    );
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .set(userRef, newUser)
+      .commit();
+
+    const newUserDoc = useFirebaseHelper().docToResource(
+      await useFirebase().getDoc(userRef)
+    );
+
+    useCommonStore().setItem<User>({ targetStore: users, item: newUserDoc });
+    return newUserDoc;
+  };
   const updateUser = (updatedUser: User) => {
     const userIndex = users.value.findIndex(
       (user) => user.id === updatedUser.id
@@ -89,6 +120,7 @@ export const useUserStore = defineStore('UserStore', () => {
     getUserById,
     fetchUser,
     fetchUsers,
+    createUser,
     updateUser,
     setUser,
     appendThreadToUser,

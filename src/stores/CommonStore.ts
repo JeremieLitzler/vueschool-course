@@ -90,7 +90,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
             const item = { id: doc.id, ...doc.data() };
             //console.log("category created: ", category);
             //commit("setItem", { source: "categories", item: item });
-            _setItem({ targetStore, item });
+            setItem({ targetStore, item });
             return item as T;
           });
           //console.log(`got from firestore > in ${collection}:`, items);
@@ -118,7 +118,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);
       const item = await useFirebase().getDoc(itemRef);
       const result = { ...item.data(), id: item.id } as T;
-      _setItem({ targetStore: targetStore, item: result });
+      setItem({ targetStore: targetStore, item: result });
       resolve(result);
     });
   };
@@ -138,11 +138,10 @@ export const useCommonStore = defineStore('CommonStore', () => {
   };
   /**
    * Set an item in a targetStore.
-   * Note: Not exposed to the outside.
    *
    * @param mutationReq A GenericMutationRequest of T having at least the property 'id'
    */
-  const _setItem = <T extends WithId>({
+  const setItem = <T extends WithId>({
     targetStore,
     item,
   }: GenericMutationRequest<T>) => {
@@ -162,5 +161,6 @@ export const useCommonStore = defineStore('CommonStore', () => {
     fetchItem,
     fetchSomeItems,
     fetchAllItems,
+    setItem,
   };
 });
