@@ -128,14 +128,19 @@ const ThreadEditRoute: RouteRecordRaw = {
     });
   },
 };
+const RegisterFormRoute: RouteRecordRaw = {
+  path: '/register',
+  name: RouteName.RegisterForm,
+  component: () => import('@/pages/RegisterForm.vue'),
+};
 const NotAuthorizedRoute: RouteRecordRaw = {
   path: '/unauthorized',
-  name: 'NotAuthorized',
+  name: RouteName.NotAuthorized,
   component: () => import('@/pages/NotAuthorized.vue'),
 };
 const NotFoundRoute: RouteRecordRaw = {
   path: '/:patchMatch(.*)*',
-  name: 'PageNotFound',
+  name: RouteName.NotFound,
   component: () => import('@/pages/NotFound.vue'),
 };
 /**
@@ -168,6 +173,7 @@ const routerOptions: RouterOptions = {
     ThreadShowRoute,
     ThreadCreateRoute,
     ThreadEditRoute,
+    RegisterFormRoute,
     NotAuthorizedRoute,
     NotFoundRoute,
   ],

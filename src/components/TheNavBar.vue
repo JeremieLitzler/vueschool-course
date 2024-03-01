@@ -37,7 +37,12 @@
 
     <ul>
       <li class="navbar-item">
-        <router-link :to="{ name: 'TheHome' }">Home</router-link>
+        <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
+      </li>
+      <li class="navbar-item">
+        <router-link :to="{ name: RouteName.RegisterForm }"
+          >Register</router-link
+        >
       </li>
       <!-- <li class="navbar-item">
             <a href="category.html">Category</a>
@@ -60,6 +65,7 @@
   </nav>
 </template>
 <script setup lang="ts">
+import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 const { fetchUser, authId } = useUserStore();
 const user = await fetchUser(authId);

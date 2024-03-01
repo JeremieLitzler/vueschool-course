@@ -7,6 +7,7 @@ export enum RouteName {
   ThreadShow = 'ThreadShow',
   ThreadCreate = 'ThreadCreate',
   ThreadEdit = 'ThreadEdit',
+  RegisterForm = 'RegisterForm',
   //Behind auth pages
   AccountEdit = 'AccountEdit',
   AccountShow = 'AccountShow',
