@@ -15,6 +15,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -113,6 +115,21 @@ export default function firebaseService() {
       });
   };
 
+  const signinWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const response = await signInWithPopup(auth, provider);
+    const user = response.user;
+    const userRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+    return {
+      id: user.uid,
+      name: user.displayName,
+      email: user.email,
+      username: user.email,
+      avatar: user.photoURL,
+      exists: userDoc.exists(),
+    };
+  };
   const signOut = () => {
     auth.signOut();
   };
@@ -129,6 +146,7 @@ export default function firebaseService() {
     updatedPost,
     registerUser,
     loginUserWithEmailAndPassword,
+    signinWithGoogle,
     signOut,
     getAuthUserId,
   };

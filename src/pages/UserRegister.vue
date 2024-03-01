@@ -59,8 +59,8 @@
         </div>
       </form>
       <div class="text-center push-top">
-        <button class="btn-red btn-xsmall">
-          <i class="fa fa-google fa-btn"></i>Sign up with Google
+        <button @click="registerGoogle" class="btn-red btn-xsmall">
+          <i class="fa fa-google fa-btn"></i>Register with Google
         </button>
       </div>
     </div>
@@ -96,6 +96,10 @@ export default {
         }
       );
       console.log("Created user >", user);
+      this.$router.push({ name: RouteName.TheHome });
+    },
+    async registerGoogle() {
+      this.$store.dispatch("loginWithGoogle");
       this.$router.push({ name: RouteName.TheHome });
     },
   },

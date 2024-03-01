@@ -102,6 +102,14 @@ export default {
     // dispatch("fetchAuthUser");
     return user;
   },
+  async loginWithGoogle({ dispatch, commit }) {
+    const user = await firebaseService().signinWithGoogle();
+    console.log("actions > loginWithGoogle > user", user);
+    if (!user.exists) {
+      dispatch("createUser", { ...user });
+      commit("setAuthId", { authId: user.id });
+    }
+  },
   loginUserWithEmailAndPassword(context, { email, password }) {
     return firebaseService().loginUserWithEmailAndPassword({ email, password });
   },
