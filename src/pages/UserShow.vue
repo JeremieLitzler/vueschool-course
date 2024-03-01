@@ -146,10 +146,14 @@ export default {
   },
   computed: {
     user() {
+      console.log("UserShow > user > id", this.id);
       if (this.id) {
         return this.$store.getters.getUser(this.id);
       }
-
+      console.log(
+        "UserShow > user > authUser getter",
+        this.$store.getters.authUser
+      );
       return this.$store.getters.authUser;
     },
     userPosts() {
@@ -162,7 +166,11 @@ export default {
   async created() {
     //get the authUser
     //const user =
-    await this.$store.dispatch("fetchUser", { id: this.id });
+    if (this.id) {
+      await this.$store.dispatch("fetchUser", { id: this.id });
+    } else {
+      await this.$store.dispatch("fetchAuthUser");
+    }
     //get the posts
 
     //get the threads

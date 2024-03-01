@@ -21,7 +21,7 @@ const routes = [
       //TODO : implement auth guard
       //verify auht user exists
       const authUser = await store.dispatch("fetchAuthUser");
-      if (!authUser) {
+      if (authUser.id === undefined) {
         return next({
           name: RouteName.NotAuthorized,
           params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
@@ -44,7 +44,7 @@ const routes = [
       //TODO : implement auth guard
       //verify auth user exists
       const authUser = await store.dispatch("fetchAuthUser");
-      if (!authUser) {
+      if (authUser.id === undefined) {
         return next({
           name: RouteName.NotAuthorized,
           params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
