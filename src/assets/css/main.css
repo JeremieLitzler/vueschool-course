@@ -45,3 +45,8 @@ a,
   font-size: 2rem;
   font-weight: bold;
 }
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}

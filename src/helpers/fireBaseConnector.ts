@@ -14,6 +14,7 @@ const db = getFirestore(firebaseApp);
 
 export default function useFirebase() {
   return {
+    firebaseApp,
     db,
     doc,
     getDoc,

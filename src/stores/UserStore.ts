@@ -10,6 +10,9 @@ import UserCreateRequest from '@/types/UserCreateRequest';
 import firebaseService from '@/services/firebaseService';
 import useFirebase from '@/helpers/fireBaseConnector';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
+import { FirebaseError } from 'firebase/app';
+import { UserCredential } from 'firebase/auth';
+import objectHelper from '@/helpers/objectHelper';
 
 // const { findById } = useArraySearchHelper();
 
@@ -63,20 +66,45 @@ export const useUserStore = defineStore('UserStore', () => {
       collection: FirestoreCollection.Users,
     });
   };
-  const createUser = async (request: UserCreateRequest): Promise<User> => {
-    const emailLower = request.email.toLowerCase();
+  const createUser = async ({
+    name,
+    username,
+    email,
+    password,
+    avatar,
+  }: UserCreateRequest): Promise<User | FirebaseError> => {
+    const emailLower = email.toLowerCase();
     const newUser = {
-      ...request,
+      name,
+      username,
+      avatar,
       email: emailLower,
       bio: '',
       postsCount: 0,
       registeredAt: firebaseService().getServerTimeStamp(),
       threads: [],
-      usernameLower: request.username.toLowerCase(),
+      usernameLower: username.toLowerCase(),
     };
 
-    const userRef = await useFirebase().doc(
-      useFirebase().collection(useFirebase().db, 'users')
+    const registerResult = await firebaseService().registerUser({
+      email,
+      password,
+    });
+
+    if (
+      !objectHelper().instanceOf<UserCredential>(
+        registerResult,
+        'operationType'
+      )
+    ) {
+      return registerResult as FirebaseError;
+    }
+    console.log('No error... Let´s continue');
+
+    const userRef = useFirebase().doc(
+      useFirebase().db,
+      'users',
+      (registerResult as UserCredential).user.uid
     );
     await useFirebase()
       .writeBatch(useFirebase().db)
