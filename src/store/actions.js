@@ -16,6 +16,7 @@ import {
   arrayUnion,
   increment,
 } from "firebase/firestore";
+
 import firebaseService from "@/services/firebaseService";
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -74,19 +75,28 @@ export default {
   fetchUsers({ dispatch }, { ids }) {
     return dispatch("fetchItems", { source: "users", ids });
   },
-  async createUser({ commit }, { user }) {
-    user.email = user.email.toLowerCase();
+  async createUser({ commit }, { name, username, email, password, avatar }) {
+    email = email.toLowerCase();
     const newUser = {
-      ...user,
+      name,
+      username,
+      email,
+      avatar,
       bio: "",
       postsCount: 0,
       registeredAt: firebaseService().getServerTimeStamp(),
       threads: [],
-      usernameLower: user.username.toLowerCase(),
+      usernameLower: username.toLowerCase(),
     };
 
-    const userRef = await doc(collection(db, "users"));
-    await writeBatch(db).set(userRef, newUser).commit();
+    const registerResult = await firebaseService().registerUser({
+      email,
+      password,
+    });
+    const userRef = doc(db, "users", registerResult.user.uid);
+    await writeBatch(db)
+      .set(userRef, { id: registerResult.user.uid, ...newUser })
+      .commit();
 
     const newUserDoc = useFirebaseHelper().docToResource(await getDoc(userRef));
 

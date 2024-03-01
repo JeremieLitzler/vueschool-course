@@ -11,6 +11,8 @@ import {
   arrayUnion,
   serverTimestamp,
 } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
@@ -82,5 +84,28 @@ export default function firebaseService() {
       .commit();
   };
 
-  return { getServerTimeStamp, fetchItem, addThread, addPost, updatedPost };
+  const registerUser = async (user) => {
+    const auth = getAuth(firebaseApp);
+    try {
+      const registerResult = await createUserWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password
+      );
+      console.log("User registered!", registerResult);
+      return registerResult;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
+  };
+
+  return {
+    getServerTimeStamp,
+    fetchItem,
+    addThread,
+    addPost,
+    updatedPost,
+    registerUser,
+  };
 }
