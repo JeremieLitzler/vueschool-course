@@ -3,7 +3,7 @@
   <nav class="navbar">
     <ul>
       <li v-if="signedIn" class="navbar-user">
-        <router-link :to="{ name: 'AccountShow' }">
+        <a @click.prevent="toggleMenu" href="#">
           <img
             class="avatar-small"
             :src="user?.avatar"
@@ -17,11 +17,11 @@
               alt=""
             />
           </span>
-        </router-link>
+        </a>
 
         <!-- dropdown menu -->
         <!-- add class "active-drop" to show the dropdown -->
-        <div id="user-dropdown">
+        <div id="user-dropdown" :class="{ 'active-drop': menuOpened }">
           <div class="triangle-drop"></div>
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
@@ -29,7 +29,9 @@
                 >View profile</router-link
               >
             </li>
-            <li class="dropdown-menu-item"><a href="#">Log out</a></li>
+            <li class="dropdown-menu-item">
+              <a @click.prevent="logout">Log out</a>
+            </li>
           </ul>
         </div>
       </li>
@@ -40,9 +42,6 @@
       </li>
       <li v-if="!signedIn" class="navbar-item">
         <router-link :to="{ name: RouteName.UserLogin }">Login</router-link>
-      </li>
-      <li v-if="signedIn" class="navbar-item">
-        <a @click.prevent="logout">Log out</a>
       </li>
     </ul>
 
@@ -72,15 +71,18 @@
   </nav>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
+
+const menuOpened = ref(false);
 const user = computed(() => useUserStore().getAuthUser());
-console.log('TheNavBar > user', user);
 
 const signedIn = computed(
   () => user.value.id != '' || useUserStore().authId != ''
 );
+
+const toggleMenu = () => (menuOpened.value = !menuOpened.value);
 
 const logout = () => {
   useUserStore().logoutUser();
