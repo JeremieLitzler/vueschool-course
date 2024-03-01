@@ -2,7 +2,7 @@
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
     <ul>
-      <li class="navbar-user">
+      <li v-if="signedIn" class="navbar-user">
         <router-link :to="{ name: 'AccountShow' }">
           <img
             class="avatar-small"
@@ -33,17 +33,24 @@
           </ul>
         </div>
       </li>
+      <li v-if="!signedIn" class="navbar-item">
+        <router-link :to="{ name: RouteName.UserRegister }"
+          >Register</router-link
+        >
+      </li>
+      <li v-if="!signedIn" class="navbar-item">
+        <router-link :to="{ name: RouteName.UserLogin }">Login</router-link>
+      </li>
+      <li v-if="signedIn" class="navbar-item">
+        <a @click.prevent="logout">Log out</a>
+      </li>
     </ul>
 
     <ul>
       <li class="navbar-item">
         <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
       </li>
-      <li class="navbar-item">
-        <router-link :to="{ name: RouteName.RegisterForm }"
-          >Register</router-link
-        >
-      </li>
+
       <!-- <li class="navbar-item">
             <a href="category.html">Category</a>
           </li>
@@ -65,7 +72,17 @@
   </nav>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-const user = useUserStore().getAuthUser();
+const user = computed(() => useUserStore().getAuthUser());
+console.log('TheNavBar > user', user);
+
+const signedIn = computed(
+  () => user.value.id != '' || useUserStore().authId != ''
+);
+
+const logout = () => {
+  useUserStore().logoutUser();
+};
 </script>

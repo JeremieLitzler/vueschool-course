@@ -53,6 +53,11 @@
           <button type="submit" class="btn-blue btn-block">Register</button>
         </div>
         <div class="error-message" v-if="error != ''">{{ error }}</div>
+        <div class="form-actions text-right">
+          <router-link :to="{ name: RouteName.UserLogin }">
+            Already have an account?
+          </router-link>
+        </div>
       </form>
       <div class="text-center push-top">
         <button class="btn-red btn-xsmall">
@@ -72,6 +77,7 @@ import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 import objectHelper from '@/helpers/objectHelper';
 
 import User from '@/types/User';
+import { RouteName } from '@/enums/RouteName';
 const { toHomePage } = useAppendRouteHelper();
 const error = ref('');
 const form = ref<UserRegisterRequest>({

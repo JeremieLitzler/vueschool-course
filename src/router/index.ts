@@ -46,8 +46,10 @@ const AccountRoute: RouteRecordRaw = {
   beforeEnter: (to, _from, next) => {
     //TODO : implement auth guard
     //verify auht user exists
-    const { getAuthUser } = useUserStore();
-    if (!getAuthUser()) {
+    const user = useUserStore().getAuthUser();
+    console.log('AccountRoute > beforeEnter > user', user);
+
+    if (user.id === '') {
       return next({
         name: RouteName.NotAuthorized,
         params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
@@ -128,10 +130,15 @@ const ThreadEditRoute: RouteRecordRaw = {
     });
   },
 };
-const RegisterFormRoute: RouteRecordRaw = {
+const UserRegisterRoute: RouteRecordRaw = {
   path: '/register',
-  name: RouteName.RegisterForm,
-  component: () => import('@/pages/RegisterForm.vue'),
+  name: RouteName.UserRegister,
+  component: () => import('@/pages/UserRegister.vue'),
+};
+const UserLoginRoute: RouteRecordRaw = {
+  path: '/login',
+  name: RouteName.UserLogin,
+  component: () => import('@/pages/UserLogin.vue'),
 };
 const NotAuthorizedRoute: RouteRecordRaw = {
   path: '/unauthorized',
@@ -173,7 +180,8 @@ const routerOptions: RouterOptions = {
     ThreadShowRoute,
     ThreadCreateRoute,
     ThreadEditRoute,
-    RegisterFormRoute,
+    UserRegisterRoute,
+    UserLoginRoute,
     NotAuthorizedRoute,
     NotFoundRoute,
   ],

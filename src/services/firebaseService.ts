@@ -1,8 +1,14 @@
 import useFirebase from '@/helpers/fireBaseConnector';
 import UserFirebaseRegisterRequest from '@/types/UserFirebaseRegisterRequest';
 import { Timestamp } from '@firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  UserCredential,
+} from 'firebase/auth';
 import type { FirebaseError } from 'firebase/app';
+import UserLoginRequest from '@/types/UserLoginRequest';
 
 export default function firebaseService() {
   const auth = getAuth(useFirebase().firebaseApp);
@@ -27,9 +33,31 @@ export default function firebaseService() {
     }
   };
 
+  const loginWithEmailAndPassword = async ({
+    email,
+    password,
+  }: UserLoginRequest): Promise<UserCredential | FirebaseError> => {
+    return signInWithEmailAndPassword(auth, email, password)
+      .then((user) => user)
+      .catch((error) => {
+        console.log(error);
+        return error;
+      });
+  };
+
+  const signOut = () => {
+    auth.signOut();
+  };
   const getAuthUserId = () => {
     return auth.currentUser?.uid;
   };
 
-  return { auth, getServerTimeStamp, registerUser, getAuthUserId };
+  return {
+    auth,
+    getServerTimeStamp,
+    registerUser,
+    getAuthUserId,
+    loginWithEmailAndPassword,
+    signOut,
+  };
 }

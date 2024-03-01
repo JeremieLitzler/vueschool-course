@@ -14,6 +14,7 @@ import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
 import objectHelper from '@/helpers/objectHelper';
 import UserRegisterRequest from '@/types/UserRegisterRequest';
+import UserLoginRequest from '@/types/UserLoginRequest';
 
 // const { findById } = useArraySearchHelper();
 
@@ -109,6 +110,13 @@ export const useUserStore = defineStore('UserStore', () => {
     await fetchAuthUser();
     return user;
   };
+  const loginWithEmailAndPassword = ({ email, password }: UserLoginRequest) => {
+    return firebaseService().loginWithEmailAndPassword({ email, password });
+  };
+  const logoutUser = () => {
+    firebaseService().signOut();
+    authId.value = '';
+  };
   const createUser = async (
     { name, username, email, avatar }: UserCreateRequest,
     id: string
@@ -173,6 +181,8 @@ export const useUserStore = defineStore('UserStore', () => {
     fetchUser,
     fetchUsers,
     registerUserWithEmailAndPassword,
+    loginWithEmailAndPassword,
+    logoutUser,
     createUser,
     updateUser,
     setUser,
