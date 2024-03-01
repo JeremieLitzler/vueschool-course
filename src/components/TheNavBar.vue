@@ -2,8 +2,7 @@
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
     <ul>
-      <li v-if="!authUser" class="navbar-user">Sign-In</li>
-      <li v-else class="navbar-user">
+      <li v-if="signedIn" class="navbar-user">
         <router-link :to="{ name: RouteName.AccountShow }">
           <img
             class="avatar-small"
@@ -37,9 +36,24 @@
                 >View profile</router-link
               > -->
             </li>
-            <li class="dropdown-menu-item"><a href="#">Log out</a></li>
+            <li v-if="signedIn" class="dropdown-menu-item">
+              <a @click.prevent="logout">Log out</a>
+            </li>
           </ul>
         </div>
+      </li>
+      <li v-if="!signedIn" class="navbar-item">
+        <router-link class="navbar-user" :to="{ name: RouteName.UserRegister }"
+          >Register</router-link
+        >
+      </li>
+      <li v-if="!signedIn" class="navbar-item">
+        <router-link class="navbar-user" :to="{ name: RouteName.UserLogin }"
+          >Login</router-link
+        >
+      </li>
+      <li v-if="signedIn" class="navbar-item">
+        <a @click.prevent="logout">Log out</a>
       </li>
     </ul>
 
@@ -47,11 +61,7 @@
       <li class="navbar-item">
         <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
       </li>
-      <li class="navbar-item">
-        <router-link class="navbar-user" :to="{ name: RouteName.RegisterForm }"
-          >Register</router-link
-        >
-      </li>
+
       <!-- <li class="navbar-item">
           <a href="category.html">Category</a>
         </li>
@@ -87,6 +97,15 @@ export default {
   computed: {
     authUser() {
       return this.$store.getters.authUser;
+    },
+    signedIn() {
+      console.log("TheNavBar > signedIn", this.$store.state.authId);
+      return this.$store.state.authId;
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logoutUser");
     },
   },
 };

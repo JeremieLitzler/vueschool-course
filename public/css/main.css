@@ -51,3 +51,8 @@ a,
   justify-content: center;
   align-items: center;
 }
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}

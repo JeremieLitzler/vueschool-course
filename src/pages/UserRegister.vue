@@ -52,6 +52,11 @@
         <div class="form-actions">
           <button type="submit" class="btn-blue btn-block">Register</button>
         </div>
+        <div class="form-actions text-right">
+          <router-link :to="{ name: RouteName.UserLogin }">
+            Already have an account?
+          </router-link>
+        </div>
       </form>
       <div class="text-center push-top">
         <button class="btn-red btn-xsmall">
@@ -71,6 +76,7 @@ const { RouteName } = useRouteName();
 export default {
   data() {
     return {
+      RouteName,
       form: {
         name: "",
         username: "",

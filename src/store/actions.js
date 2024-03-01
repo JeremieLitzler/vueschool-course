@@ -74,8 +74,9 @@ export default {
     return user;
   },
   async fetchUser({ dispatch }, { id }) {
+    console.log("fetchUser > id ", id);
     const user = await dispatch("fetchItem", { source: "users", id });
-    //console.log("fetchUser > id ", user, id);
+    console.log("fetchUser > user ", user);
     return user;
   },
   fetchUsers({ dispatch }, { ids }) {
@@ -100,6 +101,13 @@ export default {
     });
     // dispatch("fetchAuthUser");
     return user;
+  },
+  loginUserWithEmailAndPassword(context, { email, password }) {
+    return firebaseService().loginUserWithEmailAndPassword({ email, password });
+  },
+  async logoutUser({ commit }) {
+    firebaseService().signOut();
+    commit("setAuthId", { authId: null });
   },
   async createUser({ commit }, { id, name, username, email, avatar }) {
     const newUser = {

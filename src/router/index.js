@@ -208,10 +208,15 @@ const routes = [
   //Register form route
   {
     path: "/register",
-    name: RouteName.RegisterForm,
-    component: () => import("@/pages/RegisterForm.vue"),
+    name: RouteName.UserRegister,
+    component: () => import("@/pages/UserRegister.vue"),
   },
-
+  //Register form route
+  {
+    path: "/login",
+    name: RouteName.UserLogin,
+    component: () => import("@/pages/UserLogin.vue"),
+  },
   //Not authorized route
   {
     path: "/unauthorized",

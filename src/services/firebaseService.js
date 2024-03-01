@@ -11,7 +11,11 @@ import {
   arrayUnion,
   serverTimestamp,
 } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -100,6 +104,19 @@ export default function firebaseService() {
     }
   };
 
+  const loginUserWithEmailAndPassword = ({ email, password }) => {
+    return signInWithEmailAndPassword(auth, email, password)
+      .then((user) => user)
+      .catch((error) => {
+        console.log(error);
+        return error;
+      });
+  };
+
+  const signOut = () => {
+    auth.signOut();
+  };
+
   const getAuthUserId = () => {
     return auth.currentUser?.uid;
   };
@@ -111,6 +128,8 @@ export default function firebaseService() {
     addPost,
     updatedPost,
     registerUser,
+    loginUserWithEmailAndPassword,
+    signOut,
     getAuthUserId,
   };
 }
