@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import type { FirebaseError } from 'firebase/app';
 
 export default function firebaseService() {
+  const auth = getAuth(useFirebase().firebaseApp);
   const getServerTimeStamp = () => {
     const value = Timestamp.fromDate(new Date());
     //console.log('getServerTimeStamp', value);
@@ -12,7 +13,6 @@ export default function firebaseService() {
   };
 
   const registerUser = async (request: UserFirebaseRegisterRequest) => {
-    const auth = getAuth(useFirebase().firebaseApp);
     try {
       const registerResult = await createUserWithEmailAndPassword(
         auth,
@@ -27,5 +27,9 @@ export default function firebaseService() {
     }
   };
 
-  return { getServerTimeStamp, registerUser };
+  const getAuthUserId = () => {
+    return auth.currentUser?.uid;
+  };
+
+  return { auth, getServerTimeStamp, registerUser, getAuthUserId };
 }

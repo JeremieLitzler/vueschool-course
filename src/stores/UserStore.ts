@@ -13,13 +13,14 @@ import useFirebaseHelper from '@/helpers/firebaseHelper';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
 import objectHelper from '@/helpers/objectHelper';
+import UserRegisterRequest from '@/types/UserRegisterRequest';
 
 // const { findById } = useArraySearchHelper();
 
 export const useUserStore = defineStore('UserStore', () => {
   //STATE
   const users = ref<User[]>([]);
-  const authId = ref('7uVPJS9GHoftN58Z2MXCYDqmNAh2');
+  const authId = ref('');
 
   //GETTERS
   const _hydrateUser = (user: User) => {
@@ -52,6 +53,14 @@ export const useUserStore = defineStore('UserStore', () => {
   };
 
   //ACTIONS
+  const fetchAuthUser = async () => {
+    const userId = firebaseService().getAuthUserId();
+    if (userId === undefined) {
+      return new Promise((resolve) => resolve({}));
+    }
+    await fetchUser(userId);
+    authId.value = userId;
+  };
   const fetchUser = (id: string): Promise<User> => {
     return useCommonStore().fetchItem<User>({
       targetStore: users,
@@ -66,28 +75,16 @@ export const useUserStore = defineStore('UserStore', () => {
       collection: FirestoreCollection.Users,
     });
   };
-  const createUser = async ({
+  const registerUserWithEmailAndPassword = async ({
     name,
     username,
     email,
     password,
     avatar,
-  }: UserCreateRequest): Promise<User | FirebaseError> => {
+  }: UserRegisterRequest): Promise<User | FirebaseError> => {
     const emailLower = email.toLowerCase();
-    const newUser = {
-      name,
-      username,
-      avatar,
-      email: emailLower,
-      bio: '',
-      postsCount: 0,
-      registeredAt: firebaseService().getServerTimeStamp(),
-      threads: [],
-      usernameLower: username.toLowerCase(),
-    };
-
     const registerResult = await firebaseService().registerUser({
-      email,
+      email: emailLower,
       password,
     });
 
@@ -99,13 +96,39 @@ export const useUserStore = defineStore('UserStore', () => {
     ) {
       return registerResult as FirebaseError;
     }
+    console.log('actions > registerUserWithEmailAndPassword', registerResult);
+    const user = await createUser(
+      {
+        name,
+        username,
+        email: emailLower,
+        avatar,
+      },
+      registerResult.user.uid
+    );
+    await fetchAuthUser();
+    return user;
+  };
+  const createUser = async (
+    { name, username, email, avatar }: UserCreateRequest,
+    id: string
+  ): Promise<User | FirebaseError> => {
+    const newUser = {
+      id,
+      name,
+      username,
+      avatar,
+      email,
+      bio: '',
+      postsCount: 0,
+      registeredAt: firebaseService().getServerTimeStamp(),
+      threads: [],
+      usernameLower: username.toLowerCase(),
+    };
+
     console.log('No error... Let´s continue');
 
-    const userRef = useFirebase().doc(
-      useFirebase().db,
-      'users',
-      (registerResult as UserCredential).user.uid
-    );
+    const userRef = useFirebase().doc(useFirebase().db, 'users', id);
     await useFirebase()
       .writeBatch(useFirebase().db)
       .set(userRef, newUser)
@@ -146,8 +169,10 @@ export const useUserStore = defineStore('UserStore', () => {
     users,
     getAuthUser,
     getUserById,
+    fetchAuthUser,
     fetchUser,
     fetchUsers,
+    registerUserWithEmailAndPassword,
     createUser,
     updateUser,
     setUser,

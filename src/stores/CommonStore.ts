@@ -115,6 +115,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
       console.log(
         `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
       );
+      if (!id) return resolve({} as T);
+
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);
       const item = await useFirebase().getDoc(itemRef);
       const result = { ...item.data(), id: item.id } as T;

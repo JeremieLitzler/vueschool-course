@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type UserCreateRequest from '@/types/UserCreateRequest';
+import type UserRegisterRequest from '@/types/UserRegisterRequest';
 import type { FirebaseError } from 'firebase/app';
 import { useUserStore } from '@/stores/UserStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
@@ -74,7 +74,7 @@ import objectHelper from '@/helpers/objectHelper';
 import User from '@/types/User';
 const { toHomePage } = useAppendRouteHelper();
 const error = ref('');
-const form = ref<UserCreateRequest>({
+const form = ref<UserRegisterRequest>({
   name: '',
   username: '',
   email: '',
@@ -84,7 +84,9 @@ const form = ref<UserCreateRequest>({
 
 const register = async () => {
   console.log('The form data >', form.value);
-  const user = await useUserStore().createUser({ ...form.value });
+  const user = await useUserStore().registerUserWithEmailAndPassword({
+    ...form.value,
+  });
   if (!objectHelper().instanceOf<User>(user, 'username')) {
     error.value = (user as FirebaseError).message;
     return;

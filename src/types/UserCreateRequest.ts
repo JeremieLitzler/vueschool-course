@@ -1,7 +1,6 @@
 export default interface UserCreateRequest {
-  name: '';
-  username: '';
-  email: '';
-  password: '';
-  avatar: '';
+  email: string;
+  name: string;
+  username: string;
+  avatar: string;
 }

@@ -7,16 +7,15 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import pinia from '@/stores/pinia';
+import firebaseService from './services/firebaseService';
+import { useUserStore } from './stores/UserStore';
 
-import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '@/config/firebase';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Initialize Firebase
-const fireBaseApp = initializeApp(firebaseConfig);
-fireBaseApp;
-
+//Firebase common logic
+firebaseService().auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    await useUserStore().fetchAuthUser();
+  }
+});
 const app = createApp(App);
 
 //Inspired by https://zerotomastery.io/blog/how-to-auto-register-components-for-vue-with-vite/

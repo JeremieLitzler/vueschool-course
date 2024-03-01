@@ -67,6 +67,5 @@
 <script setup lang="ts">
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-const { fetchUser, authId } = useUserStore();
-const user = await fetchUser(authId);
+const user = useUserStore().getAuthUser();
 </script>
