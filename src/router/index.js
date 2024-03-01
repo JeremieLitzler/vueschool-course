@@ -205,6 +205,13 @@ const routes = [
       });
     },
   },
+  //Register form route
+  {
+    path: "/register",
+    name: RouteName.RegisterForm,
+    component: () => import("@/pages/RegisterForm.vue"),
+  },
+
   //Not authorized route
   {
     path: "/unauthorized",

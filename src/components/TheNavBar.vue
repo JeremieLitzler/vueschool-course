@@ -46,6 +46,11 @@
       <li class="navbar-item">
         <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
       </li>
+      <li class="navbar-item">
+        <router-link class="navbar-user" :to="{ name: RouteName.RegisterForm }"
+          >Register</router-link
+        >
+      </li>
       <!-- <li class="navbar-item">
           <a href="category.html">Category</a>
         </li>
