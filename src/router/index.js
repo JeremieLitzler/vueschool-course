@@ -138,11 +138,14 @@ const routes = [
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
-      const exists = await store.dispatch("fetchThread", { id: to.params.id });
+      const threadMatch = await store.dispatch("fetchThread", {
+        id: to.params.id,
+      });
+      // console.log("ThreadShow > beforeEnter > threadMatch", threadMatch);
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
       //threadExists ?? next()
-      if (exists) {
+      if (threadMatch) {
         return next();
       }
       //else redirect to not found

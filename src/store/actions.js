@@ -43,21 +43,26 @@ export default {
   fetchItem({ state, commit }, { source, id, handleUnsubscribe = null }) {
     const item = findById(state[source], id);
     if (item) {
-      // console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
+      console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
       return new Promise((resolve) => {
         resolve(item);
       });
     }
 
     return new Promise((resolve) => {
-      //console.log(`🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`);
+      console.log(
+        `🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`
+      );
       // console.log(`🚨 fetching a item on firebase 🚨`);
       const unsubscribe = onSnapshot(doc(db, source, id), (responseDoc) => {
         //console.log("from firestore > responseDoc: ", responseDoc);
         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
+        if (responseDoc.data() === undefined) {
+          resolve(null);
+        }
         const item = { ...responseDoc.data(), id: responseDoc.id };
-        //console.log(`got from firestore > in ${source}:`, item);
+        // console.log(`got from firestore > in ${source}:`, item);
         // console.log(`got item from firestore`);
         commit("setItem", { source, item });
         resolve(item);
@@ -204,6 +209,7 @@ export default {
   },
   //threads
   fetchThread({ dispatch }, { id }) {
+    // console.log("fetchThread > id", id);
     return dispatch("fetchItem", { source: "threads", id });
   },
   fetchThreads({ dispatch }, { ids }) {
