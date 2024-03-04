@@ -54,13 +54,18 @@ export const useUserStore = defineStore('UserStore', () => {
   };
 
   //ACTIONS
-  const fetchAuthUser = async (reFetch: boolean | undefined = undefined) => {
+  const fetchAuthUser = async (
+    reFetch: boolean | undefined = undefined
+  ): Promise<string | null> => {
+    console.log('UserStore > authId', authId);
     const userId = firebaseService().getAuthUserId();
     if (userId === undefined) {
-      return new Promise((resolve) => resolve({}));
+      return authId.value;
+    } else {
+      await fetchUser(userId, reFetch);
+      authId.value = userId;
+      return userId;
     }
-    await fetchUser(userId, reFetch);
-    authId.value = userId;
   };
   const fetchUser = (
     id: string,

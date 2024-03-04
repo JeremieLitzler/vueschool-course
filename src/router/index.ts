@@ -22,45 +22,13 @@ const AccountEditRoute: RouteRecordRaw = {
   name: RouteName.AccountEdit,
   component: () => import('@/pages/UserShow.vue'),
   props: { edit: true },
-  meta: { toTop: true, smoothScroll: true },
-  beforeEnter: (to, _from, next) => {
-    //TODO : implement auth guard
-    //verify auht user exists
-    const { getAuthUser } = useUserStore();
-    if (!getAuthUser()) {
-      return next({
-        name: RouteName.NotAuthorized,
-        params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
-        query: to.query,
-        hash: to.hash,
-      });
-    }
-    //continue since user is authorized
-    next();
-  },
+  meta: { toTop: true, smoothScroll: true, requiresAuth: true },
 };
 const AccountRoute: RouteRecordRaw = {
   path: '/account',
   name: RouteName.AccountShow,
   component: () => import('@/pages/UserShow.vue'),
-  meta: { toTop: true, smoothScroll: true },
-  beforeEnter: (to, _from, next) => {
-    //TODO : implement auth guard
-    //verify auht user exists
-    const user = useUserStore().getAuthUser();
-    console.log('AccountRoute > beforeEnter > user', user);
-
-    if (user.id === '') {
-      return next({
-        name: RouteName.NotAuthorized,
-        params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the NotFound component.
-        query: to.query,
-        hash: to.hash,
-      });
-    }
-    //continue since user is authorized
-    next();
-  },
+  meta: { toTop: true, smoothScroll: true, requiresAuth: true },
 };
 const UserShowRoute: RouteRecordRaw = {
   path: '/user/:id',
@@ -207,4 +175,24 @@ const routerOptions: RouterOptions = {
 
 const router: Router = createRouter(routerOptions);
 
+router.beforeEach(async (to, _from) => {
+  console.log('beforeEach global guard > to.name', to.name);
+  console.log('beforeEach global guard > to.meta', to.meta);
+
+  if (to.meta.requiresAuth) {
+    //TODO : implement auth guard
+    //verify auth user exists
+    const authUserId = await useUserStore().fetchAuthUser();
+    console.log('beforeEach global guard > authUserId', authUserId);
+
+    if (!authUserId) {
+      return {
+        name: RouteName.NotAuthorized,
+        query: to.query,
+        hash: to.hash,
+      };
+    }
+    //continue since user is authorized
+  }
+});
 export default router;
