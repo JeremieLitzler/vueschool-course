@@ -22,7 +22,9 @@ export default {
     state.appIsReady = ready;
   },
   setAuthId(state, { authId }) {
+    //console.log("Calling setAuthId with a authId = ", authId);
     state.authId = authId;
+    //console.log("Called setAuthId so authId is ", state.authId);
   },
   setItem(state, { source, item }) {
     //console.log("state + source", state, source);

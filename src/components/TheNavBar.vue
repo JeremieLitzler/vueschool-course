@@ -99,7 +99,10 @@ export default {
   },
   methods: {
     logout() {
+      //console.log("TheNavBar > logout > start");
       this.$store.dispatch("logoutUser");
+      this.$router.push({ name: RouteName.TheHome });
+      //console.log("TheNavBar > logout > done!");
     },
     toggleMenu() {
       this.menuOpened = !this.menuOpened;

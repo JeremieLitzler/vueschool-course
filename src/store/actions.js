@@ -76,6 +76,7 @@ export default {
   //users
   async fetchAuthUser({ commit, dispatch }) {
     const userId = firebaseService().getAuthUserId();
+    //console.log("fetchAuthUser > getAuthUserId returned ", userId);
     if (userId === undefined) {
       return new Promise((resolve) => resolve({}));
     }
@@ -86,6 +87,7 @@ export default {
         commit("setAuthUserUnsubscribe", unsubscribe);
       },
     });
+
     commit("setAuthId", { authId: userId });
     return user;
   },
@@ -131,6 +133,7 @@ export default {
   },
   async logoutUser({ commit }) {
     firebaseService().signOut();
+    console.log("Called firebaseService().signOut()");
     commit("setAuthId", { authId: null });
   },
   async createUser({ commit }, { id, name, username, email, avatar }) {
