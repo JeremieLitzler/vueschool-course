@@ -34,7 +34,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     request: GenericFetchRequest<T>
   ): Promise<T> => {
     const item = _findItemInLocalStore<T>({ ...request });
-    if (item) {
+    if (item && !request.reFetch) {
       console.log(
         `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
       );

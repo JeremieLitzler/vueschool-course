@@ -84,10 +84,8 @@ const threadPosts = computed((): Post[] | undefined =>
 
 const savePost = async (entry: PostAddRequest) => {
   const post = await usePostStore().addPost({ ...entry });
-  useThreadStore().appendPostToThread({
-    threadId: post.threadId!,
-    postId: post.id!,
-  });
+  await useThreadStore().refreshFromFirebase(post.threadId);
+  await useUserStore().refreshFromFirebase(post.userId);
 };
 </script>
 

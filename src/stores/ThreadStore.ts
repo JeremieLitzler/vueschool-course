@@ -66,11 +66,15 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   };
 
   //ACTIONS
-  const fetchThread = (id: string): Promise<Thread> => {
+  const fetchThread = (
+    id: string,
+    reFetch: boolean | undefined = undefined
+  ): Promise<Thread> => {
     return useCommonStore().fetchItem<Thread>({
       targetStore: threads,
       collection: FirestoreCollection.Threads,
       id,
+      reFetch,
     });
   };
   const fetchThreads = async (ids: string[]) => {
@@ -191,10 +195,13 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     }
     thread?.posts!.push(request.postId);
   };
+  const refreshFromFirebase = (id: string | undefined) => {
+    return fetchThread(id!, true);
+  };
 
   return {
     //state
-    threads,
+    threads: threads.value,
     //getters
     getThreadById,
     getThreadsByForumId,
@@ -206,5 +213,6 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     setThread,
     updateThread,
     appendPostToThread,
+    refreshFromFirebase,
   };
 });

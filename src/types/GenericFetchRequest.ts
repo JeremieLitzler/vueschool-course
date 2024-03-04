@@ -5,4 +5,5 @@ export default interface GenericFetchRequest<T extends WithId>
   extends GenericStoreRequest<T> {
   collection: string;
   id: string;
+  reFetch?: boolean;
 }

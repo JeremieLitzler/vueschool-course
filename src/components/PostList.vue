@@ -4,7 +4,7 @@
       class="post"
       v-for="post in props.posts"
       :key="post.id"
-      :title="`ID: ${post.id}`"
+      :title="`Post ID: ${post.id}`"
     >
       <post-list-item-user :user="getUserById(post.userId)" />
       <post-list-item-body :post="post!" />

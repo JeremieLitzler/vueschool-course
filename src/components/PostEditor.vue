@@ -63,6 +63,7 @@ const savePost = () => {
       threadId: threadId!,
     };
     emits('@add-post', request);
+    newPostText.value = '';
   }
 };
 </script>

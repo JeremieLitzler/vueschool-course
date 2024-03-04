@@ -54,19 +54,23 @@ export const useUserStore = defineStore('UserStore', () => {
   };
 
   //ACTIONS
-  const fetchAuthUser = async () => {
+  const fetchAuthUser = async (reFetch: boolean | undefined = undefined) => {
     const userId = firebaseService().getAuthUserId();
     if (userId === undefined) {
       return new Promise((resolve) => resolve({}));
     }
-    await fetchUser(userId);
+    await fetchUser(userId, reFetch);
     authId.value = userId;
   };
-  const fetchUser = (id: string): Promise<User> => {
+  const fetchUser = (
+    id: string,
+    reFetch: boolean | undefined = undefined
+  ): Promise<User> => {
     return useCommonStore().fetchItem<User>({
       targetStore: users,
       collection: FirestoreCollection.Users,
       id,
+      reFetch,
     });
   };
   const fetchUsers = (ids: string[]): Promise<Awaited<User>[]> => {
@@ -172,6 +176,9 @@ export const useUserStore = defineStore('UserStore', () => {
       users.value!.push(user);
     }
   };
+  const refreshFromFirebase = (id: string | undefined) => {
+    return fetchUser(id!, true);
+  };
   return {
     authId,
     users,
@@ -187,5 +194,6 @@ export const useUserStore = defineStore('UserStore', () => {
     updateUser,
     setUser,
     appendThreadToUser,
+    refreshFromFirebase,
   };
 });

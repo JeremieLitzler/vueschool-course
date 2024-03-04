@@ -71,12 +71,20 @@ export const usePostStore = defineStore('PostStore', () => {
       'threads',
       post.threadId!
     );
+    const userRef = useFirebase().doc(
+      useFirebase().db,
+      'users',
+      postFirebaseRequest.userId!
+    );
     await useFirebase()
       .writeBatch(useFirebase().db)
       .set(postRef, { ...postFirebaseRequest })
       .update(threadRef, {
         posts: useFirebase().arrayUnion(postRef.id),
         contributors: useFirebase().arrayUnion(useUserStore().authId),
+      })
+      .update(userRef, {
+        postsCount: useFirebase().increment(1),
       })
       .commit();
     //console.log('addPost < postRef', postRef);

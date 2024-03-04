@@ -8,6 +8,7 @@ import {
   collection,
   writeBatch,
   arrayUnion,
+  increment,
 } from 'firebase/firestore';
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
@@ -22,5 +23,6 @@ export default function useFirebase() {
     collection,
     writeBatch,
     arrayUnion,
+    increment,
   };
 }
