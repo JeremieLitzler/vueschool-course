@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import ThreadEditorPageProps from '@/types/ThreadEditorPageProps';
 
 const props = withDefaults(defineProps<ThreadEditorPageProps>(), {
@@ -44,17 +44,32 @@ const props = withDefaults(defineProps<ThreadEditorPageProps>(), {
 const emits = defineEmits<{
   (event: '@save', entry: ThreadBaseRequest): void;
   (event: '@cancel'): void;
+  (event: '@dirtyForm'): void;
+  (event: '@cleanForm'): void;
 }>();
 
 const form = ref({ title: props.title, body: props.body });
 const threadExists = computed(() => !!form.value.title);
 
 const save = () => {
+  emits('@cleanForm');
   emits('@save', { title: form.value.title, body: form.value.body });
 };
 const cancel = () => {
   emits('@cancel');
 };
+
+watch(
+  form.value,
+  () => {
+    if (form.value.title !== props.title || form.value.body !== props.body) {
+      emits('@dirtyForm');
+    } else {
+      emits('@cleanForm');
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped></style>
