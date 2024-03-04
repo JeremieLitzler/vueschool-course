@@ -4,7 +4,12 @@
       Create new thread in <i>{{ forum.name }}</i>
     </h1>
 
-    <thread-editor @save="saveThread" @cancel="returnToForum" />
+    <thread-editor
+      @save="saveThread"
+      @cancel="returnToForum"
+      @dirty="formIsDirty = true"
+      @clean="formIsDirty = false"
+    />
   </div>
 </template>
 
@@ -20,6 +25,9 @@ export default {
     ThreadEditor,
   },
   props: { forumId: { type: String, required: true } },
+  data() {
+    return { formIsDirty: false };
+  },
   computed: {
     forum() {
       return this.$store.getters.getForumById(this.forumId);
@@ -38,14 +46,26 @@ export default {
       });
     },
     returnToForum() {
+      console.log("ThreadCreate > methods > returnToForum");
       this.$router.push({
         name: RouteName.ForumShow,
         params: { id: this.forum.id },
       });
     },
   },
+  beforeRouteLeave() {
+    console.log("beforeRouteLeave > formIsDirty", this.formIsDirty);
+    if (this.formIsDirty) {
+      const confirmed = window.confirm(
+        //TODO : clicking cancel button fires twice this guard... Why?
+        "Are you sure you want to leave? Unsaved changes will be lost!!"
+      );
+      if (!confirmed) {
+        return false;
+      }
+    }
+  },
 };
 </script>
 
 <style lang="scss" scoped></style>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

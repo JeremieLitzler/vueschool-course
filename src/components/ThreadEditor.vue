@@ -59,12 +59,26 @@ export default {
   },
   methods: {
     save() {
+      this.$emit("clean");
       this.$emit("save", {
         ...this.form,
       });
     },
     cancel() {
+      console.log("ThreadEditor > methods > cancel");
       this.$emit("cancel");
+    },
+  },
+  watch: {
+    form: {
+      handler() {
+        if (this.form.title !== this.title || this.form.body !== this.body) {
+          this.$emit("dirty");
+        } else {
+          this.$emit("clean");
+        }
+      },
+      deep: true,
     },
   },
 };
