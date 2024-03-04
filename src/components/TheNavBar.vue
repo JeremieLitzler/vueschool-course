@@ -100,8 +100,7 @@ export default {
   methods: {
     async logout() {
       //console.log("TheNavBar > logout > start");
-      await this.$store.dispatch("logoutUser");
-      this.$router.push({ name: RouteName.TheHome });
+      this.$router.push({ name: RouteName.SignOut });
       //console.log("TheNavBar > logout > done!");
     },
     toggleMenu() {

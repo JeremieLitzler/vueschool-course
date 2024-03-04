@@ -14,6 +14,7 @@ export function useRouteName() {
     AccountEdit: "AccountEdit",
     AccountShow: "AccountShow",
     //Commun page
+    SignOut: "SignOut",
     NotAuthorized: "NotAuthorized",
     NotFound: "NotFound",
   };

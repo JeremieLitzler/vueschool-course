@@ -217,6 +217,17 @@ const routes = [
     name: RouteName.UserLogin,
     component: () => import("@/pages/UserLogin.vue"),
   },
+  {
+    path: "/logout",
+    name: "SignOut",
+    beforeEnter: async (to, from, next) => {
+      await store.dispatch("logoutUser");
+      store.dispatch("notifyAppIsReady");
+      next({
+        name: RouteName.TheHome,
+      });
+    },
+  },
   //Not authorized route
   {
     path: "/unauthorized",
