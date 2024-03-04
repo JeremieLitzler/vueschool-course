@@ -98,9 +98,9 @@ export default {
     },
   },
   methods: {
-    logout() {
+    async logout() {
       //console.log("TheNavBar > logout > start");
-      this.$store.dispatch("logoutUser");
+      await this.$store.dispatch("logoutUser");
       this.$router.push({ name: RouteName.TheHome });
       //console.log("TheNavBar > logout > done!");
     },

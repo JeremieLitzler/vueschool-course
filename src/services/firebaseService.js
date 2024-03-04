@@ -130,9 +130,9 @@ export default function firebaseService() {
       exists: userDoc.exists(),
     };
   };
-  const signOut = () => {
-    auth.signOut();
-    auth.currentUser = null;
+  const signOut = async () => {
+    await auth.signOut();
+    console.log("UserStore > signOut", auth.currentUser);
   };
 
   const getAuthUserId = () => {
