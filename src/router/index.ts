@@ -10,6 +10,7 @@ import pinia from '@/stores/pinia';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
 import { RouteName } from '@/enums/RouteName';
+import { useCommonStore } from '@/stores/CommonStore';
 
 const HomeRoute: RouteRecordRaw = {
   path: '/',
@@ -140,6 +141,21 @@ const UserLoginRoute: RouteRecordRaw = {
   name: RouteName.UserLogin,
   component: () => import('@/pages/UserLogin.vue'),
 };
+
+const { logoutUser } = useUserStore(pinia);
+const { updateFetching } = useCommonStore(pinia);
+const UserLogoutRoute: RouteRecordRaw = {
+  path: '/logout',
+  name: RouteName.UserLogout,
+  redirect: '',
+  beforeEnter: async (_to, _from, next) => {
+    await logoutUser();
+    updateFetching();
+    next({
+      name: RouteName.TheHome,
+    });
+  },
+};
 const NotAuthorizedRoute: RouteRecordRaw = {
   path: '/unauthorized',
   name: RouteName.NotAuthorized,
@@ -182,6 +198,7 @@ const routerOptions: RouterOptions = {
     ThreadEditRoute,
     UserRegisterRoute,
     UserLoginRoute,
+    UserLogoutRoute,
     NotAuthorizedRoute,
     NotFoundRoute,
   ],

@@ -6,6 +6,10 @@ export default function useAppendRouteHelper() {
   const toHomePage = () => {
     router.push({ name: RouteName.TheHome });
   };
+  const toSignOut = () => {
+    router.push({ name: RouteName.UserLogout });
+  };
+
   const toForumPage = (id: string) => {
     router.push({
       name: RouteName.ForumShow,
@@ -23,5 +27,6 @@ export default function useAppendRouteHelper() {
     toHomePage,
     toForumPage,
     toThreadPage,
+    toSignOut,
   };
 }
