@@ -119,6 +119,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
 
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);
       const item = await useFirebase().getDoc(itemRef);
+      if (!item.exists()) return resolve({} as T);
+
       const result = { ...item.data(), id: item.id } as T;
       setItem({ targetStore: targetStore, item: result });
       resolve(result);
