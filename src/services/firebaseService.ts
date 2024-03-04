@@ -45,8 +45,9 @@ export default function firebaseService() {
       });
   };
 
-  const signOut = () => {
-    auth.signOut();
+  const signOut = async () => {
+    await auth.signOut();
+    console.log('UserStore > signOut', auth.currentUser);
   };
   const getAuthUserId = () => {
     return auth.currentUser?.uid;

@@ -117,8 +117,8 @@ export const useUserStore = defineStore('UserStore', () => {
   const loginWithEmailAndPassword = ({ email, password }: UserLoginRequest) => {
     return firebaseService().loginWithEmailAndPassword({ email, password });
   };
-  const logoutUser = () => {
-    firebaseService().signOut();
+  const logoutUser = async () => {
+    await firebaseService().signOut();
     authId.value = '';
   };
   const createUser = async (

@@ -74,6 +74,9 @@
 import { ref, computed } from 'vue';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
+import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+
+const { toHomePage } = useAppendRouteHelper();
 
 const menuOpened = ref(false);
 const user = computed(() => useUserStore().getAuthUser());
@@ -84,7 +87,8 @@ const signedIn = computed(
 
 const toggleMenu = () => (menuOpened.value = !menuOpened.value);
 
-const logout = () => {
-  useUserStore().logoutUser();
+const logout = async () => {
+  await useUserStore().logoutUser();
+  toHomePage();
 };
 </script>
