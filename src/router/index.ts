@@ -56,9 +56,11 @@ const ThreadShowRoute: RouteRecordRaw = {
   props: true,
   beforeEnter: (to, _from, next) => {
     //does the thread exists?
-    const threadExists = getThreadById(to.params.id as string);
+    const threadMatch = getThreadById(to.params.id as string);
+    console.log('ThreadShow > beforeEnter > threadMatch', threadMatch);
+
     //if positive, contine
-    if (threadExists) {
+    if (threadMatch?.id !== '') {
       return next();
     }
     //else redirect to not found
