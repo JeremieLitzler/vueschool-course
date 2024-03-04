@@ -100,7 +100,11 @@ export default {
   methods: {
     async logout() {
       //console.log("TheNavBar > logout > start");
-      this.$router.push({ name: RouteName.SignOut });
+      console.log("beforeEnter > UserLogout > start...");
+      await this.$store.dispatch("logoutUser");
+      console.log("beforeEnter > UserLogout > logoutUser ran...");
+      this.$store.dispatch("notifyAppIsReady");
+      this.$router.push({ name: RouteName.TheHome });
       //console.log("TheNavBar > logout > done!");
     },
     toggleMenu() {

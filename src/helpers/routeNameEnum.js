@@ -10,11 +10,11 @@ export function useRouteName() {
     ThreadEdit: "ThreadEdit",
     UserRegister: "UserRegister",
     UserLogin: "UserLogin",
+    UserLogout: "UserLogout",
     //Behind auth pages
     AccountEdit: "AccountEdit",
     AccountShow: "AccountShow",
     //Commun page
-    SignOut: "SignOut",
     NotAuthorized: "NotAuthorized",
     NotFound: "NotFound",
   };

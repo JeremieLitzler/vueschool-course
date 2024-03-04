@@ -218,14 +218,17 @@ const routes = [
     component: () => import("@/pages/UserLogin.vue"),
   },
   {
+    //TODO: calling this from TheNavBar component doesn't work from the /Account page...
     path: "/logout",
-    name: "SignOut",
-    beforeEnter: async (to, from, next) => {
+    name: RouteName.UserLogout,
+    beforeEnter: async () => {
+      console.log("beforeEnter > UserLogout > start...");
       await store.dispatch("logoutUser");
+      console.log("beforeEnter > UserLogout > logoutUser ran...");
       store.dispatch("notifyAppIsReady");
-      next({
+      return {
         name: RouteName.TheHome,
-      });
+      };
     },
   },
   //Not authorized route
