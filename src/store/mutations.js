@@ -58,6 +58,11 @@ export default {
     state.firestoreUnsubscribes.push(unsubscribe);
     //console.log("called appendUnsubscribe");
   },
+  setAuthUserUnsubscribe(state, { unsubscribe }) {
+    //console.log("calling appendUnsubscribe");
+    state.authUserUnsubscribe = unsubscribe;
+    //console.log("called appendUnsubscribe");
+  },
   resetFirestoreUnsubs(state) {
     state.firestoreUnsubscribes.splice(0, state.firestoreUnsubscribes.length);
     //console.log("called resetFirestoreUnsubs");

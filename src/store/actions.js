@@ -34,7 +34,13 @@ export default {
     state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());
     commit("resetFirestoreUnsubs");
   },
-  fetchItem({ state, commit }, { source, id }) {
+  async runUnsubscribeAuthUser({ state, commit }) {
+    if (state.authUserUnsubscribe) {
+      state.authUserUnsubscribe();
+      commit("setAuthUserUnsubscribe", null);
+    }
+  },
+  fetchItem({ state, commit }, { source, id, handleUnsubscribe = null }) {
     const item = findById(state[source], id);
     if (item) {
       // console.log(`🍍 found item in store (source: ${source}, id: ${id}) 🍍`);
@@ -56,7 +62,11 @@ export default {
         commit("setItem", { source, item });
         resolve(item);
       });
-      commit("appendUnsubscribe", { unsubscribe });
+      if (handleUnsubscribe) {
+        handleUnsubscribe(unsubscribe);
+      } else {
+        commit("appendUnsubscribe", { unsubscribe });
+      }
     });
   },
   fetchItems({ dispatch }, { source, ids }) {
@@ -69,7 +79,13 @@ export default {
     if (userId === undefined) {
       return new Promise((resolve) => resolve({}));
     }
-    const user = await dispatch("fetchUser", { id: userId });
+    const user = await dispatch("fetchItem", {
+      source: "users",
+      id: userId,
+      handleUnsubscribe: (unsubscribe) => {
+        commit("setAuthUserUnsubscribe", unsubscribe);
+      },
+    });
     commit("setAuthId", { authId: userId });
     return user;
   },

@@ -14,6 +14,7 @@ export default createStore({
     authId: null,
     appIsReady: false,
     firestoreUnsubscribes: [],
+    authUserUnsubscribe: null,
   },
   getters,
   actions,

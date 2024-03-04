@@ -7,6 +7,7 @@ import firebaseService from "./services/firebaseService";
 
 //Firebase common logic
 firebaseService().auth.onAuthStateChanged(async (user) => {
+  store.dispatch("runUnsubscribeAuthUser");
   if (user) {
     await store.dispatch("fetchAuthUser");
   }
