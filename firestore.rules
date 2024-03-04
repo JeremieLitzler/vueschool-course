@@ -13,7 +13,49 @@ service cloud.firestore {
     // all client requests to your Firestore database will be denied until you Update
     // your rules
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2024, 3, 23);
+      allow read: if 
+      	true
+    }
+    function userIsLoggedIn(){
+      return request.auth != null  
+    }
+    function isNewResource(){
+     return resource == null  
+    }
+    function resourceBelongsToUser(){
+     return request.auth.id == resource.data.userId
+    }
+    //threads
+    match /threads/{thread}{
+      function isOnlyAppendingPostAndContributor(){
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['posts', 'contributors'])
+      }
+      allow write: if
+      	userIsLoggedIn() && (isNewResource() || resourceBelongsToUser())
+      allow update: if
+        isOnlyAppendingPostAndContributor()
+    }
+    //posts
+    match /posts/{post}{
+      allow write: if
+      	userIsLoggedIn() && (isNewResource() || resourceBelongsToUser())
+    }
+    
+    //forums
+    match /forums/{forum}{
+      function isOnlyAppendingThread(){
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['threads'])
+      }
+      allow update: if
+        userIsLoggedIn() && isOnlyAppendingThread()
+    }
+    
+    //users
+    match /users/{user}{
+      allow create: if
+        true
+      allow update: if
+        request.auth.uid == resource.id
     }
   }
 }

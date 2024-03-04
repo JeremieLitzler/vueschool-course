@@ -218,6 +218,9 @@ export default {
   },
   async createThread({ commit, dispatch, getters }, { title, body, forumId }) {
     //console.log("threadId", id);
+    if (!getters.authUser.id) {
+      return new Promise((reject) => reject("You're not logged in"));
+    }
     const thread = {
       forumId: forumId,
       publishedAt: firebaseService().getServerTimeStamp(),
@@ -228,15 +231,15 @@ export default {
     const threadRef = doc(collection(db, "threads"));
     const forumRef = doc(db, "forums", thread.forumId);
     const userRef = doc(db, "users", getters.authUser.id);
-    await writeBatch(db)
-      .set(threadRef, thread)
-      .update(forumRef, {
-        threads: arrayUnion(threadRef.id),
-      })
-      .update(userRef, {
-        threads: arrayUnion(threadRef.id),
-      })
-      .commit();
+    const batch = writeBatch(db);
+    batch.set(threadRef, thread);
+    batch.update(forumRef, {
+      threads: arrayUnion(threadRef.id),
+    });
+    batch.update(userRef, {
+      threads: arrayUnion(threadRef.id),
+    });
+    await batch.commit();
 
     const newThread = await getDoc(threadRef);
 

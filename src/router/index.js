@@ -16,22 +16,7 @@ const routes = [
     name: RouteName.AccountEdit,
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: true },
-    meta: { toTop: true, smoothScroll: true },
-    beforeEnter: async (to, from, next) => {
-      //TODO : implement auth guard
-      //verify auht user exists
-      const authUser = await store.dispatch("fetchAuthUser");
-      if (authUser.id === undefined) {
-        return next({
-          name: RouteName.NotAuthorized,
-          params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
-          query: to.query,
-          hash: to.hash,
-        });
-      }
-      //continue since user is authorized
-      next();
-    },
+    meta: { toTop: true, smoothScroll: true, requiresAuth: true },
   },
   //Authenticated user profile route
   {
@@ -39,22 +24,7 @@ const routes = [
     name: RouteName.AccountShow,
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: false },
-    meta: { toTop: true, smoothScroll: true },
-    beforeEnter: async (to, from, next) => {
-      //TODO : implement auth guard
-      //verify auth user exists
-      const authUser = await store.dispatch("fetchAuthUser");
-      if (authUser.id === undefined) {
-        return next({
-          name: RouteName.NotAuthorized,
-          params: { patchMatch: to.path.substring(1).split("/") }, // <-- preserve the requested URL while loading the NotFound component.
-          query: to.query,
-          hash: to.hash,
-        });
-      }
-      //continue since user is authorized
-      next();
-    },
+    meta: { toTop: true, smoothScroll: true, requiresAuth: true },
   },
   //User profile route
   {
@@ -164,6 +134,7 @@ const routes = [
     name: RouteName.ThreadCreate,
     component: () => import("@/pages/ThreadCreate.vue"),
     props: true,
+    meta: { requiresAuth: true },
     beforeEnter: async (to, from, next) => {
       const exists = await store.dispatch("fetchForum", {
         id: to.params.forumId,
@@ -190,6 +161,7 @@ const routes = [
     name: RouteName.ThreadEdit,
     component: () => import("@/pages/ThreadEdit.vue"),
     props: true,
+    meta: { requiresAuth: true },
     beforeEnter: async (to, from, next) => {
       const exists = await store.dispatch("fetchThread", { id: to.params.id });
       //if positive, contine
@@ -262,11 +234,29 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(async () => {
+router.beforeEach(async (to) => {
   store.dispatch("runAndResetFirestoreUnsubs");
-  await store.dispatch("fetchAuthUser");
   //this.$store.dispatch("notifyAppIsReady");
   store.dispatch("resetAppIsReady");
+
+  console.log("beforeEach global guard > to.name", to.name);
+  console.log("beforeEach global guard > to.meta", to.meta);
+
+  if (to.meta.requiresAuth) {
+    //TODO : implement auth guard
+    //verify auth user exists
+    const authUserId = await store.dispatch("fetchAuthUser");
+    console.log("beforeEach global guard > authUserId", authUserId);
+
+    if (!authUserId.id) {
+      return {
+        name: RouteName.NotAuthorized,
+        query: to.query,
+        hash: to.hash,
+      };
+    }
+  }
+  //continue since user is authorized
 });
 
 export default router;
