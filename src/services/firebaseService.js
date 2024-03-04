@@ -132,6 +132,7 @@ export default function firebaseService() {
   };
   const signOut = () => {
     auth.signOut();
+    auth.currentUser = null;
   };
 
   const getAuthUserId = () => {
