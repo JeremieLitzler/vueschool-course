@@ -2,33 +2,33 @@
   <div class="profile-card">
     <p class="text-center">
       <img
-        :src="userProfile?.avatar"
-        :alt="`${userProfile?.name} profile picture`"
+        :src="user?.avatar"
+        :alt="`${user?.name} profile picture`"
         class="avatar-xlarge"
       />
     </p>
 
-    <h1 class="title">{{ userProfile?.username }}</h1>
+    <h1 class="title">{{ user?.username }}</h1>
 
-    <p class="text-lead">{{ userProfile?.name }}</p>
+    <p class="text-lead">{{ user?.name }}</p>
 
     <p class="text-justify">
-      {{ userProfile?.bio || "No bio specified" }}
+      {{ user?.bio || "No bio specified" }}
     </p>
 
-    <span class="online">{{ userProfile?.name }} is online</span>
+    <span class="online">{{ user?.name }} is online</span>
 
     <div class="stats">
-      <span>{{ userProfile?.postsCount }} posts</span>
-      <span>{{ userProfile?.threadsCount }} threads</span>
+      <span>{{ user?.postsCount }} posts</span>
+      <span>{{ user?.threadsCount }} threads</span>
     </div>
 
     <hr />
 
-    <p v-if="userProfile?.website" class="text-large text-center">
+    <p v-if="user?.website" class="text-large text-center">
       <i class="fa fa-globe"></i>
-      <a :href="userProfile?.website" target="_blank" rel="noopener">{{
-        userProfile?.website
+      <a :href="user?.website" target="_blank" rel="noopener">{{
+        user?.website
       }}</a>
     </p>
     <div v-if="isEditableProfile" class="text-center">
@@ -58,7 +58,6 @@ export default {
   data() {
     return {
       RouteName,
-      userProfile: { ...this.user },
     };
   },
   computed: {

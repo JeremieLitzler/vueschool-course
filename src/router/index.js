@@ -17,6 +17,10 @@ const routes = [
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: true },
     meta: { toTop: true, smoothScroll: true, requiresAuth: true },
+    beforeEnter: () => {
+      //TODO: Why do I need to do that?
+      store.dispatch("notifyAppIsReady");
+    },
   },
   //Authenticated user profile route
   {
@@ -25,6 +29,10 @@ const routes = [
     component: () => import("@/pages/UserShow.vue"),
     props: { edit: false },
     meta: { toTop: true, smoothScroll: true, requiresAuth: true },
+    beforeEnter: () => {
+      //TODO: Why do I need to do that?
+      store.dispatch("notifyAppIsReady");
+    },
   },
   //User profile route
   {

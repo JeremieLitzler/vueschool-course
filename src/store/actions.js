@@ -131,7 +131,7 @@ export default {
     const posts = await getDocs(queryObj);
     posts.forEach((post) => {
       commit("setItem", {
-        source: "posts",
+        source: collectionName,
         item: { ...post.data(), id: post.id },
       });
     });
@@ -206,8 +206,15 @@ export default {
     commit("setItem", { source: "users", item: newUserDoc });
     return newUserDoc;
   },
-  updateUser({ commit }, user) {
-    commit("setItem", { source: "users", item: user });
+  async updateUser({ commit }, user) {
+    const userRef = doc(db, "users", user.id);
+    await writeBatch(db)
+      .set(userRef, { ...user })
+      .commit();
+
+    const newUser = useFirebaseHelper().docToResource(await getDoc(userRef));
+    commit("setItem", { source: "users", item: newUser });
+    return newUser;
   },
   //categories
   fetchCategory({ dispatch }, { id }) {
