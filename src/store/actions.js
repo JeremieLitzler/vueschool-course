@@ -15,6 +15,8 @@ import {
   writeBatch,
   arrayUnion,
   increment,
+  query,
+  where,
 } from "firebase/firestore";
 
 import firebaseService from "@/services/firebaseService";
@@ -117,6 +119,22 @@ export default {
 
     commit("setAuthId", { authId: userId });
     return user;
+  },
+  async fetchItemsByProp(
+    { commit },
+    { collectionName, whereProp, whereValue }
+  ) {
+    const queryObj = query(
+      collection(db, collectionName),
+      where(whereProp, "==", whereValue)
+    );
+    const posts = await getDocs(queryObj);
+    posts.forEach((post) => {
+      commit("setItem", {
+        source: "posts",
+        item: { ...post.data(), id: post.id },
+      });
+    });
   },
   async fetchUser({ dispatch }, { id }) {
     console.log("fetchUser > id ", id);

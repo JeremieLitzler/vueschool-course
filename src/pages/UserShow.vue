@@ -165,14 +165,19 @@ export default {
   },
   async created() {
     //get the authUser
-    //const user =
+    const userId = this.id ?? this.$store.getters.authUser.id;
     if (this.id) {
       await this.$store.dispatch("fetchUser", { id: this.id });
     } else {
       await this.$store.dispatch("fetchAuthUser");
     }
-    //get the posts
 
+    //get the posts
+    await this.$store.dispatch("fetchItemsByProp", {
+      collectionName: "posts",
+      whereProp: "userId",
+      whereValue: userId,
+    });
     //get the threads
 
     this.$store.dispatch("notifyAppIsReady");
