@@ -8,7 +8,7 @@
       <template #default>
         <section>
           <the-header />
-          <router-view :key="route.fullPath" />
+          <router-view :key="route.path" />
         </section>
       </template>
     </suspense>

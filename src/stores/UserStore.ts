@@ -15,6 +15,7 @@ import { UserCredential } from 'firebase/auth';
 import objectHelper from '@/helpers/objectHelper';
 import UserRegisterRequest from '@/types/UserRegisterRequest';
 import UserLoginRequest from '@/types/UserLoginRequest';
+import UserUpdateRequest from '@/types/UserUpdateRequest';
 
 // const { findById } = useArraySearchHelper();
 
@@ -189,11 +190,29 @@ export const useUserStore = defineStore('UserStore', () => {
     useCommonStore().setItem<User>({ targetStore: users, item: newUserDoc });
     return newUserDoc;
   };
-  const updateUser = (updatedUser: User) => {
-    const userIndex = users.value.findIndex(
-      (user) => user.id === updatedUser.id
+  const updateUser = async ({ userUpdated, id }: UserUpdateRequest) => {
+    const userRef = useFirebase().doc(useFirebase().db, 'users', id);
+    await useFirebase()
+      .writeBatch(useFirebase().db)
+      .set(userRef, {
+        avatar: userUpdated.avatar || null,
+        bio: userUpdated.bio || null,
+        email: userUpdated.email || null,
+        name: userUpdated.name || null,
+        postsCount: userUpdated.postsCount || null,
+        registeredAt: userUpdated.registeredAt || null,
+        threads: userUpdated.threads || null,
+        username: userUpdated.username || null,
+        usernameLower: userUpdated.usernameLower || null,
+        website: userUpdated.website || null,
+      })
+      .commit();
+
+    const newUser = useFirebaseHelper().docToResource(
+      await useFirebase().getDoc(userRef)
     );
-    users.value[userIndex] = updatedUser;
+
+    useCommonStore().setItem({ targetStore: users, item: newUser });
   };
 
   const appendThreadToUser = (request: AppendThreadToUserRequest) => {

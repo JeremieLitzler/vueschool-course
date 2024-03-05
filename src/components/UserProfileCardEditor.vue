@@ -105,7 +105,7 @@ const exitEditRoute = () => {
 };
 
 const saveProfile = () => {
-  updateUser({ ...editedUser });
+  updateUser({ userUpdated: editedUser, id: user.value.id });
   exitEditRoute();
 };
 
