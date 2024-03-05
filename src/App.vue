@@ -2,7 +2,7 @@
   <div class="container">
     <suspense>
       <template #fallback>
-        <section class="loading"><app-spinner /></section>
+        <section class="loading">LOADING <app-spinner /></section>
       </template>
       <template #default>
         <section>

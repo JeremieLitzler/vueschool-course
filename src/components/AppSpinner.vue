@@ -9,9 +9,12 @@
   </div>
 </template>
 <script setup lang="ts">
-const { backgroundColor } = defineProps<{
-  backgroundColor: { type: String; default: '#263959' };
-}>();
+interface AppSpinnerProps {
+  backgroundColor?: string;
+}
+const { backgroundColor } = withDefaults(defineProps<AppSpinnerProps>(), {
+  backgroundColor: '#263959',
+});
 </script>
 <style lang="css" scoped>
 .sk-chase {
