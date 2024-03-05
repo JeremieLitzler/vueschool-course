@@ -7,6 +7,7 @@ import type WithId from '@/types/WithId';
 import type GenericFindRequest from '@/types/GenericFindRequest';
 import type GenericFetchRequestMany from '@/types/GenericFetchRequestMany';
 import type GenericFetchRequestAll from '@/types/GenericFetchRequestAll';
+import FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
 
 export const useCommonStore = defineStore('CommonStore', () => {
   //STATE
@@ -98,6 +99,24 @@ export const useCommonStore = defineStore('CommonStore', () => {
         });
     });
   };
+  const fetchItemsByProp = async <T extends WithId>({
+    collectionName,
+    targetStore,
+    propName,
+    propValue,
+  }: FirebaseSinglePropQueryRequest<T>) => {
+    const queryObj = useFirebase().query(
+      useFirebase().collection(useFirebase().db, collectionName),
+      useFirebase().where(propName, '==', propValue)
+    );
+    const posts = await useFirebase().getDocs(queryObj);
+    posts.forEach((item) => {
+      setItem({
+        targetStore,
+        item: { ...item.data(), id: item.id },
+      });
+    });
+  };
   /**
    * Query firestore in a collection given an item id.
    * Once fetch, the item is set into the targetStore.
@@ -165,6 +184,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     fetchItem,
     fetchSomeItems,
     fetchAllItems,
+    fetchItemsByProp,
     setItem,
   };
 });

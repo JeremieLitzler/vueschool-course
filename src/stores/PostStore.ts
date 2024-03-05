@@ -58,6 +58,16 @@ export const usePostStore = defineStore('PostStore', () => {
       collection: FirestoreCollection.Posts,
     });
   };
+  const fetchPostsByUser = async (userId: string | undefined) => {
+    const userIdFinal =
+      userId === undefined ? useUserStore().getAuthUser().id : userId;
+    await useCommonStore().fetchItemsByProp({
+      collectionName: FirestoreCollection.Posts,
+      propName: 'userId',
+      propValue: userIdFinal,
+      targetStore: posts,
+    });
+  };
   const addPost = async (post: PostAddRequest) => {
     //console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
@@ -133,6 +143,7 @@ export const usePostStore = defineStore('PostStore', () => {
     //actions
     fetchPost,
     fetchPosts,
+    fetchPostsByUser,
     addPost,
     updatePost,
     setPost,

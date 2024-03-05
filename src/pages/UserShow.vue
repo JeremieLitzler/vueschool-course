@@ -118,7 +118,13 @@
             </div>
           </div>
         </div> -->
-      <post-list :posts="user?.posts!" />
+      <section class="text-center" v-if="userPosts.length === 0">
+        No post yet.
+        <router-link :to="{ name: RouteName.TheHome }"
+          >Start here ⚡</router-link
+        >
+      </section>
+      <post-list v-else :posts="userPosts" />
     </div>
   </div>
 </template>
@@ -129,6 +135,8 @@ import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import UserProfileCard from '@/components/UserProfileCard.vue';
 import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
+import { usePostStore } from '@/stores/PostStore';
+import { RouteName } from '@/enums/RouteName';
 
 const props = defineProps<{ id?: string; edit?: boolean }>();
 
@@ -140,6 +148,10 @@ const user = computed(() => {
   }
   return useUserStore().getAuthUser();
 });
+const userPosts = computed(() =>
+  usePostStore().getPostsByUserId(user.value.id)
+);
 await useUserStore().fetchUser(props.id!);
+await usePostStore().fetchPostsByUser(props.id!);
 useCommonStore().notifyAppIsReady();
 </script>
