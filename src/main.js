@@ -3,15 +3,6 @@ import store from "@/store";
 import router from "./router";
 
 import App from "./App.vue";
-// import firebaseService from "./services/firebaseService";
-
-//Firebase common logic
-// firebaseService().auth.onAuthStateChanged(async (user) => {
-//   store.dispatch("runUnsubscribeAuthUser");
-//   if (user) {
-//     await store.dispatch("fetchAuthUser");
-//   }
-// });
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...

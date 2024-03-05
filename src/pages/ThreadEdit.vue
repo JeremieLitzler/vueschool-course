@@ -58,6 +58,9 @@ export default {
       });
     },
   },
+  created() {
+    this.$store.dispatch("notifyAppIsReady");
+  },
 };
 </script>
 

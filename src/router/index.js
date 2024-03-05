@@ -250,7 +250,7 @@ router.beforeEach(async (to) => {
   if (to.meta.requiresAuth && !store.state.authId) {
     return {
       name: RouteName.UserLogin,
-      query: to.query,
+      query: { redirectTo: to.path },
       hash: to.hash,
     };
   }

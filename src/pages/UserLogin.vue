@@ -73,12 +73,18 @@ export default {
         this.errorMessage = result.message;
       } else {
         console.log("UserLogin > login:", result);
-        this.$router.push({ name: RouteName.TheHome });
+        this.successRedirect();
       }
     },
     async loginGoogle() {
       this.$store.dispatch("loginWithGoogle");
-      this.$router.push({ name: RouteName.TheHome });
+      this.successRedirect();
+    },
+    successRedirect() {
+      const redirectTo = this.$route.query.redirectTo || {
+        name: RouteName.TheHome,
+      };
+      this.$router.push(redirectTo);
     },
   },
   created() {
