@@ -17,7 +17,7 @@ import { RouteName } from '@/enums/RouteName';
 
 const { id } = defineProps<{ id: string }>();
 
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 const category = await useCategoryStore().fetchCategory(id);
 //console.log(RouteName.CategoryShow, category);
 

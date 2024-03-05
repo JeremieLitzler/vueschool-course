@@ -1,7 +1,10 @@
 <template>
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
-    <ul>
+    <span v-if="!useCommonStore().appIsReady" class="navbar-user navbar-loading"
+      ><app-spinner background-color="#ffffff"
+    /></span>
+    <ul v-else>
       <li v-if="signedIn" class="navbar-user">
         <a @click.prevent="toggleMenu" href="#">
           <img
@@ -75,6 +78,7 @@ import { ref, computed } from 'vue';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import { useCommonStore } from '@/stores/CommonStore';
 
 const { toSignOut } = useAppendRouteHelper();
 

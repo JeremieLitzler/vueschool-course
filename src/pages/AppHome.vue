@@ -12,10 +12,9 @@ import CategoryList from '@/components/CategoryList.vue';
 import { useForumStore } from '@/stores/ForumStore';
 // import { RouteName } from '@/enums/RouteName';
 
-useCommonStore().updateFetching();
 const categories = await useCategoryStore().fetchAllCategories();
 const forumIds = categories.flatMap(({ forums }) => forums!);
 await useForumStore().fetchForums(forumIds);
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 //console.log(RouteName.TheHome, categories);
 </script>

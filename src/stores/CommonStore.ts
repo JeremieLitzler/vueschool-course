@@ -13,15 +13,15 @@ export const useCommonStore = defineStore('CommonStore', () => {
   /**
    * The flag indicating we are fetching something.
    */
-  const fetching = ref(false);
+  const appIsReady = ref(false);
 
   //ACTIONS
   /**
    * Update the flag fetching the data
    */
-  const updateFetching = () => {
+  const notifyAppIsReady = () => {
     // console.log('fetching was', fetching.value);
-    fetching.value = !fetching.value;
+    appIsReady.value = true;
     // console.log('fetching is', fetching.value);
   };
   /**
@@ -160,8 +160,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
   };
 
   return {
-    fetching,
-    updateFetching,
+    appIsReady,
+    notifyAppIsReady,
     fetchItem,
     fetchSomeItems,
     fetchAllItems,

@@ -52,12 +52,12 @@ const { id } = defineProps({
   },
 });
 
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 const forum = await useForumStore().fetchForum(id);
 const threads = await useThreadStore().fetchThreads(forum.threads!);
 const userIds = threads.flatMap(({ userId }) => userId!);
 await useUserStore().fetchUsers(userIds);
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 </script>
 
 <style scoped></style>

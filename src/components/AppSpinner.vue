@@ -8,6 +8,11 @@
     <div class="sk-chase-dot"></div>
   </div>
 </template>
+<script setup lang="ts">
+const { backgroundColor } = defineProps<{
+  backgroundColor: { type: String; default: '#263959' };
+}>();
+</script>
 <style lang="css" scoped>
 .sk-chase {
   width: 40px;
@@ -30,7 +35,7 @@
   display: block;
   width: 25%;
   height: 25%;
-  background-color: #263959;
+  background-color: v-bind(backgroundColor);
   border-radius: 100%;
   animation: sk-chase-dot-before 2s infinite ease-in-out both;
 }

@@ -113,14 +113,14 @@ const UserLoginRoute: RouteRecordRaw = {
 };
 
 const { logoutUser } = useUserStore(pinia);
-const { updateFetching } = useCommonStore(pinia);
+const { notifyAppIsReady } = useCommonStore(pinia);
 const UserLogoutRoute: RouteRecordRaw = {
   path: '/logout',
   name: RouteName.UserLogout,
   redirect: '',
   beforeEnter: async (_to, _from, next) => {
     await logoutUser();
-    updateFetching();
+    notifyAppIsReady();
     next({
       name: RouteName.TheHome,
     });

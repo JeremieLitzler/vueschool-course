@@ -57,7 +57,7 @@ const { id } = defineProps({
   },
 });
 
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 //fetch requested thread
 const threadFetch = await useThreadStore().fetchThread(id);
 //... and its author
@@ -70,7 +70,7 @@ const userIds = posts.map((post) => post.userId!);
 // and finally the posts's authors
 const extraUserPromise = useUserStore().fetchUsers(userIds);
 await Promise.all([firstUserPromise, extraUserPromise]);
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 
 const thread = computed((): ThreadHydraded | undefined =>
   useThreadStore().getThreadById(id)

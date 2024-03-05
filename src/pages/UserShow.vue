@@ -141,5 +141,5 @@ const user = computed(() => {
   return useUserStore().getAuthUser();
 });
 await useUserStore().fetchUser(props.id!);
-useCommonStore().updateFetching();
+useCommonStore().notifyAppIsReady();
 </script>
