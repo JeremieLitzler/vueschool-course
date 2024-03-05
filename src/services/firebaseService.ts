@@ -6,9 +6,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   UserCredential,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import type { FirebaseError } from 'firebase/app';
 import UserLoginRequest from '@/types/UserLoginRequest';
+import UserGoogleSigninRequest from '@/types/UserGoogleSignRequest';
 
 export default function firebaseService() {
   const auth = getAuth(useFirebase().firebaseApp);
@@ -45,6 +48,21 @@ export default function firebaseService() {
       });
   };
 
+  const signinWithGoogle = async (): Promise<UserGoogleSigninRequest> => {
+    const provider = new GoogleAuthProvider();
+    const response = await signInWithPopup(auth, provider);
+    const user = response.user;
+    const userRef = useFirebase().doc(useFirebase().db, 'users', user.uid);
+    const userDoc = await useFirebase().getDoc(userRef);
+    return {
+      uid: user.uid,
+      name: user.displayName!,
+      email: user.email!,
+      username: user.email!,
+      avatar: user.photoURL!,
+      exists: userDoc.exists(),
+    };
+  };
   const signOut = async () => {
     await auth.signOut();
     console.log('UserStore > signOut', auth.currentUser);
@@ -59,6 +77,7 @@ export default function firebaseService() {
     registerUser,
     getAuthUserId,
     loginWithEmailAndPassword,
+    signinWithGoogle,
     signOut,
   };
 }

@@ -3,8 +3,13 @@
     <div class="col-2">
       <form @submit.prevent="register" class="card card-form">
         <h1 class="text-center">Register</h1>
+        <div class="text-center push-top">
+          <button @click="loginWithGoogle" class="btn-red btn-xsmall">
+            <i class="fa fa-google fa-btn"></i>Register with Google
+          </button>
+        </div>
 
-        <div class="form-group">
+        <div class="form-group push-top">
           <label for="name">Full Name</label>
           <input v-model="form.name" id="name" type="text" class="form-input" />
         </div>
@@ -59,11 +64,6 @@
           </router-link>
         </div>
       </form>
-      <div class="text-center push-top">
-        <button class="btn-red btn-xsmall">
-          <i class="fa fa-google fa-btn"></i>Sign up with Google
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -78,7 +78,8 @@ import objectHelper from '@/helpers/objectHelper';
 
 import User from '@/types/User';
 import { RouteName } from '@/enums/RouteName';
-const { toHomePage } = useAppendRouteHelper();
+import { useRoute } from 'vue-router';
+const { toHomePage, toSuccessRedirect } = useAppendRouteHelper();
 const error = ref('');
 const form = ref<UserRegisterRequest>({
   name: '',
@@ -88,6 +89,7 @@ const form = ref<UserRegisterRequest>({
   avatar: '',
 });
 
+const route = useRoute();
 const register = async () => {
   console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({
@@ -98,7 +100,19 @@ const register = async () => {
     return;
   }
   console.log('The created user >', user);
-  toHomePage();
+  if (!route.query.redirectTo) {
+    toHomePage();
+  } else {
+    toSuccessRedirect(route);
+  }
+};
+const loginWithGoogle = async () => {
+  await useUserStore().loginWithGoogle();
+  if (!route.query.redirectTo) {
+    toHomePage();
+  } else {
+    toSuccessRedirect(route);
+  }
 };
 </script>
 

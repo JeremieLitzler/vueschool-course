@@ -1,8 +1,8 @@
 import { RouteName } from '@/enums/RouteName';
-import { useRouter } from 'vue-router';
+import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
+import router from '@/router';
 
 export default function useAppendRouteHelper() {
-  const router = useRouter();
   const toHomePage = () => {
     router.push({ name: RouteName.TheHome });
   };
@@ -23,10 +23,30 @@ export default function useAppendRouteHelper() {
     });
   };
 
+  const toSuccessRedirect = (route: RouteLocationNormalizedLoaded) => {
+    console.log(
+      'toSuccessRedirect > route.query.redirectTo',
+      route.query.redirectTo
+    );
+
+    if (!route.query.redirectTo) {
+      console.log('toSuccessRedirect > going toHomePage');
+      router.push({
+        path: '/',
+      });
+    }
+
+    const redirectTo: RouteLocationRaw = {
+      path: route.query.redirectTo?.toString(),
+    };
+    router.push(redirectTo);
+  };
+
   return {
     toHomePage,
     toForumPage,
     toThreadPage,
     toSignOut,
+    toSuccessRedirect,
   };
 }

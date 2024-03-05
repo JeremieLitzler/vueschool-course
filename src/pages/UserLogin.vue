@@ -37,7 +37,7 @@
       </form>
 
       <div class="push-top text-center">
-        <button class="btn-red btn-xsmall">
+        <button @click="loginWithGoogle" class="btn-red btn-xsmall">
           <i class="fa fa-google fa-btn"></i>Sign in with Google
         </button>
       </div>
@@ -47,13 +47,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 import UserLoginRequest from '@/types/UserLoginRequest';
 import { FirebaseError } from 'firebase/app';
+import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 
-const { toHomePage } = useAppendRouteHelper();
+const route = useRoute();
+const { toHomePage, toSuccessRedirect } = useAppendRouteHelper();
 const form = ref<UserLoginRequest>({ email: '', password: '' });
 const errorMessage = ref('');
 
@@ -67,7 +69,19 @@ const login = async () => {
     errorMessage.value = error.message;
   } else {
     console.log('UserLogin > login:', result);
+    if (!route.query.redirectTo) {
+      toHomePage();
+    } else {
+      toSuccessRedirect(route);
+    }
+  }
+};
+const loginWithGoogle = async () => {
+  await useUserStore().loginWithGoogle();
+  if (!route.query.redirectTo) {
     toHomePage();
+  } else {
+    toSuccessRedirect(route);
   }
 };
 </script>

@@ -123,6 +123,14 @@ export const useUserStore = defineStore('UserStore', () => {
   const loginWithEmailAndPassword = ({ email, password }: UserLoginRequest) => {
     return firebaseService().loginWithEmailAndPassword({ email, password });
   };
+  const loginWithGoogle = async () => {
+    const user = await firebaseService().signinWithGoogle();
+    console.log('actions > loginWithGoogle > user', user);
+    if (!user.exists) {
+      createUser(user, user.uid);
+      authId.value = user.uid;
+    }
+  };
   const initAuthentification = () => {
     if (authUserObserverUnsubscribe) {
       (authUserObserverUnsubscribe as Function)();
@@ -218,6 +226,7 @@ export const useUserStore = defineStore('UserStore', () => {
     initAuthentification,
     registerUserWithEmailAndPassword,
     loginWithEmailAndPassword,
+    loginWithGoogle,
     logoutUser,
     createUser,
     updateUser,

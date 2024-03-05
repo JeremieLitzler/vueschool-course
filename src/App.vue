@@ -2,12 +2,13 @@
   <div class="container">
     <suspense>
       <template #fallback>
-        <section class="loading">LOADING <app-spinner /></section>
+        <!-- TODO: doesn't work... -->
+        <section class="loading"><app-spinner /></section>
       </template>
       <template #default>
         <section>
           <the-header />
-          <router-view />
+          <router-view :key="route.fullPath" />
         </section>
       </template>
     </suspense>
@@ -15,11 +16,9 @@
 </template>
 <script setup lang="ts">
 // import { computed } from 'vue';
-import { RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import TheHeader from '@/components/TheHeader.vue';
-// import { useCommonStore } from './stores/CommonStore';
-
-// const fetchingSomething = computed(() => useCommonStore().fetching);
+const route = useRoute();
 </script>
 
 <style scoped>

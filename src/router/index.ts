@@ -194,7 +194,7 @@ router.beforeEach(async (to, _from) => {
     //console.log('beforeEach global guard > authUserId', authUserId);
     return {
       name: RouteName.UserLogin,
-      query: to.query,
+      query: { redirectTo: to.path },
       hash: to.hash,
     };
     //continue since user is authorized
