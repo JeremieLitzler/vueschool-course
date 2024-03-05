@@ -78,12 +78,14 @@ const ThreadCreateRoute: RouteRecordRaw = {
   name: RouteName.ThreadCreate,
   component: () => import('@/pages/ThreadCreate.vue'),
   props: true,
+  meta: { requiresAuth: true },
 };
 const ThreadEditRoute: RouteRecordRaw = {
   path: '/thread/:id/edit',
   name: RouteName.ThreadEdit,
   component: () => import('@/pages/ThreadEdit.vue'),
   props: true,
+  meta: { requiresAuth: true },
   beforeEnter: (to, _from, next) => {
     //does the thread exists?
     const threadExists = getThreadById(to.params.id as string);
@@ -105,11 +107,13 @@ const UserRegisterRoute: RouteRecordRaw = {
   path: '/register',
   name: RouteName.UserRegister,
   component: () => import('@/pages/UserRegister.vue'),
+  meta: { requiresGuest: true },
 };
 const UserLoginRoute: RouteRecordRaw = {
   path: '/login',
   name: RouteName.UserLogin,
   component: () => import('@/pages/UserLogin.vue'),
+  meta: { requiresGuest: true },
 };
 
 const { logoutUser } = useUserStore(pinia);
@@ -178,23 +182,25 @@ const routerOptions: RouterOptions = {
 const router: Router = createRouter(routerOptions);
 
 router.beforeEach(async (to, _from) => {
+  await useUserStore().initAuthentification();
   console.log('beforeEach global guard > to.name', to.name);
   console.log('beforeEach global guard > to.meta', to.meta);
 
-  if (to.meta.requiresAuth) {
+  console.log('beforeEach global guard > authId', useUserStore().authId);
+  if (to.meta.requiresAuth && !useUserStore().authId) {
     //TODO : implement auth guard
     //verify auth user exists
-    const authUserId = await useUserStore().fetchAuthUser();
-    console.log('beforeEach global guard > authUserId', authUserId);
-
-    if (!authUserId) {
-      return {
-        name: RouteName.NotAuthorized,
-        query: to.query,
-        hash: to.hash,
-      };
-    }
+    //const authUserId = await useUserStore().fetchAuthUser();
+    //console.log('beforeEach global guard > authUserId', authUserId);
+    return {
+      name: RouteName.UserLogin,
+      query: to.query,
+      hash: to.hash,
+    };
     //continue since user is authorized
+  }
+  if (to.meta.requiresGuest && useUserStore().authId) {
+    return { name: RouteName.TheHome };
   }
 });
 export default router;

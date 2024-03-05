@@ -22,6 +22,7 @@ export const useUserStore = defineStore('UserStore', () => {
   //STATE
   const users = ref<User[]>([]);
   const authId = ref('');
+  let authUserObserverUnsubscribe: null | Function = null;
 
   //GETTERS
   const _hydrateUser = (user: User) => {
@@ -122,6 +123,28 @@ export const useUserStore = defineStore('UserStore', () => {
   const loginWithEmailAndPassword = ({ email, password }: UserLoginRequest) => {
     return firebaseService().loginWithEmailAndPassword({ email, password });
   };
+  const initAuthentification = () => {
+    if (authUserObserverUnsubscribe) {
+      (authUserObserverUnsubscribe as Function)();
+      authUserObserverUnsubscribe = null;
+    }
+    return new Promise((resolve) => {
+      const unsubscribe = firebaseService().auth.onAuthStateChanged(
+        async (user) => {
+          console.log(
+            'actions > initAuthentification > onAuthStateChanged running'
+          );
+
+          if (user) {
+            await fetchAuthUser();
+          }
+          useCommonStore().notifyAppIsReady();
+          resolve(user);
+        }
+      );
+      authUserObserverUnsubscribe = unsubscribe;
+    });
+  };
   const logoutUser = async () => {
     await firebaseService().signOut();
     authId.value = '';
@@ -192,6 +215,7 @@ export const useUserStore = defineStore('UserStore', () => {
     fetchAuthUser,
     fetchUser,
     fetchUsers,
+    initAuthentification,
     registerUserWithEmailAndPassword,
     loginWithEmailAndPassword,
     logoutUser,
