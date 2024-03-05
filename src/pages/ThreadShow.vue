@@ -12,6 +12,7 @@
       <h1 class="thread-title">
         {{ thread.title }}
         <router-link
+          v-if="threadEditable"
           :to="{ name: RouteName.ThreadEdit, params: { id } }"
           class="btn-green btn-small"
           >Edit the thread</router-link
@@ -61,6 +62,9 @@ export default {
     PostEditor,
   },
   computed: {
+    threadEditable() {
+      return this.thread.userId === this.$store.getters.authUser.id;
+    },
     posts() {
       const posts = this.$store.state.posts;
       //console.log("ThreadShow > computed > posts", posts);

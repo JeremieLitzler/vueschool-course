@@ -1,6 +1,23 @@
 <template>
   <div class="col-full">
-    <form @submit.prevent="savePost">
+    <section class="post-editor-cta" v-if="!postingAllowed">
+      <h2>Want to participate?</h2>
+      <router-link
+        :to="{ name: RouteName.UserLogin, query: { redirectTo: $route.path } }"
+        class="btn-green btn-small"
+        >Login</router-link
+      >
+      <p>or</p>
+      <router-link
+        :to="{
+          name: RouteName.UserRegister,
+          query: { redirectTo: $route.path },
+        }"
+        class="btn-green btn-small"
+        >Register</router-link
+      >
+    </section>
+    <form v-else @submit.prevent="savePost">
       <div class="form-group">
         <textarea
           v-model="newPostText"
@@ -17,6 +34,11 @@
 </template>
 
 <script>
+import { useRouteName } from "@/helpers/routeNameEnum";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 export default {
   props: {
     threadId: {
@@ -30,10 +52,15 @@ export default {
   },
   data() {
     return {
+      RouteName,
       newPostText: this.post?.text ?? null,
     };
   },
   computed: {
+    postingAllowed() {
+      console.log("PostEditor > postingAllowed", this.$store.getters.authUser);
+      return this.$store.getters.authUser.id;
+    },
     postIsEdited() {
       const result = this.post?.text !== null;
       //console.log("postIsEdited > ", result);
@@ -62,4 +89,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped>
+.post-editor-cta {
+  width: 18em;
+  margin: 0 auto;
+  text-align: center;
+}
+</style>
