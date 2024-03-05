@@ -24,7 +24,9 @@
     </div>
 
     <div class="btn-group">
-      <button @click="$emit('cancel')" class="btn btn-ghost">Cancel</button>
+      <button @click.prevent="$emit('cancel')" class="btn btn-ghost">
+        Cancel
+      </button>
       <button class="btn btn-blue" type="submit" name="Publish">
         {{ threadExists ? "Update" : "Publish" }}
       </button>

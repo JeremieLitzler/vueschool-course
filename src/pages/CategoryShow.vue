@@ -30,14 +30,14 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.state.categories;
+      return this.$store.state.categories.items;
     },
     category() {
       const match = this.categories.find((item) => item.id === this.id);
       return match;
     },
     categoryForums() {
-      return this.$store.state.forums.filter(
+      return this.$store.state.forums.items.filter(
         (forum) => forum.categoryId === this.category.id
       );
     },
@@ -45,11 +45,11 @@ export default {
   async beforeCreate() {
     //console.log("CategoryShow > created > categoryId >", this.id);
     //this.$store.dispatch("notifyAppIsReady");
-    const category = await this.$store.dispatch("fetchCategory", {
+    const category = await this.$store.dispatch("categories/fetchCategory", {
       id: this.$route.params.id,
     });
     //console.log("CategoryShow > created > category", category);
-    await this.$store.dispatch("fetchForums", {
+    await this.$store.dispatch("forums/fetchForums", {
       ids: category.forums,
     });
 

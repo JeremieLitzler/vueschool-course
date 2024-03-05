@@ -42,7 +42,9 @@ const routes = [
     props: true,
     beforeEnter: async (to, from, next) => {
       //does the thread exists?
-      const exists = await store.dispatch("fetchUser", { id: to.params.id });
+      const exists = await store.dispatch("users/fetchUser", {
+        id: to.params.id,
+      });
       console.log("beforeEnter > /user/:id", exists, to.params.id);
       if (exists) {
         return next();
@@ -64,7 +66,7 @@ const routes = [
     component: () => import("@/pages/CategoryShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
-      const exists = await store.dispatch("fetchCategory", {
+      const exists = await store.dispatch("categories/fetchCategory", {
         id: to.params.id,
       });
       //if positive, contine
@@ -91,7 +93,9 @@ const routes = [
     props: true,
     beforeEnter: async (to, from, next) => {
       //console.log("beforeEnter > /forum/:id > id", to.params.id);
-      const exists = await store.dispatch("fetchForum", { id: to.params.id });
+      const exists = await store.dispatch("forums/fetchForum", {
+        id: to.params.id,
+      });
       //console.log("beforeEnter > /forum/:id", exists);
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
@@ -116,7 +120,7 @@ const routes = [
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
-      const threadMatch = await store.dispatch("fetchThread", {
+      const threadMatch = await store.dispatch("threads/fetchThread", {
         id: to.params.id,
       });
       // console.log("ThreadShow > beforeEnter > threadMatch", threadMatch);
@@ -144,7 +148,7 @@ const routes = [
     props: true,
     meta: { requiresAuth: true },
     beforeEnter: async (to, from, next) => {
-      const exists = await store.dispatch("fetchForum", {
+      const exists = await store.dispatch("forums/fetchForum", {
         id: to.params.forumId,
       });
       //if positive, contine
@@ -171,7 +175,9 @@ const routes = [
     props: true,
     meta: { requiresAuth: true },
     beforeEnter: async (to, from, next) => {
-      const exists = await store.dispatch("fetchThread", { id: to.params.id });
+      const exists = await store.dispatch("threads/fetchThread", {
+        id: to.params.id,
+      });
       //if positive, contine
       //see https://stackoverflow.com/a/62426354
       //threadExists ?? next()
@@ -208,7 +214,7 @@ const routes = [
     name: RouteName.UserLogout,
     beforeEnter: async () => {
       console.log("beforeEnter > UserLogout > start...");
-      await store.dispatch("logoutUser");
+      await store.dispatch("auth/logoutUser");
       console.log("beforeEnter > UserLogout > logoutUser ran...");
       store.dispatch("notifyAppIsReady");
       return {
@@ -245,24 +251,24 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  await store.dispatch("initAuthentification");
+  await store.dispatch("auth/initAuthentification");
   store.dispatch("runAndResetFirestoreUnsubs");
   store.dispatch("resetAppIsReady");
 
   console.log("beforeEach global guard > to.name", to.name);
   console.log("beforeEach global guard > to.meta", to.meta);
-
-  // const authUserId = await store.dispatch("fetchAuthUser");
-  // console.log("beforeEach global guard > authUserId", authUserId);
-  console.log("beforeEach global guard > state.authId", store.state.authId);
-  if (to.meta.requiresAuth && !store.state.authId) {
+  console.log(
+    "beforeEach global guard > state.authId",
+    store.state.auth.authId
+  );
+  if (to.meta.requiresAuth && !store.state.auth.authId) {
     return {
       name: RouteName.UserLogin,
       query: { redirectTo: to.path },
       hash: to.hash,
     };
   }
-  if (to.meta.requiresGuest && store.state.authId) {
+  if (to.meta.requiresGuest && store.state.auth.authId) {
     return { name: RouteName.TheHome };
   }
   //continue since user is authorized

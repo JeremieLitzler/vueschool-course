@@ -18,14 +18,16 @@ export default {
   },
   computed: {
     categories() {
-      return this.$store.getters.getCategories;
+      return this.$store.getters["categories/getCategories"];
     },
   },
   async beforeCreate() {
-    const categories = await this.$store.dispatch("fetchAllCategories");
+    const categories = await this.$store.dispatch(
+      "categories/fetchAllCategories"
+    );
     const forumIds = categories.flatMap(({ forums }) => forums);
     //console.log("categories > forums", forumIds);
-    await this.$store.dispatch("fetchForums", {
+    await this.$store.dispatch("forums/fetchForums", {
       ids: forumIds,
     });
 

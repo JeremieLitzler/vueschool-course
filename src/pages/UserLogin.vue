@@ -66,7 +66,7 @@ export default {
     async login() {
       console.log(this.form);
       const result = await this.$store.dispatch(
-        "loginUserWithEmailAndPassword",
+        "auth/loginUserWithEmailAndPassword",
         this.form
       );
       if (result["name"] === "FirebaseError") {
@@ -77,7 +77,7 @@ export default {
       }
     },
     async loginGoogle() {
-      this.$store.dispatch("loginWithGoogle");
+      this.$store.dispatch("auth/loginWithGoogle");
       this.successRedirect();
     },
     successRedirect() {

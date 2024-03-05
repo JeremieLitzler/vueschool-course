@@ -30,12 +30,12 @@ export default {
   },
   computed: {
     forum() {
-      return this.$store.getters.getForumById(this.forumId);
+      return this.$store.getters["forums/getForumById"](this.forumId);
     },
   },
   methods: {
     async saveThread(threadRequest) {
-      const threadId = await this.$store.dispatch("createThread", {
+      const threadId = await this.$store.dispatch("threads/createThread", {
         ...threadRequest,
         forumId: this.forum.id,
       });

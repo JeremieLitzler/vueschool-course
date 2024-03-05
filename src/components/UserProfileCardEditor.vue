@@ -102,10 +102,10 @@ export default {
   },
   computed: {
     userPosts() {
-      return this.$store.getters.postsByUserId(this.user.id);
+      return this.$store.getters["posts/postsByUserId"](this.user.id);
     },
     userThreads() {
-      return this.$store.getters.threadsByUserId(this.user.id);
+      return this.$store.getters["threads/threadsByUserId"](this.user.id);
     },
     userPostsCount() {
       return this.userPosts.length;
@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     saveProfile() {
-      this.$store.dispatch("updateUser", { ...this.editedUser });
+      this.$store.dispatch("users/updateUser", { ...this.editedUser });
       this.$router.push({ name: RouteName.AccountShow });
     },
   },

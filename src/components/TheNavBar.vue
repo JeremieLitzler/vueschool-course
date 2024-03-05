@@ -93,18 +93,18 @@ export default {
   },
   computed: {
     authUser() {
-      return this.$store.getters.authUser;
+      return this.$store.getters["auth/authUser"];
     },
     signedIn() {
-      console.log("TheNavBar > signedIn", this.$store.state.authId);
-      return this.$store.state.authId;
+      console.log("TheNavBar > signedIn", this.$store.state.auth.authId);
+      return this.$store.state.auth.authId;
     },
   },
   methods: {
     async logout() {
       //console.log("TheNavBar > logout > start");
       console.log("beforeEnter > UserLogout > start...");
-      await this.$store.dispatch("logoutUser");
+      await this.$store.dispatch("auth/logoutUser");
       console.log("beforeEnter > UserLogout > logoutUser ran...");
       this.$store.dispatch("notifyAppIsReady");
       this.$router.push({ name: RouteName.TheHome });

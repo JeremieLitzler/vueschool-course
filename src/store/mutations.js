@@ -1,35 +1,18 @@
-import useArraySearchHelper from "@/helpers/arraySearchHelper";
+import useAppendChildToParentMutationHelper from "@/helpers/appendChildToParentMutationHelper";
 import useArrayUpdateHelper from "@/helpers/arrayUpdateHelper";
 import useFirebaseHelper from "@/helpers/firebaseHelper";
-const { findById } = useArraySearchHelper();
 const { setResource } = useArrayUpdateHelper();
 
-const appendChildToParentMutation = ({ parent, child }) => {
-  return (state, { childId, parentId }) => {
-    //console.log(`appendChildToParentMutation > state`, state);
-    //console.log(`appendChildToParentMutation > with parent = ${parent} and child = ${child}`);
-    //console.log(`appendChildToParentMutation > with parentId = ${parentId} and childId = ${childId}`);
-    const resource = findById(state[parent], parentId);
-    //console.log(`appendChildToParentMutation > resource`, resource);
-    resource[child] = resource[child] || [];
-    if (!resource[child].includes(childId)) {
-      resource[child].push(childId);
-    }
-  };
-};
+const { appendChildToParentMutation } = useAppendChildToParentMutationHelper();
+
 export default {
   setAppIsReady(state, { ready }) {
     state.appIsReady = ready;
   },
-  setAuthId(state, { authId }) {
-    //console.log("Calling setAuthId with a authId = ", authId);
-    state.authId = authId;
-    //console.log("Called setAuthId so authId is ", state.authId);
-  },
   setItem(state, { source, item }) {
     //console.log("state + source", state, source);
     //console.log("state[source]", state[source]);
-    setResource(state[source], useFirebaseHelper().docToResource(item));
+    setResource(state[source].items, useFirebaseHelper().docToResource(item));
     //console.log(`set item in ${source}`, item);
   },
   //users
@@ -45,32 +28,17 @@ export default {
   }),
 
   //posts
-  appendPostToThread: appendChildToParentMutation({
-    parent: "threads",
-    child: "posts",
-  }),
 
   //threads
-  appendContributorToThread: appendChildToParentMutation({
-    parent: "threads",
-    child: "contributors",
-  }),
+
+  //common
   appendUnsubscribe(state, { unsubscribe }) {
     //console.log("calling appendUnsubscribe");
     state.firestoreUnsubscribes.push(unsubscribe);
     //console.log("called appendUnsubscribe");
   },
-  setAuthUserUnsubscribe(state, { unsubscribe }) {
-    state.authUserUnsubscribe = unsubscribe;
-  },
-  setAuthUserObserverUnsubscribe(state, { unsubscribe }) {
-    state.authUserObserverUnsubscribe = unsubscribe;
-  },
   resetFirestoreUnsubs(state) {
     state.firestoreUnsubscribes.splice(0, state.firestoreUnsubscribes.length);
     //console.log("called resetFirestoreUnsubs");
-  },
-  setCalledFetchAllCategories(state) {
-    state.calledFetchAllCategories = true;
   },
 };

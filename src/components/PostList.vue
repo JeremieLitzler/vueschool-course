@@ -21,7 +21,7 @@ export default {
   props: { posts: { required: true, type: Array } },
   methods: {
     userById(userId) {
-      const match = this.$store.getters.getUser(userId);
+      const match = this.$store.getters["users/getUser"](userId);
       //console.log("userById", match);
       return match;
     },

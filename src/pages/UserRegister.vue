@@ -90,7 +90,7 @@ export default {
     async register() {
       console.log("Form>", this.form);
       const user = await this.$store.dispatch(
-        "registerUserWithEmailAndPassword",
+        "auth/registerUserWithEmailAndPassword",
         {
           ...this.form,
         }
@@ -99,7 +99,7 @@ export default {
       this.successRedirect();
     },
     async registerGoogle() {
-      this.$store.dispatch("loginWithGoogle");
+      this.$store.dispatch("auth/loginWithGoogle");
       this.successRedirect();
     },
     successRedirect() {

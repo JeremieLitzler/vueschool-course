@@ -59,7 +59,7 @@ export default {
   computed: {
     postingAllowed() {
       console.log("PostEditor > postingAllowed", this.$store.getters.authUser);
-      return this.$store.getters.authUser.id;
+      return this.$store.getters["auth/authUser"].id;
     },
     postIsEdited() {
       const result = this.post?.text !== null;

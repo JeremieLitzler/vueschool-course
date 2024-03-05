@@ -63,15 +63,15 @@ export default {
   },
   computed: {
     threadEditable() {
-      return this.thread.userId === this.$store.getters.authUser.id;
+      return this.thread.userId === this.$store.getters["auth/authUser"].id;
     },
     posts() {
-      const posts = this.$store.state.posts;
+      const posts = this.$store.state.posts.items;
       //console.log("ThreadShow > computed > posts", posts);
       return posts;
     },
     thread() {
-      const match = this.$store.getters.threadById(this.id);
+      const match = this.$store.getters["threads/threadById"](this.id);
       return match;
     },
     threadPosts() {
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     savePost(payload) {
-      this.$store.dispatch("createPost", { ...payload });
+      this.$store.dispatch("posts/createPost", { ...payload });
     },
   },
   async created() {
@@ -91,7 +91,7 @@ export default {
     //   "ThreadShow > beforeCreate > $route.params.id",
     //   this.$route.params.id
     // );
-    const thread = await this.$store.dispatch("fetchThread", {
+    const thread = await this.$store.dispatch("threads/fetchThread", {
       id: this.$route.params.id,
     });
     // console.log("ThreadShow > thread", thread);
@@ -99,12 +99,12 @@ export default {
     //   id: thread.userId,
     // });
     // console.log("ThreadShow > beforeCreate > postIds", thread.posts);
-    const posts = await this.$store.dispatch("fetchPosts", {
+    const posts = await this.$store.dispatch("posts/fetchPosts", {
       ids: thread.posts,
     });
     // console.log("ThreadShow > beforeCreate > posts", posts);
     const users = posts.map((post) => post.userId);
-    await this.$store.dispatch("fetchUsers", {
+    await this.$store.dispatch("users/fetchUsers", {
       ids: users,
     });
     // console.log("ThreadShow > beforeCreate > fetchUser called and done");

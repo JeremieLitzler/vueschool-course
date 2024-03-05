@@ -46,7 +46,8 @@ export default {
       this.postEdited = postId === this.postEdited ? null : postId;
     },
     savePost(payload) {
-      this.$store.dispatch("updatePost", { ...payload });
+      //TODO: FirebaseError: Missing or insufficient permissions.
+      this.$store.dispatch("posts/updatePost", { ...payload });
       this.postEdited = null;
     },
   },

@@ -66,26 +66,30 @@ export default {
   components: { ThreadList },
   computed: {
     forum() {
-      return this.$store.getters.getForumById(this.id);
+      const result = this.$store.getters["forums/getForumById"](this.id);
+      console.log("ForumShow > computed forum", result);
+      return result;
     },
     forumThreads() {
-      const threads = this.$store.getters.getThreadsByForumId(this.id);
+      const threads = this.$store.getters["threads/getThreadsByForumId"](
+        this.id
+      );
       //console.log("forumThreads", threads);
       return threads;
     },
   },
   async beforeCreate() {
-    const forum = await this.$store.dispatch("fetchForum", {
+    const forum = await this.$store.dispatch("forums/fetchForum", {
       id: this.$route.params.id,
     });
-    //console.log("ForumShow > created > forum", forum);
-    const threads = await this.$store.dispatch("fetchThreads", {
+    console.log("ForumShow > created > forum", forum);
+    const threads = await this.$store.dispatch("threads/fetchThreads", {
       ids: forum.threads,
     });
     //console.log("ForumShow > created > forumThreads", threads);
     const userIds = threads.flatMap(({ userId }) => userId);
     //console.log("ForumShow > created > userIds", userIds);
-    await this.$store.dispatch("fetchUsers", { ids: userIds });
+    await this.$store.dispatch("users/fetchUsers", { ids: userIds });
     this.$store.dispatch("notifyAppIsReady");
   },
 };

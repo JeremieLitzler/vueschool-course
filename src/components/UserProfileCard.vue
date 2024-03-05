@@ -64,7 +64,7 @@ export default {
     isEditableProfile() {
       return (
         this.$route.params.id === undefined &&
-        this.$store.getters.authUser !== undefined
+        this.$store.getters["auth/authUser"] !== undefined
       );
     },
   },

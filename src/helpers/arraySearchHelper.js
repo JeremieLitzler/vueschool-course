@@ -1,6 +1,8 @@
 const findById = (resources, id) => {
-  if (!resources) return null;
-  return resources.find((element) => element.id === id);
+  const items = resources.items ?? resources;
+  console.log("findById > items", items);
+  if (!items) return null;
+  return items.find((element) => element.id === id);
 };
 
 const findManyById = (resources, id) => {

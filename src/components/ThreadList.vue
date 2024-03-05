@@ -81,10 +81,10 @@ export default {
   },
   computed: {
     posts() {
-      return this.$store.state.posts;
+      return this.$store.state.posts.items;
     },
     users() {
-      return this.$store.state.users;
+      return this.$store.state.users.items;
     },
   },
   methods: {

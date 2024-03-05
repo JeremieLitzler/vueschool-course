@@ -119,12 +119,23 @@
           </div>
         </div>
       </div> -->
-      <post-list :posts="userPosts" />
+      <section class="text-center" v-if="userPosts.length === 0">
+        No post yet.
+        <router-link :to="{ name: RouteName.TheHome }"
+          >Start here ⚡</router-link
+        >
+      </section>
+      <post-list v-else :posts="userPosts" />
     </div>
   </div>
 </template>
 
 <script>
+import { useRouteName } from "@/helpers/routeNameEnum";
+/* eslint-disable */
+const { RouteName } = useRouteName();
+/* eslint-enable */
+
 import PostList from "@/components/PostList.vue";
 import UserProfileCard from "@/components/UserProfileCard.vue";
 import UserProfileCardEditor from "@/components/UserProfileCardEditor.vue";
@@ -137,7 +148,7 @@ export default {
     edit: { type: Boolean, default: false },
   },
   data() {
-    return {};
+    return { RouteName };
   },
   components: {
     PostList,
@@ -148,28 +159,30 @@ export default {
     user() {
       console.log("UserShow > user > id", this.id);
       if (this.id) {
-        return this.$store.getters.getUser(this.id);
+        return this.$store.getters["users/getUser"](this.id);
       }
       console.log(
         "UserShow > user > authUser getter",
-        this.$store.getters.authUser
+        this.$store.getters["auth/authUser"]
       );
-      return this.$store.getters.authUser;
+      return this.$store.getters["auth/authUser"];
     },
     userPosts() {
-      return this.$store.getters.postsByUserId(this.user.id);
+      const posts = this.$store.getters["posts/postsByUserId"](this.user.id);
+      console.log("UserShow > userPosts computed", posts);
+      return posts;
     },
     userThreads() {
-      return this.$store.getters.threadsByUserId(this.user.id);
+      return this.$store.getters["threads/threadsByUserId"](this.user.id);
     },
   },
   async created() {
     //get the authUser
-    const userId = this.id ?? this.$store.getters.authUser.id;
+    const userId = this.id ?? this.$store.getters["auth/authUser"].id;
     if (this.id) {
-      await this.$store.dispatch("fetchUser", { id: this.id });
+      await this.$store.dispatch("users/fetchUser", { id: this.id });
     } else {
-      await this.$store.dispatch("fetchAuthUser");
+      await this.$store.dispatch("auth/fetchAuthUser");
     }
 
     //get the posts
