@@ -50,6 +50,10 @@ a,
   align-items: center;
 }
 
+.navbar-loading {
+  color: white;
+}
+
 .error-message {
   color: red;
   font-weight: bold;

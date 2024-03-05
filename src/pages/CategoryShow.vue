@@ -53,7 +53,7 @@ export default {
       ids: category.forums,
     });
 
-    //this.$store.dispatch("notifyAppIsReady");
+    this.$store.dispatch("notifyAppIsReady");
   },
 };
 </script>

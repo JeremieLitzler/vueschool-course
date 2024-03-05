@@ -10,7 +10,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    backgroundColor: { type: String, default: "#263959" },
+  },
+};
 </script>
 
 <style lang="css" scoped>
@@ -35,7 +39,7 @@ export default {};
   display: block;
   width: 25%;
   height: 25%;
-  background-color: #263959;
+  background-color: v-bind(backgroundColor);
   border-radius: 100%;
   animation: sk-chase-dot-before 2s infinite ease-in-out both;
 }

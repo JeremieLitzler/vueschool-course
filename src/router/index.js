@@ -185,12 +185,14 @@ const routes = [
     path: "/register",
     name: RouteName.UserRegister,
     component: () => import("@/pages/UserRegister.vue"),
+    meta: { requiresGuest: true },
   },
   //Register form route
   {
     path: "/login",
     name: RouteName.UserLogin,
     component: () => import("@/pages/UserLogin.vue"),
+    meta: { requiresGuest: true },
   },
   {
     //TODO: calling this from TheNavBar component doesn't work from the /Account page...
@@ -235,26 +237,25 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+  await store.dispatch("initAuthentification");
   store.dispatch("runAndResetFirestoreUnsubs");
-  //this.$store.dispatch("notifyAppIsReady");
   store.dispatch("resetAppIsReady");
 
   console.log("beforeEach global guard > to.name", to.name);
   console.log("beforeEach global guard > to.meta", to.meta);
 
-  if (to.meta.requiresAuth) {
-    //TODO : implement auth guard
-    //verify auth user exists
-    const authUserId = await store.dispatch("fetchAuthUser");
-    console.log("beforeEach global guard > authUserId", authUserId);
-
-    if (!authUserId.id) {
-      return {
-        name: RouteName.NotAuthorized,
-        query: to.query,
-        hash: to.hash,
-      };
-    }
+  // const authUserId = await store.dispatch("fetchAuthUser");
+  // console.log("beforeEach global guard > authUserId", authUserId);
+  console.log("beforeEach global guard > state.authId", store.state.authId);
+  if (to.meta.requiresAuth && !store.state.authId) {
+    return {
+      name: RouteName.UserLogin,
+      query: to.query,
+      hash: to.hash,
+    };
+  }
+  if (to.meta.requiresGuest && store.state.authId) {
+    return { name: RouteName.TheHome };
   }
   //continue since user is authorized
 });

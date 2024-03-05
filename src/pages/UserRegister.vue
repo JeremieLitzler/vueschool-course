@@ -103,6 +103,9 @@ export default {
       this.$router.push({ name: RouteName.TheHome });
     },
   },
+  created() {
+    this.$store.dispatch("notifyAppIsReady");
+  },
 };
 </script>
 

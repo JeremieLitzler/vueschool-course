@@ -30,6 +30,28 @@ export default {
   resetAppIsReady({ commit }) {
     commit("setAppIsReady", { ready: false });
   },
+  initAuthentification({ state, commit, dispatch }) {
+    if (state.authUserObserverUnsubscribe) {
+      state.authUserObserverUnsubscribe();
+      commit("setAuthUserObserverUnsubscribe", { unsubscribe: null });
+    }
+    return new Promise((resolve) => {
+      const unsubscribe = firebaseService().auth.onAuthStateChanged(
+        async (user) => {
+          console.log(
+            "actions > initAuthentification > onAuthStateChanged running"
+          );
+          dispatch("runUnsubscribeAuthUser");
+          if (user) {
+            await dispatch("fetchAuthUser");
+          }
+          dispatch("notifyAppIsReady");
+          resolve(user);
+        }
+      );
+      commit("setAuthUserObserverUnsubscribe", { unsubscribe });
+    });
+  },
   async runAndResetFirestoreUnsubs({ state, commit }) {
     state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());
     commit("resetFirestoreUnsubs");

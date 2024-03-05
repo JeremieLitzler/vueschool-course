@@ -1,7 +1,10 @@
 <template>
   <!-- use .navbar-open to open nav -->
   <nav class="navbar">
-    <ul>
+    <span v-if="!$store.getters.isAppIsReady" class="navbar-user navbar-loading"
+      ><app-spinner background-color="#ffffff"
+    /></span>
+    <ul v-else>
       <li v-if="signedIn" class="navbar-user">
         <a @click.prevent="toggleMenu" href="#">
           <img
