@@ -1,5 +1,22 @@
 <template>
-  <div class="col-full">
+  <section class="post-editor-cta" v-if="!postingAllowed">
+    <h2>Want to participate?</h2>
+    <router-link
+      :to="{ name: RouteName.UserLogin, query: { redirectTo: $route.path } }"
+      class="btn-green btn-small"
+      >Login</router-link
+    >
+    <p>or</p>
+    <router-link
+      :to="{
+        name: RouteName.UserRegister,
+        query: { redirectTo: $route.path },
+      }"
+      class="btn-green btn-small"
+      >Register</router-link
+    >
+  </section>
+  <div v-else class="col-full">
     <form @submit.prevent="savePost">
       <div class="form-group">
         <textarea
@@ -22,6 +39,7 @@ import { useUserStore } from '@/stores/UserStore';
 import type PostEditorProps from '@/types/PostEditorProps';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
+import { RouteName } from '@/enums/RouteName';
 
 const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
   sourcePost: null,
@@ -41,7 +59,10 @@ const postIsEdited = computed(() => {
 
   return result;
 });
-
+const postingAllowed = computed(() => {
+  console.log('PostEditor > postingAllowed', useUserStore().getAuthUser());
+  return useUserStore().getAuthUser().id !== '';
+});
 const buttonText = computed(() =>
   !postIsEdited.value ? 'Submit post' : 'Update post'
 );
@@ -68,4 +89,10 @@ const savePost = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.post-editor-cta {
+  width: 18em;
+  margin: 0 auto;
+  text-align: center;
+}
+</style>

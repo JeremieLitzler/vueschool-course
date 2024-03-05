@@ -48,15 +48,15 @@ const ForumShowRoute: RouteRecordRaw = {
   component: () => import('@/pages/ForumShow.vue'),
   props: true,
 };
-const { getThreadById } = useThreadStore(pinia);
+const { fetchThread } = useThreadStore(pinia);
 const ThreadShowRoute: RouteRecordRaw = {
   path: '/thread/:id',
   name: RouteName.ThreadShow,
   component: () => import('@/pages/ThreadShow.vue'),
   props: true,
-  beforeEnter: (to, _from, next) => {
+  beforeEnter: async (to, _from, next) => {
     //does the thread exists?
-    const threadMatch = getThreadById(to.params.id as string);
+    const threadMatch = await fetchThread(to.params.id as string);
     console.log('ThreadShow > beforeEnter > threadMatch', threadMatch);
 
     //if positive, contine
@@ -86,9 +86,9 @@ const ThreadEditRoute: RouteRecordRaw = {
   component: () => import('@/pages/ThreadEdit.vue'),
   props: true,
   meta: { requiresAuth: true },
-  beforeEnter: (to, _from, next) => {
+  beforeEnter: async (to, _from, next) => {
     //does the thread exists?
-    const threadExists = getThreadById(to.params.id as string);
+    const threadExists = await fetchThread(to.params.id as string);
     //if positive, contine
     if (threadExists) {
       return next();

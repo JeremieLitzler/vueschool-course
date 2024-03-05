@@ -4,7 +4,7 @@ import router from '@/router';
 
 export default function useAppendRouteHelper() {
   const toHomePage = () => {
-    router.push({ name: RouteName.TheHome });
+    return { name: RouteName.TheHome };
   };
   const toSignOut = () => {
     router.push({ name: RouteName.UserLogout });
@@ -31,15 +31,13 @@ export default function useAppendRouteHelper() {
 
     if (!route.query.redirectTo) {
       console.log('toSuccessRedirect > going toHomePage');
-      router.push({
-        path: '/',
-      });
+      return toHomePage();
     }
 
     const redirectTo: RouteLocationRaw = {
       path: route.query.redirectTo?.toString(),
     };
-    router.push(redirectTo);
+    return redirectTo;
   };
 
   return {

@@ -78,8 +78,8 @@ import objectHelper from '@/helpers/objectHelper';
 
 import User from '@/types/User';
 import { RouteName } from '@/enums/RouteName';
-import { useRoute } from 'vue-router';
-const { toHomePage, toSuccessRedirect } = useAppendRouteHelper();
+import { useRoute, useRouter } from 'vue-router';
+const { toSuccessRedirect } = useAppendRouteHelper();
 const error = ref('');
 const form = ref<UserRegisterRequest>({
   name: '',
@@ -90,6 +90,8 @@ const form = ref<UserRegisterRequest>({
 });
 
 const route = useRoute();
+const router = useRouter();
+
 const register = async () => {
   console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({
@@ -100,19 +102,11 @@ const register = async () => {
     return;
   }
   console.log('The created user >', user);
-  if (!route.query.redirectTo) {
-    toHomePage();
-  } else {
-    toSuccessRedirect(route);
-  }
+  await router.push(toSuccessRedirect(route));
 };
 const loginWithGoogle = async () => {
   await useUserStore().loginWithGoogle();
-  if (!route.query.redirectTo) {
-    toHomePage();
-  } else {
-    toSuccessRedirect(route);
-  }
+  await router.push(toSuccessRedirect(route));
 };
 </script>
 

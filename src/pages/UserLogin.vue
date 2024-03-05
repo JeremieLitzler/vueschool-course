@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import UserLoginRequest from '@/types/UserLoginRequest';
@@ -55,7 +55,8 @@ import { FirebaseError } from 'firebase/app';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 
 const route = useRoute();
-const { toHomePage, toSuccessRedirect } = useAppendRouteHelper();
+const router = useRouter();
+const { toSuccessRedirect } = useAppendRouteHelper();
 const form = ref<UserLoginRequest>({ email: '', password: '' });
 const errorMessage = ref('');
 
@@ -69,20 +70,12 @@ const login = async () => {
     errorMessage.value = error.message;
   } else {
     console.log('UserLogin > login:', result);
-    if (!route.query.redirectTo) {
-      toHomePage();
-    } else {
-      toSuccessRedirect(route);
-    }
+    await router.push(toSuccessRedirect(route));
   }
 };
 const loginWithGoogle = async () => {
   await useUserStore().loginWithGoogle();
-  if (!route.query.redirectTo) {
-    toHomePage();
-  } else {
-    toSuccessRedirect(route);
-  }
+  await router.push(toSuccessRedirect(route));
 };
 </script>
 

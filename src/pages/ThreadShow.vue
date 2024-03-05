@@ -15,6 +15,7 @@
     <h1 class="thread-title">
       {{ thread?.title }}
       <router-link
+        v-if="threadEditable"
         :to="{ name: RouteName.ThreadEdit, params: { id } }"
         class="btn-green btn-small"
         >Edit the thread</router-link
@@ -75,6 +76,9 @@ useCommonStore().notifyAppIsReady();
 const thread = computed((): ThreadHydraded | undefined =>
   useThreadStore().getThreadById(id)
 );
+const threadEditable = computed(() => {
+  return thread.value?.userId === useUserStore().getAuthUser().id;
+});
 //TODO Broken reactivity on the posts...
 //when I add a new post, it is inserted into firestore
 //but the UI doesn't show it
