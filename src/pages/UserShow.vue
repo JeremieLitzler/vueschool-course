@@ -126,6 +126,13 @@
         >
       </section>
       <post-list v-else :posts="userPosts" />
+      <button
+        @click="fetchNextPosts"
+        v-if="noMorePostsToFetch"
+        class="btn-green btn-small"
+      >
+        Load more posts...
+      </button>
     </div>
   </div>
 </template>
@@ -148,7 +155,12 @@ export default {
     edit: { type: Boolean, default: false },
   },
   data() {
-    return { RouteName };
+    return {
+      RouteName,
+      maxElementsPerPage: 5,
+      postsPage: 0,
+      noMorePostsToFetch: false,
+    };
   },
   components: {
     PostList,
@@ -172,8 +184,33 @@ export default {
       console.log("UserShow > userPosts computed", posts);
       return posts;
     },
+    lastPostFetched() {
+      if (this.userPosts.length === 0) return null;
+      return this.userPosts[this.userPosts.length - 1];
+    },
     userThreads() {
       return this.$store.getters["threads/threadsByUserId"](this.user.id);
+    },
+  },
+  methods: {
+    async fetchNextPosts() {
+      const amountPostsFetched = await this.$store.dispatch(
+        "fetchItemsByProp",
+        {
+          collectionName: "posts",
+          whereProp: "userId",
+          whereValue: this.user.id,
+          orderByProp: "publishedAt",
+          orderByDirection: "desc",
+          maxElements: this.maxElementsPerPage,
+          startAt: this.lastPostFetched,
+        }
+      );
+      if (amountPostsFetched < 5) {
+        this.noMorePostsToFetch = true;
+        return;
+      }
+      this.postsPage += 1;
     },
   },
   async created() {
@@ -186,11 +223,15 @@ export default {
     }
 
     //get the posts
-    await this.$store.dispatch("fetchItemsByProp", {
+    const amountPostsFetched = await this.$store.dispatch("fetchItemsByProp", {
       collectionName: "posts",
       whereProp: "userId",
       whereValue: userId,
+      orderByProp: "publishedAt",
+      orderByDirection: "desc",
+      maxElements: this.maxElementsPerPage,
     });
+    this.noMorePostsToFetch = amountPostsFetched < 0;
     //get the threads
 
     this.$store.dispatch("notifyAppIsReady");

@@ -11,6 +11,10 @@ import {
   onSnapshot,
   query,
   where,
+  orderBy,
+  limit,
+  startAfter,
+  getDoc,
 } from "firebase/firestore";
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -71,19 +75,40 @@ export default {
   },
   async fetchItemsByProp(
     { commit },
-    { collectionName, whereProp, whereValue }
+    {
+      collectionName,
+      whereProp,
+      whereValue,
+      orderByProp,
+      orderByDirection,
+      maxElements,
+      startAt = null,
+    }
   ) {
-    const queryObj = query(
+    console.log("fetchItemsByProp > startAt", startAt);
+    console.log("fetchItemsByProp > maxElements", maxElements);
+
+    const commonQueryParts = [
       collection(db, collectionName),
-      where(whereProp, "==", whereValue)
-    );
-    const posts = await getDocs(queryObj);
-    posts.forEach((post) => {
+      where(whereProp, "==", whereValue),
+      orderBy(orderByProp, orderByDirection),
+      limit(maxElements),
+    ];
+    let queryObj = query(...commonQueryParts);
+    if (startAt) {
+      const postRef = doc(db, collectionName, startAt.id);
+      const lastPost = await getDoc(postRef);
+      queryObj = query(...commonQueryParts, startAfter(lastPost));
+    }
+    const items = await getDocs(queryObj);
+    console.log("fetchItemsByProp > items.length", items.docs);
+    items.docs.forEach((post) => {
       commit("setItem", {
         source: collectionName,
         item: { ...post.data(), id: post.id },
       });
     });
+    return items.docs?.length;
   },
 
   //users
