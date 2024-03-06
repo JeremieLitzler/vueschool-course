@@ -12,6 +12,7 @@ import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
+
 import TheNavBar from "./TheNavBar.vue";
 export default {
   components: {
@@ -24,4 +25,3 @@ export default {
   },
 };
 </script>
-@/helpers/routeNameEnum @/helpers/routeNameEnum

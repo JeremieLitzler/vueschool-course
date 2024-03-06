@@ -1,8 +1,9 @@
 <template>
   <div
     class="btn-hamburger"
-    @click="mobileMenuOpened = !mobileMenuOpened"
-    v-click-outside="() => (mobileMenuOpened = false)"
+    @click="toggleMobileMenu"
+    v-click-outside="closeMobileMenu"
+    v-page-scroll="closeMobileMenu"
   >
     <!-- use .btn-humburger-active to open the menu -->
     <div class="top bar"></div>
@@ -109,12 +110,32 @@ export default {
       this.userMenuOpened = !this.userMenuOpened;
     },
     closeDropdown() {
-      this.userMenuOpened = false;
+      this.userMenuOpenedLocal = false;
+    },
+    toggleMobileMenu() {
+      this.mobileMenuOpened = !this.mobileMenuOpened;
+    },
+    closeMobileMenu() {
+      this.mobileMenuOpened = false;
     },
   },
+  created() {
+    console.log("created > prop userMenuOpened", this.mobileMenuOpened);
+    console.log(
+      "created > data userMenuOpenedLocal",
+      this.mobileMenuOpenedLocal
+    );
+  },
+  updated() {
+    console.log("updated > prop userMenuOpened", this.mobileMenuOpened);
+    console.log(
+      "updated > data userMenuOpenedLocal",
+      this.mobileMenuOpenedLocal
+    );
+  },
   beforeRouteLeave() {
-    this.mobileMenuOpened = false;
-    this.userMenuOpened = false;
+    this.mobileMenuOpenedLocal = false;
+    this.userMenuOpenedLocal = false;
   },
 };
 </script>
