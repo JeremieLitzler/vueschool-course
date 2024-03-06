@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import store from "@/store";
-import router from "./router";
+import router from "@/router";
+import ClickOutsideDirective from "@/plugins/ClickOutsideDirective";
 
 import App from "./App.vue";
 
@@ -41,6 +42,7 @@ requireComponent.keys().forEach((fileName) => {
 // forumApp.use(SomePlugin)
 forumApp.use(router);
 forumApp.use(store);
+forumApp.use(ClickOutsideDirective);
 
 // Mount to the DOM the Vue app
 forumApp.mount("#app");
