@@ -1,15 +1,16 @@
-import './assets/css/base.css';
-import './assets/css/style.css';
-import './assets/css/main.css';
+import '@/assets/css/base.css';
+import '@/assets/css/style.css';
+import '@/assets/css/main.css';
 
 import { createApp } from 'vue';
 
-import App from './App.vue';
-import router from './router';
+import App from '@/App.vue';
+import router from '@/router';
 import pinia from '@/stores/pinia';
 import ClickOutsideDirective from '@/plugins/ClickOutsideDirective';
-import firebaseService from './services/firebaseService';
-import { useUserStore } from './stores/UserStore';
+import firebaseService from '@/services/firebaseService';
+import { useUserStore } from '@/stores/UserStore';
+import PageScrollDirective from '@/plugins/PageScrollDirective';
 
 //Firebase common logic
 firebaseService().auth.onAuthStateChanged(async (user) => {
@@ -63,5 +64,6 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
 app.use(pinia);
 app.use(router);
 app.use(ClickOutsideDirective);
+app.use(PageScrollDirective);
 
 app.mount('#app');

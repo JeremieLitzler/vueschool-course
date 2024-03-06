@@ -3,6 +3,12 @@
     class="btn-hamburger"
     @click="toggleMobileMenu"
     v-click-outside="closeMobileMenu"
+    v-page-scroll="
+      () => {
+        console.log('v-page-scroll called');
+        mobileMenuOpened = false;
+      }
+    "
   >
     <!-- use .btn-humburger-active to open the menu -->
     <div class="top bar"></div>
@@ -87,8 +93,6 @@ const signedIn = computed(
   () => user.value.id != '' || useUserStore().authId != ''
 );
 const toggleMobileMenu = () => {
-  console.log('clicked toggleMobileMenu', mobileMenuOpened.value);
-
   mobileMenuOpened.value = !mobileMenuOpened.value;
 };
 const closeDropdown = () => {
