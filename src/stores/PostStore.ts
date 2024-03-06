@@ -9,6 +9,7 @@ import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
+import { OrderByDirection } from '@/enums/OrderByDirection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
@@ -51,6 +52,7 @@ export const usePostStore = defineStore('PostStore', () => {
       id,
     });
   };
+
   const fetchPosts = (ids: string[]): Promise<Post[]> => {
     return useCommonStore().fetchSomeItems<Post>({
       ids,
@@ -58,16 +60,24 @@ export const usePostStore = defineStore('PostStore', () => {
       collection: FirestoreCollection.Posts,
     });
   };
-  const fetchPostsByUser = async (userId: string | undefined) => {
+
+  const fetchPostsByUser = async (
+    userId: string | undefined,
+    lastPost: Post | null = null
+  ) => {
     const userIdFinal =
       userId === undefined ? useUserStore().getAuthUser().id : userId;
-    await useCommonStore().fetchItemsByProp({
+    return await useCommonStore().fetchItemsByProp<Post>({
       collectionName: FirestoreCollection.Posts,
       propName: 'userId',
       propValue: userIdFinal,
       targetStore: posts,
+      orderByDirection: OrderByDirection.Desc,
+      orderByProp: 'publishedAt',
+      startAtItem: lastPost,
     });
   };
+
   const addPost = async (post: PostAddRequest) => {
     //console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;

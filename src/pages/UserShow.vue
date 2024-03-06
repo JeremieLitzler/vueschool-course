@@ -125,11 +125,18 @@
         >
       </section>
       <post-list v-else :posts="userPosts" />
+      <button
+        @click="fetchNextPosts"
+        v-if="!noMorePostsToFetch"
+        class="btn-green btn-small"
+      >
+        Load more posts...
+      </button>
     </div>
   </div>
 </template>
 <script setup async lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import PostList from '@/components/PostList.vue';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
@@ -139,6 +146,8 @@ import { usePostStore } from '@/stores/PostStore';
 import { RouteName } from '@/enums/RouteName';
 
 const props = defineProps<{ id?: string; edit?: boolean }>();
+
+const noMorePostsToFetch = ref(false);
 
 const user = computed(() => {
   //console.log('getting user in UserShow > ', props.id);
@@ -151,6 +160,23 @@ const user = computed(() => {
 const userPosts = computed(() =>
   usePostStore().getPostsByUserId(user.value.id)
 );
+const lastPostFetched = computed(() => {
+  if (userPosts.value.length === 0) return null;
+  return userPosts.value[userPosts.value.length - 1];
+});
+const fetchNextPosts = async () => {
+  const amountPostsFetched = await usePostStore().fetchPostsByUser(
+    props.id!,
+    lastPostFetched.value
+  );
+  console.log(
+    'UserShow > fetchNextPosts > amountPostsFetched',
+    amountPostsFetched
+  );
+
+  noMorePostsToFetch.value = amountPostsFetched < 5;
+};
+
 await useUserStore().fetchUser(props.id!);
 await usePostStore().fetchPostsByUser(props.id!);
 useCommonStore().notifyAppIsReady();

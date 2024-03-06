@@ -16,6 +16,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
    */
   const appIsReady = ref(false);
 
+  const maxElementsPerFetch = 5;
+
   //ACTIONS
   /**
    * Update the flag fetching the data
@@ -104,11 +106,33 @@ export const useCommonStore = defineStore('CommonStore', () => {
     targetStore,
     propName,
     propValue,
+    orderByProp,
+    orderByDirection,
+    startAtItem,
   }: FirebaseSinglePropQueryRequest<T>) => {
-    const queryObj = useFirebase().query(
-      useFirebase().collection(useFirebase().db, collectionName),
-      useFirebase().where(propName, '==', propValue)
+    const collection = useFirebase().collection(
+      useFirebase().db,
+      collectionName
     );
+    const commonQueryParts = [
+      useFirebase().where(propName, '==', propValue),
+      useFirebase().orderBy(orderByProp, orderByDirection),
+      useFirebase().limit(maxElementsPerFetch),
+    ];
+    let queryObj = useFirebase().query(collection, ...commonQueryParts);
+    if (startAtItem) {
+      const postRef = useFirebase().doc(
+        useFirebase().db,
+        collectionName,
+        startAtItem.id
+      );
+      const lastPost = await useFirebase().getDoc(postRef);
+      const constraintsExtended = [
+        ...commonQueryParts,
+        useFirebase().startAfter(lastPost),
+      ];
+      queryObj = useFirebase().query(collection, ...constraintsExtended);
+    }
     const items = await useFirebase().getDocs(queryObj);
     items.forEach((item) => {
       setItem({
@@ -116,6 +140,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
         item: { ...item.data(), id: item.id },
       });
     });
+    return items.docs?.length;
   };
   /**
    * Query firestore in a collection given an item id.
