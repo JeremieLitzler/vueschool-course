@@ -6,7 +6,7 @@
     /></span>
     <ul v-else>
       <li v-if="signedIn" class="navbar-user">
-        <a @click.prevent="toggleMenu" href="#">
+        <a @click.prevent="toggleMenu" v-click-outside="closeDropdown" href="#">
           <img
             class="avatar-small"
             :src="user?.avatar"
@@ -90,7 +90,9 @@ const signedIn = computed(
 );
 
 const toggleMenu = () => (menuOpened.value = !menuOpened.value);
-
+const closeDropdown = () => {
+  menuOpened.value = false;
+};
 const logout = async () => {
   toSignOut();
 };

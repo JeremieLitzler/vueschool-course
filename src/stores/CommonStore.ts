@@ -109,8 +109,8 @@ export const useCommonStore = defineStore('CommonStore', () => {
       useFirebase().collection(useFirebase().db, collectionName),
       useFirebase().where(propName, '==', propValue)
     );
-    const posts = await useFirebase().getDocs(queryObj);
-    posts.forEach((item) => {
+    const items = await useFirebase().getDocs(queryObj);
+    items.forEach((item) => {
       setItem({
         targetStore,
         item: { ...item.data(), id: item.id },

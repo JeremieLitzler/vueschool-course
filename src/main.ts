@@ -7,6 +7,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import pinia from '@/stores/pinia';
+import ClickOutsideDirective from '@/plugins/ClickOutsideDirective';
 import firebaseService from './services/firebaseService';
 import { useUserStore } from './stores/UserStore';
 
@@ -61,5 +62,6 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
 
 app.use(pinia);
 app.use(router);
+app.use(ClickOutsideDirective);
 
 app.mount('#app');
