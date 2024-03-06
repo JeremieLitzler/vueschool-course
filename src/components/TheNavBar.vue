@@ -1,12 +1,29 @@
 <template>
+  <div
+    class="btn-hamburger"
+    @click="mobileMenuOpened = !mobileMenuOpened"
+    v-click-outside="() => (mobileMenuOpened = false)"
+  >
+    <!-- use .btn-humburger-active to open the menu -->
+    <div class="top bar"></div>
+    <div class="middle bar"></div>
+    <div class="bottom bar"></div>
+  </div>
   <!-- use .navbar-open to open nav -->
-  <nav class="navbar">
-    <span v-if="!$store.getters.isAppIsReady" class="navbar-user navbar-loading"
-      ><app-spinner background-color="#ffffff"
-    /></span>
+  <nav class="navbar" :class="{ 'navbar-open': mobileMenuOpened }">
+    <span
+      v-if="!$store.getters.isAppIsReady"
+      class="navbar-user navbar-loading"
+    >
+      <app-spinner background-color="#ffffff" />
+    </span>
     <ul v-else>
       <li v-if="signedIn" class="navbar-user">
-        <a @click.prevent="toggleMenu" v-click-outside="closeDropdown" href="#">
+        <a
+          @click.prevent="toggleMenu"
+          v-click-outside="() => (userMenuOpened = false)"
+          href="#"
+        >
           <img
             class="avatar-small"
             :src="authUser?.avatar"
@@ -27,7 +44,7 @@
 
         <!-- dropdown menu -->
         <!-- add class "active-drop" to show the dropdown -->
-        <div id="user-dropdown" :class="{ 'active-drop': menuOpened }">
+        <div id="user-dropdown" :class="{ 'active-drop': userMenuOpened }">
           <div class="triangle-drop"></div>
           <ul class="dropdown-menu">
             <li class="dropdown-menu-item">
@@ -42,39 +59,21 @@
         </div>
       </li>
       <li v-if="!signedIn" class="navbar-item">
-        <router-link class="navbar-user" :to="{ name: RouteName.UserRegister }"
+        <router-link :to="{ name: RouteName.UserLogin }">Login</router-link>
+      </li>
+      <li v-if="!signedIn" class="navbar-item">
+        <router-link :to="{ name: RouteName.UserRegister }"
           >Register</router-link
         >
       </li>
-      <li v-if="!signedIn" class="navbar-item">
-        <router-link class="navbar-user" :to="{ name: RouteName.UserLogin }"
-          >Login</router-link
+      <li v-if="signedIn" class="navbar-mobile-item">
+        <router-link :to="{ name: RouteName.AccountShow }">
+          View profile</router-link
         >
       </li>
-    </ul>
-
-    <ul>
-      <li class="navbar-item">
-        <router-link :to="{ name: RouteName.TheHome }">Home</router-link>
+      <li v-if="signedIn" class="navbar-mobile-item">
+        <a @click.prevent="logout">Log out</a>
       </li>
-
-      <!-- <li class="navbar-item">
-          <a href="category.html">Category</a>
-        </li>
-        <li class="navbar-item">
-          <a href="forum.html">Forum</a>
-        </li>
-        <li class="navbar-item">
-          <a href="thread.html">Thread</a>
-        </li>
-        -->
-      <!-- Show these option only on mobile-->
-      <!-- <li class="navbar-item mobile-only">
-          <a href="profile.html">My Profile</a>
-        </li>
-        <li class="navbar-item mobile-only">
-          <a href="#">Logout</a>
-        </li> -->
     </ul>
   </nav>
 </template>
@@ -88,7 +87,8 @@ export default {
   data() {
     return {
       RouteName,
-      menuOpened: false,
+      userMenuOpened: false,
+      mobileMenuOpened: false,
     };
   },
   computed: {
@@ -96,26 +96,25 @@ export default {
       return this.$store.getters["auth/authUser"];
     },
     signedIn() {
-      console.log("TheNavBar > signedIn", this.$store.state.auth.authId);
       return this.$store.state.auth.authId;
     },
   },
   methods: {
     async logout() {
-      //console.log("TheNavBar > logout > start");
-      console.log("beforeEnter > UserLogout > start...");
       await this.$store.dispatch("auth/logoutUser");
-      console.log("beforeEnter > UserLogout > logoutUser ran...");
       this.$store.dispatch("notifyAppIsReady");
       this.$router.push({ name: RouteName.TheHome });
-      //console.log("TheNavBar > logout > done!");
     },
     toggleMenu() {
-      this.menuOpened = !this.menuOpened;
+      this.userMenuOpened = !this.userMenuOpened;
     },
     closeDropdown() {
-      this.menuOpened = false;
+      this.userMenuOpened = false;
     },
+  },
+  beforeRouteLeave() {
+    this.mobileMenuOpened = false;
+    this.userMenuOpened = false;
   },
 };
 </script>
