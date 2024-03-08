@@ -103,7 +103,7 @@ export default {
   methods: {
     async logout() {
       await this.$store.dispatch("auth/logoutUser");
-      this.$store.dispatch("notifyAppIsReady");
+      this.$store.dispatch("notifyAppIsReady", "TheNavBar");
       this.$router.push({ name: RouteName.TheHome });
     },
     toggleMenu() {
@@ -120,18 +120,12 @@ export default {
     },
   },
   created() {
-    console.log("created > prop userMenuOpened", this.mobileMenuOpened);
-    console.log(
-      "created > data userMenuOpenedLocal",
-      this.mobileMenuOpenedLocal
-    );
+    // console.log("created > prop userMenuOpened", this.mobileMenuOpened);
+    //console.log("created > data userMenuOpenedLocal",this.mobileMenuOpenedLocal);
   },
   updated() {
-    console.log("updated > prop userMenuOpened", this.mobileMenuOpened);
-    console.log(
-      "updated > data userMenuOpenedLocal",
-      this.mobileMenuOpenedLocal
-    );
+    //console.log("updated > prop userMenuOpened", this.mobileMenuOpened);
+    //console.log("updated > data userMenuOpenedLocal",this.mobileMenuOpenedLocal);
   },
   beforeRouteLeave() {
     this.mobileMenuOpenedLocal = false;

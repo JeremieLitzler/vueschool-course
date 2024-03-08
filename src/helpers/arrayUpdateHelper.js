@@ -1,11 +1,13 @@
 const setResource = (resources, resource) => {
   //console.log(`resources: ${resources} > ressource`, resource);
-  const index = resources.findIndex((element) => element.id === resource.id);
+  const items = resources.items ?? resources;
+  const index = items.findIndex((element) => element.id === resource.id);
   //console.log("resource", resource);
   if (resource.id && index !== -1) {
-    resources[index] = resource;
+    items[index] = resource;
   } else {
-    resources.push(resource);
+    //console.log("arrayUpdateHelper > setResource > resource", resource);
+    items.push(resource);
   }
 };
 

@@ -10,10 +10,17 @@ export default {
     state.appIsReady = ready;
   },
   setItem(state, { source, item }) {
-    //console.log("state + source", state, source);
+    //console.log("setItem > source", source);
+    //console.log("setItem > item", item);
     //console.log("state[source]", state[source]);
     setResource(state[source].items, useFirebaseHelper().docToResource(item));
     //console.log(`set item in ${source}`, item);
+  },
+  setAsyncUiPart(state, { uiElement, ready }) {
+    state.asyncUiParts[uiElement] = ready;
+  },
+  emptyUiPartsLoading(state) {
+    state.asyncUiParts = {};
   },
   //users
   appendThreadToUser: appendChildToParentMutation({

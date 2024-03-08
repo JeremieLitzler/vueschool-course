@@ -119,6 +119,7 @@ const routes = [
     name: RouteName.ThreadShow,
     component: () => import("@/pages/ThreadShow.vue"),
     props: true,
+    meta: { toTop: true, smoothScroll: true },
     beforeEnter: async (to, from, next) => {
       const threadMatch = await store.dispatch("threads/fetchThread", {
         id: to.params.id,
@@ -254,13 +255,10 @@ router.beforeEach(async (to) => {
   await store.dispatch("auth/initAuthentification");
   store.dispatch("runAndResetFirestoreUnsubs");
   store.dispatch("resetAppIsReady");
-
-  console.log("beforeEach global guard > to.name", to.name);
-  console.log("beforeEach global guard > to.meta", to.meta);
-  console.log(
-    "beforeEach global guard > state.authId",
-    store.state.auth.authId
-  );
+  store.dispatch("resetUiPartsLoading");
+  // console.log("beforeEach global guard > to.name", to.name);
+  // console.log("beforeEach global guard > to.meta", to.meta);
+  // console.log("beforeEach global guard > state.authId",store.state.auth.authId);
   if (to.meta.requiresAuth && !store.state.auth.authId) {
     return {
       name: RouteName.UserLogin,

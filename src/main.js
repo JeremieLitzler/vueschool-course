@@ -36,7 +36,7 @@ requireComponent.keys().forEach((fileName) => {
     // otherwise fall back to module's root.
     componentConfig.default || componentConfig
   );
-  console.log(`Registered ${componentName} globally`);
+  // console.log(`Registered ${componentName} globally`);
 });
 
 // or use  a plugin...

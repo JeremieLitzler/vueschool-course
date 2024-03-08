@@ -66,7 +66,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("notifyAppIsReady");
+    this.$store.dispatch("notifyAppIsReady", "ThreadCreate");
   },
 };
 </script>

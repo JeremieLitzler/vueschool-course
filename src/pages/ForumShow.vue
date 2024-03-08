@@ -90,7 +90,7 @@ export default {
     const userIds = threads.flatMap(({ userId }) => userId);
     //console.log("ForumShow > created > userIds", userIds);
     await this.$store.dispatch("users/fetchUsers", { ids: userIds });
-    this.$store.dispatch("notifyAppIsReady");
+    this.$store.dispatch("notifyAppIsReady", "ForumShow");
   },
 };
 </script>

@@ -21,7 +21,9 @@ export default createStore({
   },
   state: {
     appIsReady: false,
+    asyncUiParts: {},
     firestoreUnsubscribes: [],
+    maxItemsPerFetch: 5,
   },
   getters,
   actions,

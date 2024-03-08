@@ -1,6 +1,6 @@
 const findById = (resources, id) => {
   const items = resources.items ?? resources;
-  console.log("findById > items", items);
+  //console.log("findById > items", items);
   if (!items) return null;
   return items.find((element) => element.id === id);
 };

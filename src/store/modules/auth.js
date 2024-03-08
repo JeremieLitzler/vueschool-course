@@ -35,7 +35,7 @@ export default {
       return user;
     },
     initAuthentification({ state, commit, dispatch }) {
-      console.log("module auth > initAuthentification called");
+      //console.log("auth > initAuthentification called");
       if (state.authUserObserverUnsubscribe) {
         state.authUserObserverUnsubscribe();
         commit("setAuthUserObserverUnsubscribe", { unsubscribe: null });
@@ -43,14 +43,16 @@ export default {
       return new Promise((resolve) => {
         const unsubscribe = firebaseService().auth.onAuthStateChanged(
           async (user) => {
-            console.log(
-              "actions > initAuthentification > onAuthStateChanged running"
-            );
+            // console.log(
+            //   "actions > initAuthentification > onAuthStateChanged running"
+            // );
             dispatch("runUnsubscribeAuthUser");
             if (user) {
               await dispatch("fetchAuthUser");
             }
-            dispatch("notifyAppIsReady", {}, { root: true });
+            dispatch("notifyAppIsReady", "initAuthentification", {
+              root: true,
+            });
             resolve(user);
           }
         );
@@ -72,7 +74,7 @@ export default {
         email,
         password,
       });
-      console.log("actions > registerUserWithEmailAndPassword", registerResult);
+      //console.log("actions > registerUserWithEmailAndPassword", registerResult);
       const user = await dispatch(
         "users/createUser",
         {

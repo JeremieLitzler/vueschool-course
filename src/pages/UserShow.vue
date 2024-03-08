@@ -128,7 +128,7 @@
       <post-list v-else :posts="userPosts" />
       <button
         @click="fetchNextPosts"
-        v-if="noMorePostsToFetch"
+        v-if="!noMorePostsToFetch"
         class="btn-green btn-small"
       >
         Load more posts...
@@ -157,8 +157,6 @@ export default {
   data() {
     return {
       RouteName,
-      maxElementsPerPage: 5,
-      postsPage: 0,
       noMorePostsToFetch: false,
     };
   },
@@ -194,23 +192,15 @@ export default {
   },
   methods: {
     async fetchNextPosts() {
-      const amountPostsFetched = await this.$store.dispatch(
-        "fetchItemsByProp",
-        {
-          collectionName: "posts",
-          whereProp: "userId",
-          whereValue: this.user.id,
-          orderByProp: "publishedAt",
-          orderByDirection: "desc",
-          maxElements: this.maxElementsPerPage,
-          startAt: this.lastPostFetched,
-        }
-      );
-      if (amountPostsFetched < 5) {
-        this.noMorePostsToFetch = true;
-        return;
-      }
-      this.postsPage += 1;
+      const { amountFetched } = await this.$store.dispatch("fetchItemsByProp", {
+        collectionName: "posts",
+        whereProp: "userId",
+        whereValue: this.user.id,
+        orderByProp: "publishedAt",
+        orderByDirection: "desc",
+        startAt: this.lastPostFetched,
+      });
+      this.noMorePostsToFetch = amountFetched < 5;
     },
   },
   async created() {
@@ -223,7 +213,7 @@ export default {
     }
 
     //get the posts
-    const amountPostsFetched = await this.$store.dispatch("fetchItemsByProp", {
+    const { amountFetched } = await this.$store.dispatch("fetchItemsByProp", {
       collectionName: "posts",
       whereProp: "userId",
       whereValue: userId,
@@ -231,10 +221,11 @@ export default {
       orderByDirection: "desc",
       maxElements: this.maxElementsPerPage,
     });
-    this.noMorePostsToFetch = amountPostsFetched < 0;
+    console.log("UserShow > created > amountFetched", amountFetched);
+    this.noMorePostsToFetch = amountFetched < 5;
     //get the threads
 
-    this.$store.dispatch("notifyAppIsReady");
+    this.$store.dispatch("notifyAppIsReady", "UserShow");
   },
 };
 </script>

@@ -31,7 +31,7 @@ export default {
       ids: forumIds,
     });
 
-    this.$store.dispatch("notifyAppIsReady");
+    this.$store.dispatch("notifyAppIsReady", "TheHome");
   },
 };
 </script>

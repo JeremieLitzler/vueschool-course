@@ -21,13 +21,16 @@
       <div class="form-group">
         <textarea
           v-model="newPostText"
+          :disabled="disableForm"
           cols="30"
           rows="10"
           class="form-input"
         />
       </div>
       <div class="form-actions">
-        <button class="btn-blue">{{ buttonText }}</button>
+        <button :disabled="disableForm" class="btn-blue">
+          {{ buttonText }}
+        </button>
       </div>
     </form>
   </div>
@@ -49,6 +52,10 @@ export default {
       type: Object,
       default: () => ({ text: null }),
     },
+    disableForm: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -58,8 +65,8 @@ export default {
   },
   computed: {
     postingAllowed() {
-      console.log("PostEditor > postingAllowed", this.$store.getters.authUser);
-      return this.$store.getters["auth/authUser"].id;
+      //console.log("PostEditor > postingAllowed > authId", this.$store.state.auth.authId);
+      return this.$store.state.auth.authId !== undefined;
     },
     postIsEdited() {
       const result = this.post?.text !== null;

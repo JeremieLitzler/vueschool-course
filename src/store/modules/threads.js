@@ -64,11 +64,11 @@ export default {
       return dispatch("fetchItems", { source: "threads", ids }, { root: true });
     },
     async createThread(
-      { commit, dispatch, rootGetters },
+      { commit, dispatch, rootState },
       { title, body, forumId }
     ) {
       //console.log("threadId", id);
-      const authId = rootGetters["users/authUser"].id;
+      const authId = rootState.auth.authId;
       if (!authId) {
         return new Promise((reject) => reject("You're not logged in"));
       }
