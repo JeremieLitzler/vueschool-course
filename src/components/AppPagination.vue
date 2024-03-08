@@ -1,20 +1,22 @@
 <template>
   <section v-if="showPagination" class="app-pagination">
-    <ul>
+    <ul class="app-pagination-ctrls app-pagination-ctrls-left">
       <li
         v-show="showPrevRangeButton"
         @click="previousRange"
-        class="app-pagination-link app-pagination-ctrls"
+        class="app-pagination-link app-pagination-ctrl"
       >
         <span> ⏮️ </span>
       </li>
       <li
         v-show="currentPage > 1"
         @click="goPrevPage"
-        class="app-pagination-link app-pagination-ctrls"
+        class="app-pagination-link app-pagination-ctrl"
       >
         <span> ◀️ </span>
       </li>
+    </ul>
+    <ul class="app-pagination-list">
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
         <!-- <a
           @click.prevent="loadPage(page)"
@@ -36,10 +38,12 @@
           {{ page }}
         </router-link>
       </li>
+    </ul>
+    <ul class="app-pagination-ctrls app-pagination-ctrls-right">
       <li
         v-show="currentPage < pageCount"
         @click="goNextPage"
-        class="app-pagination-link app-pagination-ctrls"
+        class="app-pagination-link app-pagination-ctrl"
       >
         <span> ▶️ </span>
       </li>
@@ -47,7 +51,7 @@
       <li
         v-show="showNextRangeButton"
         @click="nextRange"
-        class="app-pagination-link app-pagination-ctrls"
+        class="app-pagination-link app-pagination-ctrl"
       >
         <span> ⏭️ </span>
       </li>
@@ -235,26 +239,42 @@ export default {
 };
 </script>
 <style scoped>
-.app-pagination ul {
-  width: 19em;
+.app-pagination {
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  align-items: center;
+}
+
+.app-pagination-ctrls,
+.app-pagination-list {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.app-pagination-ctrls {
+  margin: 0.5em 0;
 }
 
 .app-pagination-link {
   margin: 1px;
 }
 
-.app-pagination-ctrls {
-  padding: 0 10px;
+.app-pagination-ctrl {
+  padding: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-items: center;
   border: 2px solid #57ad8d;
   border-radius: 0.375em;
+}
+@media (min-width: 37.5em) {
+  .app-pagination {
+    flex-direction: initial;
+    justify-content: center;
+  }
 }
 </style>

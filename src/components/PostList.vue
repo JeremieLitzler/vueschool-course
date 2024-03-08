@@ -41,7 +41,7 @@ export default {
   background-color: white;
   padding: 20px 10px;
   padding-bottom: 7px;
-  box-shadow: 2px 2px 1px rgba(136, 136, 136, 0.09);
+  box-shadow: 1px 1px 0px 4px rgba(136, 136, 136, 0.09);
   margin-bottom: 20px;
 }
 

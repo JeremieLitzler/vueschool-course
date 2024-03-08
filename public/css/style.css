@@ -1800,10 +1800,10 @@ button {
 }
 
 .avatar-large {
-  width: 95px;
-  max-width: 95px;
-  height: 95px;
-  max-height: 95px;
+  width: 3em;
+  max-width: 3em;
+  height: 3em;
+  max-height: 3em;
 }
 
 .avatar-xlarge {
@@ -2375,7 +2375,7 @@ figure {
 
 @media (min-width: 240px) and (max-width: 720px) {
   .container {
-    width: 96%;
+    width: 98%;
   }
 }
 

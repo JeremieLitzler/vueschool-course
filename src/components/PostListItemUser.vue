@@ -1,14 +1,12 @@
 <template>
   <div class="user-info">
-    <router-link
-      :to="{ name: RouteName.UserShow, params: { id: user.id } }"
-      class="user-name"
-      >{{ user.name }}</router-link
-    >
-
     <router-link :to="{ name: RouteName.UserShow, params: { id: user.id } }">
       <img class="avatar-large" :src="user.avatar" :alt="user.name" />
     </router-link>
+    &nbsp;
+    <p>
+      {{ user.name }}
+    </p>
 
     <p class="desktop-only text-small">
       {{ user.postsCount }} post{{ user.postsCount > 1 ? "s" : "" }}
