@@ -60,7 +60,12 @@ import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
+
 const asyncUiElement = "newPost";
+const isCurrentPageSetInQuery = (route) => {
+  return route.query.page !== undefined && !isNaN(parseInt(route.query.page));
+};
+
 export default {
   props: {
     id: {
@@ -110,12 +115,6 @@ export default {
     },
     pageCount() {
       return Math.ceil(this.thread.posts.length / this.itemsToFetch);
-    },
-    currentPageSetInQuery() {
-      return (
-        this.$route.query.page !== undefined &&
-        !isNaN(parseInt(this.$route.query.page))
-      );
     },
   },
   methods: {
@@ -190,7 +189,7 @@ export default {
     // console.log("ThreadShow > updated");
     // console.log("ThreadShow > updated > query.page", this.$route.query.page);
     // console.log("ThreadShow > updated > currentPage", this.currentPage);
-    if (!this.currentPageSetInQuery) {
+    if (!isCurrentPageSetInQuery(this.$route)) {
       return;
     }
     // console.log(
@@ -217,11 +216,6 @@ export default {
       // );
     }
     // this.$store.dispatch("notifyAppIsReady", "ThreadShow (updated bis)");
-  },
-  beforeRouteEnter() {
-    // this.previousPage = !this.currentPageSetInQuery
-    //   ? null
-    //   : parseInt(this.$route.query.page);
   },
 };
 </script>

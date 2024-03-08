@@ -16,7 +16,7 @@
         <span> ◀️ </span>
       </li>
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
-        <a
+        <!-- <a
           @click.prevent="loadPage(page)"
           class="btn-small"
           :class="[
@@ -24,8 +24,8 @@
             { 'btn-green': page !== currentPage },
           ]"
           >{{ page }}</a
-        >
-        <!-- <router-link
+        > -->
+        <router-link
           :to="{ name: RouteName.ThreadShow, query: { page: page } }"
           class="btn-small"
           :class="[
@@ -34,7 +34,7 @@
           ]"
         >
           {{ page }}
-        </router-link> -->
+        </router-link>
       </li>
       <li
         v-show="currentPage < pageCount"
@@ -174,49 +174,55 @@ export default {
       //we want the range from which to see the from and to data properties
       //we know the range size = [pagesAround * 2 + 1]
       const rangeSize = this.pagesAround * 2 + 1;
+      let nextRangeMax = rangeSize;
       //we know the index of the page
       const currentPageIndex = this.currentPage - 1;
       let from = 0;
       let to = rangeSize;
       for (let index = 0; index < this.pages.length; index++) {
-        // console.log("app-pagination > rangeFromCurrentPage > index", index);
-        // console.log("app-pagination > rangeFromCurrentPage > from", from);
-        // console.log("app-pagination > rangeFromCurrentPage > to", to);
+        // console.log(
+        //   `app-pagination > rangeFromCurrentPage > index=${index} / range=${from} / ${to}`
+        // );
         if (to >= this.pages.length) {
+          // console.log(`app-pagination > rangeFromCurrentPage > first return`);
           return { from, to };
         }
-        if (index >= rangeSize) {
+        if (index >= nextRangeMax) {
+          // console.log(
+          //   `app-pagination > rangeFromCurrentPage > updating from and to`
+          // );
           from = to;
           to = from + rangeSize;
+          nextRangeMax = to;
+          // console.log(`new range=${from} / ${to} from index=${index}`);
         }
         if (index == currentPageIndex) {
+          // console.log(`app-pagination > rangeFromCurrentPage > second return`);
           return { from, to };
         }
+        // console.log("not found... continue");
       }
+      // console.log(`app-pagination > rangeFromCurrentPage > last return`);
       return { from, to };
     },
   },
   created() {
-    console.log("app-pagination > created > previousPage", this.previousPage);
-    console.log("app-pagination > created > currentPage", this.currentPage);
-
-    const pageChanged = this.previousPage !== this.currentPage;
+    // console.log("app-pagination > created > previousPage", this.previousPage);
+    // console.log("app-pagination > created > currentPage", this.currentPage);
     const { from, to } = this.rangeFromCurrentPage();
-    console.log("app-pagination > created > from (currentPage)", from);
-    console.log("app-pagination > created > to (currentPage)", to);
-    if (!this.navigateRanges && pageChanged) {
-      this.from = from;
-      this.to = to;
-    }
+    // console.log("app-pagination > created > from (currentPage)", from);
+    // console.log("app-pagination > created > to (currentPage)", to);
+    this.from = from;
+    this.to = to;
   },
   updated() {
-    console.log("app-pagination > updated > previousPage", this.previousPage);
-    console.log("app-pagination > updated > currentPage", this.currentPage);
+    // console.log("app-pagination > updated > previousPage", this.previousPage);
+    // console.log("app-pagination > updated > currentPage", this.currentPage);
     const pageChanged = this.previousPage !== this.currentPage;
     if (!this.navigateRanges && pageChanged) {
       const { from, to } = this.rangeFromCurrentPage();
-      console.log("app-pagination > updated > from (currentPage)", from);
-      console.log("app-pagination > updated > to (currentPage)", to);
+      // console.log("app-pagination > updated > from (currentPage)", from);
+      // console.log("app-pagination > updated > to (currentPage)", to);
       this.from = from;
       this.to = to;
     } else {
