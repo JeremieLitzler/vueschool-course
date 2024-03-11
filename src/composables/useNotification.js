@@ -3,9 +3,13 @@ import { ref } from "vue";
 const notifications = ref([]);
 
 export default function useNotification() {
-  const addNotification = (notification) => {
+  const addNotification = ({ message, timeout = null }) => {
     const notificationId = useUUID().createId();
-    notifications.value.push({ id: notificationId, ...notification });
+    notifications.value.push({ id: notificationId, message });
+
+    if (timeout) {
+      setTimeout(() => removeNotification(notificationId), timeout);
+    }
   };
   const removeNotification = (id) => {
     const index = notifications.value.findIndex((item) => item.id === id);
