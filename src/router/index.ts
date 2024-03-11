@@ -184,6 +184,7 @@ const router: Router = createRouter(routerOptions);
 
 router.beforeEach(async (to, _from) => {
   await useUserStore().initAuthentification();
+  useCommonStore().runAllSnapshotUnsubscribes();
   useCommonStore().resetAsyncUiElements();
   //console.log('beforeEach global guard > to.name', to.name);
   //console.log('beforeEach global guard > to.meta', to.meta);

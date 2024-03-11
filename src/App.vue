@@ -13,6 +13,7 @@
       </template>
     </suspense>
   </div>
+  <app-notifications />
 </template>
 <script setup lang="ts">
 // import { computed } from 'vue';

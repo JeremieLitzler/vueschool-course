@@ -10,6 +10,7 @@ import type GenericFetchRequestAll from '@/types/GenericFetchRequestAll';
 import type UiElementNotification from '@/types/UiElementNotification';
 import type FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
 import type FirebaseChunkQueryRequest from '@/types/FirebaseChunkQueryRequest';
+import type OnSnapshotUnsubscribeListener from '@/types/OnSnapshotUnsubscribeListener';
 import useArrayChunckHelper from '@/helpers/arrayChunkHelper';
 
 export const useCommonStore = defineStore('CommonStore', () => {
@@ -18,10 +19,18 @@ export const useCommonStore = defineStore('CommonStore', () => {
    * The flag indicating we are fetching something.
    */
   const appIsReady = ref(false);
-
+  /**
+   * List of asynchronous UI elements and their loading state (true = loaded ; false = loading)
+   */
+  const asyncUiParts = ref<UiElementNotification[]>([]);
+  /**
+   * Default number of elements to fetch when retrieving many items
+   */
   const maxElementsPerFetch = 5;
 
-  const asyncUiParts = ref<UiElementNotification[]>([]);
+  const onSnapshotUnsubscribeListeners = ref<OnSnapshotUnsubscribeListener[]>(
+    []
+  );
 
   //GETTERS
   const isUiElementReady = (uiElement: string) => {
@@ -234,12 +243,14 @@ export const useCommonStore = defineStore('CommonStore', () => {
       if (!id) return resolve({} as T);
 
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);
-      const item = await useFirebase().getDoc(itemRef);
-      if (!item.exists()) return resolve({} as T);
+      const unsubscribe = useFirebase().onSnapshot(itemRef, (item) => {
+        if (!item.exists()) return resolve({} as T);
 
-      const result = { ...item.data(), id: item.id } as T;
-      setItem({ targetStore: targetStore, item: result });
-      resolve(result);
+        const result = { ...item.data(), id: item.id } as T;
+        setItem({ targetStore: targetStore, item: result });
+        resolve(result);
+      });
+      appendSnapshotUnsubscribe(unsubscribe);
     });
   };
   /**
@@ -275,12 +286,28 @@ export const useCommonStore = defineStore('CommonStore', () => {
     }
   };
 
+  const appendSnapshotUnsubscribe = (unsubscribe: Function) => {
+    console.log('Running appendSnapshotUnsubscribe...');
+    onSnapshotUnsubscribeListeners.value.push({ listener: unsubscribe });
+    console.log(
+      'onSnapshotUnsubscribeListeners contains',
+      onSnapshotUnsubscribeListeners.value
+    );
+  };
+  const runAllSnapshotUnsubscribes = () => {
+    console.log('Running runAllSnapshotUnsubscribes');
+
+    onSnapshotUnsubscribeListeners.value.forEach((unsub) => unsub.listener());
+    onSnapshotUnsubscribeListeners.value = [];
+  };
+
   return {
     appIsReady,
     isUiElementReady,
     notifyAppIsReady,
     notifyAsyncUiElementState,
     resetAsyncUiElements,
+    runAllSnapshotUnsubscribes,
     fetchItem,
     fetchSomeItems,
     fetchAllItems,
