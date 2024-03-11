@@ -3,6 +3,7 @@
   <div class="container">
     <router-view :key="`${$route.path}${JSON.stringify($route.query)}`" />
   </div>
+  <app-notifications />
 </template>
 
 <script>

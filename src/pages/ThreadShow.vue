@@ -58,6 +58,7 @@ import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
 import { useRouteName } from "@/helpers/routeNameEnum";
+// import useNotification from "@/composables/useNotification";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -82,6 +83,9 @@ export default {
   components: {
     PostList,
     PostEditor,
+  },
+  setup() {
+    // const { addNotification } = useNotification();
   },
   computed: {
     savingPost() {
