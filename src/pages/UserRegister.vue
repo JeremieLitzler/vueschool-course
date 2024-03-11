@@ -40,12 +40,19 @@
         </div>
 
         <div class="form-group">
-          <label for="avatar">Avatar</label>
+          <label for="avatar"
+            >Avatar
+            <div v-if="avatarPreview">
+              <img :src="avatarPreview" class="avatar-xlarge" />
+            </div>
+          </label>
           <input
-            v-model="form.avatar"
+            v-show="!avatarPreview"
             id="avatar"
-            type="text"
+            type="file"
+            accept="image/*"
             class="form-input"
+            @change="handleImageUpload"
           />
         </div>
 
@@ -84,6 +91,7 @@ export default {
         password: "",
         avatar: "",
       },
+      avatarPreview: null,
     };
   },
   methods: {
@@ -108,6 +116,14 @@ export default {
       };
       this.$router.push(redirectTo);
     },
+    handleImageUpload(event) {
+      this.form.avatar = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        this.avatarPreview = readerEvent.target.result;
+      };
+      if (this.form.avatar) reader.readAsDataURL(this.form.avatar);
+    },
   },
   created() {
     this.$store.dispatch("notifyAppIsReady", "UserRegister");
@@ -115,4 +131,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped></style>

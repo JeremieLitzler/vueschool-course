@@ -74,6 +74,14 @@ export default {
         email,
         password,
       });
+      const storageBucket = firebaseService().getStorageBucket(
+        `uploads/${registerResult.user.uid}/images/${Date.now()}-${avatar.name}`
+      );
+      const snapshot = await firebaseService().uploadToStorageBucket(
+        storageBucket,
+        avatar
+      );
+      const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
       //console.log("actions > registerUserWithEmailAndPassword", registerResult);
       const user = await dispatch(
         "users/createUser",
@@ -81,7 +89,7 @@ export default {
           name,
           username,
           email,
-          avatar,
+          avatar: avatarUrl,
           id: registerResult.user.uid,
         },
         { root: true }

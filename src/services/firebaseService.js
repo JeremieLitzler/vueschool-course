@@ -19,6 +19,8 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
@@ -138,6 +140,19 @@ export default function firebaseService() {
   const getAuthUserId = () => {
     return auth.currentUser?.uid;
   };
+
+  const getStorageBucket = (url) => {
+    return ref(getStorage(firebaseApp), url);
+  };
+  const uploadToStorageBucket = async (bucketRef, imageBlob) => {
+    return await uploadBytes(bucketRef, imageBlob);
+  };
+  const getImageURL = async (snapshotRef) => {
+    const url = await getDownloadURL(snapshotRef);
+    //console.log("firebaseService>getImageURL", url);
+    return url;
+  };
+
   return {
     auth,
     getServerTimeStamp,
@@ -150,5 +165,8 @@ export default function firebaseService() {
     signinWithGoogle,
     signOut,
     getAuthUserId,
+    getStorageBucket,
+    uploadToStorageBucket,
+    getImageURL,
   };
 }
