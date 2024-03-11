@@ -40,7 +40,7 @@
       <template #prevRange>⏮️</template>
       <template #prevPage>◀️</template>
       <template #nextPage>▶️</template>
-      <template #nextRange>⏮️</template>
+      <template #nextRange>⏭️</template>
     </app-pagination>
     <post-list :posts="pagePosts!" />
     <app-pagination
@@ -51,7 +51,7 @@
       <template #prevRange>⏮️</template>
       <template #prevPage>◀️</template>
       <template #nextPage>▶️</template>
-      <template #nextRange>⏮️</template>
+      <template #nextRange>⏭️</template>
     </app-pagination>
 
     <app-spinner v-if="savingPost" />
