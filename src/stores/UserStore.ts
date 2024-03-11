@@ -36,7 +36,7 @@ export const useUserStore = defineStore('UserStore', () => {
         return user.threads?.length || 0;
       },
     };
-    // console.log('fetchUser > hydratedUser ', hydratedUser);
+    //console.log('fetchUser > hydratedUser ', hydratedUser);
     return hydratedUser;
   };
   const getUserById = (userId: string | undefined): GetUserExtended => {
@@ -59,7 +59,7 @@ export const useUserStore = defineStore('UserStore', () => {
   const fetchAuthUser = async (
     reFetch: boolean | undefined = undefined
   ): Promise<string | null> => {
-    console.log('UserStore > authId', authId);
+    //console.log('UserStore > authId', authId);
     const userId = firebaseService().getAuthUserId();
     if (userId === undefined) {
       return authId.value;
@@ -108,7 +108,7 @@ export const useUserStore = defineStore('UserStore', () => {
     ) {
       return registerResult as FirebaseError;
     }
-    console.log('actions > registerUserWithEmailAndPassword', registerResult);
+    //console.log('actions > registerUserWithEmailAndPassword', registerResult);
     const user = await createUser(
       {
         name,
@@ -126,7 +126,7 @@ export const useUserStore = defineStore('UserStore', () => {
   };
   const loginWithGoogle = async () => {
     const user = await firebaseService().signinWithGoogle();
-    console.log('actions > loginWithGoogle > user', user);
+    //console.log('actions > loginWithGoogle > user', user);
     if (!user.exists) {
       createUser(user, user.uid);
       authId.value = user.uid;
@@ -140,9 +140,9 @@ export const useUserStore = defineStore('UserStore', () => {
     return new Promise((resolve) => {
       const unsubscribe = firebaseService().auth.onAuthStateChanged(
         async (user) => {
-          console.log(
-            'actions > initAuthentification > onAuthStateChanged running'
-          );
+          //console.log(
+          //   'actions > initAuthentification > onAuthStateChanged running'
+          // );
 
           if (user) {
             await fetchAuthUser();
@@ -175,7 +175,7 @@ export const useUserStore = defineStore('UserStore', () => {
       usernameLower: username.toLowerCase(),
     };
 
-    console.log('No error... Let´s continue');
+    //console.log('No error... Let´s continue');
 
     const userRef = useFirebase().doc(useFirebase().db, 'users', id);
     await useFirebase()

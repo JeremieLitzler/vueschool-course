@@ -32,13 +32,40 @@
       >
     </section>
 
-    <PostList :posts="threadPosts!" />
-    <PostEditor :thread-id="id" :source-post="null" @@add-post="savePost" />
+    <app-pagination
+      :page-count="pageCount"
+      :pages-around="1"
+      :current-page="currentPage"
+    >
+      <template #prevRange>⏮️</template>
+      <template #prevPage>◀️</template>
+      <template #nextPage>▶️</template>
+      <template #nextRange>⏮️</template>
+    </app-pagination>
+    <post-list :posts="pagePosts!" />
+    <app-pagination
+      :page-count="pageCount"
+      :pages-around="1"
+      :current-page="currentPage"
+    >
+      <template #prevRange>⏮️</template>
+      <template #prevPage>◀️</template>
+      <template #nextPage>▶️</template>
+      <template #nextRange>⏮️</template>
+    </app-pagination>
+
+    <app-spinner v-if="savingPost" />
+    <post-editor :thread-id="id" :source-post="null" @@add-post="savePost" />
   </div>
 </template>
 
 <script setup async lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { RouteName } from '@/enums/RouteName';
+import type Post from '@/types/Post';
+import type ThreadHydraded from '@/types/ThreadHydraded.ts';
+import type PostAddRequest from '@/types/PostAddRequest';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
@@ -46,10 +73,6 @@ import { useCommonStore } from '@/stores/CommonStore';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
-import type Post from '@/types/Post';
-import type ThreadHydraded from '@/types/ThreadHydraded.ts';
-import { RouteName } from '@/enums/RouteName';
-import PostAddRequest from '@/types/PostAddRequest';
 
 const { id } = defineProps({
   id: {
@@ -58,20 +81,15 @@ const { id } = defineProps({
   },
 });
 
-useCommonStore().notifyAppIsReady();
-//fetch requested thread
-const threadFetch = await useThreadStore().fetchThread(id);
-//... and its author
-const firstUserPromise = useUserStore().fetchUser(threadFetch.userId!);
-//... and its posts
-const posts = await usePostStore().fetchPosts(
-  threadFetch.posts ? threadFetch.posts! : []
-);
-const userIds = posts.map((post) => post.userId!);
-// and finally the posts's authors
-const extraUserPromise = useUserStore().fetchUsers(userIds);
-await Promise.all([firstUserPromise, extraUserPromise]);
-useCommonStore().notifyAppIsReady();
+const route = useRoute();
+const asyncUiElement = 'newPost';
+const itemsToFetch = ref(5);
+const currentPage = ref(1);
+const pagePosts = ref<Post[]>([]);
+
+const savingPost = computed(() => {
+  return !useCommonStore().isUiElementReady(asyncUiElement);
+});
 
 const thread = computed((): ThreadHydraded | undefined =>
   useThreadStore().getThreadById(id)
@@ -79,18 +97,47 @@ const thread = computed((): ThreadHydraded | undefined =>
 const threadEditable = computed(() => {
   return thread.value?.userId === useUserStore().getAuthUser().id;
 });
-//TODO Broken reactivity on the posts...
-//when I add a new post, it is inserted into firestore
-//but the UI doesn't show it
-const threadPosts = computed((): Post[] | undefined =>
-  usePostStore().getPostsByThreaId(id)
-);
+const pageCount = computed(() => {
+  return Math.ceil(thread.value?.posts?.length! / itemsToFetch.value);
+});
 
 const savePost = async (entry: PostAddRequest) => {
   const post = await usePostStore().addPost({ ...entry });
   await useThreadStore().refreshFromFirebase(post.threadId);
   await useUserStore().refreshFromFirebase(post.userId);
 };
+
+const fetchPagePosts = async () => {
+  pagePosts.value = await usePostStore().fetchPostsByPage(
+    thread.value?.posts!,
+    itemsToFetch.value,
+    currentPage.value - 1
+  );
+};
+
+const isCurrentPageSetInQuery = () => {
+  return (
+    route.query.page !== undefined &&
+    !isNaN(parseInt(route.query.page as string))
+  );
+};
+
+//fetch requested thread
+const threadFetch = await useThreadStore().fetchThread(id);
+//... and its author
+const firstUserPromise = useUserStore().fetchUser(threadFetch.userId!);
+//... and its posts
+if (isCurrentPageSetInQuery()) {
+  console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
+  currentPage.value = parseInt(route.query.page as string);
+  console.log('ThreadShow > setup > currentPage (after)', currentPage.value);
+}
+await fetchPagePosts();
+const userIds = pagePosts.value.map((post) => post.userId!);
+// and finally the posts's authors
+const extraUserPromise = useUserStore().fetchUsers(userIds);
+await Promise.all([firstUserPromise, extraUserPromise]);
+useCommonStore().notifyAppIsReady();
 </script>
 
 <style scoped></style>

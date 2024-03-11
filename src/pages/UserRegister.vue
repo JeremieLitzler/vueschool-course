@@ -93,7 +93,7 @@ const route = useRoute();
 const router = useRouter();
 
 const register = async () => {
-  console.log('The form data >', form.value);
+  //console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({
     ...form.value,
   });
@@ -101,7 +101,7 @@ const register = async () => {
     error.value = (user as FirebaseError).message;
     return;
   }
-  console.log('The created user >', user);
+  //console.log('The created user >', user);
   await router.push(toSuccessRedirect(route));
 };
 const loginWithGoogle = async () => {

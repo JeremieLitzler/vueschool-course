@@ -50,17 +50,17 @@ const emits = defineEmits<{
   (event: '@update-post', entry: PostUpdateRequest): void;
 }>();
 
-console.log('props > sourcePost', sourcePost);
+//console.log('props > sourcePost', sourcePost);
 
 const newPostText = ref(sourcePost?.text ?? null);
 const postIsEdited = computed(() => {
   const result = sourcePost !== null;
-  console.log('postIsEdited computed', result);
+  //console.log('postIsEdited computed', result);
 
   return result;
 });
 const postingAllowed = computed(() => {
-  console.log('PostEditor > postingAllowed', useUserStore().getAuthUser());
+  //console.log('PostEditor > postingAllowed', useUserStore().getAuthUser());
   return useUserStore().getAuthUser().id !== '';
 });
 const buttonText = computed(() =>

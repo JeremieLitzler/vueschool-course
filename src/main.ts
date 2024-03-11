@@ -41,9 +41,9 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
     ?.replace('.vue', '');
 
   if (!componentName) {
-    console.warn(
-      `The componentName couldn't be extracted from path > ${componentPath} `
-    );
+    //console.warn(
+    //   `The componentName couldn't be extracted from path > ${componentPath} `
+    // );
     continue;
   }
   /* 

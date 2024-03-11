@@ -40,7 +40,7 @@ const toogleEditMode = (postId: string) => {
 };
 
 const savePost = (entry: PostUpdateRequest) => {
-  console.log('PostListItemBody > savePost > payload', entry);
+  //console.log('PostListItemBody > savePost > payload', entry);
 
   usePostStore().updatePost({ ...entry });
   postEdited.value = null;

@@ -8,7 +8,7 @@
       <template #default>
         <section>
           <the-header />
-          <router-view :key="route.path" />
+          <router-view :key="`${$route.path}${JSON.stringify($route.query)}`" />
         </section>
       </template>
     </suspense>
@@ -16,9 +16,8 @@
 </template>
 <script setup lang="ts">
 // import { computed } from 'vue';
-import { RouterView, useRoute } from 'vue-router';
+import { RouterView } from 'vue-router';
 import TheHeader from '@/components/TheHeader.vue';
-const route = useRoute();
 </script>
 
 <style scoped>

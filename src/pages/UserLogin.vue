@@ -61,7 +61,7 @@ const form = ref<UserLoginRequest>({ email: '', password: '' });
 const errorMessage = ref('');
 
 const login = async () => {
-  console.log(form.value);
+  //console.log(form.value);
   const result = await useUserStore().loginWithEmailAndPassword({
     ...form.value,
   });
@@ -69,7 +69,7 @@ const login = async () => {
   if (error['name'] === 'FirebaseError') {
     errorMessage.value = error.message;
   } else {
-    console.log('UserLogin > login:', result);
+    //console.log('UserLogin > login:', result);
     await router.push(toSuccessRedirect(route));
   }
 };

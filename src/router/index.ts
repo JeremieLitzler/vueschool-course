@@ -54,10 +54,11 @@ const ThreadShowRoute: RouteRecordRaw = {
   name: RouteName.ThreadShow,
   component: () => import('@/pages/ThreadShow.vue'),
   props: true,
+  meta: { toTop: true, smoothScroll: true },
   beforeEnter: async (to, _from, next) => {
     //does the thread exists?
     const threadMatch = await fetchThread(to.params.id as string);
-    console.log('ThreadShow > beforeEnter > threadMatch', threadMatch);
+    //console.log('ThreadShow > beforeEnter > threadMatch', threadMatch);
 
     //if positive, contine
     if (threadMatch?.id !== '') {
@@ -183,10 +184,11 @@ const router: Router = createRouter(routerOptions);
 
 router.beforeEach(async (to, _from) => {
   await useUserStore().initAuthentification();
-  console.log('beforeEach global guard > to.name', to.name);
-  console.log('beforeEach global guard > to.meta', to.meta);
+  useCommonStore().resetAsyncUiElements();
+  //console.log('beforeEach global guard > to.name', to.name);
+  //console.log('beforeEach global guard > to.meta', to.meta);
 
-  console.log('beforeEach global guard > authId', useUserStore().authId);
+  //console.log('beforeEach global guard > authId', useUserStore().authId);
   if (to.meta.requiresAuth && !useUserStore().authId) {
     //TODO : implement auth guard
     //verify auth user exists

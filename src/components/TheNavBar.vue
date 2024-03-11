@@ -5,7 +5,7 @@
     v-click-outside="closeMobileMenu"
     v-page-scroll="
       () => {
-        console.log('v-page-scroll called');
+        //console.log('v-page-scroll called');
         mobileMenuOpened = false;
       }
     "

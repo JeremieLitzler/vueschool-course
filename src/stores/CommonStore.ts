@@ -7,7 +7,10 @@ import type WithId from '@/types/WithId';
 import type GenericFindRequest from '@/types/GenericFindRequest';
 import type GenericFetchRequestMany from '@/types/GenericFetchRequestMany';
 import type GenericFetchRequestAll from '@/types/GenericFetchRequestAll';
-import FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
+import type UiElementNotification from '@/types/UiElementNotification';
+import type FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
+import type FirebaseChunkQueryRequest from '@/types/FirebaseChunkQueryRequest';
+import useArrayChunckHelper from '@/helpers/arrayChunkHelper';
 
 export const useCommonStore = defineStore('CommonStore', () => {
   //STATE
@@ -18,14 +21,51 @@ export const useCommonStore = defineStore('CommonStore', () => {
 
   const maxElementsPerFetch = 5;
 
+  const asyncUiParts = ref<UiElementNotification[]>([]);
+
+  //GETTERS
+  const isUiElementReady = (uiElement: string) => {
+    const match = asyncUiParts.value.find(
+      (item) => item.uiElement === uiElement
+    );
+    if (match === undefined) {
+      //console.log("getters > isUiElementReady (undefined)");
+      return true;
+    }
+    //console.log("getters > isUiElementReady", state.asyncUiParts[uiElement]);
+    return match.ready ?? true;
+  };
+
   //ACTIONS
   /**
    * Update the flag fetching the data
    */
   const notifyAppIsReady = () => {
-    // console.log('fetching was', fetching.value);
+    //console.log('fetching was', fetching.value);
     appIsReady.value = true;
-    // console.log('fetching is', fetching.value);
+    //console.log('fetching is', fetching.value);
+  };
+
+  /**
+   * Add a notification that a UI element is being updated.
+   *
+   * @param notification The UiElementNotification object
+   */
+  const notifyAsyncUiElementState = ({
+    uiElement,
+    ready = false,
+  }: UiElementNotification) => {
+    //console.log("calling notifyUiElementLoading");
+    asyncUiParts.value.push({ uiElement, ready });
+  };
+
+  /**
+   * Reset the async UI element array.
+   * @see router > beforeEach guard
+   */
+  const resetAsyncUiElements = () => {
+    //console.log("calling resetUiPartsLoading");
+    asyncUiParts.value = [];
   };
   /**
    * Fetch an item in the store first, otherwise in firestore given a collection and an id.
@@ -38,9 +78,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
   ): Promise<T> => {
     const item = _findItemInLocalStore<T>({ ...request });
     if (item && !request.reFetch) {
-      console.log(
-        `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
-      );
+      //console.log(
+      //   `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
+      // );
       return new Promise((resolve) => resolve(item as T));
     }
 
@@ -76,7 +116,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     //console.log(`store has ${targetStore.value.length} items`);
 
     if (targetStore.value.length > 0) {
-      console.log(`🍍 found categories in store 🍍`);
+      //console.log(`🍍 found categories in store 🍍`);
       return new Promise((resolve) => {
         resolve(targetStore.value);
       });
@@ -87,7 +127,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
         .getDocs(useFirebase().collection(useFirebase().db, collection))
         .then((querySnapshot) => {
           //console.log("from firestore > querySnapshot: ", querySnapshot);
-          // console.log("from firestore > querySnapshot.docs: ", querySnapshot.docs);
+          //console.log("from firestore > querySnapshot.docs: ", querySnapshot.docs);
           const items = querySnapshot.docs.map((doc) => {
             //console.log("from firestore > doc: ", doc.id, doc.data());
             const item = { id: doc.id, ...doc.data() };
@@ -101,6 +141,12 @@ export const useCommonStore = defineStore('CommonStore', () => {
         });
     });
   };
+  /**
+   * Fetch in the firestore documents matching the request
+   *
+   * @param FirebaseSinglePropQueryRequest The FirebaseSinglePropQueryRequest object
+   * @returns The number of records fetched
+   */
   const fetchItemsByProp = async <T extends WithId>({
     collectionName,
     targetStore,
@@ -143,6 +189,32 @@ export const useCommonStore = defineStore('CommonStore', () => {
     return items.docs?.length;
   };
   /**
+   * Fetch a given range or page of T items in a list of string identifiers.
+   *
+   * @param param0 The FirebaseChunkQueryRequest object
+   * @returns The list of T objects
+   */
+  const fetchItemsByChunk = <T extends WithId>({
+    targetStore,
+    collection,
+    ids,
+    chunkIndex,
+    chunkSize,
+  }: FirebaseChunkQueryRequest<T>) => {
+    //console.log("actions < fetchItemsByChunk > source", source);
+    //console.log("actions < fetchItemsByChunk > ids", ids);
+    //console.log("actions < fetchItemsByChunk > chunckIndex", chunckIndex);
+    const chuncks = useArrayChunckHelper().chunckIt<string>(chunkSize)(ids);
+
+    //console.log("actions < fetchItemsByChunk > chuncks", chuncks);
+    //console.log("actions < fetchItemsByChunk > chunck", chuncks[chunckIndex]);
+    return fetchSomeItems({
+      targetStore,
+      collection,
+      ids: chuncks[chunkIndex],
+    });
+  };
+  /**
    * Query firestore in a collection given an item id.
    * Once fetch, the item is set into the targetStore.
    * Note: Not exposed to the outside.
@@ -156,9 +228,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
     collection,
   }: GenericFetchRequest<T>): Promise<T> => {
     return new Promise(async (resolve) => {
-      console.log(
-        `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
-      );
+      //console.log(
+      //   `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
+      // );
       if (!id) return resolve({} as T);
 
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);
@@ -205,11 +277,15 @@ export const useCommonStore = defineStore('CommonStore', () => {
 
   return {
     appIsReady,
+    isUiElementReady,
     notifyAppIsReady,
+    notifyAsyncUiElementState,
+    resetAsyncUiElements,
     fetchItem,
     fetchSomeItems,
     fetchAllItems,
     fetchItemsByProp,
+    fetchItemsByChunk,
     setItem,
   };
 });

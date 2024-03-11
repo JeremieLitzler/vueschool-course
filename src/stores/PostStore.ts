@@ -78,6 +78,20 @@ export const usePostStore = defineStore('PostStore', () => {
     });
   };
 
+  const fetchPostsByPage = async (
+    ids: string[],
+    chunkSize: number,
+    chunkIndex: number
+  ) => {
+    return await useCommonStore().fetchItemsByChunk<Post>({
+      targetStore: posts,
+      collection: FirestoreCollection.Posts,
+      ids,
+      chunkSize,
+      chunkIndex,
+    });
+  };
+
   const addPost = async (post: PostAddRequest) => {
     //console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
@@ -154,6 +168,7 @@ export const usePostStore = defineStore('PostStore', () => {
     fetchPost,
     fetchPosts,
     fetchPostsByUser,
+    fetchPostsByPage,
     addPost,
     updatePost,
     setPost,

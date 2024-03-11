@@ -13,11 +13,11 @@ const PageScrollDirective = <
   Directive<PageScrollDirectiveHTMLElement, Function>
 >{
   mounted(el, binding) {
-    console.log('PageScrollDirective > mounted');
-    console.log('PageScrollDirective > binding', binding);
+    //console.log('PageScrollDirective > mounted');
+    //console.log('PageScrollDirective > binding', binding);
 
     el.__pageScrollHandler__ = () => {
-      console.log('PageScrollDirective > scrolling...');
+      //console.log('PageScrollDirective > scrolling...');
       binding.value();
     };
 

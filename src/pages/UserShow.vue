@@ -169,10 +169,6 @@ const fetchNextPosts = async () => {
     props.id!,
     lastPostFetched.value
   );
-  console.log(
-    'UserShow > fetchNextPosts > amountPostsFetched',
-    amountPostsFetched
-  );
 
   noMorePostsToFetch.value = amountPostsFetched < 5;
 };

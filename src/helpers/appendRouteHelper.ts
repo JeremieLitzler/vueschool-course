@@ -24,13 +24,13 @@ export default function useAppendRouteHelper() {
   };
 
   const toSuccessRedirect = (route: RouteLocationNormalizedLoaded) => {
-    console.log(
-      'toSuccessRedirect > route.query.redirectTo',
-      route.query.redirectTo
-    );
+    //console.log(
+    //   'toSuccessRedirect > route.query.redirectTo',
+    //   route.query.redirectTo
+    // );
 
     if (!route.query.redirectTo) {
-      console.log('toSuccessRedirect > going toHomePage');
+      //console.log('toSuccessRedirect > going toHomePage');
       return toHomePage();
     }
 

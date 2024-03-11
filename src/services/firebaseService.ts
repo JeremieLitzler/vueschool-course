@@ -28,10 +28,10 @@ export default function firebaseService() {
         request.email,
         request.password
       );
-      console.log('User registered!', registerResult);
+      //console.log('User registered!', registerResult);
       return registerResult;
     } catch (error) {
-      console.log('Error >', error);
+      //console.log('Error >', error);
       return error as FirebaseError;
     }
   };
@@ -43,7 +43,7 @@ export default function firebaseService() {
     return signInWithEmailAndPassword(auth, email, password)
       .then((user) => user)
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
         return error;
       });
   };
@@ -65,7 +65,7 @@ export default function firebaseService() {
   };
   const signOut = async () => {
     await auth.signOut();
-    console.log('UserStore > signOut', auth.currentUser);
+    //console.log('UserStore > signOut', auth.currentUser);
   };
   const getAuthUserId = () => {
     return auth.currentUser?.uid;
