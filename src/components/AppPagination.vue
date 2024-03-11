@@ -212,22 +212,6 @@ export default {
     this.from = from;
     this.to = to;
   },
-  updated() {
-    // console.log("app-pagination > updated > previousPage", this.previousPage);
-    // console.log("app-pagination > updated > currentPage", this.currentPage);
-    if (!this.navigateRanges) {
-      const { from, to } = this.rangeFromCurrentPage();
-      // console.log("app-pagination > updated > from (currentPage)", from);
-      // console.log("app-pagination > updated > to (currentPage)", to);
-      this.from = from;
-      this.to = to;
-    } else {
-      // console.log(
-      //   "app-pagination > updated > else",
-      //   `navigateRanges=${this.navigateRanges} / pageChanged=${pageChanged}`
-      // );
-    }
-  },
 };
 </script>
 <style scoped>
