@@ -92,7 +92,7 @@ export const useUserStore = defineStore('UserStore', () => {
     username,
     email,
     password,
-    avatar,
+    avatarFile,
   }: UserRegisterRequest): Promise<User | FirebaseError> => {
     const emailLower = email.toLowerCase();
     const registerResult = await firebaseService().registerUser({
@@ -108,13 +108,25 @@ export const useUserStore = defineStore('UserStore', () => {
     ) {
       return registerResult as FirebaseError;
     }
+    const storageBucket = firebaseService().getStorageBucket(
+      `uploads/${registerResult.user.uid}/images/${Date.now()}-${
+        avatarFile!.name
+      }`
+    );
+    const snapshot = await firebaseService().uploadToStorageBucket(
+      storageBucket,
+      avatarFile!
+    );
+    const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
+    //console.log("actions > registerUserWithEmailAndPassword", registerResult);
+
     //console.log('actions > registerUserWithEmailAndPassword', registerResult);
     const user = await createUser(
       {
         name,
         username,
         email: emailLower,
-        avatar,
+        avatar: avatarUrl,
       },
       registerResult.user.uid
     );

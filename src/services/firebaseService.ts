@@ -9,9 +9,17 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from 'firebase/auth';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  StorageReference,
+} from 'firebase/storage';
+
 import type { FirebaseError } from 'firebase/app';
-import UserLoginRequest from '@/types/UserLoginRequest';
-import UserGoogleSigninRequest from '@/types/UserGoogleSignRequest';
+import type UserLoginRequest from '@/types/UserLoginRequest';
+import type UserGoogleSigninRequest from '@/types/UserGoogleSignRequest';
 
 export default function firebaseService() {
   const auth = getAuth(useFirebase().firebaseApp);
@@ -71,6 +79,20 @@ export default function firebaseService() {
     return auth.currentUser?.uid;
   };
 
+  const getStorageBucket = (url: string) => {
+    return ref(getStorage(useFirebase().firebaseApp), url);
+  };
+  const uploadToStorageBucket = (
+    bucketRef: StorageReference,
+    imageBlob: Blob
+  ) => {
+    return uploadBytes(bucketRef, imageBlob);
+  };
+  const getImageURL = (snapshotRef: StorageReference) => {
+    const urlPromise = getDownloadURL(snapshotRef);
+    return urlPromise;
+  };
+
   return {
     auth,
     getServerTimeStamp,
@@ -79,5 +101,8 @@ export default function firebaseService() {
     loginWithEmailAndPassword,
     signinWithGoogle,
     signOut,
+    getStorageBucket,
+    uploadToStorageBucket,
+    getImageURL,
   };
 }

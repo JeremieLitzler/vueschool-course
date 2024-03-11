@@ -45,11 +45,17 @@
         </div>
 
         <div class="form-group">
-          <label for="avatar">Avatar</label>
+          <label for="avatar"
+            >Avatar
+            <div v-if="avatarPreview">
+              <img :src="avatarPreview" class="avatar-xlarge" />
+            </div>
+          </label>
           <input
-            v-model="form.avatar"
+            v-show="!avatarPreview"
             id="avatar"
-            type="text"
+            type="file"
+            @change="handleFileUpload"
             class="form-input"
           />
         </div>
@@ -86,12 +92,35 @@ const form = ref<UserRegisterRequest>({
   username: '',
   email: '',
   password: '',
+  avatarFile: null,
   avatar: '',
 });
+
+const avatarPreview = ref<string | null>(null);
 
 const route = useRoute();
 const router = useRouter();
 
+interface HTMLFileInputElement extends HTMLInputElement {
+  files: FileList;
+}
+interface FileUploadEvent extends Event {
+  target: HTMLFileInputElement;
+}
+
+const handleFileUpload = (uploadEvent: Event) => {
+  console.log('UserRegister>handleFileUpload', uploadEvent);
+
+  form.value.avatarFile = (uploadEvent as FileUploadEvent).target!.files[0];
+  console.log('UserRegister>handleFileUpload', form.value.avatarFile);
+  const reader = new FileReader();
+  //TODO: preview is not displayed
+  reader.onload = (readerEvent: ProgressEvent<FileReader>) => {
+    console.log('reader.onload>result', readerEvent.target!.result as string);
+    avatarPreview.value = readerEvent.target!.result as string;
+  };
+  if (form.value.avatar) reader.readAsDataURL(form.value.avatarFile as Blob);
+};
 const register = async () => {
   //console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({
