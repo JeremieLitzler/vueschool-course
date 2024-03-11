@@ -5,9 +5,15 @@ import type NotificationAddRequest from '@/types/NotificationAddRequest';
 const notifications = ref<Notification[]>([]);
 
 export default function useNotification() {
-  const addNotification = (notification: NotificationAddRequest) => {
+  const addNotification = ({
+    message,
+    timeout = null,
+  }: NotificationAddRequest) => {
     const notificationId = useUUID().newUniqueId;
-    notifications.value.push({ id: notificationId, ...notification });
+    notifications.value.push({ id: notificationId, message });
+    if (timeout) {
+      setTimeout(() => removeNotification(notificationId), timeout);
+    }
   };
   const removeNotification = (id: string) => {
     const index = notifications.value.findIndex((item) => item.id === id);
