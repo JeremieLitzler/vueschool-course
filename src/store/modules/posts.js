@@ -1,6 +1,9 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 const { findById, findManyByProp } = useArraySearchHelper();
 
+import useMakeFetchActions from "@/helpers/makeFetchActionsHelper";
+const { makeFetchItemAction, makeFetchItemsAction } = useMakeFetchActions();
+
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/config/firebase";
 import {
@@ -33,12 +36,8 @@ export default {
       findById(state.items, thread.posts[0]),
   },
   actions: {
-    fetchPost({ dispatch }, { id }) {
-      return dispatch("fetchItem", { source: "posts", id }, { root: true });
-    },
-    fetchPosts({ dispatch }, { ids }) {
-      return dispatch("fetchItems", { source: "posts", ids }, { root: true });
-    },
+    fetchPost: makeFetchItemAction({ source: "posts" }),
+    fetchPosts: makeFetchItemsAction({ source: "posts" }),
     async createPost({ commit, rootGetters }, post) {
       //console.log("'createPost > post", post);
       const authId = rootGetters["auth/authUser"].id;

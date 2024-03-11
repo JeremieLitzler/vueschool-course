@@ -1,6 +1,9 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 const { findById, findManyByProp } = useArraySearchHelper();
 
+import useMakeFetchActions from "@/helpers/makeFetchActionsHelper";
+const { makeFetchItemAction, makeFetchItemsAction } = useMakeFetchActions();
+
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/config/firebase";
 import {
@@ -55,14 +58,8 @@ export default {
     },
   },
   actions: {
-    fetchThread({ dispatch }, { id }) {
-      // console.log("fetchThread > id", id);
-      return dispatch("fetchItem", { source: "threads", id }, { root: true });
-    },
-    fetchThreads({ dispatch }, { ids }) {
-      //console.log(`fetchItem > getting`, ids);
-      return dispatch("fetchItems", { source: "threads", ids }, { root: true });
-    },
+    fetchThread: makeFetchItemAction({ source: "threads" }),
+    fetchThreads: makeFetchItemsAction({ source: "threads" }),
     async createThread(
       { commit, dispatch, rootState },
       { title, body, forumId }

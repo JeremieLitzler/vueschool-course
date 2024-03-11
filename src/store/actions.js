@@ -48,7 +48,10 @@ export default {
     state.firestoreUnsubscribes.forEach((unsubscribe) => unsubscribe());
     commit("resetFirestoreUnsubs");
   },
-  fetchItem({ state, commit }, { source, id, handleUnsubscribe = null }) {
+  fetchItem(
+    { state, commit },
+    { source, id, handleUnsubscribe = null, once = false }
+  ) {
     //console.log("global > actions > fetchItem > source", source);
     const item = findById(state[source], id);
     if (item) {
@@ -65,7 +68,11 @@ export default {
         //console.log("from firestore > responseDoc: ", responseDoc);
         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
-        if (responseDoc.data() === undefined) {
+        if (once) {
+          unsubscribe();
+          console.log("actions>fetchItem>once called");
+        }
+        if (!responseDoc.exists()) {
           resolve(null);
         }
         const item = { ...responseDoc.data(), id: responseDoc.id };

@@ -1,6 +1,9 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 const { findById } = useArraySearchHelper();
 
+import useMakeFetchActions from "@/helpers/makeFetchActionsHelper";
+const { makeFetchItemAction, makeFetchItemsAction } = useMakeFetchActions();
+
 export default {
   namespaced: true,
   state: { items: [] },
@@ -8,12 +11,8 @@ export default {
     getForumById: (state) => (forumId) => findById(state.items, forumId),
   },
   actions: {
-    fetchForums({ dispatch }, { ids }) {
-      return dispatch("fetchItems", { source: "forums", ids }, { root: true });
-    },
-    fetchForum({ dispatch }, { id }) {
-      return dispatch("fetchItem", { source: "forums", id }, { root: true });
-    },
+    fetchForum: makeFetchItemAction({ source: "forums" }),
+    fetchForums: makeFetchItemsAction({ source: "forums" }),
   },
   mutations: {},
 };

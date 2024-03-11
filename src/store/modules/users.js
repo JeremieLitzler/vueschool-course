@@ -1,6 +1,9 @@
 import useArraySearchHelper from "@/helpers/arraySearchHelper";
 const { findById } = useArraySearchHelper();
 
+import useMakeFetchActions from "@/helpers/makeFetchActionsHelper";
+const { makeFetchItemAction, makeFetchItemsAction } = useMakeFetchActions();
+
 import useFirebaseHelper from "@/helpers/firebaseHelper";
 
 import { initializeApp } from "firebase/app";
@@ -68,19 +71,8 @@ export default {
         );
       });
     },
-    async fetchUser({ dispatch }, { id }) {
-      console.log("fetchUser > id ", id);
-      const user = await dispatch(
-        "fetchItem",
-        { source: "users", id },
-        { root: true }
-      );
-      console.log("fetchUser > user ", user);
-      return user;
-    },
-    fetchUsers({ dispatch }, { ids }) {
-      return dispatch("fetchItems", { source: "users", ids }, { root: true });
-    },
+    fetchUser: makeFetchItemAction({ source: "users" }),
+    fetchUsers: makeFetchItemsAction({ source: "users" }),
 
     async createUser({ commit }, { id, name, username, email, avatar }) {
       const newUser = {

@@ -66,6 +66,7 @@ const routes = [
     component: () => import("@/pages/CategoryShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
+      console.log("router > CategoryShow > beforeEnter");
       const exists = await store.dispatch("categories/fetchCategory", {
         id: to.params.id,
       });
@@ -123,6 +124,7 @@ const routes = [
     beforeEnter: async (to, from, next) => {
       const threadMatch = await store.dispatch("threads/fetchThread", {
         id: to.params.id,
+        once: true,
       });
       // console.log("ThreadShow > beforeEnter > threadMatch", threadMatch);
       //if positive, contine
