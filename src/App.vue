@@ -1,7 +1,7 @@
 <template>
   <the-header />
   <div class="container">
-    <router-view :key="$router.path" />
+    <router-view :key="`${$route.path}${JSON.stringify($route.query)}`" />
   </div>
 </template>
 

@@ -10,23 +10,17 @@
       </li>
       <li
         v-show="currentPage > 1"
-        @click="goPrevPage"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <span> ◀️ </span>
+        <router-link
+          :to="{ name: RouteName.ThreadShow, query: { page: prevPage } }"
+        >
+          ◀️
+        </router-link>
       </li>
     </ul>
     <ul class="app-pagination-list">
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
-        <!-- <a
-          @click.prevent="loadPage(page)"
-          class="btn-small"
-          :class="[
-            { 'btn-brown': page === currentPage },
-            { 'btn-green': page !== currentPage },
-          ]"
-          >{{ page }}</a
-        > -->
         <router-link
           :to="{ name: RouteName.ThreadShow, query: { page: page } }"
           class="btn-small"
@@ -42,10 +36,13 @@
     <ul class="app-pagination-ctrls app-pagination-ctrls-right">
       <li
         v-show="currentPage < pageCount"
-        @click="goNextPage"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <span> ▶️ </span>
+        <router-link
+          :to="{ name: RouteName.ThreadShow, query: { page: nextPage } }"
+        >
+          ▶️
+        </router-link>
       </li>
 
       <li
@@ -78,10 +75,6 @@ export default {
     currentPage: {
       type: Number,
       default: 1,
-    },
-    previousPage: {
-      type: Number,
-      default: null,
     },
   },
   data() {
@@ -222,8 +215,7 @@ export default {
   updated() {
     // console.log("app-pagination > updated > previousPage", this.previousPage);
     // console.log("app-pagination > updated > currentPage", this.currentPage);
-    const pageChanged = this.previousPage !== this.currentPage;
-    if (!this.navigateRanges && pageChanged) {
+    if (!this.navigateRanges) {
       const { from, to } = this.rangeFromCurrentPage();
       // console.log("app-pagination > updated > from (currentPage)", from);
       // console.log("app-pagination > updated > to (currentPage)", to);
@@ -263,13 +255,16 @@ export default {
 }
 
 .app-pagination-ctrl {
-  padding: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-items: center;
   border: 2px solid #57ad8d;
   border-radius: 0.375em;
+}
+.app-pagination-ctrl a,
+.app-pagination-ctrl span {
+  padding: 9px;
 }
 @media (min-width: 37.5em) {
   .app-pagination {

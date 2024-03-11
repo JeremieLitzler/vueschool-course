@@ -30,18 +30,19 @@
           contributors</span
         >
       </section>
+      <app-pagination
+        :page-count="pageCount"
+        :pages-around="1"
+        :current-page="currentPage"
+      />
       <post-list :posts="pagePosts" />
       <app-pagination
         :page-count="pageCount"
         :pages-around="1"
         :current-page="currentPage"
-        :previous-page="previousPage"
       />
 
-      <app-loading-state
-        v-if="savingPost"
-        message="Saving your post... Please wait ⌛"
-      />
+      <app-loading-state v-if="savingPost" />
       <post-editor
         :threadId="id"
         :disable-form="savingPost"
@@ -62,9 +63,6 @@ const { RouteName } = useRouteName();
 /* eslint-enable */
 
 const asyncUiElement = "newPost";
-const isCurrentPageSetInQuery = (route) => {
-  return route.query.page !== undefined && !isNaN(parseInt(route.query.page));
-};
 
 export default {
   props: {
@@ -78,9 +76,7 @@ export default {
       RouteName,
       itemsToFetch: 5,
       currentPage: 1,
-      previousPage: null,
       pagePosts: [],
-      pageChanged: false,
     };
   },
   components: {
@@ -91,27 +87,12 @@ export default {
     savingPost() {
       return !this.$store.getters.isUiElementReady(asyncUiElement);
     },
-
-    threadEditable() {
-      return this.thread.userId === this.$store.getters["auth/authUser"].id;
-    },
-    posts() {
-      const posts = this.$store.state.posts.items;
-      //console.log("ThreadShow > computed > posts", posts);
-      return posts;
-    },
-    lastPostFetched() {
-      if (this.posts.length === 0) return null;
-      return this.posts[this.posts.length - 1];
-    },
     thread() {
       const match = this.$store.getters["threads/threadById"](this.id);
       return match;
     },
-    threadPosts() {
-      const matches = this.posts.filter((post) => post.threadId === this.id);
-      //console.log("ThreadShow > computed > threadPosts", matches);
-      return matches;
+    threadEditable() {
+      return this.thread.userId === this.$store.getters["auth/authUser"].id;
     },
     pageCount() {
       return Math.ceil(this.thread.posts.length / this.itemsToFetch);
@@ -184,38 +165,6 @@ export default {
   async created() {
     await this.initialize();
     this.$store.dispatch("notifyAppIsReady", "ThreadShow (created)");
-  },
-  async updated() {
-    // console.log("ThreadShow > updated");
-    // console.log("ThreadShow > updated > query.page", this.$route.query.page);
-    // console.log("ThreadShow > updated > currentPage", this.currentPage);
-    if (!isCurrentPageSetInQuery(this.$route)) {
-      return;
-    }
-    // console.log(
-    //   "ThreadShow > updated > currentPage (before if)",
-    //   this.currentPage
-    // );
-    const pageChanged = parseInt(this.$route.query.page) !== this.currentPage;
-    if (pageChanged) {
-      this.pageChanged = !this.pageChanged;
-      this.currentPage = parseInt(this.$route.query.page);
-      // console.log("ThreadShow > updated > currentPage (if)", this.currentPage);
-      await this.fetchPagePosts();
-      const users = this.pagePosts.map((post) => post.userId);
-      //console.log("ThreadShow > updated > pagePosts", this.pagePosts);
-      //console.log("ThreadShow > updated > users", users);
-      await this.$store.dispatch("users/fetchUsers", {
-        ids: users,
-      });
-      this.$store.dispatch("notifyAppIsReady", "ThreadShow (updated)");
-    } else {
-      // console.log(
-      //   "ThreadShow > updated > currentPage (else)",
-      //   this.currentPage
-      // );
-    }
-    // this.$store.dispatch("notifyAppIsReady", "ThreadShow (updated bis)");
   },
 };
 </script>
