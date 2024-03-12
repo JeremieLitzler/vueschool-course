@@ -2,10 +2,19 @@
   <div class="profile-card">
     <form @submit.prevent="saveProfile">
       <p class="text-center">
-        <img
-          :src="user?.avatar"
-          :alt="`${user?.name} profile picture`"
-          class="avatar-xlarge img-update"
+        <label for="avatar">
+          <img
+            :src="avatarPreview"
+            :alt="`${user?.name} profile picture`"
+            class="avatar-xlarge img-update"
+          />
+        </label>
+        <input
+          v-show="false"
+          type="file"
+          id="avatar"
+          accept="image/*"
+          @change="handleImageUpload"
         />
       </p>
 
@@ -98,6 +107,7 @@ export default {
   data() {
     return {
       editedUser: { ...this.user },
+      avatarPreview: this.user.avatar,
     };
   },
   computed: {
@@ -118,6 +128,14 @@ export default {
     saveProfile() {
       this.$store.dispatch("users/updateUser", { ...this.editedUser });
       this.$router.push({ name: RouteName.AccountShow });
+    },
+    handleImageUpload(event) {
+      this.editedUser.avatar = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        this.avatarPreview = readerEvent.target.result;
+      };
+      if (this.editedUser.avatar) reader.readAsDataURL(this.editedUser.avatar);
     },
   },
 };

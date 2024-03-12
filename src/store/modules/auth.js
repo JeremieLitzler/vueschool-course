@@ -66,22 +66,27 @@ export default {
       }
     },
     async registerUserWithEmailAndPassword(
-      { dispatch },
-      { name, username, email, password, avatar }
+      { dispatch, state },
+      { name, username, email, password, avatar = null }
     ) {
       email = email.toLowerCase();
       const registerResult = await firebaseService().registerUser({
         email,
         password,
       });
-      const storageBucket = firebaseService().getStorageBucket(
-        `uploads/${registerResult.user.uid}/images/${Date.now()}-${avatar.name}`
+      console.log(
+        "auth>this.registerUserWithEmailAndPassword>userId",
+        registerResult.user.uid
       );
-      const snapshot = await firebaseService().uploadToStorageBucket(
-        storageBucket,
-        avatar
+      console.log(
+        "auth>this.registerUserWithEmailAndPassword>authId",
+        state.authId
       );
-      const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
+      let avatarUrl = await dispatch("uploadAvatar", {
+        userId: registerResult.user.uid,
+        avatar,
+      });
+
       //console.log("actions > registerUserWithEmailAndPassword", registerResult);
       const user = await dispatch(
         "users/createUser",
@@ -115,6 +120,21 @@ export default {
       firebaseService().signOut();
       console.log("Called firebaseService().signOut()");
       commit("setAuthId", { authId: null });
+    },
+    async uploadAvatar(context, { userId, avatar }) {
+      if (!avatar) {
+        return null;
+      }
+      const storageBucket = firebaseService().getStorageBucket(
+        `uploads/${userId}/images/${avatar.name}`
+      );
+      const snapshot = await firebaseService().uploadToStorageBucket(
+        storageBucket,
+        avatar
+      );
+      const imageUrl = await firebaseService().getImageURL(snapshot.ref);
+      console.log("auth>uploadAvatar>imageUrl", imageUrl);
+      return imageUrl;
     },
   },
   mutations: {

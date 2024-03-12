@@ -101,10 +101,18 @@ export default {
       commit("setItem", { source: "users", item: newUserDoc }, { root: true });
       return newUserDoc;
     },
-    async updateUser({ commit }, user) {
+    async updateUser({ dispatch, commit }, user) {
+      const avatarUrl = await dispatch(
+        "auth/uploadAvatar",
+        {
+          userId: user.id,
+          avatar: user.avatar,
+        },
+        { root: true }
+      );
       const userRef = doc(db, "users", user.id);
       await writeBatch(db)
-        .set(userRef, { ...user })
+        .set(userRef, { ...user, avatar: avatarUrl })
         .commit();
 
       const newUser = useFirebaseHelper().docToResource(await getDoc(userRef));
