@@ -1,3 +1,4 @@
+import useNotification from "@/composables/useNotification";
 import useUUID from "@/helpers/uniqueIdHelper";
 import firebaseService from "@/services/firebaseService";
 
@@ -123,19 +124,28 @@ export default {
       commit("setAuthId", { authId: null });
     },
     async uploadAvatar(context, { userId, avatar }) {
-      if (!avatar) {
-        return null;
+      try {
+        if (!avatar) {
+          return null;
+        }
+        const storageBucket = firebaseService().getStorageBucket(
+          `uploads/${userId}/images/${useUUID().createId()}-${avatar.name}`
+        );
+        const snapshot = await firebaseService().uploadToStorageBucket(
+          storageBucket,
+          avatar
+        );
+        const imageUrl = await firebaseService().getImageURL(snapshot.ref);
+        console.log("auth>uploadAvatar>imageUrl", imageUrl);
+        return { imageUrl, success: true };
+      } catch (error) {
+        console.error(error);
+        useNotification().addNotification({
+          message: `Failed to upload image (${error.code})`,
+          type: "error",
+        });
+        return { imageUrl: null };
       }
-      const storageBucket = firebaseService().getStorageBucket(
-        `uploads/${userId}/images/${useUUID().createId()}-${avatar.name}`
-      );
-      const snapshot = await firebaseService().uploadToStorageBucket(
-        storageBucket,
-        avatar
-      );
-      const imageUrl = await firebaseService().getImageURL(snapshot.ref);
-      console.log("auth>uploadAvatar>imageUrl", imageUrl);
-      return imageUrl;
     },
   },
   mutations: {

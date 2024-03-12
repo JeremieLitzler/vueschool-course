@@ -5,6 +5,7 @@
         v-for="notification in notifications"
         :key="notification.id"
         class="notification"
+        :class="`notification-type-${notification.type}`"
       >
         <span>
           {{ notification.message }}
@@ -40,7 +41,6 @@ export default {
   box-shadow: 2px 2px 2px 2px rbga(0, 0, 0.5);
   padding: 10px 20px;
   margin-bottom: 5px;
-  border-left: 5px solid #263959;
 }
 .notification-enter-active,
 .notification-leave-active {
@@ -53,5 +53,14 @@ export default {
 }
 .notification-move {
   transition: transform 0.8s ease;
+}
+.notification-type-info {
+  border-left: 5px solid #263959;
+}
+.notification-type-warning {
+  border-left: 5px solid #f19a16;
+}
+.notification-type-error {
+  border-left: 5px solid #f80707;
 }
 </style>

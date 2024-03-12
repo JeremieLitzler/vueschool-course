@@ -149,10 +149,11 @@ export default {
       this.uploadingImage = true;
       const file = event.target.files[0];
       console.log("UserProfileCardEditor>handleImageUpload", file);
-      this.editedUser.avatar = await this.$store.dispatch("auth/uploadAvatar", {
+      const { imageUrl } = await this.$store.dispatch("auth/uploadAvatar", {
         userId: this.editedUser.id,
         avatar: file,
       });
+      this.editedUser.avatar = imageUrl || this.editedUser.avatar;
       this.uploadingImage = false;
     },
   },

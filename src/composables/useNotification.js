@@ -3,9 +3,9 @@ import { ref } from "vue";
 const notifications = ref([]);
 
 export default function useNotification() {
-  const addNotification = ({ message, timeout = null }) => {
+  const addNotification = ({ message, timeout = 5000, type = "info" }) => {
     const notificationId = useUUID().createId();
-    notifications.value.push({ id: notificationId, message });
+    notifications.value.push({ id: notificationId, message, type });
 
     if (timeout) {
       setTimeout(() => removeNotification(notificationId), timeout);
