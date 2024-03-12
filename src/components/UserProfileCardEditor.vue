@@ -15,7 +15,7 @@
             <div class="underlay">
               <img
                 :src="editedUser.avatar"
-                :alt="`${user?.name} profile picture`"
+                :alt="`${editedUser?.name} profile picture`"
                 class="avatar-xlarge img-update"
               />
             </div>
