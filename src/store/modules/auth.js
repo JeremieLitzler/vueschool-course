@@ -1,3 +1,4 @@
+import useUUID from "@/helpers/uniqueIdHelper";
 import firebaseService from "@/services/firebaseService";
 
 export default {
@@ -126,7 +127,7 @@ export default {
         return null;
       }
       const storageBucket = firebaseService().getStorageBucket(
-        `uploads/${userId}/images/${avatar.name}`
+        `uploads/${userId}/images/${useUUID().createId()}-${avatar.name}`
       );
       const snapshot = await firebaseService().uploadToStorageBucket(
         storageBucket,

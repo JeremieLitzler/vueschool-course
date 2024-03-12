@@ -9,11 +9,12 @@
         >
           <div class="wrapper avatar-xlarge">
             <div id="avatar-change" class="content">
-              <span>Modify 📷</span>
+              <app-spinner v-if="uploadingImage" backgroundColor="#ffffff" />
+              <span v-else>Modify 📷</span>
             </div>
             <div class="underlay">
               <img
-                :src="avatarPreview"
+                :src="editedUser.avatar"
                 :alt="`${user?.name} profile picture`"
                 class="avatar-xlarge img-update"
               />
@@ -117,6 +118,7 @@ export default {
   },
   data() {
     return {
+      uploadingImage: false,
       editedUser: { ...this.user },
       avatarPreview: this.user.avatar,
     };
@@ -143,13 +145,15 @@ export default {
     cancel() {
       this.$router.push({ name: RouteName.AccountShow });
     },
-    handleImageUpload(event) {
-      this.editedUser.avatar = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (readerEvent) => {
-        this.avatarPreview = readerEvent.target.result;
-      };
-      if (this.editedUser.avatar) reader.readAsDataURL(this.editedUser.avatar);
+    async handleImageUpload(event) {
+      this.uploadingImage = true;
+      const file = event.target.files[0];
+      console.log("UserProfileCardEditor>handleImageUpload", file);
+      this.editedUser.avatar = await this.$store.dispatch("auth/uploadAvatar", {
+        userId: this.editedUser.id,
+        avatar: file,
+      });
+      this.uploadingImage = false;
     },
   },
 };
