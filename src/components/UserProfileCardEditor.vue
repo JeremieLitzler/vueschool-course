@@ -149,7 +149,15 @@ const handleFileUpload = async (event: Event) => {
 const assignRandomAvatar = async (url: string) => {
   console.log('assignRandomAvatar>url', url);
   //TODO: editedUser.value.avatar isn't reactive... You have to save and refresh to see the new image...
-  editedUser.value.avatar = url || editedUser.value.avatar;
+  uploadingImage.value = true;
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const firebaseUrl = await useCommonStore().uploadImageToStorage({
+    userId: editedUser.value.id,
+    image: blob as File,
+  });
+  editedUser.value.avatar = firebaseUrl || editedUser.value.avatar;
+  uploadingImage.value = false;
   console.log('assignRandomAvatar>editedUser', editedUser.value);
 };
 

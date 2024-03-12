@@ -312,7 +312,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
   }: UploadImageToStorage) => {
     try {
       const storageBucket = firebaseService().getStorageBucket(
-        `uploads/${userId}/images/${Date.now()}-${image!.name}`
+        `uploads/${userId}/images/${Date.now()}-${
+          image!.name || 'random-image'
+        }`
       );
       const snapshot = await firebaseService().uploadToStorageBucket(
         storageBucket,
