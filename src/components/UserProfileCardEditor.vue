@@ -28,9 +28,10 @@
           accept="image/*"
           @change="handleFileUpload"
         />
+        <app-random-avatar-image-picker @@hit="assignRandomAvatar" />
       </p>
 
-      <div class="form-group">
+      <div class="form-group push-top">
         <input
           type="text"
           v-model="editedUser.username"
@@ -123,7 +124,7 @@ const uploadingImage = ref(false);
 const newAvatar = ref<File | null>(null);
 
 const user = computed(() => getUserById(props.user.id));
-const editedUser = { ...user.value };
+const editedUser = ref({ ...user.value });
 console.log(editedUser);
 
 const exitEditRoute = () => {
@@ -138,16 +139,26 @@ const handleFileUpload = async (event: Event) => {
   const file = fileUploadEvent.target.files[0];
   console.log('UserProfileCardEditor>handleImageUpload', file);
   const url = await useCommonStore().uploadImageToStorage({
-    userId: editedUser.id,
+    userId: editedUser.value.id,
     image: file,
   });
-  editedUser.avatar = url || editedUser.avatar;
+  editedUser.value.avatar = url || editedUser.value.avatar;
   uploadingImage.value = false;
 };
 
+const assignRandomAvatar = async (url: string) => {
+  console.log('assignRandomAvatar>url', url);
+  //TODO: editedUser.value.avatar isn't reactive... You have to save and refresh to see the new image...
+  editedUser.value.avatar = url || editedUser.value.avatar;
+  console.log('assignRandomAvatar>editedUser', editedUser.value);
+};
+
 const saveProfile = () => {
+  console.log('saveProfile>editedUser', editedUser.value);
+  console.log('saveProfile>newAvatar', newAvatar.value);
+
   updateUser({
-    userUpdated: editedUser,
+    userUpdated: editedUser.value,
     id: user.value.id,
     updatedAvatar: newAvatar.value!,
   });

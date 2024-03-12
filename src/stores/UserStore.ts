@@ -201,16 +201,18 @@ export const useUserStore = defineStore('UserStore', () => {
     updatedAvatar,
     id,
   }: UserUpdateRequest) => {
-    const avatarUrl = await useCommonStore().uploadImageToStorage({
-      userId: id,
-      image: updatedAvatar!,
-    });
+    const avatarUrl = updatedAvatar
+      ? await useCommonStore().uploadImageToStorage({
+          userId: id,
+          image: updatedAvatar!,
+        })
+      : null;
 
     const userRef = useFirebase().doc(useFirebase().db, 'users', id);
     await useFirebase()
       .writeBatch(useFirebase().db)
       .set(userRef, {
-        avatar: avatarUrl || null,
+        avatar: avatarUrl || userUpdated.avatar,
         bio: userUpdated.bio || null,
         email: userUpdated.email || null,
         name: userUpdated.name || null,

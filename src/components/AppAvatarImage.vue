@@ -17,5 +17,8 @@ const { src, alt, cssClass } = withDefaults(defineProps<AppAvatarImage>(), {
 const theSrc = src || '/img/user-placeholder.png';
 console.log(src, theSrc, alt, cssClass);
 </script>
-
-<style scoped></style>
+<style scoped>
+img {
+  object-fit: cover;
+}
+</style>
