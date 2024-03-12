@@ -135,6 +135,15 @@
       </button>
     </div>
   </div>
+  <div class="credits">
+    The placeholder image is provided by
+    <a
+      href="https://commons.wikimedia.org/wiki/File:Portrait_Placeholder.png"
+      target="_blank"
+      rel="noopener noreferrer"
+      >commons.wikimedia.org</a
+    >.
+  </div>
 </template>
 
 <script>
