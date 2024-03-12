@@ -13,10 +13,10 @@
               <span v-else>Modify 📷</span>
             </div>
             <div class="underlay">
-              <img
+              <app-avatar-image
                 :src="editedUser.avatar"
                 :alt="`${editedUser?.name} profile picture`"
-                class="avatar-xlarge img-update"
+                cssclass="avatar-xlarge img-update"
               />
             </div>
           </div>

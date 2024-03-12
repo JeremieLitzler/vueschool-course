@@ -84,7 +84,7 @@ export default {
         "auth>this.registerUserWithEmailAndPassword>authId",
         state.authId
       );
-      let avatarUrl = await dispatch("uploadAvatar", {
+      let { imageUrl } = await dispatch("uploadAvatar", {
         userId: registerResult.user.uid,
         avatar,
       });
@@ -96,7 +96,7 @@ export default {
           name,
           username,
           email,
-          avatar: avatarUrl,
+          avatar: imageUrl,
           id: registerResult.user.uid,
         },
         { root: true }

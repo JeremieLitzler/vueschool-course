@@ -1,10 +1,10 @@
 <template>
   <div class="profile-card">
     <p class="text-center">
-      <img
+      <app-avatar-image
         :src="user?.avatar"
         :alt="`${user?.name} profile picture`"
-        class="avatar-xlarge"
+        cssClass="avatar-xlarge"
       />
     </p>
 
@@ -23,14 +23,16 @@
       <span>{{ user?.threadsCount }} threads</span>
     </div>
 
-    <hr />
+    <div v-if="user?.website">
+      <hr />
+      <p class="text-large text-center">
+        <i class="fa fa-globe"></i>
+        <a :href="user?.website" target="_blank" rel="noopener">{{
+          user?.website
+        }}</a>
+      </p>
+    </div>
 
-    <p v-if="user?.website" class="text-large text-center">
-      <i class="fa fa-globe"></i>
-      <a :href="user?.website" target="_blank" rel="noopener">{{
-        user?.website
-      }}</a>
-    </p>
     <div v-if="isEditableProfile" class="text-center">
       <hr />
       <router-link
@@ -67,6 +69,9 @@ export default {
         this.$store.getters["auth/authUser"] !== undefined
       );
     },
+  },
+  created() {
+    console.log("UserProfileCard>created>user", this.user);
   },
 };
 </script>

@@ -25,8 +25,8 @@
           v-click-outside="() => (userMenuOpened = false)"
           href="#"
         >
-          <img
-            class="avatar-small"
+          <app-avatar-image
+            cssClass="avatar-small"
             :src="authUser?.avatar"
             :alt="`${authUser?.name} profile picture`"
           />

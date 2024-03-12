@@ -25,8 +25,8 @@
           :to="{ name: RouteName.ThreadShow, query: { page: page } }"
           class="btn-small"
           :class="[
-            { 'btn-brown': page === currentPage },
-            { 'btn-green': page !== currentPage },
+            { 'btn-blue': page === currentPage },
+            { '': page !== currentPage },
           ]"
         >
           {{ page }}
@@ -238,17 +238,18 @@ export default {
   margin: 1px;
 }
 
-.app-pagination-ctrl {
+.app-pagination-ctrl,
+.app-pagination-link {
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-items: center;
-  border: 2px solid #57ad8d;
+  border: 2px solid #263959;
   border-radius: 0.375em;
 }
 .app-pagination-ctrl a,
 .app-pagination-ctrl span {
-  padding: 9px;
+  padding: 9.5px 0.75em;
 }
 @media (min-width: 37.5em) {
   .app-pagination {
