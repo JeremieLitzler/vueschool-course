@@ -76,15 +76,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import type User from '@/types/User';
 import type UserRegisterRequest from '@/types/UserRegisterRequest';
 import type { FirebaseError } from 'firebase/app';
+import type FileUploadEvent from '@/types/FileUploadEvent';
+import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 import objectHelper from '@/helpers/objectHelper';
 
-import User from '@/types/User';
-import { RouteName } from '@/enums/RouteName';
-import { useRoute, useRouter } from 'vue-router';
 const { toSuccessRedirect } = useAppendRouteHelper();
 const error = ref('');
 const form = ref<UserRegisterRequest>({
@@ -101,22 +102,15 @@ const avatarPreview = ref<string | null>(null);
 const route = useRoute();
 const router = useRouter();
 
-interface HTMLFileInputElement extends HTMLInputElement {
-  files: FileList;
-}
-interface FileUploadEvent extends Event {
-  target: HTMLFileInputElement;
-}
-
 const handleFileUpload = (uploadEvent: Event) => {
-  console.log('UserRegister>handleFileUpload', uploadEvent);
+  //console.log('UserRegister>handleFileUpload', uploadEvent);
 
   form.value.avatarFile = (uploadEvent as FileUploadEvent).target!.files[0];
-  console.log('UserRegister>handleFileUpload', form.value.avatarFile);
+  //console.log('UserRegister>handleFileUpload', form.value.avatarFile);
   const reader = new FileReader();
   //TODO: preview is not displayed
   reader.onload = (readerEvent: ProgressEvent<FileReader>) => {
-    console.log('reader.onload>result', readerEvent.target!.result as string);
+    //console.log('reader.onload>result', readerEvent.target!.result as string);
     avatarPreview.value = readerEvent.target!.result as string;
   };
   if (form.value.avatar) reader.readAsDataURL(form.value.avatarFile as Blob);

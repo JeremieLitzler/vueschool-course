@@ -2,15 +2,17 @@ import { ref } from 'vue';
 import useUUID from '@/helpers/uniqueIdHelper';
 import type Notification from '@/types/Notification';
 import type NotificationAddRequest from '@/types/NotificationAddRequest';
+import { NotificationType } from '@/enums/NotificationType';
 const notifications = ref<Notification[]>([]);
 
 export default function useNotification() {
   const addNotification = ({
     message,
-    timeout = null,
+    timeout = 5000,
+    type = NotificationType.Info,
   }: NotificationAddRequest) => {
     const notificationId = useUUID().newUniqueId;
-    notifications.value.push({ id: notificationId, message });
+    notifications.value.push({ id: notificationId, message, type });
     if (timeout) {
       setTimeout(() => removeNotification(notificationId), timeout);
     }

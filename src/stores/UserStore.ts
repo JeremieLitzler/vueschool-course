@@ -108,16 +108,10 @@ export const useUserStore = defineStore('UserStore', () => {
     ) {
       return registerResult as FirebaseError;
     }
-    const storageBucket = firebaseService().getStorageBucket(
-      `uploads/${registerResult.user.uid}/images/${Date.now()}-${
-        avatarFile!.name
-      }`
-    );
-    const snapshot = await firebaseService().uploadToStorageBucket(
-      storageBucket,
-      avatarFile!
-    );
-    const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
+    const avatarUrl = await useCommonStore().uploadImageToStorage({
+      userId: registerResult.user.uid,
+      image: avatarFile!,
+    });
     //console.log("actions > registerUserWithEmailAndPassword", registerResult);
 
     //console.log('actions > registerUserWithEmailAndPassword', registerResult);
@@ -126,7 +120,7 @@ export const useUserStore = defineStore('UserStore', () => {
         name,
         username,
         email: emailLower,
-        avatar: avatarUrl,
+        avatar: avatarUrl!,
       },
       registerResult.user.uid
     );
@@ -202,12 +196,21 @@ export const useUserStore = defineStore('UserStore', () => {
     useCommonStore().setItem<User>({ targetStore: users, item: newUserDoc });
     return newUserDoc;
   };
-  const updateUser = async ({ userUpdated, id }: UserUpdateRequest) => {
+  const updateUser = async ({
+    userUpdated,
+    updatedAvatar,
+    id,
+  }: UserUpdateRequest) => {
+    const avatarUrl = await useCommonStore().uploadImageToStorage({
+      userId: id,
+      image: updatedAvatar!,
+    });
+
     const userRef = useFirebase().doc(useFirebase().db, 'users', id);
     await useFirebase()
       .writeBatch(useFirebase().db)
       .set(userRef, {
-        avatar: userUpdated.avatar || null,
+        avatar: avatarUrl || null,
         bio: userUpdated.bio || null,
         email: userUpdated.email || null,
         name: userUpdated.name || null,

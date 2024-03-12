@@ -12,6 +12,11 @@ import type FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQuery
 import type FirebaseChunkQueryRequest from '@/types/FirebaseChunkQueryRequest';
 import type OnSnapshotUnsubscribeListener from '@/types/OnSnapshotUnsubscribeListener';
 import useArrayChunckHelper from '@/helpers/arrayChunkHelper';
+import firebaseService from '@/services/firebaseService';
+import UploadImageToStorage from '@/types/UploadImageToStorageRequest';
+import useNotification from '@/composables/useNotification';
+import { FirebaseError } from 'firebase/app';
+import { NotificationType } from '@/enums/NotificationType';
 
 export const useCommonStore = defineStore('CommonStore', () => {
   //STATE
@@ -301,6 +306,29 @@ export const useCommonStore = defineStore('CommonStore', () => {
     onSnapshotUnsubscribeListeners.value = [];
   };
 
+  const uploadImageToStorage = async ({
+    userId,
+    image,
+  }: UploadImageToStorage) => {
+    try {
+      const storageBucket = firebaseService().getStorageBucket(
+        `uploads/${userId}/images/${Date.now()}-${image!.name}`
+      );
+      const snapshot = await firebaseService().uploadToStorageBucket(
+        storageBucket,
+        image
+      );
+      const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
+      return avatarUrl;
+    } catch (error) {
+      console.error(error);
+      useNotification().addNotification({
+        message: `Failed to upload image (${(error as FirebaseError).code})`,
+        type: NotificationType.Error,
+      });
+      return null;
+    }
+  };
   return {
     appIsReady,
     isUiElementReady,
@@ -314,5 +342,6 @@ export const useCommonStore = defineStore('CommonStore', () => {
     fetchItemsByProp,
     fetchItemsByChunk,
     setItem,
+    uploadImageToStorage,
   };
 });
