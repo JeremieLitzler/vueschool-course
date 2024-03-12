@@ -13,10 +13,10 @@
               <span v-else>Modify 📷</span>
             </div>
             <div class="underlay">
-              <img
+              <app-avatar-image
                 :src="editedUser.avatar"
                 :alt="`${editedUser.name} profile picture`"
-                class="avatar-xlarge img-update"
+                cssClass="avatar-xlarge img-update"
               />
             </div>
           </div>
@@ -96,7 +96,7 @@
       </div>
 
       <div class="btn-group space-between">
-        <button @click="cancelEdit" class="btn-ghost">Cancel</button>
+        <button @click.prevent="cancelEdit" class="btn-ghost">Cancel</button>
         <button type="submit" class="btn-blue">Save</button>
       </div>
     </form>
@@ -124,6 +124,7 @@ const newAvatar = ref<File | null>(null);
 
 const user = computed(() => getUserById(props.user.id));
 const editedUser = { ...user.value };
+console.log(editedUser);
 
 const exitEditRoute = () => {
   //console.log('exitEditRoute', router);

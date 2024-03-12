@@ -27,8 +27,8 @@
           v-click-outside="closeDropdown"
           href="#"
         >
-          <img
-            class="avatar-small"
+          <app-avatar-image
+            cssClass="avatar-small"
             :src="user?.avatar"
             :alt="`${user?.name} profile picture`"
           />

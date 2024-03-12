@@ -2,7 +2,7 @@ import WithId from '@/types/WithId';
 
 export default interface User extends WithId {
   // id?: string;
-  avatar?: string;
+  avatar?: string | null;
   email?: string;
   lastVisitAt?: number;
   name?: string;

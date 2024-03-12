@@ -7,7 +7,11 @@
     >
 
     <router-link :to="{ name: RouteName.UserShow, params: { id: user?.id } }">
-      <img class="avatar-large" :src="user?.avatar" :alt="user?.name" />
+      <app-avatar-image
+        cssClass="avatar-large"
+        :src="user?.avatar"
+        :alt="user?.name"
+      />
     </router-link>
 
     <p class="desktop-only text-small">

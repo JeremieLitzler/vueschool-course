@@ -28,8 +28,8 @@
             }}
           </p>
 
-          <img
-            class="avatar-medium"
+          <app-avatar-image
+            cssClass="avatar-medium"
             :src="getUserById(thread.userId).avatar"
             :alt="`Avatar of ${getUserById(thread.userId).name}`"
           />

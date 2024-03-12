@@ -1,10 +1,10 @@
 <template>
   <div class="profile-card">
     <p class="text-center">
-      <img
+      <app-avatar-image
         :src="user?.avatar"
         :alt="`${user?.name} profile picture`"
-        class="avatar-xlarge"
+        cssClass="avatar-xlarge"
       />
     </p>
 
