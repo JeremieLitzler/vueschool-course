@@ -28,9 +28,10 @@
           accept="image/*"
           @change="handleImageUpload"
         />
+        <app-random-avatar-image-picker @hit="assignRandomAvatar" />
       </p>
 
-      <div class="form-group">
+      <div class="form-group push-top">
         <input
           type="text"
           v-model="editedUser.username"
@@ -155,6 +156,9 @@ export default {
       });
       this.editedUser.avatar = imageUrl || this.editedUser.avatar;
       this.uploadingImage = false;
+    },
+    async assignRandomAvatar(url) {
+      this.editedUser.avatar = url;
     },
   },
 };
