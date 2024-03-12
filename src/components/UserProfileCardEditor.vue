@@ -158,7 +158,15 @@ export default {
       this.uploadingImage = false;
     },
     async assignRandomAvatar(url) {
-      this.editedUser.avatar = url;
+      this.uploadingImage = true;
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const { imageUrl } = await this.$store.dispatch("auth/uploadAvatar", {
+        userId: this.editedUser.id,
+        avatar: blob,
+      });
+      this.editedUser.avatar = imageUrl;
+      this.uploadingImage = false;
     },
   },
 };

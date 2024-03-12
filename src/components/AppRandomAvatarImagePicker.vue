@@ -12,18 +12,23 @@
 </template>
 
 <script>
-import arrayRandomHelper from "@/helpers/arrayRandomHelper";
+// import arrayRandomHelper from "@/helpers/arrayRandomHelper";
 
 export default {
   methods: {
     async pickRandomAvatar() {
       //Instead of Pixabay, we can also use picsum.photos.
-      const randomImagesResult = await fetch(
-        "https://picsum.photos/v2/list?limit=100"
-      );
-      const randomImages = await randomImagesResult.json();
-      console.log("pickRandomAvatar>randomImages", randomImages);
-      this.$emit("hit", arrayRandomHelper().pick(randomImages).download_url);
+      // const randomImagesResult = await fetch(
+      //   "https://picsum.photos/v2/list?limit=100"
+      // );
+      // const randomImages = await randomImagesResult.json();
+      // console.log("pickRandomAvatar>randomImages", randomImages);
+      // this.$emit("hit", arrayRandomHelper().pick(randomImages).download_url);
+      //-------------------------------------------------------
+      //We will use the generic URL because it allows to pick a
+      //random image too and make sure the size doesn't exceed
+      //the firebase storage size limit
+      this.$emit("hit", "https://picsum.photos/400/400.webp");
     },
   },
 };

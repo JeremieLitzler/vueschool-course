@@ -129,7 +129,9 @@ export default {
           return null;
         }
         const storageBucket = firebaseService().getStorageBucket(
-          `uploads/${userId}/images/${useUUID().createId()}-${avatar.name}`
+          `uploads/${userId}/images/${useUUID().createId()}-${
+            avatar.name || "random-image"
+          }`
         );
         const snapshot = await firebaseService().uploadToStorageBucket(
           storageBucket,
