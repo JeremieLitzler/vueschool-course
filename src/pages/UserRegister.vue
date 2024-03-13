@@ -1,22 +1,7 @@
 <template>
   <div class="flex-grid justify-center">
     <div class="col-2">
-      <vee-form
-        @submit="register"
-        class="card card-form"
-        :validation-schema="{
-          name: () => {
-            if (value && value.trim()) return true;
-
-            return 'This is required';
-          },
-          username: () => {
-            if (value && value.trim()) return true;
-
-            return 'This is required';
-          },
-        }"
-      >
+      <vee-form @submit="register" class="card card-form">
         <h1 class="text-center">Register</h1>
 
         <div class="form-group">
@@ -24,10 +9,12 @@
           <vee-field
             name="name"
             v-model="form.name"
+            :rules="required"
             id="name"
             type="text"
             class="form-input"
           />
+          <vee-error-message class="error-message" name="name" />
         </div>
 
         <div class="form-group">
@@ -35,10 +22,12 @@
           <vee-field
             name="username"
             v-model="form.username"
+            :rules="required"
             id="username"
             type="text"
             class="form-input"
           />
+          <vee-error-message class="error-message" name="username" />
         </div>
 
         <div class="form-group">
@@ -50,6 +39,7 @@
             type="email"
             class="form-input"
           />
+          <vee-error-message class="error-message" name="email" />
         </div>
 
         <div class="form-group">
@@ -61,6 +51,7 @@
             type="password"
             class="form-input"
           />
+          <vee-error-message class="error-message" name="password" />
         </div>
 
         <div class="form-group">
@@ -100,8 +91,8 @@
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
 import { useRouteName } from "@/helpers/routeNameEnum";
-import { Form, Field } from "vee-validate";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -110,6 +101,7 @@ export default {
   components: {
     VeeForm: Form,
     VeeField: Field,
+    VeeErrorMessage: ErrorMessage,
   },
   data() {
     return {
@@ -125,6 +117,11 @@ export default {
     };
   },
   methods: {
+    required(value) {
+      if (value && value.trim()) return true;
+
+      return "Please provide a value";
+    },
     async register() {
       console.log("Form>", this.form);
       const user = await this.$store.dispatch(
