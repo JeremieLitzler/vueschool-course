@@ -48,6 +48,7 @@
           <vee-field
             name="password"
             v-model="form.password"
+            rules="required|min:8"
             id="password"
             type="password"
             class="form-input"
