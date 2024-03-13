@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grid justify-center">
     <div class="col-2">
-      <vee-form @submit.prevent="login" class="card card-form">
+      <vee-form @submit="login" class="card card-form">
         <h1 class="text-center">Login</h1>
         <app-form-field
           name="email"

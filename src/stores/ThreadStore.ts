@@ -119,7 +119,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       .commit();
     const newThread = await useFirebase().getDoc(threadRef);
     setThread({ ...newThread.data(), id: threadRef.id });
-    createThreadAddRelated(request, {
+    await createThreadAddRelated(request, {
       ...newThread.data(),
       id: threadRef.id,
     } as Thread);
@@ -169,7 +169,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     }
   };
 
-  const createThreadAddRelated = (
+  const createThreadAddRelated = async (
     threadRequest: ThreadCreateRequest,
     thread: Thread
   ) => {
@@ -183,7 +183,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       thread,
       userId: thread.userId!,
     });
-    usePostStore().addPost({
+    await usePostStore().addPost({
       threadId: thread.id,
       text: threadRequest.body,
     });

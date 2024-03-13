@@ -17,19 +17,20 @@
     >
   </section>
   <div v-else class="col-full">
-    <form @submit.prevent="savePost">
-      <div class="form-group">
-        <textarea
-          v-model="newPostText"
-          cols="30"
-          rows="10"
-          class="form-input"
-        />
-      </div>
+    <vee-form @submit="savePost" :key="formKey">
+      <app-form-field
+        as="textarea"
+        name="message"
+        label="New message"
+        v-model="newPostText"
+        rules="required"
+        cols="30"
+        rows="10"
+      />
       <div class="form-actions">
         <button class="btn-blue">{{ buttonText }}</button>
       </div>
-    </form>
+    </vee-form>
   </div>
 </template>
 
@@ -40,6 +41,7 @@ import type PostEditorProps from '@/types/PostEditorProps';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { RouteName } from '@/enums/RouteName';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 
 const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
   sourcePost: null,
@@ -52,6 +54,7 @@ const emits = defineEmits<{
 
 //console.log('props > sourcePost', sourcePost);
 
+const formKey = ref(uniqueIdHelper().newUniqueId);
 const newPostText = ref(sourcePost?.text ?? null);
 const postIsEdited = computed(() => {
   const result = sourcePost !== null;
@@ -86,6 +89,7 @@ const savePost = () => {
     emits('@add-post', request);
     newPostText.value = '';
   }
+  formKey.value = uniqueIdHelper().newUniqueId;
 };
 </script>
 

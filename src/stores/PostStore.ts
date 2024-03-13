@@ -13,6 +13,7 @@ import { OrderByDirection } from '@/enums/OrderByDirection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
+import { useThreadStore } from './ThreadStore';
 
 // const { findById, findManyById } = useArraySearchHelper();
 
@@ -92,9 +93,9 @@ export const usePostStore = defineStore('PostStore', () => {
     });
   };
 
-  const addPost = async (post: PostAddRequest) => {
+  const addPost = async (request: PostAddRequest) => {
     //console.log('calling addPost in PostStore', post);
-    const postFirebaseRequest = post as unknown as PostAddToFirebaseRequest;
+    const postFirebaseRequest = request as unknown as PostAddToFirebaseRequest;
     postFirebaseRequest.publishedAt = firebaseService().getServerTimeStamp();
     postFirebaseRequest.userId = useUserStore().getAuthUser().id!;
     const postRef = useFirebase().doc(
@@ -103,7 +104,7 @@ export const usePostStore = defineStore('PostStore', () => {
     const threadRef = useFirebase().doc(
       useFirebase().db,
       'threads',
-      post.threadId!
+      request.threadId!
     );
     const userRef = useFirebase().doc(
       useFirebase().db,
@@ -126,6 +127,10 @@ export const usePostStore = defineStore('PostStore', () => {
     const newPostRef = await useFirebase().getDoc(postRef);
     const newPost = { ...newPostRef.data(), id: postRef.id };
     setPost(newPost);
+    useThreadStore().appendPostToThread({
+      postId: postRef.id,
+      threadId: request.threadId,
+    });
     return newPost as Post;
   };
 

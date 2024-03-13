@@ -8,7 +8,7 @@
       :title="thread.title"
       :body="firstPostBody"
       @@save="updateThread"
-      @@cancel="toForumPage(thread.forumId!)"
+      @@cancel="cancel"
     />
   </div>
 </template>
@@ -38,5 +38,11 @@ const updateThread = async (payload: ThreadBaseRequest) => {
   });
   toThreadPage(thread.id!);
 };
+const cancel = (threadExists: boolean) => {
+  if (threadExists) {
+    toThreadPage(thread.value.id!);
+  } else {
+    toForumPage(thread.value.forumId!);
+  }
+};
 </script>
-@/composables/appendRouteHelper

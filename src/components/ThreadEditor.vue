@@ -1,35 +1,28 @@
 <template>
-  <form @submit.prevent="save">
-    <div class="form-group">
-      <label for="thread_title">Title:</label>
-      <input
-        v-model="form.title"
-        type="text"
-        id="thread_title"
-        class="form-input"
-        name="title"
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="thread_content">Content:</label>
-      <textarea
-        v-model="form.body"
-        id="thread_content"
-        class="form-input"
-        name="content"
-        rows="8"
-        cols="140"
-      ></textarea>
-    </div>
-
+  <vee-form @submit="save">
+    <app-form-field
+      name="title"
+      label="Title:"
+      v-model="form.title"
+      rules="required"
+      type="text"
+    />
+    <app-form-field
+      as="textarea"
+      name="post"
+      label="First post:"
+      v-model="form.body"
+      rules="required"
+      rows="8"
+      cols="140"
+    />
     <div class="btn-group">
       <button @click="cancel" class="btn btn-ghost">Cancel</button>
       <button class="btn btn-blue" type="submit" name="Publish">
         {{ threadExists ? 'Update' : 'Publish' }}
       </button>
     </div>
-  </form>
+  </vee-form>
 </template>
 
 <script setup lang="ts">
@@ -43,7 +36,7 @@ const props = withDefaults(defineProps<ThreadEditorPageProps>(), {
 
 const emits = defineEmits<{
   (event: '@save', entry: ThreadBaseRequest): void;
-  (event: '@cancel'): void;
+  (event: '@cancel', threadExists: boolean): void;
   (event: '@dirtyForm'): void;
   (event: '@cleanForm'): void;
 }>();
@@ -56,7 +49,7 @@ const save = () => {
   emits('@save', { title: form.value.title, body: form.value.body });
 };
 const cancel = () => {
-  emits('@cancel');
+  emits('@cancel', threadExists.value);
 };
 
 watch(

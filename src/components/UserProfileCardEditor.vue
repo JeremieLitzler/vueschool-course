@@ -1,6 +1,6 @@
 <template>
   <div class="profile-card">
-    <form @submit.prevent="saveProfile">
+    <vee-form @submit="saveProfile">
       <p class="text-center">
         <label
           aria-labelledby="avatar-change"
@@ -30,35 +30,29 @@
         />
         <app-random-avatar-image-picker @@hit="assignRandomAvatar" />
       </p>
-
-      <div class="form-group push-top">
-        <input
-          type="text"
-          v-model="editedUser.username"
-          placeholder="Username"
-          class="form-input text-lead text-bold"
-        />
-      </div>
-
-      <div class="form-group">
-        <input
-          type="text"
-          v-model="editedUser.name"
-          placeholder="Full Name"
-          class="form-input text-lead"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="user_bio">Bio</label>
-        <textarea
-          v-model="editedUser.bio"
-          class="form-input"
-          id="user_bio"
-          placeholder="Write a few words about yourself."
-        ></textarea>
-      </div>
-
+      <app-form-field
+        name="username"
+        label="Username"
+        v-model="editedUser.username"
+        type="text"
+        disabled
+        cssClass="text-lead text-bold"
+      />
+      <app-form-field
+        name="name"
+        label="Full Name"
+        v-model="editedUser.name"
+        rules="required|min:3"
+        type="text"
+        cssClass="text-lead"
+      />
+      <app-form-field
+        as="textarea"
+        name="bio"
+        label="Bio"
+        v-model="editedUser.bio"
+        placeholder="Write a few words about yourself."
+      />
       <div class="stats">
         <span>{{ user.postsCount! }} posts</span>
         <span>{{ user.threadsCount! }} threads</span>
@@ -66,41 +60,30 @@
 
       <hr />
 
-      <div class="form-group">
-        <label class="form-label" for="user_website">Website</label>
-        <input
-          autocomplete="off"
-          class="form-input"
-          id="user_website"
-          v-model="editedUser.website"
-        />
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="user_email">Email</label>
-        <input
-          autocomplete="off"
-          class="form-input"
-          id="user_email"
-          v-model="editedUser.email"
-        />
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="user_location">Location</label>
-        <input
-          autocomplete="off"
-          class="form-input"
-          id="user_location"
-          v-model="editedUser.location"
-        />
-      </div>
-
+      <app-form-field
+        name="website"
+        label="Website"
+        rules="url"
+        v-model="editedUser.website"
+        autocomplete="off"
+      />
+      <app-form-field
+        name="email"
+        label="Email"
+        v-model="editedUser.email"
+        disabled
+      />
+      <app-form-field
+        name="location"
+        label="Location"
+        v-model="editedUser.location"
+        autocomplete="off"
+      />
       <div class="btn-group space-between">
         <button @click.prevent="cancelEdit" class="btn-ghost">Cancel</button>
         <button type="submit" class="btn-blue">Save</button>
       </div>
-    </form>
+    </vee-form>
   </div>
 </template>
 
