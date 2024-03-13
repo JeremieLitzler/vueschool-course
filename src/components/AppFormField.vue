@@ -8,6 +8,7 @@
       :id="name"
       v-bind="$attrs"
       class="form-input"
+      :class="cssClass"
     />
     <vee-error-message :name="name" class="error-message" />
   </div>
@@ -19,6 +20,7 @@ export default {
     name: { type: String, required: true },
     label: { type: String, required: true },
     modelValue: { type: String, default: "" },
+    cssClass: { type: String, default: "" },
   },
 };
 </script>

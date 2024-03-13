@@ -17,22 +17,23 @@
         >Register</router-link
       >
     </section>
-    <form v-else @submit.prevent="savePost">
-      <div class="form-group">
-        <textarea
-          v-model="newPostText"
-          :disabled="disableForm"
-          cols="30"
-          rows="10"
-          class="form-input"
-        />
-      </div>
+    <vee-form v-else @submit="savePost">
+      <app-form-field
+        as="textarea"
+        name="message"
+        label="New message"
+        v-model="newPostText"
+        rules="required|min:2"
+        :disabled="disableForm"
+        cols="30"
+        rows="10"
+      />
       <div class="form-actions">
         <button :disabled="disableForm" class="btn-blue">
           {{ buttonText }}
         </button>
       </div>
-    </form>
+    </vee-form>
   </div>
 </template>
 

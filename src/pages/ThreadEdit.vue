@@ -30,12 +30,14 @@ export default {
   },
   computed: {
     thread() {
-      const match = this.$store.getters.threadById(this.id);
+      const match = this.$store.getters["threads/threadById"](this.id);
       //console.log("thread> ", match);
       return match;
     },
     firstPostBody() {
-      const post = this.$store.getters.getThreadFirstPostBody(this.thread);
+      const post = this.$store.getters["posts/getThreadFirstPostBody"](
+        this.thread
+      );
       return post.text;
     },
   },
