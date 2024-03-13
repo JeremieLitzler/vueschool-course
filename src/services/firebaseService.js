@@ -10,6 +10,9 @@ import {
   writeBatch,
   arrayUnion,
   serverTimestamp,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -152,6 +155,17 @@ export default function firebaseService() {
     //console.log("firebaseService>getImageURL", url);
     return url;
   };
+  const isUnique = async ({ collectionName, prop, value }) => {
+    console.log("firebaseService>isUnique");
+    const commonQueryParts = [
+      collection(db, collectionName),
+      where(prop, "==", value),
+    ];
+    let queryObj = query(...commonQueryParts);
+    const result = await getDocs(queryObj);
+
+    return result.empty;
+  };
 
   return {
     auth,
@@ -168,5 +182,6 @@ export default function firebaseService() {
     getStorageBucket,
     uploadToStorageBucket,
     getImageURL,
+    isUnique,
   };
 }

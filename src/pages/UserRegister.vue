@@ -22,9 +22,9 @@
           <label for="username">Username</label>
           <vee-field
             name="username"
-            label="UserName"
+            label="Username"
             v-model="form.username"
-            rules="required"
+            rules="required|unique|unique:users,username"
             id="username"
             type="text"
             class="form-input"
@@ -39,7 +39,11 @@
             label="Email"
             v-model="form.email"
             id="email"
-            rules="required|email"
+            :rules="{
+              required: true,
+              email: true,
+              unique: { collectionName: 'users', prop: 'email' },
+            }"
             type="email"
             class="form-input"
           />
