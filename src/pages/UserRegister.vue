@@ -44,7 +44,7 @@
           <vee-field
             name="email"
             v-model="form.email"
-            rules="required"
+            rules="required|email"
             id="email"
             type="email"
             class="form-input"
