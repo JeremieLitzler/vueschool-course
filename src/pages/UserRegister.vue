@@ -36,6 +36,7 @@
             name="email"
             v-model="form.email"
             id="email"
+            rules="required|email"
             type="email"
             class="form-input"
           />

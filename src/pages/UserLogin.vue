@@ -9,7 +9,7 @@
           <vee-field
             name="email"
             v-model="form.email"
-            rules="required"
+            rules="required|email"
             id="email"
             type="text"
             class="form-input"
