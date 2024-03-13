@@ -2,7 +2,6 @@
   <div class="flex-grid justify-center">
     <div class="col-2">
       <vee-form
-        :validation-schema="registerSchema"
         @submit="register"
         @invalid-submit="handleErrors"
         class="card card-form"
@@ -18,8 +17,8 @@
           <label for="name">Full Name</label>
           <vee-field
             name="name"
-            v-model="name"
-            v-bind="nameAttrs"
+            v-model="form.name"
+            rules="required"
             id="name"
             type="text"
             class="form-input"
@@ -31,8 +30,8 @@
           <label for="username">Username</label>
           <vee-field
             name="username"
-            v-model="username"
-            v-bind="usernameAttrs"
+            v-model="form.username"
+            rules="required"
             id="username"
             type="text"
             class="form-input"
@@ -44,8 +43,8 @@
           <label for="email">Email</label>
           <vee-field
             name="email"
-            v-model="email"
-            v-bind="emailAttrs"
+            v-model="form.email"
+            rules="required"
             id="email"
             type="email"
             class="form-input"
@@ -57,8 +56,8 @@
           <label for="password">Password</label>
           <vee-field
             name="password"
-            v-model="password"
-            v-bind="passwordAttrs"
+            v-model="form.password"
+            rules="required"
             id="password"
             type="password"
             class="form-input"
@@ -76,8 +75,6 @@
           <vee-field
             name="avatar"
             v-show="!avatarPreview"
-            v-model="avatar"
-            v-bind="avatarAttrs"
             id="avatar"
             type="file"
             @change="handleFileUpload"
@@ -106,17 +103,15 @@ import {
   Form as VeeForm,
   Field as VeeField,
   ErrorMessage as VeeErrorMessage,
-  useForm,
   GenericObject,
   InvalidSubmissionContext,
 } from 'vee-validate';
-import { object, string } from 'zod';
-import { toTypedSchema } from '@vee-validate/zod';
 
 import type User from '@/types/User';
 // import type UserRegisterRequest from '@/types/UserRegisterRequest';
 import type { FirebaseError } from 'firebase/app';
 import type FileUploadEvent from '@/types/FileUploadEvent';
+import type UserRegisterRequest from '@/types/UserRegisterRequest';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
@@ -124,36 +119,17 @@ import objectHelper from '@/helpers/objectHelper';
 
 const { toSuccessRedirect } = useAppendRouteHelper();
 
-const error = ref('');
-const avatarFile = ref<File | null>(null);
-
-const registerSchema = toTypedSchema(
-  object({
-    email: string().min(5, 'The email is required'),
-    password: string().min(
-      8,
-      'Password is required and must be 8 characters long or more'
-    ),
-    name: string().min(
-      3,
-      'Your name is required and must be 3 characters long or more'
-    ),
-    username: string().min(
-      3,
-      'A username is required and must be 3 characters long or more'
-    ),
-    avatar: string().optional(),
-  })
-);
-const { values: form, defineField } = useForm({
-  validationSchema: registerSchema,
+const form = ref<UserRegisterRequest>({
+  name: '',
+  username: '',
+  email: '',
+  password: '',
+  avatarFile: null,
+  avatar: '',
 });
 
-const [email, emailAttrs] = defineField('email');
-const [password, passwordAttrs] = defineField('password');
-const [name, nameAttrs] = defineField('name');
-const [username, usernameAttrs] = defineField('username');
-const [avatar, avatarAttrs] = defineField('avatar');
+const error = ref('');
+const avatarFile = ref<File | null>(null);
 
 const avatarPreview = ref<string | null>(null);
 
@@ -171,7 +147,7 @@ const handleFileUpload = (uploadEvent: Event) => {
     //console.log('reader.onload>result', readerEvent.target!.result as string);
     avatarPreview.value = readerEvent.target!.result as string;
   };
-  if (form.avatar) reader.readAsDataURL(avatarFile.value as Blob);
+  if (form.value.avatar) reader.readAsDataURL(avatarFile.value as Blob);
 };
 
 const handleErrors = ({
@@ -189,12 +165,12 @@ const register = async (values: Record<string, unknown>) => {
   }
   //console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({
-    avatar: form.avatar!,
+    avatar: form.value.avatar,
     avatarFile: avatarFile.value,
-    email: form.email!,
-    name: form.name!,
-    username: form.username!,
-    password: form.password!,
+    email: form.value.email,
+    name: form.value.name,
+    username: form.value.username,
+    password: form.value.password,
   });
   if (!objectHelper().instanceOf<User>(user, 'username')) {
     error.value = (user as FirebaseError).message;

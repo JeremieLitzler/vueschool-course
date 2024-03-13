@@ -11,6 +11,7 @@ import ClickOutsideDirective from '@/plugins/ClickOutsideDirective';
 import firebaseService from '@/services/firebaseService';
 import { useUserStore } from '@/stores/UserStore';
 import PageScrollDirective from '@/plugins/PageScrollDirective';
+import VeeValidatePlugin from './plugins/VeeValidatePlugin';
 
 //Firebase common logic
 firebaseService().auth.onAuthStateChanged(async (user) => {
@@ -65,5 +66,6 @@ app.use(pinia);
 app.use(router);
 app.use(ClickOutsideDirective);
 app.use(PageScrollDirective);
+app.use(VeeValidatePlugin);
 
 app.mount('#app');
