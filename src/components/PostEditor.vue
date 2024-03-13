@@ -17,7 +17,7 @@
         >Register</router-link
       >
     </section>
-    <vee-form v-else @submit="savePost">
+    <vee-form v-else @submit="savePost" :key="formKey">
       <app-form-field
         as="textarea"
         name="message"
@@ -39,6 +39,7 @@
 
 <script>
 import { useRouteName } from "@/helpers/routeNameEnum";
+import useUUID from "@/helpers/uniqueIdHelper";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
@@ -62,6 +63,7 @@ export default {
     return {
       RouteName,
       newPostText: this.post?.text ?? null,
+      formKey: useUUID().createId(),
     };
   },
   computed: {
@@ -89,6 +91,7 @@ export default {
         });
       }
       this.newPostText = null;
+      this.formKey = useUUID().createId();
     },
   },
   created() {
