@@ -12,69 +12,40 @@
             <i class="fa fa-google fa-btn"></i>Register with Google
           </button>
         </div>
-
-        <div class="form-group push-top">
-          <label for="name">Full Name</label>
-          <vee-field
-            name="name"
-            label="name"
-            v-model="form.name"
-            rules="required|min:3"
-            id="name"
-            type="text"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="name" />
-        </div>
-
-        <div class="form-group">
-          <label for="username">Username</label>
-          <!-- using validation rules with string syntax -->
-          <vee-field
-            name="username"
-            label="username|min:3"
-            v-model="form.username"
-            rules="required|unique|unique:users,username"
-            id="username"
-            type="text"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="username" />
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <!-- using validation rules with object syntax -->
-          <vee-field
-            name="email"
-            label="email"
-            v-model="form.email"
-            :rules="{
-              required: true,
-              email: true,
-              unique: { collectionName: 'users', prop: 'email' },
-            }"
-            id="email"
-            type="email"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="email" />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <vee-field
-            name="password"
-            label="password"
-            v-model="form.password"
-            rules="required|min:8"
-            id="password"
-            type="password"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="password" />
-        </div>
-
+        <app-form-field
+          name="name"
+          label="name"
+          v-model="form.name"
+          rules="required|min:3"
+          type="text"
+        />
+        <!-- using validation rules with string syntax -->
+        <app-form-field
+          name="username"
+          label="username|min:3"
+          v-model="form.username"
+          rules="required|unique|unique:users,username"
+          type="text"
+        />
+        <!-- using validation rules with object syntax -->
+        <app-form-field
+          name="email"
+          label="email"
+          v-model="form.email"
+          :rules="{
+            required: true,
+            email: true,
+            unique: { collectionName: 'users', prop: 'email' },
+          }"
+          type="email"
+        />
+        <app-form-field
+          name="password"
+          label="password"
+          v-model="form.password"
+          rules="required|min:8"
+          type="password"
+        />
         <div class="form-group">
           <label for="avatar"
             >Avatar
@@ -82,7 +53,7 @@
               <img :src="avatarPreview" class="avatar-xlarge" />
             </div>
           </label>
-          <vee-field
+          <input
             name="avatar"
             v-show="!avatarPreview"
             id="avatar"
@@ -111,8 +82,6 @@ import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   Form as VeeForm,
-  Field as VeeField,
-  ErrorMessage as VeeErrorMessage,
   GenericObject,
   InvalidSubmissionContext,
 } from 'vee-validate';
