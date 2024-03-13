@@ -8,6 +8,7 @@
           <label for="name">Full Name</label>
           <vee-field
             name="name"
+            label="Name"
             v-model="form.name"
             rules="required"
             id="name"
@@ -21,6 +22,7 @@
           <label for="username">Username</label>
           <vee-field
             name="username"
+            label="UserName"
             v-model="form.username"
             rules="required"
             id="username"
@@ -34,6 +36,7 @@
           <label for="email">Email</label>
           <vee-field
             name="email"
+            label="Email"
             v-model="form.email"
             id="email"
             rules="required|email"
@@ -47,6 +50,7 @@
           <label for="password">Password</label>
           <vee-field
             name="password"
+            label="Password"
             v-model="form.password"
             rules="required|min:8"
             id="password"
