@@ -1,5 +1,5 @@
 <template>
-  <img :src="src" :alt="alt" :class="cssClass" />
+  <img :src="theSrc" :alt="alt" :class="cssClass" />
 </template>
 
 <script>
@@ -7,7 +7,6 @@ export default {
   props: {
     src: {
       type: String,
-      default: "/img/user-placeholder.png",
     },
     cssClass: {
       type: String,
@@ -17,6 +16,11 @@ export default {
       type: String,
       required: true,
     },
+  },
+  data() {
+    return {
+      theSrc: this.src || "/img/user-placeholder.png",
+    };
   },
 };
 </script>

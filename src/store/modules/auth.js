@@ -126,7 +126,7 @@ export default {
     async uploadAvatar(context, { userId, avatar }) {
       try {
         if (!avatar) {
-          return null;
+          return { imageUrl: null };
         }
         const storageBucket = firebaseService().getStorageBucket(
           `uploads/${userId}/images/${useUUID().createId()}-${

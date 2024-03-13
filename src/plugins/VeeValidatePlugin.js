@@ -26,10 +26,10 @@ export default (app) => {
   configure({
     generateMessage: localize("en", {
       messages: {
-        required: "{field} is required.",
-        email: "{field} must be a valid email.",
-        min: "{field} must be at least 0:{min} characters long.",
-        unique: "This {field} is already taken.",
+        required: "The {field} is required.",
+        email: "The {field} must be a valid email.",
+        min: "The {field} must be at least 0:{min} characters long.",
+        unique: "The {field} is already taken.",
       },
     }),
   });

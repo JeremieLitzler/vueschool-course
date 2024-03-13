@@ -3,67 +3,38 @@
     <div class="col-2">
       <vee-form @submit="register" class="card card-form">
         <h1 class="text-center">Register</h1>
-
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <vee-field
-            name="name"
-            label="Name"
-            v-model="form.name"
-            rules="required"
-            id="name"
-            type="text"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="name" />
-        </div>
-
-        <div class="form-group">
-          <label for="username">Username</label>
-          <vee-field
-            name="username"
-            label="Username"
-            v-model="form.username"
-            rules="required|unique|unique:users,username"
-            id="username"
-            type="text"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="username" />
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <vee-field
-            name="email"
-            label="Email"
-            v-model="form.email"
-            id="email"
-            :rules="{
-              required: true,
-              email: true,
-              unique: { collectionName: 'users', prop: 'email' },
-            }"
-            type="email"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="email" />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <vee-field
-            name="password"
-            label="Password"
-            v-model="form.password"
-            rules="required|min:8"
-            id="password"
-            type="password"
-            class="form-input"
-          />
-          <vee-error-message class="error-message" name="password" />
-        </div>
-
+        <app-form-field
+          name="name"
+          label="Full Name"
+          v-model="form.name"
+          rules="required"
+          type="text"
+        />
+        <app-form-field
+          name="username"
+          label="Username"
+          v-model="form.username"
+          rules="required|unique|unique:users,username"
+          type="text"
+        />
+        <app-form-field
+          name="email"
+          label="Email"
+          v-model="form.email"
+          :rules="{
+            required: true,
+            email: true,
+            unique: { collectionName: 'users', prop: 'email' },
+          }"
+          type="email"
+        />
+        <app-form-field
+          name="password"
+          label="Password"
+          v-model="form.password"
+          rules="required|min:8"
+          type="password"
+        />
         <div class="form-group">
           <label for="avatar"
             >Avatar
@@ -71,7 +42,7 @@
               <img :src="avatarPreview" class="avatar-xlarge" />
             </div>
           </label>
-          <vee-field
+          <input
             name="avatar"
             v-show="!avatarPreview"
             id="avatar"
