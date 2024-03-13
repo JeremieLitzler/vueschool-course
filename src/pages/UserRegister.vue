@@ -17,9 +17,9 @@
           <label for="name">Full Name</label>
           <vee-field
             name="name"
-            label="Name"
+            label="name"
             v-model="form.name"
-            rules="required"
+            rules="required|min:3"
             id="name"
             type="text"
             class="form-input"
@@ -29,11 +29,12 @@
 
         <div class="form-group">
           <label for="username">Username</label>
+          <!-- using validation rules with string syntax -->
           <vee-field
             name="username"
-            label="Username"
+            label="username|min:3"
             v-model="form.username"
-            rules="required"
+            rules="required|unique|unique:users,username"
             id="username"
             type="text"
             class="form-input"
@@ -43,11 +44,16 @@
 
         <div class="form-group">
           <label for="email">Email</label>
+          <!-- using validation rules with object syntax -->
           <vee-field
             name="email"
-            label="Email"
+            label="email"
             v-model="form.email"
-            rules="required|email"
+            :rules="{
+              required: true,
+              email: true,
+              unique: { collectionName: 'users', prop: 'email' },
+            }"
             id="email"
             type="email"
             class="form-input"
@@ -59,7 +65,7 @@
           <label for="password">Password</label>
           <vee-field
             name="password"
-            label="Password"
+            label="password"
             v-model="form.password"
             rules="required|min:8"
             id="password"

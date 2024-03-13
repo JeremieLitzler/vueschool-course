@@ -20,6 +20,7 @@ import {
 import type { FirebaseError } from 'firebase/app';
 import type UserLoginRequest from '@/types/UserLoginRequest';
 import type UserGoogleSigninRequest from '@/types/UserGoogleSignRequest';
+import type FirebaseResourcePropUnicityRequest from '@/types/FirebaseResourcePropUnicityRequest';
 
 export default function firebaseService() {
   const auth = getAuth(useFirebase().firebaseApp);
@@ -93,6 +94,23 @@ export default function firebaseService() {
     return urlPromise;
   };
 
+  const isUnique = async <T>({
+    collectionName,
+    prop,
+    value,
+  }: FirebaseResourcePropUnicityRequest<T>) => {
+    console.log('firebaseService>isUnique');
+    const collection = useFirebase().collection(
+      useFirebase().db,
+      collectionName
+    );
+    const commonQueryParts = [useFirebase().where(prop, '==', value)];
+    let queryObj = useFirebase().query(collection, ...commonQueryParts);
+    const result = await useFirebase().getDocs(queryObj);
+
+    return result.empty;
+  };
+
   return {
     auth,
     getServerTimeStamp,
@@ -104,5 +122,6 @@ export default function firebaseService() {
     getStorageBucket,
     uploadToStorageBucket,
     getImageURL,
+    isUnique,
   };
 }
