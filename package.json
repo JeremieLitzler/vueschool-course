@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vee-validate/i18n": "^4.12.6",
     "@vee-validate/rules": "^4.12.6",
     "dayjs": "^1.11.10",
     "firebase": "^10.8.1",
