@@ -83,7 +83,6 @@
             @change="handleFileUpload"
             class="form-input"
           />
-          <vee-error-message class="error-message" name="avatar" />
         </div>
 
         <div class="form-actions">
@@ -130,10 +129,19 @@ const avatarFile = ref<File | null>(null);
 
 const registerSchema = toTypedSchema(
   object({
-    email: string().min(1, 'required'),
-    password: string().min(8, 'required'),
-    name: string().min(1, 'required'),
-    username: string().min(1, 'required'),
+    email: string().min(5, 'The email is required'),
+    password: string().min(
+      8,
+      'Password is required and must be 8 characters long or more'
+    ),
+    name: string().min(
+      3,
+      'Your name is required and must be 3 characters long or more'
+    ),
+    username: string().min(
+      3,
+      'A username is required and must be 3 characters long or more'
+    ),
     avatar: string().optional(),
   })
 );
