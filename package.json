@@ -9,6 +9,7 @@
     "db:seed": "firebase firestore:delete --all-collections --force && node firestoreImport.js"
   },
   "dependencies": {
+    "@vee-validate/rules": "^4.12.6",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.10",
     "firebase": "^10.8.0",

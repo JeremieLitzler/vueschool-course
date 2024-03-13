@@ -9,7 +9,7 @@
           <vee-field
             name="name"
             v-model="form.name"
-            :rules="required"
+            rules="required"
             id="name"
             type="text"
             class="form-input"
@@ -22,7 +22,7 @@
           <vee-field
             name="username"
             v-model="form.username"
-            :rules="required"
+            rules="required"
             id="username"
             type="text"
             class="form-input"
@@ -91,18 +91,12 @@
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
 import { useRouteName } from "@/helpers/routeNameEnum";
 /* eslint-disable */
 const { RouteName } = useRouteName();
 /* eslint-enable */
 
 export default {
-  components: {
-    VeeForm: Form,
-    VeeField: Field,
-    VeeErrorMessage: ErrorMessage,
-  },
   data() {
     return {
       RouteName,
@@ -117,11 +111,6 @@ export default {
     };
   },
   methods: {
-    required(value) {
-      if (value && value.trim()) return true;
-
-      return "Please provide a value";
-    },
     async register() {
       console.log("Form>", this.form);
       const user = await this.$store.dispatch(

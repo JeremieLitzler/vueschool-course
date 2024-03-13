@@ -5,6 +5,7 @@ import ClickOutsideDirective from "@/plugins/ClickOutsideDirective";
 import PageScrollDirective from "@/plugins/PageScrollDirective";
 
 import App from "./App.vue";
+import VeeValidationPlugin from "./plugins/VeeValidatePlugin";
 
 const forumApp = createApp(App);
 // Configure the App below before you mount it...
@@ -45,6 +46,7 @@ forumApp.use(router);
 forumApp.use(store);
 forumApp.use(ClickOutsideDirective);
 forumApp.use(PageScrollDirective);
+forumApp.use(VeeValidationPlugin);
 
 // Mount to the DOM the Vue app
 forumApp.mount("#app");
