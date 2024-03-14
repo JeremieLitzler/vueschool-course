@@ -1,6 +1,6 @@
 <template>
   <div class="post-list">
-    <div class="post" v-for="post in posts" :key="post.id">
+    <div class="post" v-for="post in orderedPosts" :key="post.id">
       <post-list-item-user :user="userById(post.userId)" />
       <post-list-item-body :post="post" />
       <div class="post-date text-faded">
@@ -18,7 +18,23 @@ export default {
     PostListItemBody,
     PostListItemUser,
   },
-  props: { posts: { required: true, type: Array } },
+  props: {
+    posts: { required: true, type: Array },
+    orderBy: {
+      type: String,
+      default: "asc",
+    },
+  },
+  computed: {
+    orderedPosts() {
+      return [...this.posts].sort((first, next) => {
+        if (this.orderBy === "asc") {
+          return first.publishedAt > next.publishedAt ? 1 : -1;
+        }
+        return first.publishedAt < next.publishedAt ? 1 : -1;
+      });
+    },
+  },
   methods: {
     userById(userId) {
       const match = this.$store.getters["users/getUser"](userId);

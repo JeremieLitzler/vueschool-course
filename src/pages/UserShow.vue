@@ -125,7 +125,7 @@
           >Start here ⚡</router-link
         >
       </section>
-      <post-list v-else :posts="userPosts" />
+      <post-list v-else :posts="userPosts" orderBy="desc" />
       <button
         @click="fetchNextPosts"
         v-if="!noMorePostsToFetch"
