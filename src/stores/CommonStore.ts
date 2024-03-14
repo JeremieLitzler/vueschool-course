@@ -331,7 +331,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
       const avatarUrl = await firebaseService().getImageURL(snapshot.ref);
       return avatarUrl;
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       useNotification().addNotification({
         message: `Failed to upload image (${(error as FirebaseError).code})`,
         type: NotificationType.Error,

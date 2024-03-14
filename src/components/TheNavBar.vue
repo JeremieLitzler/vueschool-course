@@ -90,7 +90,7 @@ const userMenuOpened = ref(false);
 const mobileMenuOpened = ref(false);
 //TODO: The image isn't reloaded after a profile update...
 const user = computed(() => useUserStore().getAuthUser());
-console.log('the-navbar>setup>user', user.value);
+//console.log('the-navbar>setup>user', user.value);
 
 const signedIn = computed(() => {
   //console.log('the-navbar>signedIn>user', user.value);

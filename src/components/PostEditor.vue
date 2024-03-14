@@ -42,7 +42,6 @@ import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { RouteName } from '@/enums/RouteName';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
-import firebaseService from '@/services/firebaseService';
 
 const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
   sourcePost: null,
@@ -75,7 +74,7 @@ const savePost = () => {
   if (!authUser) {
     //TODO : handle not authenticated user
     //       firebase returns a permission error
-    console.log('PostEditor>savePost>!auth', firebaseService().getAuthUserId());
+    //console.log('PostEditor>savePost>!auth', firebaseService().getAuthUserId());
   }
 
   if (postIsEdited.value) {

@@ -50,10 +50,10 @@ export const useUserStore = defineStore('UserStore', () => {
   };
 
   const getAuthUser = (): GetUserExtended => {
-    console.log('UserStore>getAuthUser>authId', authId.value);
+    //console.log('UserStore>getAuthUser>authId', authId.value);
 
     const result = getUserById(authId.value);
-    console.log('UserStore>getAuthUser>authUser', result);
+    //console.log('UserStore>getAuthUser>authUser', result);
     return result;
   };
 

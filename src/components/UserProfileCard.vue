@@ -59,7 +59,7 @@ const props = defineProps<{
 const appAvatarImageCompKey = ref(uniqueIdHelper().newUniqueId);
 
 const user = computed(() => getUserById(props.user?.id));
-console.log('user-profile-card>setup>user', user.value);
+//console.log('user-profile-card>setup>user', user.value);
 
 const isEditableProfile = computed(() => {
   const route = useRoute();

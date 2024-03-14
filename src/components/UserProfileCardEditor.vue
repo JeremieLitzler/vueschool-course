@@ -124,7 +124,7 @@ const newAvatar = ref<File | null>(null);
 const appAvatarImageCompKey = ref(uniqueIdHelper().newUniqueId);
 const user = computed(() => getUserById(props.user.id));
 const editedUser = ref({ ...user.value });
-console.log(editedUser);
+//console.log(editedUser);
 
 /**
  * List of countries
@@ -197,7 +197,7 @@ const assignRandomAvatar = async (url: string) => {
 };
 
 const saveProfile = async () => {
-  console.log('saveProfile>editedUser', editedUser.value);
+  //console.log('saveProfile>editedUser', editedUser.value);
   //console.log('saveProfile>newAvatar', newAvatar.value);
 
   await updateUser({
