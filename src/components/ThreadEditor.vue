@@ -60,7 +60,7 @@ export default {
       });
     },
     cancel() {
-      console.log("ThreadEditor > methods > cancel");
+      //console.log("ThreadEditor > methods > cancel");
       this.$emit("cancel");
     },
   },

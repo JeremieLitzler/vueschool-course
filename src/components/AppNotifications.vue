@@ -1,6 +1,6 @@
 <template>
   <div class="notifications">
-    <transaction-group name="notification">
+    <transition-group name="notification">
       <div
         v-for="notification in notifications"
         :key="notification.id"
@@ -12,7 +12,7 @@
         </span>
         <button @click="removeNotification(notification.id)">x</button>
       </div>
-    </transaction-group>
+    </transition-group>
   </div>
 </template>
 

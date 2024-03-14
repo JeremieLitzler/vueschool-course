@@ -71,7 +71,7 @@ export default {
     },
   },
   created() {
-    console.log("UserProfileCard>created>user", this.user);
+    //console.log("UserProfileCard>created>user", this.user);
   },
 };
 </script>

@@ -37,14 +37,14 @@ export default function firebaseService() {
   const fetchItem = ({ source, id, commit }) => {
     return new Promise((resolve) => {
       //console.log(`🚨 fetching a item (source: ${source}, id: ${id}) on firebase 🚨`);
-      console.log(`🚨 fetching a item on firebase 🚨`);
+      //console.log(`🚨 fetching a item on firebase 🚨`);
       onSnapshot(doc(db, source, id), (responseDoc) => {
         //console.log("from firestore > responseDoc: ", responseDoc);
         //console.log("from firestore > responseDoc.data: ", responseDoc.data());
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
         const item = { ...responseDoc.data(), id: responseDoc.id };
         //console.log(`got from firestore > in ${source}:`, item);
-        console.log(`got item from firestore`);
+        //console.log(`got item from firestore`);
         commit("setItem", { source, item });
         resolve(item);
       });
@@ -103,10 +103,10 @@ export default function firebaseService() {
         user.email,
         user.password
       );
-      console.log("User registered!", registerResult);
+      //console.log("User registered!", registerResult);
       return registerResult;
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       throw new Error(error);
     }
   };
@@ -115,7 +115,7 @@ export default function firebaseService() {
     return signInWithEmailAndPassword(auth, email, password)
       .then((user) => user)
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
         return error;
       });
   };
@@ -137,7 +137,7 @@ export default function firebaseService() {
   };
   const signOut = async () => {
     await auth.signOut();
-    console.log("UserStore > signOut", auth.currentUser);
+    //console.log("UserStore > signOut", auth.currentUser);
   };
 
   const getAuthUserId = () => {
@@ -156,7 +156,7 @@ export default function firebaseService() {
     return url;
   };
   const isUnique = async ({ collectionName, prop, value }) => {
-    console.log("firebaseService>isUnique");
+    //console.log("firebaseService>isUnique");
     const commonQueryParts = [
       collection(db, collectionName),
       where(prop, "==", value),

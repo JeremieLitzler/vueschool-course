@@ -23,8 +23,8 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
 export default {
-  notifyAppIsReady({ commit }, caller) {
-    console.log("notifyAppIsReady by", caller);
+  notifyAppIsReady({ commit } /*, _caller*/) {
+    //console.log("notifyAppIsReady by", caller);
     //console.log("fetching is", state.fetching);
     commit("setAppIsReady", { ready: true });
     //console.log("fetching became", state.fetching);
@@ -70,7 +70,7 @@ export default {
         //console.log("from firestore > responseDoc.ref: ", responseDoc.ref);
         if (once) {
           unsubscribe();
-          console.log("actions>fetchItem>once called");
+          //console.log("actions>fetchItem>once called");
         }
         if (!responseDoc.exists()) {
           resolve(null);
@@ -115,7 +115,7 @@ export default {
     }
   ) {
     maxElements = maxElements ?? state.maxItemsPerFetch;
-    console.log("fetchItemsByProp > maxElements", maxElements);
+    //console.log("fetchItemsByProp > maxElements", maxElements);
     const commonQueryParts = [
       collection(db, collectionName),
       where(whereProp, "==", whereValue),
@@ -150,7 +150,7 @@ export default {
    * @returns Number
    */
   async entriesCount(context, collectionName) {
-    console.log("actions > entriesCount > collectionName", collectionName);
+    //console.log("actions > entriesCount > collectionName", collectionName);
     const dbEntries = collection(db, collectionName);
     const snapshot = await getCountFromServer(dbEntries);
     return snapshot.data().count;

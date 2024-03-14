@@ -127,12 +127,12 @@ export default {
     },
     nextPage() {
       const possibleNextPage = this.currentPage + 1;
-      console.log("app-pagination > nextPage", possibleNextPage);
+      //console.log("app-pagination > nextPage", possibleNextPage);
       return possibleNextPage;
     },
     prevPage() {
       const possiblePreviousPage = this.currentPage - 1;
-      console.log("app-pagination > nextPage", possiblePreviousPage);
+      //console.log("app-pagination > nextPage", possiblePreviousPage);
       return possiblePreviousPage;
     },
   },

@@ -78,7 +78,7 @@ export default {
   computed: {
     forum() {
       const result = this.$store.getters["forums/getForumById"](this.id);
-      console.log("ForumShow > computed forum", result);
+      //console.log("ForumShow > computed forum", result);
       return result;
     },
 
@@ -107,7 +107,7 @@ export default {
     const forum = await this.$store.dispatch("forums/fetchForum", {
       id: this.$route.params.id,
     });
-    console.log("ForumShow > created > forum", forum);
+    //console.log("ForumShow > created > forum", forum);
     this.currentPage =
       this.$route.query.page === undefined
         ? 1

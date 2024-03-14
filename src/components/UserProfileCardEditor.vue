@@ -146,7 +146,7 @@ export default {
     async handleImageUpload(event) {
       this.uploadingImage = true;
       const file = event.target.files[0];
-      console.log("UserProfileCardEditor>handleImageUpload", file);
+      //console.log("UserProfileCardEditor>handleImageUpload", file);
       const { imageUrl } = await this.$store.dispatch("auth/uploadAvatar", {
         userId: this.editedUser.id,
         avatar: file,

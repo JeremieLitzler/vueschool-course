@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     async login() {
-      console.log(this.form);
+      //console.log(this.form);
       const result = await this.$store.dispatch(
         "auth/loginUserWithEmailAndPassword",
         this.form
@@ -68,7 +68,7 @@ export default {
       if (result["name"] === "FirebaseError") {
         this.errorMessage = result.message;
       } else {
-        console.log("UserLogin > login:", result);
+        //console.log("UserLogin > login:", result);
         this.successRedirect();
       }
     },

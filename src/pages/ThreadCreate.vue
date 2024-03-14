@@ -46,7 +46,7 @@ export default {
       });
     },
     returnToForum() {
-      console.log("ThreadCreate > methods > returnToForum");
+      //console.log("ThreadCreate > methods > returnToForum");
       this.$router.push({
         name: RouteName.ForumShow,
         params: { id: this.forum.id },
@@ -54,7 +54,7 @@ export default {
     },
   },
   beforeRouteLeave() {
-    console.log("beforeRouteLeave > formIsDirty", this.formIsDirty);
+    //console.log("beforeRouteLeave > formIsDirty", this.formIsDirty);
     if (this.formIsDirty) {
       const confirmed = window.confirm(
         //TODO : clicking cancel button fires twice this guard... Why?

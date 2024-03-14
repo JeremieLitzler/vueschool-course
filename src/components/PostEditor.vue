@@ -68,10 +68,10 @@ export default {
   },
   computed: {
     postingAllowed() {
-      console.log(
-        "PostEditor > postingAllowed > authId",
-        this.$store.state.auth.authId
-      );
+      // console.log(
+      //   "PostEditor > postingAllowed > authId",
+      //   this.$store.state.auth.authId
+      // );
       return this.$store.state.auth.authId !== null;
     },
     postIsEdited() {

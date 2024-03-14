@@ -88,7 +88,7 @@ export default {
         usernameLower: username.toLowerCase(),
       };
 
-      console.log("actions > createUser > id", id);
+      //console.log("actions > createUser > id", id);
       const userRef = doc(db, "users", id);
       await writeBatch(db)
         .set(userRef, { ...newUser })

@@ -100,9 +100,6 @@ export default {
     PostList,
     PostEditor,
   },
-  setup() {
-    // const { addNotification } = useNotification();
-  },
   computed: {
     routeAllowsToPost() {
       return this.currentPageIsLast;
@@ -143,7 +140,7 @@ export default {
         await this.fetchPagePosts();
         this.$store.dispatch("notifyUiElementReady", asyncUiElement);
       } else {
-        console.log("updatePage>pageCount", this.pageCount);
+        //console.log("updatePage>pageCount", this.pageCount);
         //TODO: Doesn't update the route in the browser, but the UI is...
         this.$router.push({
           name: RouteName.ThreadShow,
@@ -182,17 +179,17 @@ export default {
       //   id: thread.userId,
       // });
       // console.log("ThreadShow > beforeCreate > postIds", thread.posts);
-      let start = Date.now();
+      // let start = Date.now();
       //console.log("initialize > query.page", this.$route.query.page);
       this.currentPage =
         this.$route.query.page === undefined
           ? 1
           : parseInt(this.$route.query.page);
       await this.fetchPagePosts(thread);
-      console.log(
-        "ThreadShow > created > posts fetched in ",
-        `${Date.now() - start} ms`
-      );
+      //console.log(
+      //   "ThreadShow > created > posts fetched in ",
+      //   `${Date.now() - start} ms`
+      // );
       // console.log("ThreadShow > created > posts ", posts);
       const users = this.pagePosts.map((post) => post.userId);
       await this.$store.dispatch("users/fetchUsers", {

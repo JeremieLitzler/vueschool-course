@@ -68,7 +68,7 @@ export default {
       }
     },
     async registerUserWithEmailAndPassword(
-      { dispatch, state },
+      { dispatch /*state*/ },
       { name, username, email, password, avatar = null }
     ) {
       email = email.toLowerCase();
@@ -76,14 +76,14 @@ export default {
         email,
         password,
       });
-      console.log(
-        "auth>this.registerUserWithEmailAndPassword>userId",
-        registerResult.user.uid
-      );
-      console.log(
-        "auth>this.registerUserWithEmailAndPassword>authId",
-        state.authId
-      );
+      //console.log(
+      //   "auth>this.registerUserWithEmailAndPassword>userId",
+      //   registerResult.user.uid
+      // );
+      //console.log(
+      //   "auth>this.registerUserWithEmailAndPassword>authId",
+      //   state.authId
+      // );
       let { imageUrl } = await dispatch("uploadAvatar", {
         userId: registerResult.user.uid,
         avatar,
@@ -106,7 +106,7 @@ export default {
     },
     async loginWithGoogle({ dispatch, commit }) {
       const user = await firebaseService().signinWithGoogle();
-      console.log("actions > loginWithGoogle > user", user);
+      //console.log("actions > loginWithGoogle > user", user);
       if (!user.exists) {
         dispatch("users/createUser", { ...user }, { root: true });
         commit("setAuthId", { authId: user.id });
@@ -120,7 +120,7 @@ export default {
     },
     async logoutUser({ commit }) {
       firebaseService().signOut();
-      console.log("Called firebaseService().signOut()");
+      //console.log("Called firebaseService().signOut()");
       commit("setAuthId", { authId: null });
     },
     async uploadAvatar(context, { userId, avatar }) {
@@ -138,10 +138,10 @@ export default {
           avatar
         );
         const imageUrl = await firebaseService().getImageURL(snapshot.ref);
-        console.log("auth>uploadAvatar>imageUrl", imageUrl);
+        //console.log("auth>uploadAvatar>imageUrl", imageUrl);
         return { imageUrl, success: true };
       } catch (error) {
-        console.error(error);
+        //console.error(error);
         useNotification().addNotification({
           message: `Failed to upload image (${error.code})`,
           type: "error",

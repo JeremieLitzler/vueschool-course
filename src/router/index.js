@@ -45,7 +45,7 @@ const routes = [
       const exists = await store.dispatch("users/fetchUser", {
         id: to.params.id,
       });
-      console.log("beforeEnter > /user/:id", exists, to.params.id);
+      //console.log("beforeEnter > /user/:id", exists, to.params.id);
       if (exists) {
         return next();
       }
@@ -66,7 +66,7 @@ const routes = [
     component: () => import("@/pages/CategoryShow.vue"),
     props: true,
     beforeEnter: async (to, from, next) => {
-      console.log("router > CategoryShow > beforeEnter");
+      //console.log("router > CategoryShow > beforeEnter");
       const exists = await store.dispatch("categories/fetchCategory", {
         id: to.params.id,
       });
@@ -216,9 +216,9 @@ const routes = [
     path: "/logout",
     name: RouteName.UserLogout,
     beforeEnter: async () => {
-      console.log("beforeEnter > UserLogout > start...");
+      //console.log("beforeEnter > UserLogout > start...");
       await store.dispatch("auth/logoutUser");
-      console.log("beforeEnter > UserLogout > logoutUser ran...");
+      //console.log("beforeEnter > UserLogout > logoutUser ran...");
       store.dispatch("notifyAppIsReady");
       return {
         name: RouteName.TheHome,

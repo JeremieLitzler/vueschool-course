@@ -93,14 +93,11 @@ export default {
   },
   methods: {
     async register() {
-      console.log("Form>", this.form);
-      const user = await this.$store.dispatch(
-        "auth/registerUserWithEmailAndPassword",
-        {
-          ...this.form,
-        }
-      );
-      console.log("Created user >", user);
+      //console.log("Form>", this.form);
+      await this.$store.dispatch("auth/registerUserWithEmailAndPassword", {
+        ...this.form,
+      });
+      //console.log("Created user >", user);
       this.successRedirect();
     },
     async registerGoogle() {
