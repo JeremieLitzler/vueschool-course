@@ -94,6 +94,20 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     });
     return threadsFetched.map((thread) => _hydrateThread(thread));
   };
+  const fetchByPage = async (
+    ids: string[],
+    chunkSize: number,
+    chunkIndex: number
+  ) => {
+    const raws = await useCommonStore().fetchItemsByChunk<Thread>({
+      targetStore: threads,
+      collection: FirestoreCollection.Threads,
+      ids,
+      chunkSize,
+      chunkIndex,
+    });
+    return raws.map((item) => _hydrateThread(item));
+  };
   const createThread = async (request: ThreadCreateRequest) => {
     const thread = {
       forumId: request.forumId,
@@ -218,6 +232,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     //actions
     fetchThread,
     fetchThreads,
+    fetchByPage,
     createThread,
     setThread,
     updateThread,

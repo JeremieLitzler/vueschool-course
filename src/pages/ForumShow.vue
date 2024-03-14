@@ -25,25 +25,32 @@
   </div>
 
   <div class="col-full push-top">
-    <thread-list :threads="threads!" />
-
-    <!-- <div class="pagination">
-        <button class="btn-circle" disabled>
-          <i class="fa fa-angle-left"></i>
-        </button>
-        1 of 3
-        <button class="btn-circle"><i class="fa fa-angle-right"></i></button>
-      </div> -->
+    <thread-list :threads="pageThreads" />
+    <app-pagination
+      :page-count="pageCount"
+      :pages-around="1"
+      :current-page="currentPage"
+      :parentRouteName="RouteName.ForumShow"
+    >
+      <template #prevRange>⏮️</template>
+      <template #prevPage>◀️</template>
+      <template #nextPage>▶️</template>
+      <template #nextRange>⏭️</template>
+    </app-pagination>
   </div>
 </template>
 
 <script setup async lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
+
 import ThreadList from '@/components/ThreadList.vue';
 import { RouteName } from '@/enums/RouteName';
+import type ThreadHydraded from '@/types/ThreadHydraded';
 
 const { id } = defineProps({
   id: {
@@ -52,10 +59,37 @@ const { id } = defineProps({
   },
 });
 
+const route = useRoute();
+const itemsToFetch = ref(8);
+const currentPage = ref(1);
+const pageThreads = ref<ThreadHydraded[]>([]);
+
+const pageCount = computed(() => {
+  return Math.ceil((forum.value?.threads?.length! || 0) / itemsToFetch.value);
+});
+const fetchPageThreads = async () => {
+  pageThreads.value = await useThreadStore().fetchByPage(
+    forum.value?.threads! || [],
+    itemsToFetch.value,
+    currentPage.value - 1
+  );
+};
+
+const isCurrentPageSetInQuery = () => {
+  return (
+    route.query.page !== undefined &&
+    !isNaN(parseInt(route.query.page as string))
+  );
+};
 useCommonStore().notifyAppIsReady();
-const forum = await useForumStore().fetchForum(id);
-const threads = await useThreadStore().fetchThreads(forum.threads!);
-const userIds = threads.flatMap(({ userId }) => userId!);
+const forum = ref(await useForumStore().fetchForum(id));
+if (isCurrentPageSetInQuery()) {
+  //console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
+  currentPage.value = parseInt(route.query.page as string);
+  //console.log('ThreadShow > setup > currentPage (after)', currentPage.value);
+}
+await fetchPageThreads();
+const userIds = pageThreads.value.flatMap(({ userId }) => userId!);
 await useUserStore().fetchUsers(userIds);
 useCommonStore().notifyAppIsReady();
 </script>

@@ -12,9 +12,7 @@
         v-show="currentPage > 1"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: prevPage } }"
-        >
+        <router-link :to="{ name: parentRouteName, query: { page: prevPage } }">
           <slot name="prevPage"></slot>
         </router-link>
       </li>
@@ -22,7 +20,7 @@
     <ul class="app-pagination-list">
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
         <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: page } }"
+          :to="{ name: parentRouteName, query: { page: page } }"
           class="btn-small"
           :class="[
             { 'btn-blue': page === currentPage },
@@ -38,9 +36,7 @@
         v-show="currentPage < pageCount"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: nextPage } }"
-        >
+        <router-link :to="{ name: parentRouteName, query: { page: nextPage } }">
           <slot name="nextPage"></slot>
         </router-link>
       </li>
@@ -66,9 +62,10 @@ interface AppPaginationProps {
   pageCount: number;
   pagesAround: number;
   currentPage: number;
+  parentRouteName: RouteName;
 }
 
-const { pageCount, pagesAround, currentPage } = withDefaults(
+const { pageCount, pagesAround, currentPage, parentRouteName } = withDefaults(
   defineProps<AppPaginationProps>(),
   {
     pageCount: 0,
@@ -133,7 +130,7 @@ const prevPage = computed(() => {
 
 // const loadPage = (page: number) => {
 //   router.push({
-//     name: RouteName.ThreadShow,
+//     name: parentRouteName,
 //     query: { page: page },
 //   });
 // };

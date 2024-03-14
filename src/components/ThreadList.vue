@@ -1,9 +1,15 @@
 <template>
-  <div class="col-full">
+  <div>
     <div class="thread-list">
       <h2 class="list-title">Threads</h2>
 
-      <div class="thread" v-for="thread in props.threads" :key="thread.id">
+      <p v-if="threads?.length === 0" class="no-threads">No threads yet.</p>
+      <div
+        v-else
+        class="thread"
+        v-for="thread in props.threads"
+        :key="thread.id"
+      >
         <div>
           <p>
             <router-link
@@ -70,4 +76,10 @@ const props = defineProps<{
 const { getUserById } = useUserStore();
 </script>
 
-<style scoped></style>
+<style scoped>
+.no-threads {
+  text-align: center;
+  padding: 1em;
+  font-weight: bold;
+}
+</style>

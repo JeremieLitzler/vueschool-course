@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!thread" class="col-full text-center">
+  <div v-if="!thread" class="text-center">
     <h1>Oops, the thread isn't valid</h1>
     <p>
       The thread (<b>ID: {{ id }}</b
@@ -7,7 +7,7 @@
     </p>
     <router-link :to="{ name: 'Home' }">Back to a safe place</router-link>
   </div>
-  <div v-else class="col-large push-top" :title="`Thread ID: ${thread.id}`">
+  <div v-else class="push-top" :title="`Thread ID: ${thread.id}`">
     <router-link
       :to="{ name: RouteName.ForumShow, params: { id: thread?.forumId } }"
       >⬅️ Back to Forum</router-link
@@ -40,6 +40,7 @@
       :page-count="pageCount"
       :pages-around="1"
       :current-page="currentPage"
+      :parentRouteName="RouteName.ThreadShow"
       class="push-top"
     >
       <template #prevRange>⏮️</template>
@@ -61,6 +62,7 @@
       :page-count="pageCount"
       :pages-around="1"
       :current-page="currentPage"
+      :parentRouteName="RouteName.ThreadShow"
     >
       <template #prevRange>⏮️</template>
       <template #prevPage>◀️</template>

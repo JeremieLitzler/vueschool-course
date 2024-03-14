@@ -1,5 +1,5 @@
 <template>
-  <section class="post-editor-cta" v-if="!postingAllowed">
+  <section v-if="!postingAllowed" class="post-editor-cta">
     <h2>Want to participate?</h2>
     <router-link
       :to="{ name: RouteName.UserLogin, query: { redirectTo: $route.path } }"

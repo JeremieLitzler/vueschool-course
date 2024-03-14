@@ -5,6 +5,9 @@ const chunckIt =
   <T>(chunckSize: number) =>
   (inputArray: T[]) => {
     const initialValue: T[][] = [[]];
+    if (inputArray.length === 0) {
+      return initialValue;
+    }
     return inputArray.reduce((resultArray, item) => {
       if (resultArray[resultArray.length - 1].length < chunckSize) {
         resultArray[resultArray.length - 1].push(item as T);
