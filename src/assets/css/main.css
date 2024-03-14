@@ -4,8 +4,6 @@
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-
   font-weight: normal;
 }
 
@@ -27,6 +25,7 @@ a,
     display: flex;
     place-items: center;
   }
+
   #app {
     width: 60em;
   }
@@ -44,9 +43,13 @@ a,
 }
 
 .loading {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-loading {
+  color: white;
 }
 
 .error-message {
@@ -55,5 +58,5 @@ a,
 }
 
 .credits {
-  font-size: x-small;
+  font-size: xx-small;
 }
