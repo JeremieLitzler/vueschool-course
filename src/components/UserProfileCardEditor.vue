@@ -75,8 +75,16 @@
         name="location"
         label="Location"
         v-model="editedUser.location"
-        autocomplete="off"
+        @mouseenter="loadCountries()"
+        list="countries"
       />
+      <datalist id="countries">
+        <option
+          v-for="country in countries"
+          :key="country.name.common"
+          :value="country.name.common"
+        />
+      </datalist>
       <div class="btn-group space-between">
         <button @click.prevent="cancel" class="btn-ghost">Cancel</button>
         <button type="submit" class="btn-blue">Save</button>
@@ -92,6 +100,7 @@ const { RouteName } = useRouteName();
 /* eslint-enable */
 
 export default {
+  inheritAttrs: false,
   props: {
     user: {
       type: Object,
@@ -103,6 +112,7 @@ export default {
       uploadingImage: false,
       editedUser: { ...this.user },
       avatarPreview: this.user.avatar,
+      countries: [],
     };
   },
   computed: {
@@ -120,6 +130,12 @@ export default {
     },
   },
   methods: {
+    async loadCountries() {
+      if (this.countries.length) return;
+
+      const response = await fetch("https://restcountries.com/v3/all");
+      this.countries = await response.json();
+    },
     saveProfile() {
       this.$store.dispatch("users/updateUser", { ...this.editedUser });
       this.$router.push({ name: RouteName.AccountShow });
