@@ -30,17 +30,17 @@ interface PostListProps {
   orderBy: OrderByDirection;
 }
 
-const { posts, orderBy } = withDefaults(defineProps<PostListProps>(), {
+const props = withDefaults(defineProps<PostListProps>(), {
   orderBy: OrderByDirection.Asc,
 });
-const orderedPosts = computed(() =>
-  posts.sort((first, next) => {
-    if (orderBy === OrderByDirection.Asc) {
-      return first.publishedAt! > next.publishedAt! ? 1 : -1;
-    }
-    return first.publishedAt! < next.publishedAt! ? 1 : -1;
-  })
-);
+const orderedPosts = computed(() => {
+  if (props.orderBy === OrderByDirection.Asc) {
+    return props.posts;
+  }
+  return [...props.posts].sort((first, next) =>
+    first.publishedAt! < next.publishedAt! ? 1 : -1
+  );
+});
 </script>
 
 <style lang="css" scoped>
