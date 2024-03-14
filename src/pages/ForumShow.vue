@@ -30,8 +30,13 @@
     </div>
 
     <div class="col-full push-top">
-      <ThreadList :threads="forumThreads" />
-
+      <ThreadList :threads="pageThreads" />
+      <app-pagination
+        :page-count="pageCount"
+        :pages-around="1"
+        :current-page="currentPage"
+        :parentRouteName="RouteName.ForumShow"
+      />
       <!-- <div class="pagination">
         <button class="btn-circle" disabled>
           <i class="fa fa-angle-left"></i>
@@ -44,6 +49,8 @@
 </template>
 
 <script>
+import uniqueIdHelper from "@/helpers/uniqueIdHelper";
+
 import ThreadList from "@/components/ThreadList.vue";
 
 import { useRouteName } from "@/helpers/routeNameEnum";
@@ -61,6 +68,10 @@ export default {
   data() {
     return {
       RouteName,
+      itemsToFetch: 8,
+      currentPage: 1,
+      pageThreads: [],
+      paginationKey: uniqueIdHelper().createId,
     };
   },
   components: { ThreadList },
@@ -70,25 +81,39 @@ export default {
       console.log("ForumShow > computed forum", result);
       return result;
     },
-    forumThreads() {
-      const threads = this.$store.getters["threads/getThreadsByForumId"](
-        this.id
-      );
-      //console.log("forumThreads", threads);
-      return threads;
+
+    currentPageIsLast() {
+      return this.currentPage === this.pageCount;
+    },
+    pageCount() {
+      return Math.ceil(this.forum.threads?.length / this.itemsToFetch);
     },
   },
-  async beforeCreate() {
+  methods: {
+    async fetchPageThreads() {
+      const threads = await this.$store.dispatch("fetchItemsByChunk", {
+        source: "threads",
+        ids: this.forum.threads,
+        chunckIndex: this.currentPage - 1,
+        chunckSize: this.itemsToFetch,
+      });
+      const hydratedThreads = threads.map((item) =>
+        this.$store.getters["threads/hydrateThread"](item)
+      );
+      this.pageThreads = hydratedThreads;
+    },
+  },
+  async created() {
     const forum = await this.$store.dispatch("forums/fetchForum", {
       id: this.$route.params.id,
     });
     console.log("ForumShow > created > forum", forum);
-    const threads = await this.$store.dispatch("threads/fetchThreads", {
-      ids: forum.threads,
-    });
-    //console.log("ForumShow > created > forumThreads", threads);
-    const userIds = threads.flatMap(({ userId }) => userId);
-    //console.log("ForumShow > created > userIds", userIds);
+    this.currentPage =
+      this.$route.query.page === undefined
+        ? 1
+        : parseInt(this.$route.query.page);
+    await this.fetchPageThreads(forum);
+    const userIds = this.pageThreads.flatMap(({ userId }) => userId);
     await this.$store.dispatch("users/fetchUsers", { ids: userIds });
     this.$store.dispatch("notifyAppIsReady", "ForumShow");
   },

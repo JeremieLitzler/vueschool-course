@@ -68,8 +68,11 @@ export default {
   },
   computed: {
     postingAllowed() {
-      //console.log("PostEditor > postingAllowed > authId", this.$store.state.auth.authId);
-      return this.$store.state.auth.authId !== undefined;
+      console.log(
+        "PostEditor > postingAllowed > authId",
+        this.$store.state.auth.authId
+      );
+      return this.$store.state.auth.authId !== null;
     },
     postIsEdited() {
       const result = this.post?.text !== null;

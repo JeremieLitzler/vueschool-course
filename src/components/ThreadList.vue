@@ -3,7 +3,11 @@
     <div class="thread-list">
       <h2 class="list-title">Threads</h2>
 
-      <div class="thread" v-for="thread in threads" :key="thread.id">
+      <p v-if="threads?.length === 0" class="align-center">
+        <em> No threads yet. </em>
+      </p>
+
+      <div v-else class="thread" v-for="thread in threads" :key="thread.id">
         <div>
           <p>
             <RouterLink

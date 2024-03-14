@@ -12,9 +12,7 @@
         v-show="currentPage > 1"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: prevPage } }"
-        >
+        <router-link :to="{ name: parentRouteName, query: { page: prevPage } }">
           ◀️
         </router-link>
       </li>
@@ -22,7 +20,7 @@
     <ul class="app-pagination-list">
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
         <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: page } }"
+          :to="{ name: parentRouteName, query: { page: page } }"
           class="btn-small"
           :class="[
             { 'btn-blue': page === currentPage },
@@ -38,9 +36,7 @@
         v-show="currentPage < pageCount"
         class="app-pagination-link app-pagination-ctrl"
       >
-        <router-link
-          :to="{ name: RouteName.ThreadShow, query: { page: nextPage } }"
-        >
+        <router-link :to="{ name: parentRouteName, query: { page: nextPage } }">
           ▶️
         </router-link>
       </li>
@@ -75,6 +71,10 @@ export default {
     currentPage: {
       type: Number,
       default: 1,
+    },
+    parentRouteName: {
+      type: String,
+      required: true,
     },
   },
   data() {
@@ -139,7 +139,7 @@ export default {
   methods: {
     loadPage(page) {
       this.$router.push({
-        name: RouteName.ThreadShow,
+        name: this.parentRouteName,
         query: { page: page },
       });
     },

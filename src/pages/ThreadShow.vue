@@ -37,6 +37,7 @@
         :page-count="pageCount"
         :pages-around="1"
         :current-page="currentPage"
+        :parentRouteName="RouteName.ThreadShow"
       />
       <!-- TODO: would be nice to focus in the PostEditor -->
       <router-link
@@ -51,6 +52,7 @@
         :page-count="pageCount"
         :pages-around="1"
         :current-page="currentPage"
+        :parentRouteName="RouteName.ThreadShow"
       />
 
       <app-loading-state v-if="savingPost" />
@@ -102,9 +104,6 @@ export default {
     // const { addNotification } = useNotification();
   },
   computed: {
-    currentPageIsLast() {
-      return this.currentPage === this.pageCount;
-    },
     routeAllowsToPost() {
       return this.currentPageIsLast;
     },
@@ -117,6 +116,9 @@ export default {
     },
     threadEditable() {
       return this.thread.userId === this.$store.getters["auth/authUser"].id;
+    },
+    currentPageIsLast() {
+      return this.currentPage === this.pageCount;
     },
     pageCount() {
       return Math.ceil(this.thread.posts.length / this.itemsToFetch);
