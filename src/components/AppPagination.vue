@@ -26,7 +26,7 @@
           class="btn-small"
           :class="[
             { 'btn-blue': page === currentPage },
-            { 'btn-green': page !== currentPage },
+            { '': page !== currentPage },
           ]"
         >
           {{ page }}
@@ -206,23 +206,6 @@ const { newFrom, newTo } = rangeFromCurrentPage();
 //console.log("app-pagination > created > to (currentPage)", to);
 from.value = newFrom;
 to.value = newTo;
-
-// onUpdated(() => {
-//   // console.log("app-pagination > updated > previousPage", this.previousPage);
-//   // console.log("app-pagination > updated > currentPage", this.currentPage);
-//   if (!navigateRanges.value) {
-//     const { newFrom, newTo } = rangeFromCurrentPage();
-//     // console.log("app-pagination > updated > from (currentPage)", from);
-//     // console.log("app-pagination > updated > to (currentPage)", to);
-//     from.value = newFrom;
-//     to.value = newTo;
-//   } else {
-//     // console.log(
-//     //   "app-pagination > updated > else",
-//     //   `navigateRanges=${this.navigateRanges} / pageChanged=${pageChanged}`
-//     // );
-//   }
-// });
 </script>
 <style scoped>
 .app-pagination {
@@ -248,17 +231,18 @@ to.value = newTo;
   margin: 1px;
 }
 
-.app-pagination-ctrl {
+.app-pagination-ctrl,
+.app-pagination-link {
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-items: center;
-  border: 2px solid #57ad8d;
+  border: 2px solid #263959;
   border-radius: 0.375em;
 }
 .app-pagination-ctrl a,
 .app-pagination-ctrl span {
-  padding: 9px;
+  padding: 9.5px 0.75em;
 }
 @media (min-width: 37.5em) {
   .app-pagination {
