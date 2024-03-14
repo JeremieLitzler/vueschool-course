@@ -59,7 +59,7 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
     (moduleImport as ModuleImportInterface).default
   );
   /* eslint-enable */
-  console.info(`Registered component <${componentName!}> globally.`);
+  //console.info(`Registered component <${componentName!}> globally.`);
 }
 
 app.use(pinia);

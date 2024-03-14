@@ -122,12 +122,12 @@ const pages = computed(() => {
 });
 const nextPage = computed(() => {
   const possibleNextPage = currentPage + 1;
-  console.log('app-pagination > nextPage', possibleNextPage);
+  //console.log('app-pagination > nextPage', possibleNextPage);
   return possibleNextPage;
 });
 const prevPage = computed(() => {
   const possiblePreviousPage = currentPage - 1;
-  console.log('app-pagination > prevPage', possiblePreviousPage);
+  //console.log('app-pagination > prevPage', possiblePreviousPage);
   return possiblePreviousPage;
 });
 

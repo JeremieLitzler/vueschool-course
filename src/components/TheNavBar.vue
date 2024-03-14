@@ -82,16 +82,28 @@ import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
 import { useCommonStore } from '@/stores/CommonStore';
+import GetUserExtented from '@/types/GetUserExtended';
 
 const { toSignOut } = useAppendRouteHelper();
 
 const userMenuOpened = ref(false);
 const mobileMenuOpened = ref(false);
+//TODO: The image isn't reloaded after a profile update...
 const user = computed(() => useUserStore().getAuthUser());
+console.log('the-navbar>setup>user', user.value);
 
-const signedIn = computed(
-  () => user.value.id != '' || useUserStore().authId != ''
-);
+const signedIn = computed(() => {
+  //console.log('the-navbar>signedIn>user', user.value);
+  if (!user.value) return false;
+
+  return user.value && (user.value as GetUserExtented).id != '';
+});
+
+const fetchAuthUser = async () => {
+  await useUserStore().fetchAuthUser();
+};
+await fetchAuthUser();
+
 const toggleMobileMenu = () => {
   mobileMenuOpened.value = !mobileMenuOpened.value;
 };

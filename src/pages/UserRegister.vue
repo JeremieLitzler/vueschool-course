@@ -1,11 +1,7 @@
 <template>
   <div class="flex-grid justify-center">
     <div class="col-2">
-      <vee-form
-        @submit="register"
-        @invalid-submit="handleErrors"
-        class="card card-form"
-      >
+      <vee-form @submit="register" class="card card-form">
         <h1 class="text-center">Register</h1>
         <div class="text-center push-top">
           <button @click="loginWithGoogle" class="btn-red btn-xsmall">
@@ -80,11 +76,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import {
-  Form as VeeForm,
-  GenericObject,
-  InvalidSubmissionContext,
-} from 'vee-validate';
+import { Form as VeeForm } from 'vee-validate';
 
 import type User from '@/types/User';
 // import type UserRegisterRequest from '@/types/UserRegisterRequest';
@@ -129,18 +121,9 @@ const handleFileUpload = (uploadEvent: Event) => {
   if (form.value.avatar) reader.readAsDataURL(avatarFile.value as Blob);
 };
 
-const handleErrors = ({
-  errors,
-  results,
-}: InvalidSubmissionContext<GenericObject>) => {
-  // console.log('UserRegister>handleErrors>context', context);
-  console.log('UserRegister>handleErrors>errors', errors);
-  console.log('UserRegister>handleErrors>results', results);
-};
-
 const register = async (values: Record<string, unknown>) => {
   if (values) {
-    console.log('UserRegister>register', values);
+    //console.log('UserRegister>register', values);
   }
   //console.log('The form data >', form.value);
   const user = await useUserStore().registerUserWithEmailAndPassword({

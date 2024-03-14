@@ -99,7 +99,7 @@ export default function firebaseService() {
     prop,
     value,
   }: FirebaseResourcePropUnicityRequest<T>) => {
-    console.log('firebaseService>isUnique');
+    //console.log('firebaseService>isUnique');
     const collection = useFirebase().collection(
       useFirebase().db,
       collectionName

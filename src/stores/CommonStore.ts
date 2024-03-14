@@ -292,15 +292,15 @@ export const useCommonStore = defineStore('CommonStore', () => {
   };
 
   const appendSnapshotUnsubscribe = (unsubscribe: Function) => {
-    console.log('Running appendSnapshotUnsubscribe...');
+    //console.log('Running appendSnapshotUnsubscribe...');
     onSnapshotUnsubscribeListeners.value.push({ listener: unsubscribe });
-    console.log(
-      'onSnapshotUnsubscribeListeners contains',
-      onSnapshotUnsubscribeListeners.value
-    );
+    // console.log(
+    //   'onSnapshotUnsubscribeListeners contains',
+    //   onSnapshotUnsubscribeListeners.value
+    // );
   };
   const runAllSnapshotUnsubscribes = () => {
-    console.log('Running runAllSnapshotUnsubscribes');
+    //console.log('Running runAllSnapshotUnsubscribes');
 
     onSnapshotUnsubscribeListeners.value.forEach((unsub) => unsub.listener());
     onSnapshotUnsubscribeListeners.value = [];

@@ -2,6 +2,7 @@
   <div class="profile-card">
     <p class="text-center">
       <app-avatar-image
+        :key="appAvatarImageCompKey"
         :src="user?.avatar"
         :alt="`${user?.name} profile picture`"
         cssClass="avatar-xlarge"
@@ -43,9 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 import User from '@/types/User';
 import { RouteName } from '@/enums/RouteName';
 const { getUserById, getAuthUser } = useUserStore();
@@ -54,7 +56,11 @@ const props = defineProps<{
   user: User;
 }>();
 
+const appAvatarImageCompKey = ref(uniqueIdHelper().newUniqueId);
+
 const user = computed(() => getUserById(props.user?.id));
+console.log('user-profile-card>setup>user', user.value);
+
 const isEditableProfile = computed(() => {
   const route = useRoute();
   const result = route.params.id === undefined && getAuthUser() !== undefined;

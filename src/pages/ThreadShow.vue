@@ -55,7 +55,12 @@
     </app-pagination>
 
     <app-spinner v-if="savingPost" />
-    <post-editor :thread-id="id" :source-post="null" @@add-post="savePost" />
+    <post-editor
+      :thread-id="id"
+      :source-post="null"
+      @@add-post="savePost"
+      @@update-post="updatePost"
+    />
   </div>
 </template>
 
@@ -73,6 +78,7 @@ import { useCommonStore } from '@/stores/CommonStore';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
+import PostUpdateRequest from '@/types/PostUpdateRequest';
 
 const { id } = defineProps({
   id: {
@@ -102,9 +108,23 @@ const pageCount = computed(() => {
 });
 
 const savePost = async (entry: PostAddRequest) => {
+  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
   const post = await usePostStore().addPost({ ...entry });
   await useThreadStore().refreshFromFirebase(post.threadId);
   await useUserStore().refreshFromFirebase(post.userId);
+  useCommonStore().notifyAsyncUiElementState({
+    uiElement: asyncUiElement,
+    ready: true,
+  });
+};
+
+const updatePost = async (entry: PostUpdateRequest) => {
+  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
+  await usePostStore().updatePost({ ...entry });
+  useCommonStore().notifyAsyncUiElementState({
+    uiElement: asyncUiElement,
+    ready: true,
+  });
 };
 
 const fetchPagePosts = async () => {
@@ -128,9 +148,9 @@ const threadFetch = await useThreadStore().fetchThread(id);
 const firstUserPromise = useUserStore().fetchUser(threadFetch.userId!);
 //... and its posts
 if (isCurrentPageSetInQuery()) {
-  console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
+  //console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
   currentPage.value = parseInt(route.query.page as string);
-  console.log('ThreadShow > setup > currentPage (after)', currentPage.value);
+  //console.log('ThreadShow > setup > currentPage (after)', currentPage.value);
 }
 await fetchPagePosts();
 const userIds = pagePosts.value.map((post) => post.userId!);

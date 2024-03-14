@@ -50,23 +50,25 @@ export const useUserStore = defineStore('UserStore', () => {
   };
 
   const getAuthUser = (): GetUserExtended => {
+    console.log('UserStore>getAuthUser>authId', authId.value);
+
     const result = getUserById(authId.value);
-    //console.log('authUser', result);
+    console.log('UserStore>getAuthUser>authUser', result);
     return result;
   };
 
   //ACTIONS
   const fetchAuthUser = async (
     reFetch: boolean | undefined = undefined
-  ): Promise<string | null> => {
+  ): Promise<GetUserExtended | null> => {
     //console.log('UserStore > authId', authId);
     const userId = firebaseService().getAuthUserId();
     if (userId === undefined) {
-      return authId.value;
+      return null;
     } else {
-      await fetchUser(userId, reFetch);
-      authId.value = userId;
-      return userId;
+      const authUser = await fetchUser(userId, reFetch);
+      authId.value = authUser.id;
+      return _hydrateUser(authUser);
     }
   };
   const fetchUser = (
@@ -222,6 +224,7 @@ export const useUserStore = defineStore('UserStore', () => {
         username: userUpdated.username || null,
         usernameLower: userUpdated.usernameLower || null,
         website: userUpdated.website || null,
+        location: userUpdated.location || null,
       })
       .commit();
 

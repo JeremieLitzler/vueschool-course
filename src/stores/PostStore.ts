@@ -14,6 +14,7 @@ import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
 import { useThreadStore } from './ThreadStore';
+import { FirebaseError } from 'firebase/app';
 
 // const { findById, findManyById } = useArraySearchHelper();
 
@@ -137,16 +138,19 @@ export const usePostStore = defineStore('PostStore', () => {
   const updatePost = async (request: PostUpdateRequest) => {
     //console.log('updatePost > request ', request);
     const postRef = useFirebase().doc(useFirebase().db, 'posts', request.id);
-    await useFirebase()
-      .writeBatch(useFirebase().db)
-      .update(postRef, {
-        text: request.body,
-      })
-      .update(postRef, {
-        text: request.body,
-      })
-      .commit();
-
+    try {
+      await useFirebase()
+        .writeBatch(useFirebase().db)
+        .update(postRef, {
+          text: request.body,
+        })
+        .update(postRef, {
+          text: request.body,
+        })
+        .commit();
+    } catch (error) {
+      console.error('PostStore>updatedPost>error', error as FirebaseError);
+    }
     const updatedPost = useFirebaseHelper().docToResource(
       await useFirebase().getDoc(postRef)
     );
