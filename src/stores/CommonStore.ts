@@ -70,7 +70,15 @@ export const useCommonStore = defineStore('CommonStore', () => {
     ready = false,
   }: UiElementNotification) => {
     //console.log("calling notifyUiElementLoading");
-    asyncUiParts.value.push({ uiElement, ready });
+    if (!ready) {
+      asyncUiParts.value.push({ uiElement, ready });
+      return;
+    }
+
+    const index = asyncUiParts.value.findIndex(
+      (item) => item.uiElement === uiElement
+    );
+    asyncUiParts.value.splice(index, 1);
   };
 
   /**
@@ -333,6 +341,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
   };
   return {
     appIsReady,
+    asyncUiParts,
     isUiElementReady,
     notifyAppIsReady,
     notifyAsyncUiElementState,

@@ -28,7 +28,13 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       (thread: Thread) => thread.id === threadId
     );
     if (match === undefined)
-      return { id: '', author: '', repliesCount: 0, contributorsCount: 0 };
+      return {
+        id: '',
+        author: '',
+        threadJustCreated: false,
+        repliesCount: 0,
+        contributorsCount: 0,
+      };
 
     return _hydrateThread(match);
   };
@@ -58,6 +64,9 @@ export const useThreadStore = defineStore('ThreadStore', () => {
         if (!thread?.posts) return 0;
 
         return thread?.posts!.length - 1; //the first post isn't counted hence the '-1'
+      },
+      get threadJustCreated() {
+        return thread?.posts!.length < 2;
       },
       get contributorsCount() {
         return [...new Set(thread?.contributors)].length;

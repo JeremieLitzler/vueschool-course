@@ -26,24 +26,38 @@
         By <a href="#" class="link-unstyled">{{ thread?.author }}</a
         >, <app-date :timestamp="thread?.publishedAt" />.
       </p>
-      <span class="hide-mobile text-faded text-small"
+      <span
+        v-if="!thread.threadJustCreated"
+        class="hide-mobile text-faded text-small"
         >{{ thread?.repliesCount }} replies by
         {{ thread?.contributorsCount }} contributors</span
       >
+      <span v-else>No replies yet.</span>
     </section>
 
     <app-pagination
+      :key="paginationKey"
       :page-count="pageCount"
       :pages-around="1"
       :current-page="currentPage"
+      class="push-top"
     >
       <template #prevRange>⏮️</template>
       <template #prevPage>◀️</template>
       <template #nextPage>▶️</template>
       <template #nextRange>⏭️</template>
     </app-pagination>
+    <!-- TODO: would be nice to focus in the PostEditor -->
+    <router-link
+      v-if="!routeAllowsToPost"
+      :to="{ ...route, query: { page: pageCount } }"
+      class="btn-green"
+      >Reply</router-link
+    >
+
     <post-list :posts="pagePosts!" />
     <app-pagination
+      :key="paginationKey"
       :page-count="pageCount"
       :pages-around="1"
       :current-page="currentPage"
@@ -56,6 +70,7 @@
 
     <app-spinner v-if="savingPost" />
     <post-editor
+      v-if="routeAllowsToPost"
       :thread-id="id"
       :source-post="null"
       @@add-post="savePost"
@@ -66,19 +81,20 @@
 
 <script setup async lang="ts">
 import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { RouteName } from '@/enums/RouteName';
 import type Post from '@/types/Post';
 import type ThreadHydraded from '@/types/ThreadHydraded.ts';
 import type PostAddRequest from '@/types/PostAddRequest';
+import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
-import PostUpdateRequest from '@/types/PostUpdateRequest';
 
 const { id } = defineProps({
   id: {
@@ -87,12 +103,13 @@ const { id } = defineProps({
   },
 });
 
+const router = useRouter();
 const route = useRoute();
 const asyncUiElement = 'newPost';
 const itemsToFetch = ref(5);
 const currentPage = ref(1);
 const pagePosts = ref<Post[]>([]);
-
+const paginationKey = ref(uniqueIdHelper().newUniqueId);
 const savingPost = computed(() => {
   return !useCommonStore().isUiElementReady(asyncUiElement);
 });
@@ -106,12 +123,16 @@ const threadEditable = computed(() => {
 const pageCount = computed(() => {
   return Math.ceil(thread.value?.posts?.length! / itemsToFetch.value);
 });
+const currentPageIsLast = computed(() => currentPage.value === pageCount.value);
+const routeAllowsToPost = computed(() => currentPageIsLast.value);
 
 const savePost = async (entry: PostAddRequest) => {
   useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
   const post = await usePostStore().addPost({ ...entry });
   await useThreadStore().refreshFromFirebase(post.threadId);
   await useUserStore().refreshFromFirebase(post.userId);
+  await fetchPagePosts();
+  updatePage();
   useCommonStore().notifyAsyncUiElementState({
     uiElement: asyncUiElement,
     ready: true,
@@ -127,6 +148,12 @@ const updatePost = async (entry: PostUpdateRequest) => {
   });
 };
 
+const updatePage = () => {
+  if (!currentPageIsLast.value) {
+    router.push({ ...route, query: { page: pageCount.value } });
+    paginationKey.value = uniqueIdHelper().newUniqueId;
+  }
+};
 const fetchPagePosts = async () => {
   pagePosts.value = await usePostStore().fetchPostsByPage(
     thread.value?.posts!,
