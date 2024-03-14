@@ -51,6 +51,9 @@ export default {
         get repliesCount() {
           return thread?.posts.length - 1; //the first post isn't counted hence the '-1'
         },
+        get threadJustCreated() {
+          return thread?.posts.length < 2;
+        },
         get contributorsCount() {
           return [...new Set(thread?.contributors)].length;
         },

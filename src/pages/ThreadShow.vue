@@ -23,18 +23,29 @@
           By <a href="#" class="link-unstyled">{{ thread.author }}</a
           >, <app-date :timestamp="thread.publishedAt" />.
         </p>
-        <span class="hide-mobile text-faded text-small"
+        <span
+          v-if="!thread.threadJustCreated"
+          class="hide-mobile text-faded text-small"
           >{{ thread.repliesCount }}
           replies by
           {{ thread.contributorsCount }}
           contributors</span
         >
+        <span v-else>No replies yet.</span>
       </section>
       <app-pagination
         :page-count="pageCount"
         :pages-around="1"
         :current-page="currentPage"
       />
+      <!-- TODO: would be nice to focus in the PostEditor -->
+      <router-link
+        v-if="!routeAllowsToPost"
+        :to="{ ...route, query: { page: pageCount } }"
+        class="btn-green"
+        >Reply</router-link
+      >
+
       <post-list :posts="pagePosts" />
       <app-pagination
         :page-count="pageCount"
@@ -44,6 +55,7 @@
 
       <app-loading-state v-if="savingPost" />
       <post-editor
+        v-if="routeAllowsToPost"
         :threadId="id"
         :disable-form="savingPost"
         @add-post="savePost"
@@ -54,6 +66,7 @@
 </template>
 
 <script>
+import uniqueIdHelper from "@/helpers/uniqueIdHelper";
 import PostList from "@/components/PostList.vue";
 import PostEditor from "@/components/PostEditor.vue";
 
@@ -78,6 +91,7 @@ export default {
       itemsToFetch: 5,
       currentPage: 1,
       pagePosts: [],
+      paginationKey: uniqueIdHelper().createId,
     };
   },
   components: {
@@ -88,6 +102,12 @@ export default {
     // const { addNotification } = useNotification();
   },
   computed: {
+    currentPageIsLast() {
+      return this.currentPage === this.pageCount;
+    },
+    routeAllowsToPost() {
+      return this.currentPageIsLast;
+    },
     savingPost() {
       return !this.$store.getters.isUiElementReady(asyncUiElement);
     },
@@ -101,11 +121,14 @@ export default {
     pageCount() {
       return Math.ceil(this.thread.posts.length / this.itemsToFetch);
     },
+    updateCurrentPage() {
+      if (!this.currentPageIsLast) {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
-    updatePage(page) {
-      this.currentPage = page;
-    },
     async savePost(payload) {
       this.$store.dispatch("notifyUiElementLoading", asyncUiElement);
       //console.log("ThreadShow > savePost called");
@@ -114,8 +137,18 @@ export default {
         //console.log("ThreadShow > need to update current page");
         this.currentPage = this.pageCount;
       }
-      await this.fetchPagePosts();
-      this.$store.dispatch("notifyUiElementReady", asyncUiElement);
+      if (!this.updateCurrentPage) {
+        await this.fetchPagePosts();
+        this.$store.dispatch("notifyUiElementReady", asyncUiElement);
+      } else {
+        console.log("updatePage>pageCount", this.pageCount);
+        //TODO: Doesn't update the route in the browser, but the UI is...
+        this.$router.push({
+          name: RouteName.ThreadShow,
+          query: { page: this.pageCount },
+        });
+        this.paginationKey = uniqueIdHelper().newUniqueId;
+      }
     },
     async fetchPagePosts() {
       //console.log(
