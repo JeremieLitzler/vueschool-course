@@ -2,7 +2,7 @@
   <div class="post-list">
     <div
       class="post"
-      v-for="post in props.posts"
+      v-for="post in orderedPosts"
       :key="post.id"
       :title="`Post ID: ${post.id}`"
     >
@@ -16,16 +16,31 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import PostListItemUser from '@/components/PostListItemUser.vue';
 import PostListItemBody from '@/components/PostListItemBody.vue';
 import type Post from '@/types/Post.ts';
 import { useUserStore } from '@/stores/UserStore';
+import { OrderByDirection } from '@/enums/OrderByDirection';
 
 const { getUserById } = useUserStore();
 
-const props = defineProps<{
+interface PostListProps {
   posts: Post[];
-}>();
+  orderBy: OrderByDirection;
+}
+
+const { posts, orderBy } = withDefaults(defineProps<PostListProps>(), {
+  orderBy: OrderByDirection.Asc,
+});
+const orderedPosts = computed(() =>
+  posts.sort((first, next) => {
+    if (orderBy === OrderByDirection.Asc) {
+      return first.publishedAt! > next.publishedAt! ? 1 : -1;
+    }
+    return first.publishedAt! < next.publishedAt! ? 1 : -1;
+  })
+);
 </script>
 
 <style lang="css" scoped>

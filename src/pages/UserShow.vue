@@ -124,7 +124,7 @@
           >Start here ⚡</router-link
         >
       </section>
-      <post-list v-else :posts="userPosts" />
+      <post-list v-else :posts="userPosts" :orderBy="OrderByDirection.Desc" />
       <button
         @click="fetchNextPosts"
         v-if="!noMorePostsToFetch"
@@ -137,13 +137,14 @@
 </template>
 <script setup async lang="ts">
 import { ref, computed } from 'vue';
-import PostList from '@/components/PostList.vue';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
-import UserProfileCard from '@/components/UserProfileCard.vue';
-import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 import { usePostStore } from '@/stores/PostStore';
 import { RouteName } from '@/enums/RouteName';
+import { OrderByDirection } from '@/enums/OrderByDirection';
+import PostList from '@/components/PostList.vue';
+import UserProfileCard from '@/components/UserProfileCard.vue';
+import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 
 const props = defineProps<{ id?: string; edit?: boolean }>();
 
