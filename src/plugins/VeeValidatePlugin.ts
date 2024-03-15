@@ -7,6 +7,7 @@ import firebaseService from '@/services/firebaseService';
 interface UniqueRuleArgs {
   collectionName: string;
   prop: string;
+  excluding: string;
 }
 
 export default (app: App) => {
@@ -15,12 +16,13 @@ export default (app: App) => {
   defineRule('url', url);
   defineRule('min', min);
   defineRule('unique', async <T, A>(value: T, args: A) => {
-    let collectionName: string, prop: string;
+    let collectionName: string, prop: string, excluding: string;
     if (Array.isArray(args)) {
-      [collectionName, prop] = args;
+      [collectionName, prop, excluding] = args;
     } else {
-      ({ collectionName, prop } = args as UniqueRuleArgs);
+      ({ collectionName, prop, excluding } = args as UniqueRuleArgs);
     }
+    if (value === excluding) return true;
 
     return await firebaseService().isUnique({
       collectionName,

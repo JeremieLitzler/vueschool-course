@@ -1,35 +1,7 @@
 <template>
   <div class="flex-grid justify-center">
     <div class="col-2">
-      <vee-form @submit="login" class="card card-form">
-        <h1 class="text-center">Login</h1>
-        <app-form-field
-          name="email"
-          label="Email"
-          v-model="form.email"
-          rules="required|email"
-          type="text"
-        />
-        <app-form-field
-          name="password"
-          label="Password"
-          v-model="form.password"
-          rules="required|min:8"
-          type="password"
-        />
-        <div class="push-top">
-          <button type="submit" class="btn-blue btn-block">Log in</button>
-        </div>
-        <div v-if="errorMessage != ''" class="error-message">
-          {{ errorMessage }}
-        </div>
-        <div class="form-actions text-right">
-          <router-link :to="{ name: RouteName.UserRegister }">
-            Create an account?
-          </router-link>
-        </div>
-      </vee-form>
-
+      <app-login-form :errorMessage="errorMessage" @@login="login" />
       <div class="push-top text-center">
         <button @click="loginWithGoogle" class="btn-red btn-xsmall">
           <i class="fa fa-google fa-btn"></i>Sign in with Google
@@ -42,22 +14,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-import UserLoginRequest from '@/types/UserLoginRequest';
 import { FirebaseError } from 'firebase/app';
 import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import UserLoginRequest from '@/types/UserLoginRequest';
 
 const route = useRoute();
 const router = useRouter();
 const { toSuccessRedirect } = useAppendRouteHelper();
-const form = ref<UserLoginRequest>({ email: '', password: '' });
 const errorMessage = ref('');
-
-const login = async () => {
+const login = async (request: UserLoginRequest) => {
   //console.log(form.value);
   const result = await useUserStore().loginWithEmailAndPassword({
-    ...form.value,
+    ...request,
   });
   const error = result as FirebaseError;
   if (error['name'] === 'FirebaseError') {

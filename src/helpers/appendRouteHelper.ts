@@ -1,8 +1,25 @@
 import { RouteName } from '@/enums/RouteName';
 import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
 import router from '@/router';
+import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 
 export default function useAppendRouteHelper() {
+  /**
+   * Rebuild the route to load from 'redirectTo' query parameter.
+   *
+   * @param route The current route
+   * @returns The full route found in the 'redirectTo' query parameter.
+   */
+  const _toRequestedRoute = (route: RouteLocationNormalizedLoaded) => {
+    const [path, queryRaw] =
+      route.query[AppQueryStringParam.redirectTo]!.toString().split('?');
+    const query = Object.fromEntries(new URLSearchParams(queryRaw));
+    const redirectTo: RouteLocationRaw = {
+      path,
+      query: query,
+    };
+    return redirectTo;
+  };
   const toHomePage = () => {
     return { name: RouteName.TheHome };
   };
@@ -24,20 +41,11 @@ export default function useAppendRouteHelper() {
   };
 
   const toSuccessRedirect = (route: RouteLocationNormalizedLoaded) => {
-    //console.log(
-    //   'toSuccessRedirect > route.query.redirectTo',
-    //   route.query.redirectTo
-    // );
-
     if (!route.query.redirectTo) {
-      //console.log('toSuccessRedirect > going toHomePage');
       return toHomePage();
     }
 
-    const redirectTo: RouteLocationRaw = {
-      path: route.query.redirectTo?.toString(),
-    };
-    return redirectTo;
+    return _toRequestedRoute(route);
   };
 
   return {

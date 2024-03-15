@@ -69,10 +69,10 @@
         autocomplete="off"
       />
       <app-form-field
-        name="email"
+        name="email_editor"
         label="Email"
         v-model="editedUser.email"
-        disabled
+        :rules="`required|email|unique:users,email,${editedUser.email}`"
       />
       <app-form-field
         name="location"
@@ -89,24 +89,90 @@
         />
       </datalist>
 
+      <app-spinner v-if="!asyncElementReady" />
       <div class="btn-group space-between">
-        <button @click.prevent="cancelEdit" class="btn-ghost">Cancel</button>
-        <button type="submit" class="btn-blue">Save</button>
+        <button @click.prevent="cancelEdit" class="btn-ghost btn-small">
+          Cancel
+        </button>
+        <button
+          v-if="emailChanged && !emailVerified"
+          :disabled="emailVerificationSent"
+          @click.prevent="verifyEmail"
+          class="btn-red btn-small"
+        >
+          Save and verify
+        </button>
+        <button
+          v-else
+          :disabled="emailChanged"
+          type="submit"
+          class="btn-blue btn-small"
+        >
+          Save
+        </button>
       </div>
+      <p
+        v-if="emailChanged && !emailVerified"
+        class="block-message block-message-warning"
+      >
+        Clicking <i>"Save and verify"</i> will update your profile and send you
+        a verification link to the updated email address.
+        <b>You must use the link to complete the process</b> to avoid
+        desynchronisation of your account. Thank you 👍.
+      </p>
     </vee-form>
+    <!-- TODO: Not working, see script setup in UserProfileCardEditorReauthenticate
+    component -->
+    <!-- <user-profile-card-editor-reauthenticate
+      :key="reauthCompKey"
+      :display-modal="newAuthNeeded"
+      @@logged-back="verifyEmail"
+    /> -->
+    <!-- <section class="reauthenticate-modal-wrapper"> -->
+    <dialog ref="nativeDialogEl" class="modal-overlay">
+      <section class="modal-content">
+        <form method="dialog">
+          <button
+            class="btn-close btn-small btn-red"
+            aria-label="Click or Hit ESC"
+            title="Click or Hit ESC"
+          >
+            Cancel
+          </button>
+        </form>
+        <article>
+          <h3>You're authentication cookie is too old 😟</h3>
+          <p>Please enter your credentials again 🗝️</p>
+          <app-login-form
+            :errorMessage="errorMessage"
+            :enable-register="false"
+            @@login="login"
+          />
+        </article>
+      </section>
+    </dialog>
+    <!-- </section> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
+import useNotification from '@/composables/useNotification';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
+import { getQueryStringValue } from '@/helpers/queryStringHelper';
+import firebaseService from '@/services/firebaseService';
 import { RouteName } from '@/enums/RouteName';
-import type User from '@/types/User';
+import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
+import { NotificationType } from '@/enums/NotificationType';
+import type { FirebaseError } from 'firebase/app';
 import type FileUploadEvent from '@/types/FileUploadEvent';
 import type Country from '@/types/Country';
+import type User from '@/types/User';
+import type UserLoginRequest from '@/types/UserLoginRequest';
+// import UserProfileCardEditorReauthenticate from '@/components/UserProfileCardEditorReauthenticate.vue';
 
 const { getUserById, updateUser } = useUserStore();
 const router = useRouter();
@@ -119,12 +185,25 @@ const props = defineProps<{
   user: User;
 }>();
 
+const route = useRoute();
+const asyncElement = 'UserProfileCardEditor';
+const asyncElementReady = computed(() =>
+  useCommonStore().isUiElementReady(asyncElement)
+);
 const uploadingImage = ref(false);
 const newAvatar = ref<File | null>(null);
 const appAvatarImageCompKey = ref(uniqueIdHelper().newUniqueId);
 const user = computed(() => getUserById(props.user.id));
 const editedUser = ref({ ...user.value });
-//console.log(editedUser);
+const emailChanged = computed(
+  () => user.value.email !== editedUser.value.email
+);
+const emailVerificationSent = ref(false);
+const emailVerified = ref(false);
+const newEmailVerified = getQueryStringValue(
+  route.query,
+  AppQueryStringParam.verifiedEmail
+);
 
 /**
  * List of countries
@@ -154,6 +233,14 @@ const loadCountries = async () => {
  * Handle the click on Cancel button
  */
 const exitEditRoute = () => {
+  if (emailVerified.value) {
+    router.push({
+      name: RouteName.AccountShow,
+      query: { emailWasVerified: 'true' },
+    });
+
+    return;
+  }
   router.push({ name: RouteName.AccountShow });
 };
 /**
@@ -197,6 +284,8 @@ const assignRandomAvatar = async (url: string) => {
 };
 
 const saveProfile = async () => {
+  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncElement });
+
   //console.log('saveProfile>editedUser', editedUser.value);
   //console.log('saveProfile>newAvatar', newAvatar.value);
 
@@ -205,15 +294,89 @@ const saveProfile = async () => {
     id: user.value.id,
     updatedAvatar: newAvatar.value!,
   });
+  useCommonStore().notifyAsyncUiElementState({
+    uiElement: asyncElement,
+    ready: true,
+  });
+
   exitEditRoute();
 };
 
 const cancelEdit = () => {
   exitEditRoute();
 };
+
+const verifyEmail = async () => {
+  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncElement });
+  const result = await firebaseService().secureUpdateEmail(
+    editedUser.value.email!
+  );
+  if (!result.success) {
+    useCommonStore().notifyAsyncUiElementState({
+      uiElement: asyncElement,
+      ready: true,
+    });
+    return reauthenticateWithLoginAndPassword();
+  }
+  useNotification().addNotification({
+    message: `Please check the inbox of ${editedUser.value.email} and
+        follow the instructions.`,
+    type: NotificationType.Warning,
+  });
+  emailVerificationSent.value = true;
+  await saveProfile();
+  useCommonStore().notifyAsyncUiElementState({
+    uiElement: asyncElement,
+    ready: true,
+  });
+};
+
+const reauthenticateWithLoginAndPassword = () => {
+  showNativeDialog();
+};
+
+if (newEmailVerified) {
+  editedUser.value.email = newEmailVerified;
+  emailVerified.value = true;
+  await saveProfile();
+}
+
+const errorMessage = ref('');
+
+const login = async (request: UserLoginRequest) => {
+  //console.log(form.value);
+  const result = await useUserStore().loginWithEmailAndPassword({
+    ...request,
+  });
+  const error = result as FirebaseError;
+  if (error['name'] === 'FirebaseError') {
+    errorMessage.value = error.message;
+  } else {
+    console.log('Reauthenticated successfully!');
+    hideNativeDialog();
+    verifyEmail();
+  }
+};
+
+const nativeDialogEl = ref<HTMLDialogElement | null>(null);
+const showNativeDialog = () => {
+  console.log(
+    'UserProfileCardEditorReauthenticate>showNativeDialog>nativeDialogEl',
+    nativeDialogEl.value
+  );
+  nativeDialogEl.value?.showModal();
+  console.log(
+    'UserProfileCardEditorReauthenticate>showNativeDialog>showModal called'
+  );
+};
+const hideNativeDialog = () => nativeDialogEl.value?.close();
 </script>
 
 <style scoped>
+.reauthenticate-modal-wrapper {
+  width: 100vw;
+  height: 100vh;
+}
 .wrapper {
   cursor: pointer;
   display: flex;

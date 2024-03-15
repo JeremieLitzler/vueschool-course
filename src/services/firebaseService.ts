@@ -8,6 +8,7 @@ import {
   UserCredential,
   GoogleAuthProvider,
   signInWithPopup,
+  verifyBeforeUpdateEmail,
 } from 'firebase/auth';
 import {
   getStorage,
@@ -17,10 +18,13 @@ import {
   StorageReference,
 } from 'firebase/storage';
 
+import useUUID from '@/helpers/uniqueIdHelper';
+
 import type { FirebaseError } from 'firebase/app';
 import type UserLoginRequest from '@/types/UserLoginRequest';
 import type UserGoogleSigninRequest from '@/types/UserGoogleSignRequest';
 import type FirebaseResourcePropUnicityRequest from '@/types/FirebaseResourcePropUnicityRequest';
+import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 
 export default function firebaseService() {
   const auth = getAuth(useFirebase().firebaseApp);
@@ -43,6 +47,50 @@ export default function firebaseService() {
       //console.log('Error >', error);
       return error as FirebaseError;
     }
+  };
+
+  /**
+   * Send Firebase a request to get a verifyAndUpdateEmail link for a user.
+   *
+   * The 'continueUrl' contains the link to the /account/edit route from
+   * where the request is made.
+   *
+   * The query string parameters are used to have a smooth UX:
+   * - verifiedEmail: used on the login page (/account/edit requires authentification)
+   *   and the /account/edit page once reauthenticated.
+   * - showReconnectMessage: used on the login page to show a clear message about the
+   *   email address to use to login.
+   * - oobCode: not used but could be to secure the request if the code was saved in
+   *   the firestore document corresponding to the updated user.
+   *
+   * The try&catch is necessary to show a login form on /account/edit if Firebase requests
+   * reauthentication.
+   *
+   * Don't forget to add VITE_BASE_URL in your CD.
+   *
+   * @param newEmail The new email to set on the authenticated user
+   * @returns The result of the request : success (boolean) and the Firebase error (if any)
+   */
+  const secureUpdateEmail = async (newEmail: string) => {
+    const oobCode = useUUID().newUniqueId;
+    const continueUrl = `${import.meta.env.VITE_BASE_URL}/account/edit?${
+      AppQueryStringParam.verifiedEmail
+    }=${newEmail}&${AppQueryStringParam.oobCode}=${oobCode}&${
+      AppQueryStringParam.showReconnectMessage
+    }=true`;
+    console.log('secureUpdateEmail>continueUrl', continueUrl);
+
+    return verifyBeforeUpdateEmail(auth.currentUser!, newEmail, {
+      url: `${continueUrl}`,
+      handleCodeInApp: true,
+    })
+      .then(() => {
+        return { success: true, errorMessage: null };
+      })
+      .catch((error) => {
+        //console.log(error);
+        return { success: false, errorMessage: error };
+      });
   };
 
   const loginWithEmailAndPassword = async ({
@@ -115,6 +163,7 @@ export default function firebaseService() {
     auth,
     getServerTimeStamp,
     registerUser,
+    secureUpdateEmail,
     getAuthUserId,
     loginWithEmailAndPassword,
     signinWithGoogle,

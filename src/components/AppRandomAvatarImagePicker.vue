@@ -1,8 +1,8 @@
 <template>
-  <button class="btn-blue" @click.prevent="pickRandomAvatar">
+  <button class="btn-blue btn-small" @click.prevent="pickRandomAvatar">
     Pick a random avatar
   </button>
-  <p class="credits">
+  <p class="credits push-top">
     Thanks to
     <a href="http://picsum.photos" target="_blank" rel="noopener noreferrer"
       >Picsum.photos</a
