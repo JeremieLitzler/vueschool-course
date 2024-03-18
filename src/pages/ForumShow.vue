@@ -1,9 +1,4 @@
 <template>
-  <app-page-head
-    :title="head.title"
-    :description="head.description"
-    :slug="head.slug"
-  />
   <div class="col-full push-top">
     <!-- <ul class="breadcrumbs">
         <li>
@@ -48,14 +43,12 @@
 <script setup async lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useCustomPageHead } from '@/composables/usePagesHead';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
 
 import { RouteName } from '@/enums/RouteName';
-import { RoutePath } from '@/enums/RoutePath';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import ThreadList from '@/components/ThreadList.vue';
 
@@ -65,10 +58,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const head = await useCustomPageHead(RoutePath.ForumShow).useForumPage(
-  props.id
-);
 
 const route = useRoute();
 const itemsToFetch = ref(8);

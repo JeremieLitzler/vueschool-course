@@ -1,6 +1,4 @@
 <template>
-  <app-page-head :title="head.title" :description="head.description" />
-
   <div class="col-full">
     <CategoryList :categories="categories" />
   </div>
@@ -11,10 +9,7 @@ import { useCategoryStore } from '@/stores/CategoryStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import CategoryList from '@/components/CategoryList.vue';
 import { useForumStore } from '@/stores/ForumStore';
-import { useCustomPageHead } from '@/composables/usePagesHead';
 // import { RouteName } from '@/enums/RouteName';
-
-const head = useCustomPageHead().useHomePage();
 
 const categories = await useCategoryStore().fetchAllCategories();
 const forumIds = categories.flatMap(({ forums }) => forums!);
