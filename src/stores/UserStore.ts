@@ -9,7 +9,7 @@ import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import UserCreateRequest from '@/types/UserCreateRequest';
 import firebaseService from '@/services/firebaseService';
 import useFirebase from '@/helpers/fireBaseConnector';
-import useFirebaseHelper from '@/helpers/firebaseHelper';
+import firebaseHelper from '@/helpers/firebaseHelper';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
 import objectHelper from '@/helpers/objectHelper';
@@ -191,7 +191,7 @@ export const useUserStore = defineStore('UserStore', () => {
       .set(userRef, newUser)
       .commit();
 
-    const newUserDoc = useFirebaseHelper().docToResource(
+    const newUserDoc = firebaseHelper().docToResource(
       await useFirebase().getDoc(userRef)
     );
 
@@ -228,7 +228,7 @@ export const useUserStore = defineStore('UserStore', () => {
       })
       .commit();
 
-    const newUser = useFirebaseHelper().docToResource(
+    const newUser = firebaseHelper().docToResource(
       await useFirebase().getDoc(userRef)
     );
 

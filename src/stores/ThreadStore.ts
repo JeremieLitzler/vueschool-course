@@ -14,7 +14,7 @@ import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
-import useFirebaseHelper from '@/helpers/firebaseHelper';
+import firebaseHelper from '@/helpers/firebaseHelper';
 
 // const { threadsData } = useSampleData();
 // const { findById, findManyById } = arraySearchHelper();
@@ -169,10 +169,10 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       })
       .commit();
 
-    const updatedThread = useFirebaseHelper().docToResource(
+    const updatedThread = firebaseHelper().docToResource(
       await useFirebase().getDoc(threadRef)
     );
-    const updatedPost = useFirebaseHelper().docToResource(
+    const updatedPost = firebaseHelper().docToResource(
       await useFirebase().getDoc(postRef)
     );
 

@@ -12,7 +12,7 @@ import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import { OrderByDirection } from '@/enums/OrderByDirection';
 import useFirebase from '@/helpers/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
-import useFirebaseHelper from '@/helpers/firebaseHelper';
+import firebaseHelper from '@/helpers/firebaseHelper';
 import { useThreadStore } from './ThreadStore';
 
 // const { findById, findManyById } = arraySearchHelper();
@@ -150,7 +150,7 @@ export const usePostStore = defineStore('PostStore', () => {
     } catch (error) {
       //console.error('PostStore>updatedPost>error', error as FirebaseError);
     }
-    const updatedPost = useFirebaseHelper().docToResource(
+    const updatedPost = firebaseHelper().docToResource(
       await useFirebase().getDoc(postRef)
     );
     setPost(updatedPost);
