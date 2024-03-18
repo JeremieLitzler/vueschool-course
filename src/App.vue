@@ -16,7 +16,6 @@
   <app-notifications />
 </template>
 <script setup lang="ts">
-// import { computed } from 'vue';
 import { RouterView } from 'vue-router';
 import TheHeader from '@/components/TheHeader.vue';
 </script>

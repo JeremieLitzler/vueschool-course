@@ -1,4 +1,9 @@
 <template>
+  <app-page-head
+    :title="head.title"
+    :description="head.description"
+    :slug="head.slug"
+  />
   <div
     v-if="emailWasVerified"
     class="block-message block-message-success block-message-no-mg push-top"
@@ -43,8 +48,14 @@ import UserProfileCardEditor from '@/components/UserProfileCardEditor.vue';
 import { getQueryStringValue } from '@/helpers/queryStringHelper';
 import { useRoute } from 'vue-router';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
+import { useCustomPageHead } from '@/composables/usePagesHead';
+import { RoutePath } from '@/enums/RoutePath';
 
 const props = defineProps<{ id?: string; edit?: boolean }>();
+
+const head = await useCustomPageHead(RoutePath.UserShow).usePublicUserPage(
+  props.id!
+);
 
 const noMorePostsToFetch = ref(false);
 const user = computed(() => {

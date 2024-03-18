@@ -1,4 +1,9 @@
 <template>
+  <app-page-head
+    :title="head.title"
+    :description="head.description"
+    :slug="head.slug"
+  />
   <div class="col-full push-top">
     <!-- <ul class="breadcrumbs">
         <li>
@@ -43,21 +48,27 @@
 <script setup async lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useCustomPageHead } from '@/composables/usePagesHead';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
 
-import ThreadList from '@/components/ThreadList.vue';
 import { RouteName } from '@/enums/RouteName';
+import { RoutePath } from '@/enums/RoutePath';
 import type ThreadHydraded from '@/types/ThreadHydraded';
+import ThreadList from '@/components/ThreadList.vue';
 
-const { id } = defineProps({
+const props = defineProps({
   id: {
     type: String,
     required: true,
   },
 });
+
+const head = await useCustomPageHead(RoutePath.ForumShow).useForumPage(
+  props.id
+);
 
 const route = useRoute();
 const itemsToFetch = ref(8);
@@ -82,7 +93,7 @@ const isCurrentPageSetInQuery = () => {
   );
 };
 useCommonStore().notifyAppIsReady();
-const forum = ref(await useForumStore().fetchForum(id));
+const forum = ref(await useForumStore().fetchForum(props.id));
 if (isCurrentPageSetInQuery()) {
   //console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
   currentPage.value = parseInt(route.query.page as string);

@@ -11,6 +11,7 @@
   "dependencies": {
     "@vee-validate/i18n": "^4.12.6",
     "@vee-validate/rules": "^4.12.6",
+    "@vueuse/head": "^2.0.0",
     "dayjs": "^1.11.10",
     "firebase": "^10.8.1",
     "pinia": "^2.1.7",
