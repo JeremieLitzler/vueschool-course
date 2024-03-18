@@ -8,6 +8,7 @@ import type Category from '@/types/Category';
 import type Forum from '@/types/Forum';
 import type User from '@/types/User';
 import type WithName from '@/types/WithName';
+import { UseHeadInput } from '@vueuse/head';
 
 export function useCustomPageHead(baseSlug: RoutePath | string | null = '') {
   const _getSlug = (id: string | null = null) =>
@@ -19,10 +20,20 @@ export function useCustomPageHead(baseSlug: RoutePath | string | null = '') {
     label: string | null,
     customDescription: string | null = null
   ) => {
-    const headData: AppPageHeadProps = {
+    const headData: UseHeadInput = {
       title: `${label ? `${label}:` : ''} ${entity.name}`,
-      description: customDescription ?? `The page for ${label} ${entity.name}`,
-      slug: _getSlug(id),
+      meta: [
+        {
+          name: 'description',
+          content: customDescription ?? `The page for ${label} ${entity.name}`,
+        },
+      ],
+      link: [
+        {
+          rel: 'canonical',
+          href: `${import.meta.env.VITE_BASE_URL}/${_getSlug(id)}`,
+        },
+      ],
     };
     return headData;
   };
