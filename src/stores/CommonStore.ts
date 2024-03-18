@@ -11,7 +11,7 @@ import type UiElementNotification from '@/types/UiElementNotification';
 import type FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
 import type FirebaseChunkQueryRequest from '@/types/FirebaseChunkQueryRequest';
 import type OnSnapshotUnsubscribeListener from '@/types/OnSnapshotUnsubscribeListener';
-import useArrayChunckHelper from '@/helpers/arrayChunkHelper';
+import arrayChunckHelper from '@/helpers/arrayChunkHelper';
 import firebaseService from '@/services/firebaseService';
 import UploadImageToStorage from '@/types/UploadImageToStorageRequest';
 import useNotification from '@/composables/useNotification';
@@ -226,7 +226,7 @@ export const useCommonStore = defineStore('CommonStore', () => {
     //console.log("actions < fetchItemsByChunk > source", source);
     //console.log("actions < fetchItemsByChunk > ids", ids);
     //console.log("actions < fetchItemsByChunk > chunckIndex", chunckIndex);
-    const chuncks = useArrayChunckHelper().chunckIt<string>(chunkSize)(ids);
+    const chuncks = arrayChunckHelper().chunckIt<string>(chunkSize)(ids);
 
     //console.log("actions < fetchItemsByChunk > chuncks", chuncks);
     //console.log("actions < fetchItemsByChunk > chunck", chuncks[chunckIndex]);

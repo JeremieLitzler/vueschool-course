@@ -19,7 +19,7 @@ const chunckIt =
     }, initialValue);
   };
 
-export default function useArrayChunckHelper() {
+export default function arrayChunckHelper() {
   return {
     chunckIt,
   };
