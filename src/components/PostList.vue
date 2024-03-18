@@ -27,7 +27,7 @@ const { getUserById } = useUserStore();
 
 interface PostListProps {
   posts: Post[];
-  orderBy: OrderByDirection;
+  orderBy?: OrderByDirection;
 }
 
 const props = withDefaults(defineProps<PostListProps>(), {

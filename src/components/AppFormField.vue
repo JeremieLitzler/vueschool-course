@@ -17,7 +17,7 @@
 interface AppFormFieldProps {
   name: string;
   label: string;
-  modelValue: string;
+  modelValue?: string;
 }
 
 const { name, label, modelValue } = withDefaults(
