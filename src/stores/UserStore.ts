@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import User from '@/types/User';
 import AppendThreadToUserRequest from '@/types/AppendThreadToUserRequest';
-// import useArraySearchHelper from '@/helpers/arraySearchHelper';
+// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import { useCommonStore } from '@/stores/CommonStore';
 import type GetUserExtended from '@/types/GetUserExtended';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
@@ -17,7 +17,7 @@ import UserRegisterRequest from '@/types/UserRegisterRequest';
 import UserLoginRequest from '@/types/UserLoginRequest';
 import UserUpdateRequest from '@/types/UserUpdateRequest';
 
-// const { findById } = useArraySearchHelper();
+// const { findById } = arraySearchHelper();
 
 export const useUserStore = defineStore('UserStore', () => {
   //STATE

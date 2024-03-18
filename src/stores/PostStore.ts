@@ -5,7 +5,7 @@ import type Thread from '@/types/Thread';
 import type PostAddToFirebaseRequest from '@/types/PostAddToFirebaseRequest';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
-// import useArraySearchHelper from '@/helpers/arraySearchHelper';
+// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
@@ -15,7 +15,7 @@ import firebaseService from '@/services/firebaseService';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
 import { useThreadStore } from './ThreadStore';
 
-// const { findById, findManyById } = useArraySearchHelper();
+// const { findById, findManyById } = arraySearchHelper();
 
 export const usePostStore = defineStore('PostStore', () => {
   //STATE

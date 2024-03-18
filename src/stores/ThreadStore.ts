@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 // import useSampleData from '@/helpers/sampleData';
-// import useArraySearchHelper from '@/helpers/arraySearchHelper';
+// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useForumStore } from '@/stores/ForumStore';
 import { useUserStore } from '@/stores/UserStore';
@@ -17,7 +17,7 @@ import firebaseService from '@/services/firebaseService';
 import useFirebaseHelper from '@/helpers/firebaseHelper';
 
 // const { threadsData } = useSampleData();
-// const { findById, findManyById } = useArraySearchHelper();
+// const { findById, findManyById } = arraySearchHelper();
 
 export const useThreadStore = defineStore('ThreadStore', () => {
   //STATE

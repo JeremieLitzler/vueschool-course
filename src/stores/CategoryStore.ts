@@ -1,11 +1,11 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-// import useArraySearchHelper from '@/helpers/arraySearchHelper';
+// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import type Category from '@/types/Category';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 
-// const { findById } = useArraySearchHelper();
+// const { findById } = arraySearchHelper();
 
 export const useCategoryStore = defineStore('CategoryStore', () => {
   //STATE

@@ -2,13 +2,13 @@ import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { defineStore } from 'pinia';
 // import useSampleData from '@/helpers/sampleData';
-// import useArraySearchHelper from '@/helpers/arraySearchHelper';
+// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import Forum from '@/types/Forum';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import { useCommonStore } from './CommonStore';
 
 // const { forumsData } = useSampleData();
-// const { findById, findManyById } = useArraySearchHelper();
+// const { findById, findManyById } = arraySearchHelper();
 
 export const useForumStore = defineStore('ForumStore', () => {
   //STATE

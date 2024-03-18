@@ -11,7 +11,7 @@ const findManyById = (resources: Identifier[], id: string) => {
   return resources.filter((element) => element.id === id);
 };
 
-export default function useArraySearchHelper() {
+export default function arraySearchHelper() {
   return {
     findById,
     findManyById,
