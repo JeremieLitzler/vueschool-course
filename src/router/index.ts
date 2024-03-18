@@ -7,10 +7,10 @@ import type {
 } from 'vue-router';
 import AppHome from '@/pages/AppHome.vue';
 import pinia from '@/stores/pinia';
-import { useThreadStore } from '@/stores/ThreadStore';
-import { useUserStore } from '@/stores/UserStore';
-import { RouteName } from '@/enums/RouteName';
 import { useCommonStore } from '@/stores/CommonStore';
+import { useUserStore } from '@/stores/UserStore';
+import { useThreadStore } from '@/stores/ThreadStore';
+import { RouteName } from '@/enums/RouteName';
 import { RoutePath } from '@/enums/RoutePath';
 
 const HomeRoute: RouteRecordRaw = {

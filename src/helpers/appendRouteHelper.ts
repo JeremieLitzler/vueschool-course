@@ -1,6 +1,6 @@
-import { RouteName } from '@/enums/RouteName';
-import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
 import router from '@/router';
+import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
+import { RouteName } from '@/enums/RouteName';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 
 export default function appendRouteHelper() {
