@@ -7,7 +7,6 @@ import { createApp } from 'vue';
 import App from '@/App.vue';
 import router from '@/router';
 import pinia from '@/stores/pinia';
-import { createHead } from '@vueuse/head';
 
 import ClickOutsideDirective from '@/plugins/ClickOutsideDirective';
 import firebaseService from '@/services/firebaseService';
@@ -66,7 +65,6 @@ for (const [componentPath, moduleImport] of componentFilesEntries) {
 
 app.use(pinia);
 app.use(router);
-app.use(createHead());
 app.use(ClickOutsideDirective);
 app.use(PageScrollDirective);
 app.use(VeeValidatePlugin);

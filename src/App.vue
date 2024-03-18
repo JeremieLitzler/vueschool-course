@@ -54,18 +54,18 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 import TheHeader from '@/components/TheHeader.vue';
-import { useHead } from '@vueuse/head';
+// import { useHead } from '@vueuse/head';
 
-useHead({
-  title: 'Vue.js 3 Master Class Forum Built By Jeremie Litzler',
-  meta: [
-    {
-      name: 'description',
-      content: 'An Awesome  TypeScript, Pinia and Vue.js 3 powered forum!',
-    },
-  ],
-  link: [{ rel: 'canonical', href: import.meta.env.VITE_BASE_URL }],
-});
+// useHead({
+//   title: 'Vue.js 3 Master Class Forum Built By Jeremie Litzler',
+//   meta: [
+//     {
+//       name: 'description',
+//       content: 'An Awesome  TypeScript, Pinia and Vue.js 3 powered forum!',
+//     },
+//   ],
+//   link: [{ rel: 'canonical', href: import.meta.env.VITE_BASE_URL }],
+// });
 </script>
 
 <style scoped>

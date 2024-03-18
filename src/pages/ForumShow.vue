@@ -47,14 +47,14 @@ const props = defineProps({
     required: true,
   },
 });
-import { useHead } from '@vueuse/head';
-import { useCustomPageHead } from '@/composables/usePagesHead';
-import { RoutePath } from '@/enums/RoutePath';
-const head = await useCustomPageHead(RoutePath.ForumShow).useForumPage(
-  props.id
-);
-console.log('ForumShow>head', head);
-useHead({ ...head });
+// import { useHead } from '@vueuse/head';
+// import { useCustomPageHead } from '@/composables/usePagesHead';
+// import { RoutePath } from '@/enums/RoutePath';
+// const head = await useCustomPageHead(RoutePath.ForumShow).useForumPage(
+//   props.id
+// );
+// console.log('ForumShow>head', head);
+// useHead({ ...head });
 
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
