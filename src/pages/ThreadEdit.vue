@@ -18,9 +18,9 @@ import { ref, computed } from 'vue';
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { usePostStore } from '@/stores/PostStore';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import appendRouteHelper from '@/helpers/appendRouteHelper';
 
-const { toForumPage, toThreadPage } = useAppendRouteHelper();
+const { toForumPage, toThreadPage } = appendRouteHelper();
 
 const { id } = defineProps<{ id: string }>();
 

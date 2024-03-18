@@ -3,7 +3,7 @@ import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
 import router from '@/router';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 
-export default function useAppendRouteHelper() {
+export default function appendRouteHelper() {
   /**
    * Rebuild the route to load from 'redirectTo' query parameter.
    *

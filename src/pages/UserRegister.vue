@@ -85,10 +85,10 @@ import type FileUploadEvent from '@/types/FileUploadEvent';
 import type UserRegisterRequest from '@/types/UserRegisterRequest';
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import appendRouteHelper from '@/helpers/appendRouteHelper';
 import objectHelper from '@/helpers/objectHelper';
 
-const { toSuccessRedirect } = useAppendRouteHelper();
+const { toSuccessRedirect } = appendRouteHelper();
 
 const form = ref<UserRegisterRequest>({
   name: '',

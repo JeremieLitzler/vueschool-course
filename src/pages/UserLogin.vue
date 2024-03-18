@@ -16,12 +16,12 @@ import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import { FirebaseError } from 'firebase/app';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import appendRouteHelper from '@/helpers/appendRouteHelper';
 import UserLoginRequest from '@/types/UserLoginRequest';
 
 const route = useRoute();
 const router = useRouter();
-const { toSuccessRedirect } = useAppendRouteHelper();
+const { toSuccessRedirect } = appendRouteHelper();
 const errorMessage = ref('');
 const login = async (request: UserLoginRequest) => {
   //console.log(form.value);

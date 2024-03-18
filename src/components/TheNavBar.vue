@@ -80,11 +80,11 @@ import { ref, computed } from 'vue';
 
 import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import appendRouteHelper from '@/helpers/appendRouteHelper';
 import { useCommonStore } from '@/stores/CommonStore';
 import GetUserExtented from '@/types/GetUserExtended';
 
-const { toSignOut } = useAppendRouteHelper();
+const { toSignOut } = appendRouteHelper();
 
 const userMenuOpened = ref(false);
 const mobileMenuOpened = ref(false);

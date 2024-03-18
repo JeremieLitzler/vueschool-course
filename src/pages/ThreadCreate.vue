@@ -19,12 +19,12 @@ import { onBeforeRouteLeave } from 'vue-router';
 import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useForumStore } from '@/stores/ForumStore';
 import { useThreadStore } from '@/stores/ThreadStore';
-import useAppendRouteHelper from '@/helpers/appendRouteHelper';
+import appendRouteHelper from '@/helpers/appendRouteHelper';
 
 const { createThread } = useThreadStore();
 const props = defineProps<{ forumid: string }>();
 
-const { toForumPage, toThreadPage } = useAppendRouteHelper();
+const { toForumPage, toThreadPage } = appendRouteHelper();
 
 const forum = await useForumStore().fetchForum(props.forumid);
 const formIsDirty = ref(false);
