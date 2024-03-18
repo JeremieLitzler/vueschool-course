@@ -18,7 +18,7 @@ import {
   StorageReference,
 } from 'firebase/storage';
 
-import useUUID from '@/helpers/uniqueIdHelper';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 
 import type { FirebaseError } from 'firebase/app';
 import type UserLoginRequest from '@/types/UserLoginRequest';
@@ -72,7 +72,7 @@ export default function firebaseService() {
    * @returns The result of the request : success (boolean) and the Firebase error (if any)
    */
   const secureUpdateEmail = async (newEmail: string) => {
-    const oobCode = useUUID().newUniqueId;
+    const oobCode = uniqueIdHelper().newUniqueId;
     const continueUrl = `${import.meta.env.VITE_BASE_URL}/account/edit?${
       AppQueryStringParam.verifiedEmail
     }=${newEmail}&${AppQueryStringParam.oobCode}=${oobCode}&${

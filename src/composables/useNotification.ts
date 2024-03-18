@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import useUUID from '@/helpers/uniqueIdHelper';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 import type Notification from '@/types/Notification';
 import type NotificationAddRequest from '@/types/NotificationAddRequest';
 import { NotificationType } from '@/enums/NotificationType';
@@ -11,7 +11,7 @@ export default function useNotification() {
     timeout = 5000,
     type = NotificationType.Info,
   }: NotificationAddRequest) => {
-    const notificationId = useUUID().newUniqueId;
+    const notificationId = uniqueIdHelper().newUniqueId;
     notifications.value.push({ id: notificationId, message, type });
     if (timeout) {
       setTimeout(() => removeNotification(notificationId), timeout);
