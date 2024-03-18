@@ -9,7 +9,7 @@ import type Forum from '@/types/Forum';
 import type User from '@/types/User';
 import type WithName from '@/types/WithName';
 
-export function useCustomPageHead(baseSlug: RoutePath | null = null) {
+export function useCustomPageHead(baseSlug: RoutePath | string | null = '') {
   const _getSlug = (id: string | null = null) =>
     baseSlug!.substring(1, baseSlug!.length).replace(':id', id!);
 

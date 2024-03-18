@@ -41,6 +41,17 @@
 </template>
 
 <script setup async lang="ts">
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
+import { useHead } from '@vueuse/head';
+import { useCustomPageHead } from '@/composables/usePagesHead';
+const head = await useCustomPageHead().useForumPage(props.id);
+useHead({ ...head });
+
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useForumStore } from '@/stores/ForumStore';
@@ -51,13 +62,6 @@ import { useUserStore } from '@/stores/UserStore';
 import { RouteName } from '@/enums/RouteName';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import ThreadList from '@/components/ThreadList.vue';
-
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-});
 
 const route = useRoute();
 const itemsToFetch = ref(8);
