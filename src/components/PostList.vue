@@ -7,7 +7,10 @@
       :title="`Post ID: ${post.id}`"
     >
       <post-list-item-user :user="getUserById(post.userId)" />
-      <post-list-item-body :post="post!" />
+      <post-list-item-body
+        :post="post!"
+        @@refresh-posts="$emit('@refresh-posts', true)"
+      />
       <div class="post-date text-faded">
         <app-date :timestamp="post.publishedAt!" />
       </div>
@@ -17,20 +20,15 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useUserStore } from '@/stores/UserStore';
+import type PropsPostList from '@/types/PropsPostList';
+import { OrderByDirection } from '@/enums/OrderByDirection';
 import PostListItemUser from '@/components/PostListItemUser.vue';
 import PostListItemBody from '@/components/PostListItemBody.vue';
-import type Post from '@/types/Post.ts';
-import { useUserStore } from '@/stores/UserStore';
-import { OrderByDirection } from '@/enums/OrderByDirection';
 
 const { getUserById } = useUserStore();
 
-interface PostListProps {
-  posts: Post[];
-  orderBy?: OrderByDirection;
-}
-
-const props = withDefaults(defineProps<PostListProps>(), {
+const props = withDefaults(defineProps<PropsPostList>(), {
   orderBy: OrderByDirection.Asc,
 });
 const orderedPosts = computed(() => {
@@ -41,6 +39,8 @@ const orderedPosts = computed(() => {
     first.publishedAt! < next.publishedAt! ? 1 : -1
   );
 });
+
+console.log('post-list>props.posts', props.posts);
 </script>
 
 <style lang="css" scoped>

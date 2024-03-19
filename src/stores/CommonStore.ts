@@ -100,9 +100,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
   ): Promise<T> => {
     const item = _findItemInLocalStore<T>({ ...request });
     if (item && !request.reFetch) {
-      //console.log(
-      //   `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
-      // );
+      console.log(
+        `🍍found item in pinia (store: ${request.collection}, id: ${request.id}) on firebase🍍`
+      );
       return new Promise((resolve) => resolve(item as T));
     }
 
@@ -250,9 +250,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
     collection,
   }: GenericFetchRequest<T>): Promise<T> => {
     return new Promise(async (resolve) => {
-      //console.log(
-      //   `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
-      // );
+      console.log(
+        `🚨fetching a item (collection: ${collection}, id: ${id}) on firebase🚨`
+      );
       if (!id) return resolve({} as T);
 
       const itemRef = useFirebase().doc(useFirebase().db, collection, id);

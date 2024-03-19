@@ -56,7 +56,7 @@
       >Reply</router-link
     >
 
-    <post-list :posts="pagePosts!" />
+    <post-list :posts="pagePosts!" @@refresh-posts="refreshPosts" />
     <app-pagination
       :key="paginationKey"
       :page-count="pageCount"
@@ -76,7 +76,6 @@
       :thread-id="id"
       :source-post="null"
       @@add-post="savePost"
-      @@update-post="updatePost"
     />
   </div>
 </template>
@@ -84,17 +83,15 @@
 <script setup async lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { RouteName } from '@/enums/RouteName';
-import type Post from '@/types/Post';
-import type ThreadHydraded from '@/types/ThreadHydraded.ts';
-import type PostAddRequest from '@/types/PostAddRequest';
-import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { usePostStore } from '@/stores/PostStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
-
+import type Post from '@/types/Post';
+import type ThreadHydraded from '@/types/ThreadHydraded.ts';
+import type PostAddRequest from '@/types/PostAddRequest';
+import { RouteName } from '@/enums/RouteName';
 import PostList from '@/components/PostList.vue';
 import PostEditor from '@/components/PostEditor.vue';
 
@@ -128,40 +125,34 @@ const pageCount = computed(() => {
 const currentPageIsLast = computed(() => currentPage.value === pageCount.value);
 const routeAllowsToPost = computed(() => currentPageIsLast.value);
 
-const savePost = async (entry: PostAddRequest) => {
-  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
-  const post = await usePostStore().addPost({ ...entry });
-  await useThreadStore().refreshFromFirebase(post.threadId);
-  await useUserStore().refreshFromFirebase(post.userId);
-  await fetchPagePosts();
-  updatePage();
-  useCommonStore().notifyAsyncUiElementState({
-    uiElement: asyncUiElement,
-    ready: true,
-  });
-};
-
-const updatePost = async (entry: PostUpdateRequest) => {
-  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
-  await usePostStore().updatePost({ ...entry });
-  useCommonStore().notifyAsyncUiElementState({
-    uiElement: asyncUiElement,
-    ready: true,
-  });
-};
-
-const updatePage = () => {
-  if (!currentPageIsLast.value) {
-    router.push({ ...route, query: { page: pageCount.value } });
-    paginationKey.value = uniqueIdHelper().newUniqueId;
-  }
-};
 const fetchPagePosts = async () => {
   pagePosts.value = await usePostStore().fetchPostsByPage(
     thread.value?.posts!,
     itemsToFetch.value,
     currentPage.value - 1
   );
+};
+
+const savePost = async (request: PostAddRequest) => {
+  useCommonStore().notifyAsyncUiElementState({ uiElement: asyncUiElement });
+  const post = await usePostStore().addPost({ ...request });
+  await useThreadStore().refreshFromFirebase(post.threadId);
+  await useUserStore().refreshFromFirebase(post.userId);
+  await fetchPagePosts();
+  updatePaginationPageIfNecessary();
+  useCommonStore().notifyAsyncUiElementState({
+    uiElement: asyncUiElement,
+    ready: true,
+  });
+};
+
+const refreshPosts = async () => await fetchPagePosts();
+
+const updatePaginationPageIfNecessary = () => {
+  if (!currentPageIsLast.value) {
+    router.push({ ...route, query: { page: pageCount.value } });
+    paginationKey.value = uniqueIdHelper().newUniqueId;
+  }
 };
 
 const isCurrentPageSetInQuery = () => {

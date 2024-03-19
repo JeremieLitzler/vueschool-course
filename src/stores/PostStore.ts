@@ -123,7 +123,6 @@ export const usePostStore = defineStore('PostStore', () => {
         postsCount: useFirebase().increment(1),
       })
       .commit();
-    //console.log('addPost < postRef', postRef);
 
     const newPostRef = await useFirebase().getDoc(postRef);
     const newPost = { ...newPostRef.data(), id: postRef.id };
@@ -136,7 +135,6 @@ export const usePostStore = defineStore('PostStore', () => {
   };
 
   const updatePost = async (request: PostUpdateRequest) => {
-    //console.log('updatePost > request ', request);
     const postRef = useFirebase().doc(useFirebase().db, 'posts', request.id);
     try {
       const batch = useFirebase().writeBatch(useFirebase().db);

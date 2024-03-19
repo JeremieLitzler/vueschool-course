@@ -39,7 +39,6 @@ import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 import { RouteName } from '@/enums/RouteName';
-import firebaseService from '@/services/firebaseService';
 import type PropsPostEditor from '@/types/PropsPostEditor';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
@@ -49,8 +48,8 @@ const props = withDefaults(defineProps<PropsPostEditor>(), {
 });
 
 const emits = defineEmits<{
-  (event: '@add-post', entry: PostAddRequest): void;
-  (event: '@update-post', entry: PostUpdateRequest): void;
+  (event: '@add-post', request: PostAddRequest): void;
+  (event: '@update-post', request: PostUpdateRequest): void;
 }>();
 
 const formKey = ref(uniqueIdHelper().newUniqueId);
@@ -67,20 +66,6 @@ const buttonText = computed(() =>
 );
 const savePost = () => {
   const authUser = useUserStore().getAuthUser();
-  if (!authUser) {
-    //TODO : handle not authenticated user
-    //       firebase returns a permission error
-    console.log(
-      'PostEditor>savePost>!authUser',
-      firebaseService().getAuthUserId()
-    );
-  } else {
-    console.log('PostEditor>savePost>authUser', authUser);
-    console.log(
-      'PostEditor>savePost>!authUser',
-      firebaseService().getAuthUserId()
-    );
-  }
 
   if (postIsEdited.value) {
     const request: PostUpdateRequest = {
@@ -89,6 +74,7 @@ const savePost = () => {
       userId: authUser.id,
     };
     emits('@update-post', request);
+    console.log('@update-post emitted...');
   } else {
     const request: PostAddRequest = {
       text: newPostText.value!,
