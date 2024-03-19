@@ -121,14 +121,18 @@
         desynchronisation of your account. Thank you 👍.
       </p>
     </vee-form>
-    <!-- TODO: Not working, see script setup in UserProfileCardEditorReauthenticate
-    component -->
+    <!-- TODO: Not working: see script setup of the 
+      component UserProfileCardEditorReauthenticate
+    -->
     <!-- <user-profile-card-editor-reauthenticate
       :key="reauthCompKey"
       :display-modal="newAuthNeeded"
       @@logged-back="verifyEmail"
     /> -->
-    <!-- <section class="reauthenticate-modal-wrapper"> -->
+    <!-- Instead, I had to copy the code of the component
+         UserProfileCardEditorReauthenticate here so that
+         focus trap worked correctly with the dialog.
+    -->
     <dialog ref="nativeDialogEl" class="modal-overlay">
       <section class="modal-content">
         <form method="dialog">
@@ -164,14 +168,15 @@ import useNotification from '@/composables/useNotification';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 import { getQueryStringValue } from '@/helpers/queryStringHelper';
 import firebaseService from '@/services/firebaseService';
-import { RouteName } from '@/enums/RouteName';
-import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
-import { NotificationType } from '@/enums/NotificationType';
 import type { FirebaseError } from 'firebase/app';
 import type FileUploadEvent from '@/types/FileUploadEvent';
 import type Country from '@/types/Country';
 import type User from '@/types/User';
 import type UserLoginRequest from '@/types/UserLoginRequest';
+import { RouteName } from '@/enums/RouteName';
+import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
+import { NotificationType } from '@/enums/NotificationType';
+import firebaseStorageService from '@/services/firebaseStorageService';
 // import UserProfileCardEditorReauthenticate from '@/components/UserProfileCardEditorReauthenticate.vue';
 
 const { getUserById, updateUser } = useUserStore();
@@ -232,7 +237,8 @@ const loadCountries = async () => {
 /**
  * Handle the click on Cancel button
  */
-const exitEditRoute = () => {
+const exitEdit = (cancelling: boolean = false) => {
+  cleanUselessImages(cancelling);
   if (emailVerified.value) {
     router.push({
       name: RouteName.AccountShow,
@@ -244,18 +250,37 @@ const exitEditRoute = () => {
   router.push({ name: RouteName.AccountShow });
 };
 /**
- * Loads the image selected in the file system
+ * Remove all uploaded images that are not used.
+ * For the Cancel action, it is all of them.
+ * For the Update actionm it is all but the last one.
+ */
+const cleanUselessImages = (cancelling: boolean = false) => {
+  console.log('cleanUselessImages>all', uploadedImages.value);
+  const images = cancelling
+    ? [...uploadedImages.value]
+    : [...uploadedImages.value].splice(0, uploadedImages.value.length - 1);
+
+  console.log('cleanUselessImages>filtered', images);
+  images.forEach((image) => {
+    firebaseStorageService().deleteFile(image);
+  });
+};
+
+const uploadedImages = ref<string[]>([]);
+/**
+ * Loads the image selected in the file system.
  */
 const handleFileUpload = async (event: Event) => {
   const fileUploadEvent = event as FileUploadEvent;
   uploadingImage.value = true;
   const file = fileUploadEvent.target.files[0];
-  //console.log('UserProfileCardEditor>handleImageUpload', file);
-  const url = await useCommonStore().uploadImageToStorage({
-    userId: editedUser.value.id,
-    image: file,
-  });
-  //console.log('UserProfileCardEditor>handleFileUpload>url', url);
+  const { url, notification } =
+    await firebaseStorageService().uploadImageToStorage({
+      userId: editedUser.value.id,
+      image: file,
+    });
+  if (url) uploadedImages.value.push(url);
+  useNotification().addNotification(notification!);
 
   editedUser.value.avatar = url || editedUser.value.avatar;
   uploadingImage.value = false;
@@ -264,22 +289,27 @@ const handleFileUpload = async (event: Event) => {
   //unless you assign to the compoment a unique key on each upload
   appAvatarImageCompKey.value = uniqueIdHelper().newUniqueId;
 };
-
-const assignRandomAvatar = async (url: string) => {
-  //console.log('assignRandomAvatar>url', url);
+/**
+ * Loads a random image from picsum.photos into the avatar.
+ */
+const assignRandomAvatar = async (randomUrl: string) => {
   uploadingImage.value = true;
-  const response = await fetch(url);
+  const response = await fetch(randomUrl);
   const blob = await response.blob();
-  const firebaseUrl = await useCommonStore().uploadImageToStorage({
-    userId: editedUser.value.id,
-    image: blob as File,
-  });
-  editedUser.value.avatar = firebaseUrl || editedUser.value.avatar;
+  const { url, notification } =
+    await firebaseStorageService().uploadImageToStorage({
+      userId: editedUser.value.id,
+      image: blob as File,
+    });
+  if (url) uploadedImages.value.push(url);
+  useNotification().addNotification(notification!);
+
+  editedUser.value.avatar = url || editedUser.value.avatar;
   uploadingImage.value = false;
   //console.log('assignRandomAvatar>editedUser', editedUser.value);
   //editedUser.value.avatar isn't reactive...
   //you have to save and refresh to see the new image...
-  //unless you assign to the compoment a unique key on each upload
+  //unless you assign to the compoment a unique key on each random pick
   appAvatarImageCompKey.value = uniqueIdHelper().newUniqueId;
 };
 
@@ -299,11 +329,11 @@ const saveProfile = async () => {
     ready: true,
   });
 
-  exitEditRoute();
+  exitEdit();
 };
 
 const cancelEdit = () => {
-  exitEditRoute();
+  exitEdit(true);
 };
 
 const verifyEmail = async () => {

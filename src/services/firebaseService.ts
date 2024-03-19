@@ -10,13 +10,6 @@ import {
   signInWithPopup,
   verifyBeforeUpdateEmail,
 } from 'firebase/auth';
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  StorageReference,
-} from 'firebase/storage';
 
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 
@@ -127,21 +120,6 @@ export default function firebaseService() {
   const getAuthUserId = () => {
     return auth.currentUser?.uid;
   };
-
-  const getStorageBucket = (url: string) => {
-    return ref(getStorage(useFirebase().firebaseApp), url);
-  };
-  const uploadToStorageBucket = (
-    bucketRef: StorageReference,
-    imageBlob: Blob
-  ) => {
-    return uploadBytes(bucketRef, imageBlob);
-  };
-  const getImageURL = (snapshotRef: StorageReference) => {
-    const urlPromise = getDownloadURL(snapshotRef);
-    return urlPromise;
-  };
-
   const isUnique = async <T>({
     collectionName,
     prop,
@@ -168,9 +146,6 @@ export default function firebaseService() {
     loginWithEmailAndPassword,
     signinWithGoogle,
     signOut,
-    getStorageBucket,
-    uploadToStorageBucket,
-    getImageURL,
     isUnique,
   };
 }

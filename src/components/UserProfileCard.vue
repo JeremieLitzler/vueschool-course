@@ -47,10 +47,10 @@
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
-import uniqueIdHelper from '@/helpers/uniqueIdHelper';
-import User from '@/types/User';
-import { RouteName } from '@/enums/RouteName';
 const { getUserById, getAuthUser } = useUserStore();
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
+import type User from '@/types/User';
+import { RouteName } from '@/enums/RouteName';
 
 const props = defineProps<{
   user: User;

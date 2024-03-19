@@ -51,6 +51,10 @@ const { notifications, removeNotification } = useNotification();
 .notification-type-info {
   border-left: 5px solid #263959;
 }
+.notification-type-success {
+  border-left: 5px solid #57ad8d;
+}
+
 .notification-type-warning {
   border-left: 5px solid #f19a16;
 }

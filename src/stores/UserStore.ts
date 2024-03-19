@@ -16,6 +16,8 @@ import objectHelper from '@/helpers/objectHelper';
 import UserRegisterRequest from '@/types/UserRegisterRequest';
 import UserLoginRequest from '@/types/UserLoginRequest';
 import UserUpdateRequest from '@/types/UserUpdateRequest';
+import firebaseStorageService from '@/services/firebaseStorageService';
+import useNotification from '@/composables/useNotification';
 
 // const { findById } = arraySearchHelper();
 
@@ -110,10 +112,12 @@ export const useUserStore = defineStore('UserStore', () => {
     ) {
       return registerResult as FirebaseError;
     }
-    const avatarUrl = await useCommonStore().uploadImageToStorage({
-      userId: registerResult.user.uid,
-      image: avatarFile!,
-    });
+    const { url, notification } =
+      await firebaseStorageService().uploadImageToStorage({
+        userId: registerResult.user.uid,
+        image: avatarFile!,
+      });
+    if (notification) useNotification().addNotification(notification!);
     //console.log("actions > registerUserWithEmailAndPassword", registerResult);
 
     //console.log('actions > registerUserWithEmailAndPassword', registerResult);
@@ -122,7 +126,7 @@ export const useUserStore = defineStore('UserStore', () => {
         name,
         username,
         email: emailLower,
-        avatar: avatarUrl!,
+        avatar: url!,
       },
       registerResult.user.uid
     );
@@ -198,23 +202,19 @@ export const useUserStore = defineStore('UserStore', () => {
     useCommonStore().setItem<User>({ targetStore: users, item: newUserDoc });
     return newUserDoc;
   };
-  const updateUser = async ({
-    userUpdated,
-    updatedAvatar,
-    id,
-  }: UserUpdateRequest) => {
-    const avatarUrl = updatedAvatar
-      ? await useCommonStore().uploadImageToStorage({
-          userId: id,
-          image: updatedAvatar!,
-        })
-      : null;
+  const updateUser = async ({ userUpdated, id }: UserUpdateRequest) => {
+    // const {url} = updatedAvatar
+    //   ? await useCommonStore().uploadImageToStorage({
+    //       userId: id,
+    //       image: updatedAvatar!,
+    //     })
+    //   : null;
 
     const userRef = useFirebase().doc(useFirebase().db, 'users', id);
     await useFirebase()
       .writeBatch(useFirebase().db)
       .set(userRef, {
-        avatar: avatarUrl || userUpdated.avatar,
+        avatar: userUpdated.avatar || null,
         bio: userUpdated.bio || null,
         email: userUpdated.email || null,
         name: userUpdated.name || null,
