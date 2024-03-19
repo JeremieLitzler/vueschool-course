@@ -23,7 +23,7 @@ service cloud.firestore {
      return resource == null  
     }
     function resourceBelongsToUser(){
-     return request.auth.id == resource.data.userId
+     return request.auth.uid == resource.data.userId
     }
     //threads
     match /threads/{thread}{
