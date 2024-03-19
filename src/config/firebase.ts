@@ -1,5 +1,6 @@
 const firebaseConfig = {
-  //https://github.com/vitejs/vite/issues/1973
+  //Use 'VITE_' prefix
+  // see https://github.com/vitejs/vite/issues/1973
   apiKey: import.meta.env.VITE_FIRESTORE_API_KEY,
   authDomain: import.meta.env.VITE_FIRESTORE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIRESTORE_PROJECT_ID,

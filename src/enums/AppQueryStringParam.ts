@@ -4,4 +4,5 @@ export enum AppQueryStringParam {
   redirectTo = 'redirectTo',
   showReconnectMessage = 'showReconnectMessage',
   emailWasVerified = 'emailWasVerified',
+  reloadAll = 'reloadAll',
 }

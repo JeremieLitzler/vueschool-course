@@ -1,8 +1,5 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-// import useSampleData from '@/helpers/sampleData';
-// import arraySearchHelper from '@/helpers/arraySearchHelper';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useForumStore } from '@/stores/ForumStore';
 import { useUserStore } from '@/stores/UserStore';
@@ -12,12 +9,8 @@ import type Thread from '@/types/Thread';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
-import useFirebase from '@/services/fireBaseConnector';
-import firebaseService from '@/services/firebaseService';
 import firebaseHelper from '@/helpers/firebaseHelper';
-
-// const { threadsData } = useSampleData();
-// const { findById, findManyById } = arraySearchHelper();
+import { firebaseFireStoreService } from '@/services/firebaseFireStoreService';
 
 export const useThreadStore = defineStore('ThreadStore', () => {
   //STATE
@@ -111,36 +104,39 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   const createThread = async (request: ThreadCreateRequest) => {
     const thread = {
       forumId: request.forumId,
-      publishedAt: firebaseService().getServerTimeStamp(),
+      publishedAt: firebaseFireStoreService().getServerTimeStamp(),
       title: request.title,
       userId: useUserStore().getAuthUser().id,
       posts: [],
     };
 
-    const threadRef = useFirebase().doc(
-      useFirebase().collection(useFirebase().db, 'threads')
+    const threadRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().collection(
+        firebaseFireStoreService().db,
+        'threads'
+      )
     );
-    const forumRef = useFirebase().doc(
-      useFirebase().db,
+    const forumRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
       'forums',
       thread.forumId!
     );
-    const userRef = useFirebase().doc(
-      useFirebase().db,
+    const userRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
       'users',
       thread.userId!
     );
-    await useFirebase()
-      .writeBatch(useFirebase().db)
+    await firebaseFireStoreService()
+      .writeBatch(firebaseFireStoreService().db)
       .set(threadRef, thread)
       .update(forumRef, {
-        threads: useFirebase().arrayUnion(threadRef.id),
+        threads: firebaseFireStoreService().arrayUnion(threadRef.id),
       })
       .update(userRef, {
-        threads: useFirebase().arrayUnion(threadRef.id),
+        threads: firebaseFireStoreService().arrayUnion(threadRef.id),
       })
       .commit();
-    const newThread = await useFirebase().getDoc(threadRef);
+    const newThread = await firebaseFireStoreService().getDoc(threadRef);
     setThread({ ...newThread.data(), id: threadRef.id });
     await createThreadAddRelated(request, {
       ...newThread.data(),
@@ -153,14 +149,18 @@ export const useThreadStore = defineStore('ThreadStore', () => {
   ): Promise<Thread> => {
     //console.log("updatedThread > id ", id);
     const thread = getThreadById(request.threadId);
-    const threadRef = useFirebase().doc(useFirebase().db, 'threads', thread.id);
-    const postRef = useFirebase().doc(
-      useFirebase().db,
+    const threadRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
+      'threads',
+      thread.id
+    );
+    const postRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
       'posts',
       thread.posts![0]
     );
-    await useFirebase()
-      .writeBatch(useFirebase().db)
+    await firebaseFireStoreService()
+      .writeBatch(firebaseFireStoreService().db)
       .update(threadRef, {
         title: request.title,
       })
@@ -170,10 +170,10 @@ export const useThreadStore = defineStore('ThreadStore', () => {
       .commit();
 
     const updatedThread = firebaseHelper().docToResource(
-      await useFirebase().getDoc(threadRef)
+      await firebaseFireStoreService().getDoc(threadRef)
     );
     const updatedPost = firebaseHelper().docToResource(
-      await useFirebase().getDoc(postRef)
+      await firebaseFireStoreService().getDoc(postRef)
     );
 
     setThread(updatedThread);

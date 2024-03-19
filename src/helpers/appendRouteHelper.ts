@@ -2,17 +2,24 @@ import router from '@/router';
 import { RouteLocationNormalizedLoaded, RouteLocationRaw } from 'vue-router';
 import { RouteName } from '@/enums/RouteName';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
+import { getQueryStringValue } from './queryStringHelper';
 
 export default function appendRouteHelper() {
   /**
    * Rebuild the route to load from 'redirectTo' query parameter.
    *
    * @param route The current route
-   * @returns The full route found in the 'redirectTo' query parameter.
+   * @returns The full route found in the 'redirectTo' query parameter value.
    */
   const _toRequestedRoute = (route: RouteLocationNormalizedLoaded) => {
-    const [path, queryRaw] =
-      route.query[AppQueryStringParam.redirectTo]!.toString().split('?');
+    const redirectToValue = getQueryStringValue(
+      route.query,
+      AppQueryStringParam.redirectTo
+    );
+    if (!redirectToValue) {
+      return toHomePage();
+    }
+    const [path, queryRaw] = redirectToValue!.split('?');
     const query = Object.fromEntries(new URLSearchParams(queryRaw));
     const redirectTo: RouteLocationRaw = {
       path,

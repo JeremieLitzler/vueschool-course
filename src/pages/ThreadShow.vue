@@ -48,7 +48,6 @@
       <template #nextPage>▶️</template>
       <template #nextRange>⏭️</template>
     </app-pagination>
-    <!-- TODO: would be nice to focus in the PostEditor -->
     <router-link
       v-if="!routeAllowsToPost"
       :to="{ ...route, query: { page: pageCount } }"

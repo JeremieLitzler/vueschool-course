@@ -10,7 +10,7 @@
         </div>
         <app-form-field
           name="name"
-          label="name"
+          label="Name"
           v-model="form.name"
           rules="required|min:3"
           type="text"
@@ -18,7 +18,7 @@
         <!-- using validation rules with string syntax -->
         <app-form-field
           name="username"
-          label="username|min:3"
+          label="Username"
           v-model="form.username"
           rules="required|unique|unique:users,username"
           type="text"
@@ -26,7 +26,7 @@
         <!-- using validation rules with object syntax -->
         <app-form-field
           name="email"
-          label="email"
+          label="Email"
           v-model="form.email"
           :rules="{
             required: true,
@@ -37,7 +37,7 @@
         />
         <app-form-field
           name="password"
-          label="password"
+          label="Password"
           v-model="form.password"
           rules="required|min:8"
           type="password"
@@ -121,11 +121,7 @@ const handleFileUpload = (uploadEvent: Event) => {
   if (form.value.avatar) reader.readAsDataURL(avatarFile.value as Blob);
 };
 
-const register = async (values: Record<string, unknown>) => {
-  if (values) {
-    //console.log('UserRegister>register', values);
-  }
-  //console.log('The form data >', form.value);
+const register = async (_values: Record<string, unknown>) => {
   const user = await useUserStore().registerUserWithEmailAndPassword({
     avatar: form.value.avatar,
     avatarFile: avatarFile.value,
@@ -134,11 +130,10 @@ const register = async (values: Record<string, unknown>) => {
     username: form.value.username,
     password: form.value.password,
   });
-  if (!objectHelper().instanceOf<User>(user, 'username')) {
+  if (!objectHelper().propExistsInObject<User>(user, 'username')) {
     error.value = (user as FirebaseError).message;
     return;
   }
-  //console.log('The created user >', user);
   await router.push(toSuccessRedirect(route));
 };
 const loginWithGoogle = async () => {

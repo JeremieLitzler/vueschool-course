@@ -2,7 +2,10 @@
   <section v-if="!postingAllowed" class="post-editor-cta">
     <h2>Want to participate?</h2>
     <router-link
-      :to="{ name: RouteName.UserLogin, query: { redirectTo: $route.path } }"
+      :to="{
+        name: RouteName.UserLogin,
+        query: { redirectTo: $route.fullPath },
+      }"
       class="btn-green btn-small"
       >Login</router-link
     >
@@ -10,7 +13,7 @@
     <router-link
       :to="{
         name: RouteName.UserRegister,
-        query: { redirectTo: $route.path },
+        query: { redirectTo: $route.fullPath },
       }"
       class="btn-green btn-small"
       >Register</router-link

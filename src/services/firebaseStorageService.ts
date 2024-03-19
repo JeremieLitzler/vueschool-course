@@ -1,3 +1,4 @@
+import { firebaseApp } from '@/services/fireBaseConnector';
 import {
   getStorage,
   ref,
@@ -8,14 +9,13 @@ import {
 } from 'firebase/storage';
 
 import type FirebaseStorageAddImageRequest from '@/types/FirebaseStorageAddImageRequest';
-import useFirebase from './fireBaseConnector';
 import FirebaseStorageResponse from '@/types/FirebaseStorageResponse';
 import { NotificationType } from '@/enums/NotificationType';
 import { FirebaseError } from 'firebase/app';
 
 export default function firebaseStorageService() {
   const _getStorageBucket = (url: string) => {
-    return ref(getStorage(useFirebase().firebaseApp), url);
+    return ref(getStorage(firebaseApp), url);
   };
   const _uploadToStorageBucket = (
     bucketRef: StorageReference,

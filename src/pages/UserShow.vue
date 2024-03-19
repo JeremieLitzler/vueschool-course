@@ -7,7 +7,7 @@
     <router-link :to="{ name: RouteName.TheHome }">Forums</router-link>.
   </div>
   <div class="flex-grid">
-    <div class="col-3 push-top">
+    <div class="col-3 push-top" :title="`User: ${user.id}`">
       <user-profile-card v-if="!edit" :user="user" />
       <user-profile-card-editor v-else :user="user" />
     </div>

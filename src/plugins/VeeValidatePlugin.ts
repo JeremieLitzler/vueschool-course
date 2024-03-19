@@ -2,7 +2,7 @@ import { App } from 'vue';
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
 import { required, email, url, min } from '@vee-validate/rules';
 import { localize } from '@vee-validate/i18n';
-import firebaseService from '@/services/firebaseService';
+import firebaseAuthService from '@/services/firebaseAuthService';
 
 interface UniqueRuleArgs {
   collectionName: string;
@@ -24,7 +24,7 @@ export default (app: App) => {
     }
     if (value === excluding) return true;
 
-    return await firebaseService().isUnique({
+    return await firebaseAuthService().isUnique({
       collectionName,
       prop,
       value,

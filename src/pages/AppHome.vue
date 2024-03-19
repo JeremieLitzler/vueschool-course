@@ -1,19 +1,15 @@
 <template>
-  <div class="col-full">
-    <CategoryList :categories="categories" />
-  </div>
+  <CategoryList :categories="categories" />
 </template>
 
 <script setup async lang="ts">
-import { useCategoryStore } from '@/stores/CategoryStore';
 import { useCommonStore } from '@/stores/CommonStore';
-import CategoryList from '@/components/CategoryList.vue';
+import { useCategoryStore } from '@/stores/CategoryStore';
 import { useForumStore } from '@/stores/ForumStore';
-// import { RouteName } from '@/enums/RouteName';
+import CategoryList from '@/components/CategoryList.vue';
 
 const categories = await useCategoryStore().fetchAllCategories();
 const forumIds = categories.flatMap(({ forums }) => forums!);
 await useForumStore().fetchForums(forumIds);
 useCommonStore().notifyAppIsReady();
-//console.log(RouteName.TheHome, categories);
 </script>

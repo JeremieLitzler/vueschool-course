@@ -7,8 +7,7 @@ import { useCommonStore } from '@/stores/CommonStore';
 import type GetUserExtended from '@/types/GetUserExtended';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import UserCreateRequest from '@/types/UserCreateRequest';
-import firebaseService from '@/services/firebaseService';
-import useFirebase from '@/services/fireBaseConnector';
+import firebaseAuthService from '@/services/firebaseAuthService';
 import firebaseHelper from '@/helpers/firebaseHelper';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
@@ -18,6 +17,7 @@ import UserLoginRequest from '@/types/UserLoginRequest';
 import UserUpdateRequest from '@/types/UserUpdateRequest';
 import firebaseStorageService from '@/services/firebaseStorageService';
 import useNotification from '@/composables/useNotification';
+import { firebaseFireStoreService } from '@/services/firebaseFireStoreService';
 
 // const { findById } = arraySearchHelper();
 
@@ -64,7 +64,7 @@ export const useUserStore = defineStore('UserStore', () => {
     reFetch: boolean | undefined = undefined
   ): Promise<GetUserExtended | null> => {
     //console.log('UserStore > authId', authId);
-    const userId = firebaseService().getAuthUserId();
+    const userId = firebaseAuthService().getAuthUserId();
     if (userId === undefined) {
       return null;
     } else {
@@ -99,13 +99,13 @@ export const useUserStore = defineStore('UserStore', () => {
     avatarFile,
   }: UserRegisterRequest): Promise<User | FirebaseError> => {
     const emailLower = email.toLowerCase();
-    const registerResult = await firebaseService().registerUser({
+    const registerResult = await firebaseAuthService().registerUser({
       email: emailLower,
       password,
     });
 
     if (
-      !objectHelper().instanceOf<UserCredential>(
+      !objectHelper().propExistsInObject<UserCredential>(
         registerResult,
         'operationType'
       )
@@ -134,10 +134,10 @@ export const useUserStore = defineStore('UserStore', () => {
     return user;
   };
   const loginWithEmailAndPassword = ({ email, password }: UserLoginRequest) => {
-    return firebaseService().loginWithEmailAndPassword({ email, password });
+    return firebaseAuthService().loginWithEmailAndPassword({ email, password });
   };
   const loginWithGoogle = async () => {
-    const user = await firebaseService().signinWithGoogle();
+    const user = await firebaseAuthService().signinWithGoogle();
     //console.log('actions > loginWithGoogle > user', user);
     if (!user.exists) {
       createUser(user, user.uid);
@@ -150,7 +150,7 @@ export const useUserStore = defineStore('UserStore', () => {
       authUserObserverUnsubscribe = null;
     }
     return new Promise((resolve) => {
-      const unsubscribe = firebaseService().auth.onAuthStateChanged(
+      const unsubscribe = firebaseAuthService().auth.onAuthStateChanged(
         async (user) => {
           //console.log(
           //   'actions > initAuthentification > onAuthStateChanged running'
@@ -167,7 +167,7 @@ export const useUserStore = defineStore('UserStore', () => {
     });
   };
   const logoutUser = async () => {
-    await firebaseService().signOut();
+    await firebaseAuthService().signOut();
     authId.value = '';
   };
   const createUser = async (
@@ -182,21 +182,25 @@ export const useUserStore = defineStore('UserStore', () => {
       email,
       bio: '',
       postsCount: 0,
-      registeredAt: firebaseService().getServerTimeStamp(),
+      registeredAt: firebaseFireStoreService().getServerTimeStamp(),
       threads: [],
       usernameLower: username.toLowerCase(),
     };
 
     //console.log('No error... Let´s continue');
 
-    const userRef = useFirebase().doc(useFirebase().db, 'users', id);
-    await useFirebase()
-      .writeBatch(useFirebase().db)
+    const userRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
+      'users',
+      id
+    );
+    await firebaseFireStoreService()
+      .writeBatch(firebaseFireStoreService().db)
       .set(userRef, newUser)
       .commit();
 
     const newUserDoc = firebaseHelper().docToResource(
-      await useFirebase().getDoc(userRef)
+      await firebaseFireStoreService().getDoc(userRef)
     );
 
     useCommonStore().setItem<User>({ targetStore: users, item: newUserDoc });
@@ -210,9 +214,13 @@ export const useUserStore = defineStore('UserStore', () => {
     //     })
     //   : null;
 
-    const userRef = useFirebase().doc(useFirebase().db, 'users', id);
-    await useFirebase()
-      .writeBatch(useFirebase().db)
+    const userRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
+      'users',
+      id
+    );
+    await firebaseFireStoreService()
+      .writeBatch(firebaseFireStoreService().db)
       .set(userRef, {
         avatar: userUpdated.avatar || null,
         bio: userUpdated.bio || null,
@@ -229,7 +237,7 @@ export const useUserStore = defineStore('UserStore', () => {
       .commit();
 
     const newUser = firebaseHelper().docToResource(
-      await useFirebase().getDoc(userRef)
+      await firebaseFireStoreService().getDoc(userRef)
     );
 
     useCommonStore().setItem({ targetStore: users, item: newUser });

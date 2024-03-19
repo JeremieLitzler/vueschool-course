@@ -2,27 +2,27 @@
   <div class="col-full push-top">
     <router-link :to="{ name: RouteName.TheHome }">⬅️ Back to Home</router-link>
     <h1>
-      {{ category.name }}
+      {{ category?.name }}
     </h1>
   </div>
   <ForumList :forums="categoryForums" />
 </template>
 
 <script setup async lang="ts">
-import ForumList from '@/components/ForumList.vue';
-import { useForumStore } from '@/stores/ForumStore';
-import { useCategoryStore } from '@/stores/CategoryStore';
 import { useCommonStore } from '@/stores/CommonStore';
+import { useCategoryStore } from '@/stores/CategoryStore';
+import { useForumStore } from '@/stores/ForumStore';
 import { RouteName } from '@/enums/RouteName';
+import ForumList from '@/components/ForumList.vue';
 
 const props = defineProps<{ id: string }>();
 
 useCommonStore().notifyAppIsReady();
-const category = await useCategoryStore().fetchCategory(props.id);
-//console.log(RouteName.CategoryShow, category);
+const category = (await useCategoryStore().fetchAllCategories()).find(
+  (item) => item.id === props.id
+);
 
-const categoryForums = await useForumStore().fetchForums(category.forums!);
-//console.log(RouteName.CategoryShow, categoryForums.value);
+const categoryForums = await useForumStore().fetchForums(category?.forums!);
 </script>
 
 <style scoped></style>

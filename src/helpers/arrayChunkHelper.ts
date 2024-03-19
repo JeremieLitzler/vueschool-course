@@ -1,5 +1,5 @@
 /**
- * @see https://stackoverflow.com/a/37826698
+ * @see https://stackoverflow.com/a/37826698 for inspiration
  */
 const chunckIt =
   <T>(chunckSize: number) =>

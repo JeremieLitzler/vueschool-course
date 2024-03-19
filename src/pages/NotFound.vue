@@ -1,6 +1,6 @@
 <template>
-  <div class="col-full text-center">
-    <h1>Oops, the link isn't valid</h1>
+  <div class="col-full text-center push-top">
+    <h1>Oops, the link isn't valid or doesn't exist anymore.</h1>
     <router-link :to="{ name: RouteName.TheHome }"
       >Back to a safe place</router-link
     >

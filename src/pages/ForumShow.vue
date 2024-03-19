@@ -47,14 +47,6 @@ const props = defineProps({
     required: true,
   },
 });
-// import { useHead } from '@vueuse/head';
-// import { useCustomPageHead } from '@/composables/usePagesHead';
-// import { RoutePath } from '@/enums/RoutePath';
-// const head = await useCustomPageHead(RoutePath.ForumShow).useForumPage(
-//   props.id
-// );
-// console.log('ForumShow>head', head);
-// useHead({ ...head });
 
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -75,6 +67,9 @@ const pageThreads = ref<ThreadHydraded[]>([]);
 const pageCount = computed(() => {
   return Math.ceil((forum.value?.threads?.length! || 0) / itemsToFetch.value);
 });
+/**
+ * Fetches the threads for a given range.
+ */
 const fetchPageThreads = async () => {
   pageThreads.value = await useThreadStore().fetchByPage(
     forum.value?.threads! || [],
@@ -82,20 +77,28 @@ const fetchPageThreads = async () => {
     currentPage.value - 1
   );
 };
-
+/**
+ * Checks if the current page is provided in the query string.
+ */
 const isCurrentPageSetInQuery = () => {
   return (
     route.query.page !== undefined &&
     !isNaN(parseInt(route.query.page as string))
   );
 };
-useCommonStore().notifyAppIsReady();
-const forum = ref(await useForumStore().fetchForum(props.id));
-if (isCurrentPageSetInQuery()) {
-  //console.log('ThreadShow > setup > currentPage (before)', currentPage.value);
+/**
+ * Updates currentPage data prop if necessary.
+ */
+const setCurrentPageFromQueryString = () => {
+  if (!isCurrentPageSetInQuery()) {
+    return;
+  }
+
   currentPage.value = parseInt(route.query.page as string);
-  //console.log('ThreadShow > setup > currentPage (after)', currentPage.value);
-}
+};
+
+setCurrentPageFromQueryString();
+const forum = ref(await useForumStore().fetchForum(props.id));
 await fetchPageThreads();
 const userIds = pageThreads.value.flatMap(({ userId }) => userId!);
 await useUserStore().fetchUsers(userIds);

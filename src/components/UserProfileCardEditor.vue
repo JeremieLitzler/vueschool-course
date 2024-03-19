@@ -161,13 +161,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
 import useNotification from '@/composables/useNotification';
 import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 import { getQueryStringValue } from '@/helpers/queryStringHelper';
-import firebaseService from '@/services/firebaseService';
+import firebaseAuthService from '@/services/firebaseAuthService';
 import type { FirebaseError } from 'firebase/app';
 import type FileUploadEvent from '@/types/FileUploadEvent';
 import type Country from '@/types/Country';
@@ -234,6 +234,10 @@ const loadCountries = async () => {
   fetchingCountries.value = false;
 };
 
+/**
+ * Clear useless images in storage
+ */
+onBeforeRouteLeave(() => cleanUselessImages(true));
 /**
  * Handle the click on Cancel button
  */
@@ -315,10 +319,7 @@ const assignRandomAvatar = async (randomUrl: string) => {
 
 const saveProfile = async () => {
   useCommonStore().notifyAsyncUiElementState({ uiElement: asyncElement });
-
-  //console.log('saveProfile>editedUser', editedUser.value);
-  //console.log('saveProfile>newAvatar', newAvatar.value);
-
+  //TODO: we could clean the old image updating the user with the latest.
   await updateUser({
     userUpdated: editedUser.value,
     id: user.value.id,
@@ -338,7 +339,7 @@ const cancelEdit = () => {
 
 const verifyEmail = async () => {
   useCommonStore().notifyAsyncUiElementState({ uiElement: asyncElement });
-  const result = await firebaseService().secureUpdateEmail(
+  const result = await firebaseAuthService().secureUpdateEmail(
     editedUser.value.email!
   );
   if (!result.success) {

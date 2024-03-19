@@ -15,9 +15,11 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
-import { FirebaseError } from 'firebase/app';
+import useNotification from '@/composables/useNotification';
 import appendRouteHelper from '@/helpers/appendRouteHelper';
 import UserLoginRequest from '@/types/UserLoginRequest';
+import type { FirebaseError } from 'firebase/app';
+import { NotificationType } from '@/enums/NotificationType';
 
 const route = useRoute();
 const router = useRouter();
@@ -30,7 +32,10 @@ const login = async (request: UserLoginRequest) => {
   });
   const error = result as FirebaseError;
   if (error['name'] === 'FirebaseError') {
-    errorMessage.value = error.message;
+    useNotification().addNotification({
+      message: error.message,
+      type: NotificationType.Error,
+    });
   } else {
     //console.log('UserLogin > login:', result);
     await router.push(toSuccessRedirect(route));

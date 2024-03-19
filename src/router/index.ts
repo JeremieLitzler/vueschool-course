@@ -12,6 +12,9 @@ import { useUserStore } from '@/stores/UserStore';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { RouteName } from '@/enums/RouteName';
 import { RoutePath } from '@/enums/RoutePath';
+import { useForumStore } from '@/stores/ForumStore';
+import objectHelper from '@/helpers/objectHelper';
+import { useCategoryStore } from '@/stores/CategoryStore';
 
 const HomeRoute: RouteRecordRaw = {
   path: '/',
@@ -31,23 +34,69 @@ const AccountRoute: RouteRecordRaw = {
   component: () => import('@/pages/UserShow.vue'),
   meta: { toTop: true, smoothScroll: true, requiresAuth: true },
 };
+
+const { fetchUser } = useUserStore(pinia);
 const UserShowRoute: RouteRecordRaw = {
   path: RoutePath.UserShow,
   name: RouteName.UserShow,
   component: () => import('@/pages/UserShow.vue'),
   props: true,
+  beforeEnter: async (to, _from, next) => {
+    const match = await fetchUser(to.params.id as string);
+    if (objectHelper().propExistsInObject(match, 'id')) {
+      return next();
+    }
+    next({
+      name: RouteName.NotFound,
+      params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
+      query: to.query,
+      hash: to.hash,
+    });
+  },
 };
+
+const { fetchCategory } = useCategoryStore(pinia);
 const CategoryShowRoute: RouteRecordRaw = {
   path: RoutePath.CategoryShow,
   name: RouteName.CategoryShow,
   component: () => import('@/pages/CategoryShow.vue'),
   props: true,
+  beforeEnter: async (to, _from, next) => {
+    const match = await fetchCategory(to.params.id as string);
+    if (objectHelper().propExistsInObject(match, 'id')) {
+      return next();
+    }
+    //else redirect to not found
+    //next({ name: "NotFound" }); // <-- redirect with URL change
+    next({
+      name: RouteName.NotFound,
+      params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
+      query: to.query,
+      hash: to.hash,
+    });
+  },
 };
+
+const { fetchForum } = useForumStore(pinia);
 const ForumShowRoute: RouteRecordRaw = {
   path: RoutePath.ForumShow,
   name: RouteName.ForumShow,
   component: () => import('@/pages/ForumShow.vue'),
   props: true,
+  beforeEnter: async (to, _from, next) => {
+    const match = await fetchForum(to.params.id as string);
+    if (objectHelper().propExistsInObject(match, 'id')) {
+      return next();
+    }
+    //else redirect to not found
+    //next({ name: "NotFound" }); // <-- redirect with URL change
+    next({
+      name: RouteName.NotFound,
+      params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
+      query: to.query,
+      hash: to.hash,
+    });
+  },
 };
 const { fetchThread } = useThreadStore(pinia);
 const ThreadShowRoute: RouteRecordRaw = {
@@ -57,16 +106,10 @@ const ThreadShowRoute: RouteRecordRaw = {
   props: true,
   meta: { toTop: true, smoothScroll: true },
   beforeEnter: async (to, _from, next) => {
-    //does the thread exists?
-    const threadMatch = await fetchThread(to.params.id as string);
-    //console.log('ThreadShow > beforeEnter > threadMatch', threadMatch);
-
-    //if positive, contine
-    if (threadMatch?.id !== '') {
+    const match = await fetchThread(to.params.id as string);
+    if (objectHelper().propExistsInObject(match, 'id')) {
       return next();
     }
-    //else redirect to not found
-    //next({ name: "NotFound" }); // <-- redirect with URL change
     next({
       name: RouteName.NotFound,
       params: { patchMatch: to.path.substring(1).split('/') }, // <-- preserve the requested URL while loading the PageNotFound component.
@@ -121,7 +164,7 @@ const UserLoginRoute: RouteRecordRaw = {
 const { logoutUser } = useUserStore(pinia);
 const { notifyAppIsReady } = useCommonStore(pinia);
 const UserLogoutRoute: RouteRecordRaw = {
-  path: RouteName.UserLogout,
+  path: RoutePath.UserLogout,
   name: RouteName.UserLogout,
   redirect: '',
   beforeEnter: async (_to, _from, next) => {
@@ -187,15 +230,8 @@ router.beforeEach(async (to, _from) => {
   await useUserStore().initAuthentification();
   useCommonStore().runAllSnapshotUnsubscribes();
   useCommonStore().resetAsyncUiElements();
-  //console.log('beforeEach global guard > to.name', to.name);
-  //console.log('beforeEach global guard > to.meta', to.meta);
 
-  //console.log('beforeEach global guard > authId', useUserStore().authId);
   if (to.meta.requiresAuth && !useUserStore().authId) {
-    //TODO : implement auth guard
-    //verify auth user exists
-    //const authUserId = await useUserStore().fetchAuthUser();
-    //console.log('beforeEach global guard > authUserId', authUserId);
     return {
       name: RouteName.UserLogin,
       query: { redirectTo: to.fullPath },

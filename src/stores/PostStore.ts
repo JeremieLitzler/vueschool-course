@@ -1,20 +1,18 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { useUserStore } from '@/stores/UserStore';
+import { useCommonStore } from '@/stores/CommonStore';
+import { useThreadStore } from './ThreadStore';
+import { firebaseFireStoreService } from '@/services/firebaseFireStoreService';
+import firebaseHelper from '@/helpers/firebaseHelper';
 import type Post from '@/types/Post.ts';
 import type Thread from '@/types/Thread';
 import type PostAddToFirebaseRequest from '@/types/PostAddToFirebaseRequest';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
-// import arraySearchHelper from '@/helpers/arraySearchHelper';
-import { useUserStore } from '@/stores/UserStore';
-import { useCommonStore } from '@/stores/CommonStore';
+import { FirebaseError } from 'firebase/app';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import { OrderByDirection } from '@/enums/OrderByDirection';
-import useFirebase from '@/services/fireBaseConnector';
-import firebaseService from '@/services/firebaseService';
-import firebaseHelper from '@/helpers/firebaseHelper';
-import { useThreadStore } from './ThreadStore';
-import { FirebaseError } from 'firebase/app';
 
 // const { findById, findManyById } = arraySearchHelper();
 
@@ -97,34 +95,40 @@ export const usePostStore = defineStore('PostStore', () => {
   const addPost = async (request: PostAddRequest) => {
     //console.log('calling addPost in PostStore', post);
     const postFirebaseRequest = request as unknown as PostAddToFirebaseRequest;
-    postFirebaseRequest.publishedAt = firebaseService().getServerTimeStamp();
+    postFirebaseRequest.publishedAt =
+      firebaseFireStoreService().getServerTimeStamp();
     postFirebaseRequest.userId = useUserStore().getAuthUser().id!;
-    const postRef = useFirebase().doc(
-      useFirebase().collection(useFirebase().db, 'posts')
+    const postRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().collection(
+        firebaseFireStoreService().db,
+        'posts'
+      )
     );
-    const threadRef = useFirebase().doc(
-      useFirebase().db,
+    const threadRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
       'threads',
       request.threadId!
     );
-    const userRef = useFirebase().doc(
-      useFirebase().db,
+    const userRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
       'users',
       postFirebaseRequest.userId!
     );
-    await useFirebase()
-      .writeBatch(useFirebase().db)
+    await firebaseFireStoreService()
+      .writeBatch(firebaseFireStoreService().db)
       .set(postRef, { ...postFirebaseRequest })
       .update(threadRef, {
-        posts: useFirebase().arrayUnion(postRef.id),
-        contributors: useFirebase().arrayUnion(useUserStore().authId),
+        posts: firebaseFireStoreService().arrayUnion(postRef.id),
+        contributors: firebaseFireStoreService().arrayUnion(
+          useUserStore().authId
+        ),
       })
       .update(userRef, {
-        postsCount: useFirebase().increment(1),
+        postsCount: firebaseFireStoreService().increment(1),
       })
       .commit();
 
-    const newPostRef = await useFirebase().getDoc(postRef);
+    const newPostRef = await firebaseFireStoreService().getDoc(postRef);
     const newPost = { ...newPostRef.data(), id: postRef.id };
     setPost(newPost);
     useThreadStore().appendPostToThread({
@@ -135,9 +139,15 @@ export const usePostStore = defineStore('PostStore', () => {
   };
 
   const updatePost = async (request: PostUpdateRequest) => {
-    const postRef = useFirebase().doc(useFirebase().db, 'posts', request.id);
+    const postRef = firebaseFireStoreService().doc(
+      firebaseFireStoreService().db,
+      'posts',
+      request.id
+    );
     try {
-      const batch = useFirebase().writeBatch(useFirebase().db);
+      const batch = firebaseFireStoreService().writeBatch(
+        firebaseFireStoreService().db
+      );
       batch.update(postRef, {
         ...request,
       });
@@ -146,7 +156,7 @@ export const usePostStore = defineStore('PostStore', () => {
       console.error('PostStore>updatedPost>error', error as FirebaseError);
     }
     const updatedPost = firebaseHelper().docToResource(
-      await useFirebase().getDoc(postRef)
+      await firebaseFireStoreService().getDoc(postRef)
     );
     setPost(updatedPost);
   };

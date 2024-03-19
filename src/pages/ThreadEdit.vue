@@ -15,16 +15,16 @@
 
 <script setup async lang="ts">
 import { ref, computed } from 'vue';
-import ThreadEditor from '@/components/ThreadEditor.vue';
 import { useThreadStore } from '@/stores/ThreadStore';
 import { usePostStore } from '@/stores/PostStore';
 import appendRouteHelper from '@/helpers/appendRouteHelper';
+import ThreadEditor from '@/components/ThreadEditor.vue';
 
 const { toForumPage, toThreadPage } = appendRouteHelper();
 
-const { id } = defineProps<{ id: string }>();
+const props = defineProps<{ id: string }>();
 
-const thread = ref(await useThreadStore().fetchThread(id));
+const thread = ref(await useThreadStore().fetchThread(props.id));
 
 const firstPostBody = computed(() => {
   const post = usePostStore().getThreadFirstPostBody(thread.value);
@@ -34,7 +34,7 @@ const firstPostBody = computed(() => {
 const updateThread = async (payload: ThreadBaseRequest) => {
   const thread = await useThreadStore().updateThread({
     ...payload,
-    threadId: id,
+    threadId: props.id,
   });
   toThreadPage(thread.id!);
 };

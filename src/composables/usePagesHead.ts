@@ -1,4 +1,6 @@
 // import { RoutePath } from '@/enums/RoutePath';
+//TODO: requires a SSR or SSG application. No viable for a public application
+//      since SPA are not SEO friendly.
 // import { useCategoryStore } from '@/stores/CategoryStore';
 // import { useForumStore } from '@/stores/ForumStore';
 // import { useThreadStore } from '@/stores/ThreadStore';

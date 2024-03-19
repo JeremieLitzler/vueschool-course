@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useFirebase from '@/services/fireBaseConnector';
+import { firebaseFireStoreService } from '@/services/firebaseFireStoreService';
 import type GenericMutationRequest from '@/types/GenericMutationRequest';
 import type GenericFetchRequest from '@/types/GenericFetchRequest';
 import type WithId from '@/types/WithId';
@@ -140,8 +140,13 @@ export const useCommonStore = defineStore('CommonStore', () => {
     }
     //console.log(`🚨 fetching categories from firestore 🚨`);
     return new Promise((resolve) => {
-      useFirebase()
-        .getDocs(useFirebase().collection(useFirebase().db, collection))
+      firebaseFireStoreService()
+        .getDocs(
+          firebaseFireStoreService().collection(
+            firebaseFireStoreService().db,
+            collection
+          )
+        )
         .then((querySnapshot) => {
           //console.log("from firestore > querySnapshot: ", querySnapshot);
           //console.log("from firestore > querySnapshot.docs: ", querySnapshot.docs);
@@ -173,30 +178,36 @@ export const useCommonStore = defineStore('CommonStore', () => {
     orderByDirection,
     startAtItem,
   }: FirebaseSinglePropQueryRequest<T>) => {
-    const collection = useFirebase().collection(
-      useFirebase().db,
+    const collection = firebaseFireStoreService().collection(
+      firebaseFireStoreService().db,
       collectionName
     );
     const commonQueryParts = [
-      useFirebase().where(propName, '==', propValue),
-      useFirebase().orderBy(orderByProp, orderByDirection),
-      useFirebase().limit(maxElementsPerFetch),
+      firebaseFireStoreService().where(propName, '==', propValue),
+      firebaseFireStoreService().orderBy(orderByProp, orderByDirection),
+      firebaseFireStoreService().limit(maxElementsPerFetch),
     ];
-    let queryObj = useFirebase().query(collection, ...commonQueryParts);
+    let queryObj = firebaseFireStoreService().query(
+      collection,
+      ...commonQueryParts
+    );
     if (startAtItem) {
-      const postRef = useFirebase().doc(
-        useFirebase().db,
+      const postRef = firebaseFireStoreService().doc(
+        firebaseFireStoreService().db,
         collectionName,
         startAtItem.id
       );
-      const lastPost = await useFirebase().getDoc(postRef);
+      const lastPost = await firebaseFireStoreService().getDoc(postRef);
       const constraintsExtended = [
         ...commonQueryParts,
-        useFirebase().startAfter(lastPost),
+        firebaseFireStoreService().startAfter(lastPost),
       ];
-      queryObj = useFirebase().query(collection, ...constraintsExtended);
+      queryObj = firebaseFireStoreService().query(
+        collection,
+        ...constraintsExtended
+      );
     }
-    const items = await useFirebase().getDocs(queryObj);
+    const items = await firebaseFireStoreService().getDocs(queryObj);
     items.forEach((item) => {
       setItem({
         targetStore,
@@ -250,14 +261,21 @@ export const useCommonStore = defineStore('CommonStore', () => {
       );
       if (!id) return resolve({} as T);
 
-      const itemRef = useFirebase().doc(useFirebase().db, collection, id);
-      const unsubscribe = useFirebase().onSnapshot(itemRef, (item) => {
-        if (!item.exists()) return resolve({} as T);
+      const itemRef = firebaseFireStoreService().doc(
+        firebaseFireStoreService().db,
+        collection,
+        id
+      );
+      const unsubscribe = firebaseFireStoreService().onSnapshot(
+        itemRef,
+        (item) => {
+          if (!item.exists()) return resolve({} as T);
 
-        const result = { ...item.data(), id: item.id } as T;
-        setItem({ targetStore: targetStore, item: result });
-        resolve(result);
-      });
+          const result = { ...item.data(), id: item.id } as T;
+          setItem({ targetStore: targetStore, item: result });
+          resolve(result);
+        }
+      );
       appendSnapshotUnsubscribe(unsubscribe);
     });
   };

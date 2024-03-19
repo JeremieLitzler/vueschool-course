@@ -1,4 +1,4 @@
 export default interface PropsAppLoginForm {
-  enableRegister: boolean;
+  enableRegister?: boolean;
   errorMessage?: string;
 }

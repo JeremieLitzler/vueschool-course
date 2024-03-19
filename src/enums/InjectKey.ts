@@ -1,3 +1,1 @@
-export enum InjectKey {
-  updatedPost = 'updatedPost',
-}
+export enum InjectKey {}

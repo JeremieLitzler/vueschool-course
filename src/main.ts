@@ -9,13 +9,13 @@ import router from '@/router';
 import pinia from '@/stores/pinia';
 
 import ClickOutsideDirective from '@/plugins/ClickOutsideDirective';
-import firebaseService from '@/services/firebaseService';
+import firebaseAuthService from '@/services/firebaseAuthService';
 import { useUserStore } from '@/stores/UserStore';
 import PageScrollDirective from '@/plugins/PageScrollDirective';
 import VeeValidatePlugin from './plugins/VeeValidatePlugin';
 
 //Firebase common logic
-firebaseService().auth.onAuthStateChanged(async (user) => {
+firebaseAuthService().auth.onAuthStateChanged(async (user) => {
   if (user) {
     await useUserStore().fetchAuthUser();
   }

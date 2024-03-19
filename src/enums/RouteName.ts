@@ -9,7 +9,7 @@ export enum RouteName {
   ThreadEdit = 'ThreadEdit',
   UserRegister = 'UserRegister',
   UserLogin = 'UserLogin',
-  UserLogout = '/logout',
+  UserLogout = 'UserLogout',
   //Behind auth pages
   AccountEdit = 'AccountEdit',
   AccountShow = 'AccountShow',
