@@ -38,7 +38,7 @@
   <div class="container">
     <suspense>
       <template #fallback>
-        <!-- TODO: doesn't work... -->
+        <!-- TODO: bug > doesn't load the spinner work... -->
         <section class="loading"><app-spinner /></section>
       </template>
       <template #default>

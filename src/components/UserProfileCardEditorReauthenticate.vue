@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-//TODO: From UserProfileCardEditor, I pass on displayModal to trigger showModal native
+//TODO: bug > From UserProfileCardEditor, I pass on displayModal to trigger showModal native
 //      method of the dialog element.
 //      But the 'nativeDialogEl.value' in showNativeDialog is null... resulting in not
 //      calling showModal() and not displaying the modal

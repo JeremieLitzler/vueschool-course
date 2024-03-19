@@ -38,7 +38,7 @@ const saveThread = async (payload: ThreadBaseRequest) => {
   toThreadPage(threadId);
 };
 onBeforeRouteLeave((_to, _from) => {
-  //TODO : clicking cancel button fires twice this guard... Why?
+  //TODO : bug > clicking cancel button fires twice this guard... Why?
   if (formIsDirty.value) {
     const confirmed = window.confirm(
       'Are you sure you want to leave? Unsaved changes will be lost!!'

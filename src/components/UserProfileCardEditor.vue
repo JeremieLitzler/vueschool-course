@@ -121,8 +121,9 @@
         desynchronisation of your account. Thank you 👍.
       </p>
     </vee-form>
-    <!-- TODO: Not working: see script setup of the 
-      component UserProfileCardEditorReauthenticate
+    <!-- 
+      TODO: bug > not working: see script setup of the 
+            component UserProfileCardEditorReauthenticate
     -->
     <!-- <user-profile-card-editor-reauthenticate
       :key="reauthCompKey"
@@ -310,7 +311,6 @@ const assignRandomAvatar = async (randomUrl: string) => {
 
   editedUser.value.avatar = url || editedUser.value.avatar;
   uploadingImage.value = false;
-  //console.log('assignRandomAvatar>editedUser', editedUser.value);
   //editedUser.value.avatar isn't reactive...
   //you have to save and refresh to see the new image...
   //unless you assign to the compoment a unique key on each random pick
@@ -319,7 +319,7 @@ const assignRandomAvatar = async (randomUrl: string) => {
 
 const saveProfile = async () => {
   useCommonStore().notifyAsyncUiElementState({ uiElement: asyncElement });
-  //TODO: we could clean the old image updating the user with the latest.
+  //TODO: enhance > we could clean the old image updating the user with the latest.
   await updateUser({
     userUpdated: editedUser.value,
     id: user.value.id,

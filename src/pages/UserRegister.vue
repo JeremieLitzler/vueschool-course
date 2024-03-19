@@ -113,7 +113,7 @@ const handleFileUpload = (uploadEvent: Event) => {
   avatarFile.value = (uploadEvent as FileUploadEvent).target!.files[0];
   //console.log('UserRegister>handleFileUpload', form.value.avatarFile);
   const reader = new FileReader();
-  //TODO: preview is not displayed
+  //TODO: bug > preview is not displayed
   reader.onload = (readerEvent: ProgressEvent<FileReader>) => {
     //console.log('reader.onload>result', readerEvent.target!.result as string);
     avatarPreview.value = readerEvent.target!.result as string;
