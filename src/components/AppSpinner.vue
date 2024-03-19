@@ -13,6 +13,7 @@ interface AppSpinnerProps {
   backgroundColor?: string;
 }
 const { backgroundColor } = withDefaults(defineProps<AppSpinnerProps>(), {
+  //See the styles below for the use of the prop > selector ".sk-chase-dot:before"
   backgroundColor: '#263959',
 });
 </script>

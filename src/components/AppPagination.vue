@@ -1,5 +1,6 @@
 <template>
   <section v-if="showPagination" class="app-pagination">
+    <!-- Left controls = previous page and previous range -->
     <ul class="app-pagination-ctrls app-pagination-ctrls-left">
       <li
         v-show="showPrevRangeButton"
@@ -17,6 +18,7 @@
         </router-link>
       </li>
     </ul>
+    <!-- The list of pages with a router-link for each page -->
     <ul class="app-pagination-list">
       <li v-for="page in pagination" :key="page" class="app-pagination-link">
         <router-link
@@ -31,6 +33,7 @@
         </router-link>
       </li>
     </ul>
+    <!-- Right controls = next page and next range -->
     <ul class="app-pagination-ctrls app-pagination-ctrls-right">
       <li
         v-show="currentPage < pageCount"
@@ -56,30 +59,19 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { RouteName } from '@/enums/RouteName';
+import PropsAppPagination from '@/types/PropsAppPagination';
 
-interface AppPaginationProps {
-  pageCount: number;
-  pagesAround: number;
-  currentPage: number;
-  parentRouteName: RouteName;
-}
+const props = withDefaults(defineProps<PropsAppPagination>(), {
+  pageCount: 0,
+  pagesAround: 1,
+});
 
-const { pageCount, pagesAround, currentPage, parentRouteName } = withDefaults(
-  defineProps<AppPaginationProps>(),
-  {
-    pageCount: 0,
-    pagesAround: 1,
-  }
-);
-
-// const router = useRouter();
 const from = ref(0);
-const to = ref(pagesAround * 2 + 1);
+const to = ref(props.pagesAround * 2 + 1);
 const navigateRanges = ref(false);
 
 const showPagination = computed(() => {
-  return pageCount > 1;
+  return props.pageCount > 1;
 });
 const showPrevRangeButton = computed(() => {
   return hasRange.value && (inBetween.value || ending.value);
@@ -88,62 +80,40 @@ const showNextRangeButton = computed(() => {
   return hasRange.value && (inBetween.value || starting.value);
 });
 const hasRange = computed(() => {
-  return pageCount / (pagesAround * 2 + 1) > 1;
+  return props.pageCount / (props.pagesAround * 2 + 1) > 1;
 });
 const starting = computed(() => {
-  return to.value <= pagesAround * 2 + 1;
+  return to.value <= props.pagesAround * 2 + 1;
 });
 const inBetween = computed(() => {
-  return from.value > pagesAround * 2 && to.value < pageCount;
+  return from.value > props.pagesAround * 2 && to.value < props.pageCount;
 });
 const ending = computed(() => {
-  return to.value >= pageCount;
+  return to.value >= props.pageCount;
 });
 const pagination = computed(() => {
   const result = pages.value.slice(from.value, to.value);
-  //console.log(
-  //   `app-pagination > pagination
-  //     > state=${
-  //       starting ? "starting" : ending ? "ending" : "inBetween"
-  //     }
-  //     > from=${from} - to=${to} - current=${currentPage}
-  //     > result=${result}`
-  // );
   return result;
 });
 const pages = computed(() => {
-  const pageArray = Array.apply(null, Array(pageCount)).map(
+  const pageArray = Array.apply(null, Array(props.pageCount)).map(
     (_index, value: number) => value + 1
   );
   return pageArray;
 });
 const nextPage = computed(() => {
-  const possibleNextPage = currentPage + 1;
-  //console.log('app-pagination > nextPage', possibleNextPage);
+  const possibleNextPage = props.currentPage + 1;
   return possibleNextPage;
 });
 const prevPage = computed(() => {
-  const possiblePreviousPage = currentPage - 1;
-  //console.log('app-pagination > prevPage', possiblePreviousPage);
+  const possiblePreviousPage = props.currentPage - 1;
   return possiblePreviousPage;
 });
 
-// const loadPage = (page: number) => {
-//   router.push({
-//     name: parentRouteName,
-//     query: { page: page },
-//   });
-// };
-// const goNextPage = () => {
-//   loadPage(nextPage.value);
-// };
-// const goPrevPage = () => {
-//   loadPage(prevPage.value);
-// };
 const nextRange = () => {
   if (starting.value || inBetween.value) {
     from.value = to.value;
-    to.value = from.value + (pagesAround * 2 + 1);
+    to.value = from.value + (props.pagesAround * 2 + 1);
     navigateRanges.value = true;
   }
 };
@@ -151,9 +121,9 @@ const previousRange = () => {
   if (ending.value || inBetween.value) {
     to.value = from.value;
     from.value =
-      from.value - (pagesAround * 2 + 2) < 0
+      from.value - (props.pagesAround * 2 + 2) < 0
         ? 0
-        : from.value - (pagesAround * 2 + 1);
+        : from.value - (props.pagesAround * 2 + 1);
     navigateRanges.value = true;
   }
 };
@@ -165,42 +135,29 @@ interface ResultRangeFromCurrentPage {
 const rangeFromCurrentPage = (): ResultRangeFromCurrentPage => {
   //we want the range from which to see the from and to data properties
   //we know the range size = [pagesAround * 2 + 1]
-  const rangeSize = pagesAround * 2 + 1;
+  const rangeSize = props.pagesAround * 2 + 1;
   let nextRangeMax = rangeSize;
   //we know the index of the page
-  const currentPageIndex = currentPage - 1;
+  const currentPageIndex = props.currentPage - 1;
   let from = 0;
   let to = rangeSize;
   for (let index = 0; index < pages.value.length; index++) {
-    //console.log(
-    //   `app-pagination > rangeFromCurrentPage > index=${index} / range=${from} / ${to}`
-    // );
     if (to >= pages.value.length) {
-      //console.log(`app-pagination > rangeFromCurrentPage > first return`);
       return { newFrom: from, newTo: to };
     }
     if (index >= nextRangeMax) {
-      //console.log(
-      //   `app-pagination > rangeFromCurrentPage > updating from and to`
-      // );
       from = to;
       to = from + rangeSize;
       nextRangeMax = to;
-      //console.log(`new range=${from} / ${to} from index=${index}`);
     }
     if (index == currentPageIndex) {
-      //console.log(`app-pagination > rangeFromCurrentPage > second return`);
       return { newFrom: from, newTo: to };
     }
-    //console.log("not found... continue");
   }
-  //console.log(`app-pagination > rangeFromCurrentPage > last return`);
   return { newFrom: from, newTo: to };
 };
 
 const { newFrom, newTo } = rangeFromCurrentPage();
-//console.log("app-pagination > created > from (currentPage)", from);
-//console.log("app-pagination > created > to (currentPage)", to);
 from.value = newFrom;
 to.value = newTo;
 </script>

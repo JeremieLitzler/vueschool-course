@@ -1,4 +1,4 @@
-import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebase from '@/services/fireBaseConnector';
 import UserFirebaseRegisterRequest from '@/types/UserFirebaseRegisterRequest';
 import { Timestamp } from '@firebase/firestore';
 import {

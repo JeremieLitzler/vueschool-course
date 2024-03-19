@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+// //Requires to use a SSR or SSG application...
 // import { ref } from 'vue';
 // // import { Head } from '@vueuse/head';
 // import AppPageHeadProps from '@/types/AppPageHeadProps';

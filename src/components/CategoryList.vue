@@ -1,5 +1,5 @@
 <template>
-  <ForumList
+  <forum-list
     v-for="category in categories"
     :key="category.id"
     :forums="getForumsByCategory(category.id).value"
@@ -9,13 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import Category from '@/types/Category';
 import { useForumStore } from '@/stores/ForumStore';
-import ForumList from './ForumList.vue';
+import type Category from '@/types/Category';
+import ForumList from '@/components/ForumList.vue';
 
-const { getForumsByCategory } = useForumStore();
 const { categories } = defineProps<{ categories: Category[] }>();
-//console.log(`RouteName.TheHome > CategoryList`, categories);
+const { getForumsByCategory } = useForumStore();
 </script>
 
 <style scoped></style>

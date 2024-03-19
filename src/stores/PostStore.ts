@@ -10,7 +10,7 @@ import { useUserStore } from '@/stores/UserStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import { OrderByDirection } from '@/enums/OrderByDirection';
-import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebase from '@/services/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
 import firebaseHelper from '@/helpers/firebaseHelper';
 import { useThreadStore } from './ThreadStore';
@@ -141,10 +141,10 @@ export const usePostStore = defineStore('PostStore', () => {
       await useFirebase()
         .writeBatch(useFirebase().db)
         .update(postRef, {
-          text: request.body,
+          text: request.text,
         })
         .update(postRef, {
-          text: request.body,
+          text: request.text,
         })
         .commit();
     } catch (error) {

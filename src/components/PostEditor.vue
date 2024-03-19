@@ -37,13 +37,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
-import type PostEditorProps from '@/types/PostEditorProps';
+import uniqueIdHelper from '@/helpers/uniqueIdHelper';
+import { RouteName } from '@/enums/RouteName';
+import firebaseService from '@/services/firebaseService';
+import type PropsPostEditor from '@/types/PropsPostEditor';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
-import { RouteName } from '@/enums/RouteName';
-import uniqueIdHelper from '@/helpers/uniqueIdHelper';
 
-const { sourcePost, threadId } = withDefaults(defineProps<PostEditorProps>(), {
+const { sourcePost, threadId } = withDefaults(defineProps<PropsPostEditor>(), {
   sourcePost: null,
 });
 
@@ -52,18 +53,13 @@ const emits = defineEmits<{
   (event: '@update-post', entry: PostUpdateRequest): void;
 }>();
 
-//console.log('props > sourcePost', sourcePost);
-
 const formKey = ref(uniqueIdHelper().newUniqueId);
 const newPostText = ref(sourcePost?.text ?? null);
 const postIsEdited = computed(() => {
   const result = sourcePost !== null;
-  //console.log('postIsEdited computed', result);
-
   return result;
 });
 const postingAllowed = computed(() => {
-  //console.log('PostEditor > postingAllowed', useUserStore().getAuthUser());
   return useUserStore().getAuthUser().id !== '';
 });
 const buttonText = computed(() =>
@@ -74,12 +70,12 @@ const savePost = () => {
   if (!authUser) {
     //TODO : handle not authenticated user
     //       firebase returns a permission error
-    //console.log('PostEditor>savePost>!auth', firebaseService().getAuthUserId());
+    console.log('PostEditor>savePost>!auth', firebaseService().getAuthUserId());
   }
 
   if (postIsEdited.value) {
     const request: PostUpdateRequest = {
-      body: newPostText.value!,
+      text: newPostText.value!,
       id: sourcePost?.id!,
     };
     emits('@update-post', request);
@@ -91,6 +87,7 @@ const savePost = () => {
     emits('@add-post', request);
     newPostText.value = '';
   }
+  //Refreshing the key of the form component allow to prevent the validation message to show.
   formKey.value = uniqueIdHelper().newUniqueId;
 };
 </script>

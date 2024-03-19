@@ -8,7 +8,7 @@ import type GetUserExtended from '@/types/GetUserExtended';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
 import UserCreateRequest from '@/types/UserCreateRequest';
 import firebaseService from '@/services/firebaseService';
-import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebase from '@/services/fireBaseConnector';
 import firebaseHelper from '@/helpers/firebaseHelper';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';

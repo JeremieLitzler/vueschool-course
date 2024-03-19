@@ -46,7 +46,7 @@ const threadExists = computed(() => !!form.value.title);
 
 const save = () => {
   emits('@cleanForm');
-  emits('@save', { title: form.value.title, body: form.value.body });
+  emits('@save', { title: form.value.title, firstPostText: form.value.body });
 };
 const cancel = () => {
   emits('@cancel', threadExists.value);

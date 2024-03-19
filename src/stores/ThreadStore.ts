@@ -12,7 +12,7 @@ import type Thread from '@/types/Thread';
 import type ThreadHydraded from '@/types/ThreadHydraded';
 import AppendPostToThreadRequest from '@/types/AppendPostToThreadRequest';
 import { FirestoreCollection } from '@/enums/FirestoreCollection';
-import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebase from '@/services/fireBaseConnector';
 import firebaseService from '@/services/firebaseService';
 import firebaseHelper from '@/helpers/firebaseHelper';
 
@@ -165,7 +165,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
         title: request.title,
       })
       .update(postRef, {
-        text: request.body,
+        text: request.firstPostText,
       })
       .commit();
 
@@ -208,7 +208,7 @@ export const useThreadStore = defineStore('ThreadStore', () => {
     });
     await usePostStore().addPost({
       threadId: thread.id,
-      text: threadRequest.body,
+      text: threadRequest.firstPostText,
     });
   };
   const appendPostToThread = (request: AppendPostToThreadRequest) => {

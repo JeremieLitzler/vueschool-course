@@ -12,12 +12,6 @@
 </template>
 
 <script setup lang="ts">
-// import arrayRandomHelper from '@/helpers/arrayRandomHelper';
-
-// interface PicsumImage {
-//   download_url: string;
-// }
-
 const emits = defineEmits<{
   (event: '@hit', url: string): void;
 }>();
@@ -36,6 +30,7 @@ const pickRandomAvatar = async () => {
   //We will use the generic URL because it allows to pick a
   //random image too and make sure the size doesn't exceed
   //the firebase storage size limit
+  //Beloy we use a 400x400 webp image
   emits('@hit', 'https://picsum.photos/400/400.webp');
 };
 </script>

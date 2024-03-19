@@ -40,40 +40,42 @@ import { getQueryStringValue } from '@/helpers/queryStringHelper';
 import { RouteName } from '@/enums/RouteName';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 import type UserLoginRequest from '@/types/UserLoginRequest';
+import type PropsAppLoginForm from '@/types/PropsAppLoginForm';
 
 const route = useRoute();
 const form = ref<UserLoginRequest>({ email: '', password: '' });
 
-interface AppLoginFormProps {
-  enableRegister: boolean;
-  errorMessage?: string;
-}
-const props = withDefaults(defineProps<AppLoginFormProps>(), {
+const props = withDefaults(defineProps<PropsAppLoginForm>(), {
   enableRegister: true,
 });
+
 const emits = defineEmits<{
   (event: '@login', request: UserLoginRequest): void;
 }>();
 
 const showCheckEmailMessage = ref(false);
 const verifiedEmail = ref('');
-console.log('redirectTo', route.query[AppQueryStringParam.redirectTo]);
 
 const redirectToValue = route.query[AppQueryStringParam.redirectTo] as string;
 console.log(redirectToValue);
 
-if (
-  !!redirectToValue &&
-  redirectToValue.includes(AppQueryStringParam.showReconnectMessage)
-) {
-  showCheckEmailMessage.value = true;
-  verifiedEmail.value = getQueryStringValue(
-    Object.fromEntries(
-      new URLSearchParams(decodeURI(redirectToValue.split('?')[1] || ''))
-    ),
-    AppQueryStringParam.verifiedEmail
-  )!;
-}
+const showReconnectMessage = () => {
+  if (
+    !!redirectToValue &&
+    redirectToValue.includes(AppQueryStringParam.showReconnectMessage)
+  ) {
+    showCheckEmailMessage.value = true;
+    verifiedEmail.value = getQueryStringValue(
+      Object.fromEntries(
+        new URLSearchParams(decodeURI(redirectToValue.split('?')[1] || ''))
+      ),
+      AppQueryStringParam.verifiedEmail
+    )!;
+  }
+};
+
+showReconnectMessage();
+
 const login = async () => {
   emits('@login', {
     ...form.value,

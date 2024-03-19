@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import useFirebase from '@/helpers/fireBaseConnector';
+import useFirebase from '@/services/fireBaseConnector';
 import type GenericMutationRequest from '@/types/GenericMutationRequest';
 import type GenericFetchRequest from '@/types/GenericFetchRequest';
 import type WithId from '@/types/WithId';

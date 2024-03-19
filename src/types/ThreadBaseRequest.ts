@@ -1,4 +1,4 @@
 interface ThreadBaseRequest {
   title: string;
-  body: string;
+  firstPostText: string;
 }
