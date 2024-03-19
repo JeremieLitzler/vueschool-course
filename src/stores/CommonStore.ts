@@ -10,7 +10,7 @@ import type GenericFetchRequestAll from '@/types/GenericFetchRequestAll';
 import type UiElementNotification from '@/types/UiElementNotification';
 import type FirebaseSinglePropQueryRequest from '@/types/FirebaseSinglePropQueryRequest';
 import type FirebaseChunkQueryRequest from '@/types/FirebaseChunkQueryRequest';
-import type OnSnapshotUnsubscribeListener from '@/types/OnSnapshotUnsubscribeListener';
+import type FirebaseOnSnapshotUnsubscribeListener from '@/types/FirebaseOnSnapshotUnsubscribeListener';
 import arrayChunckHelper from '@/helpers/arrayChunkHelper';
 
 export const useCommonStore = defineStore('CommonStore', () => {
@@ -28,9 +28,9 @@ export const useCommonStore = defineStore('CommonStore', () => {
    */
   const maxElementsPerFetch = 5;
 
-  const onSnapshotUnsubscribeListeners = ref<OnSnapshotUnsubscribeListener[]>(
-    []
-  );
+  const onSnapshotUnsubscribeListeners = ref<
+    FirebaseOnSnapshotUnsubscribeListener[]
+  >([]);
 
   //GETTERS
   const isUiElementReady = (uiElement: string) => {
