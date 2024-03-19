@@ -44,7 +44,7 @@ import type PropsPostEditor from '@/types/PropsPostEditor';
 import type PostAddRequest from '@/types/PostAddRequest';
 import type PostUpdateRequest from '@/types/PostUpdateRequest';
 
-const { sourcePost, threadId } = withDefaults(defineProps<PropsPostEditor>(), {
+const props = withDefaults(defineProps<PropsPostEditor>(), {
   sourcePost: null,
 });
 
@@ -54,9 +54,9 @@ const emits = defineEmits<{
 }>();
 
 const formKey = ref(uniqueIdHelper().newUniqueId);
-const newPostText = ref(sourcePost?.text ?? null);
+const newPostText = ref(props.sourcePost?.text ?? null);
 const postIsEdited = computed(() => {
-  const result = sourcePost !== null;
+  const result = props.sourcePost !== null;
   return result;
 });
 const postingAllowed = computed(() => {
@@ -70,19 +70,29 @@ const savePost = () => {
   if (!authUser) {
     //TODO : handle not authenticated user
     //       firebase returns a permission error
-    console.log('PostEditor>savePost>!auth', firebaseService().getAuthUserId());
+    console.log(
+      'PostEditor>savePost>!authUser',
+      firebaseService().getAuthUserId()
+    );
+  } else {
+    console.log('PostEditor>savePost>authUser', authUser);
+    console.log(
+      'PostEditor>savePost>!authUser',
+      firebaseService().getAuthUserId()
+    );
   }
 
   if (postIsEdited.value) {
     const request: PostUpdateRequest = {
       text: newPostText.value!,
-      id: sourcePost?.id!,
+      id: props.sourcePost?.id!,
+      userId: authUser.id,
     };
     emits('@update-post', request);
   } else {
     const request: PostAddRequest = {
       text: newPostText.value!,
-      threadId: threadId!,
+      threadId: props.threadId!,
     };
     emits('@add-post', request);
     newPostText.value = '';
