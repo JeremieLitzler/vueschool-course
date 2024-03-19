@@ -26,14 +26,14 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import PostEditor from './PostEditor.vue';
-import type Post from '@/types/Post';
-import type PostUpdateRequest from '@/types/PostUpdateRequest';
 import { usePostStore } from '@/stores/PostStore';
 import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
+import type Post from '@/types/Post';
+import type PostUpdateRequest from '@/types/PostUpdateRequest';
+import PostEditor from '@/components/PostEditor.vue';
 
-const { post } = defineProps<{ post: Post }>();
+const props = defineProps<{ post: Post }>();
 const emits = defineEmits<{
   (event: '@refresh-posts', value: boolean): void;
 }>();
@@ -43,11 +43,15 @@ const savingPost = computed(() => {
   return !useCommonStore().isUiElementReady(asyncUiElement);
 });
 const linkText = computed(() =>
-  postEdited.value === post.id ? 'Cancel' : 'Edit'
+  postEdited.value === props.post.id ? 'Cancel' : 'Edit'
 );
 
+/**
+ * Client side rule, also enforced on the server side.
+ * @see firestore.rules file at the root of the project.
+ */
 const canEditPost = computed(
-  () => useUserStore().getAuthUser()?.id === post.userId
+  () => useUserStore().getAuthUser()?.id === props.post.userId
 );
 const toogleEditMode = (post: Post) => {
   postEdited.value = post.id === postEdited.value ? null : post.id;
@@ -63,6 +67,9 @@ const updatePost = async (request: PostUpdateRequest) => {
     ready: true,
   });
   postEdited.value = null;
+  //  This emit cascade to PostList (parent) and ThreadShow (grand-parent).
+  //  It is needed to refresh the PostList component with what the updated
+  //  store contains.
   emits('@refresh-posts', true);
 };
 </script>

@@ -27,7 +27,14 @@
           v-click-outside="closeDropdown"
           href="#"
         >
+          <!-- The key is required because the update of the avatar 
+          is made in the UserProfileCardEditor.
+          The value of user?.avatar does change, but the component
+          app-avatar-image needs to know it changed so it can update
+          the UI.
+          -->
           <app-avatar-image
+            :key="user?.avatar"
             cssClass="avatar-small"
             :src="user?.avatar"
             :alt="`${user?.name} profile picture`"
@@ -77,21 +84,15 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-
-import { RouteName } from '@/enums/RouteName';
+import { useCommonStore } from '@/stores/CommonStore';
 import { useUserStore } from '@/stores/UserStore';
 import appendRouteHelper from '@/helpers/appendRouteHelper';
-import { useCommonStore } from '@/stores/CommonStore';
-import GetUserExtented from '@/types/GetUserExtended';
-
-const { toSignOut } = appendRouteHelper();
+import { RouteName } from '@/enums/RouteName';
+import type GetUserExtented from '@/types/GetUserExtended';
 
 const userMenuOpened = ref(false);
 const mobileMenuOpened = ref(false);
-//TODO: The image isn't reloaded after a profile update...
 const user = computed(() => useUserStore().getAuthUser());
-//console.log('the-navbar>setup>user', user.value);
-
 const signedIn = computed(() => {
   //console.log('the-navbar>signedIn>user', user.value);
   if (!user.value) return false;
@@ -113,6 +114,8 @@ const closeDropdown = () => {
 const closeMobileMenu = () => {
   mobileMenuOpened.value = false;
 };
+
+const { toSignOut } = appendRouteHelper();
 const logout = async () => {
   mobileMenuOpened.value = false;
   toSignOut();

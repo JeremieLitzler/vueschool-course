@@ -39,8 +39,6 @@ const orderedPosts = computed(() => {
     first.publishedAt! < next.publishedAt! ? 1 : -1
   );
 });
-
-console.log('post-list>props.posts', props.posts);
 </script>
 
 <style lang="css" scoped>
