@@ -54,7 +54,7 @@ const search = async () => {
   init.value = false;
   //You can use $fetch that Nuxt provides out-of-the-box
   const response: ApiSearchResponse = await $fetch(
-    `http://www.omdbapi.com/?apikey=236d985a&page=1&s=${query.value}`
+    `https://www.omdbapi.com/?apikey=236d985a&page=1&s=${query.value}`
   );
   // const searchResponse: ApiSearchResponse = { ...(await response.json()) };
   movies.value = [...response.Search];
