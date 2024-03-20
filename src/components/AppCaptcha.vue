@@ -18,7 +18,6 @@ import type CaptchaEmitNotification from '@/types/CaptchaEmitNotification';
 const siteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY;
 
 const emits = defineEmits<{
-  (event: '@hcaptcha-execute', entry: unknown): void;
   (event: '@hcaptcha-notification', entry: CaptchaEmitNotification): void;
 }>();
 
@@ -74,8 +73,7 @@ const runCaptcha = async () => {
   if (!asyncExecuteHCaptcha.value) {
     return;
   }
-  const executeResponse = await asyncExecuteHCaptcha.value!.executeAsync();
-  emits('@hcaptcha-execute', executeResponse);
+  await asyncExecuteHCaptcha.value!.executeAsync();
 };
 /**
  * Finally expose the function to the parent components using this component.

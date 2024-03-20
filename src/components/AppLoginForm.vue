@@ -22,7 +22,6 @@
     <app-captcha
       ref="captchaRef"
       @@hcaptcha-notification="notifyUserWithCaptchaResponse"
-      @@hcaptcha-execute="processCaptchaExecute"
     />
     <div class="push-top">
       <!-- 
@@ -103,15 +102,11 @@ const notifyUserWithCaptchaResponse = (response: CaptchaEmitNotification) => {
     captchaPassed.value = true;
   } else {
     captchaPassed.value = false;
-    captchaErrorMessage.value = response.message!;
+    captchaErrorMessage.value =
+      '🚧 Please resolve the captcha challenge to login.';
   }
 };
 
-const processCaptchaExecute = (executeResponse: unknown) => {
-  console.log(executeResponse);
-
-  //  login();
-};
 const login = async () => {
   if (!captchaPassed.value) {
     useNotification().addNotification({
@@ -123,9 +118,9 @@ const login = async () => {
       message: 'Logging-in...',
       type: NotificationType.Success,
     });
-    // emits('@login', {
-    //   ...form.value,
-    // });
+    emits('@login', {
+      ...form.value,
+    });
   }
 };
 </script>
