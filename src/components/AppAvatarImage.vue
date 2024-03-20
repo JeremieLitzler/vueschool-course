@@ -3,13 +3,14 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 interface AppAvatarImage {
   src?: string;
   alt: string;
   cssClass?: string;
 }
 
-const { src, alt, cssClass } = withDefaults(defineProps<AppAvatarImage>(), {
+const props = withDefaults(defineProps<AppAvatarImage>(), {
   src: '/img/user-placeholder.png',
   cssClass: 'avatar-xlarge',
 });
@@ -17,7 +18,7 @@ const { src, alt, cssClass } = withDefaults(defineProps<AppAvatarImage>(), {
 /**
  * Load the src into the data prop unless it is null, otherwise use the placeholder.
  */
-const theSrc = src || '/img/user-placeholder.png';
+const theSrc = ref(props.src || '/img/user-placeholder.png');
 //console.log(src, theSrc, alt, cssClass);
 </script>
 <style scoped>
