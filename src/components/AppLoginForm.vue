@@ -28,15 +28,16 @@
       <!-- 
         The button below calls the runCaptcha of the app-captcha.
         In test mode, it verifies the captcha.
+        See comment of BenW301 to this reply: https://stackoverflow.com/a/55317353/3910066
        -->
-      <!-- <button
+      <button
         @click="captchaRef.runCaptcha()"
         type="submit"
         class="btn-blue btn-block"
       >
         Log in
-      </button> -->
-      <button type="submit" class="btn-blue btn-block">Log in</button>
+      </button>
+      <!-- <button type="submit" class="btn-blue btn-block">Log in</button> -->
     </div>
     <div v-if="props.errorMessage != ''" class="error-message">
       {{ props.errorMessage }}

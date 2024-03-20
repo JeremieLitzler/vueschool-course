@@ -14,8 +14,6 @@
 import { ref } from 'vue';
 import VueHcaptcha from '@hcaptcha/vue3-hcaptcha';
 import type CaptchaEmitNotification from '@/types/CaptchaEmitNotification';
-// import '@hcaptcha/types';
-console.log('hCaptcha>sitekey', import.meta.env.VITE_HCAPTCHA_SITEKEY);
 
 const siteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY;
 
