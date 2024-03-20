@@ -16,6 +16,7 @@ import VueHcaptcha from '@hcaptcha/vue3-hcaptcha';
 import type CaptchaEmitNotification from '@/types/CaptchaEmitNotification';
 
 const siteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY;
+const isVerified = ref(false);
 
 const emits = defineEmits<{
   (event: '@hcaptcha-notification', entry: CaptchaEmitNotification): void;
@@ -32,6 +33,7 @@ const asyncExecuteHCaptcha = ref<VueHcaptcha | null>(null);
  */
 const onVerify = (_token: string, _eKey: string) => {
   // console.log('onVerify: ', { _token, _eKey });
+  isVerified.value = true;
   emits('@hcaptcha-notification', { success: true });
 };
 /**
@@ -70,13 +72,19 @@ const onError = (_err: unknown) => {
  * On resolution, it will trigger a onVerify callback.
  */
 const runCaptcha = async () => {
+  if (isVerified.value) {
+    //To prevent the execution to run again if the captcha is
+    //verified
+    return;
+  }
   if (!asyncExecuteHCaptcha.value) {
     return;
   }
   await asyncExecuteHCaptcha.value!.executeAsync();
 };
 /**
- * Finally expose the function to the parent components using this component.
+ * Finally expose the function to the parent components using
+ * this component.
  */
 defineExpose({ runCaptcha });
 </script>
