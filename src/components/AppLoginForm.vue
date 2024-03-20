@@ -114,10 +114,6 @@ const login = async () => {
       type: NotificationType.Error,
     });
   } else {
-    useNotification().addNotification({
-      message: 'Logging-in...',
-      type: NotificationType.Success,
-    });
     emits('@login', {
       ...form.value,
     });

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-grid justify-center">
     <div class="col-2">
-      <vee-form @submit="register" class="card card-form">
+      <vee-form @submit="verifyCaptchaBeforeRegister" class="card card-form">
         <h1 class="text-center">Register</h1>
         <div class="text-center push-top">
           <button @click="loginWithGoogle" class="btn-red btn-xsmall">
@@ -58,9 +58,18 @@
             class="form-input"
           />
         </div>
-
+        <app-captcha
+          ref="captchaRef"
+          @@hcaptcha-notification="notifyUserWithCaptchaResponse"
+        />
         <div class="form-actions">
-          <button type="submit" class="btn-blue btn-block">Register</button>
+          <button
+            @click="captchaRef.runCaptcha()"
+            type="submit"
+            class="btn-blue btn-block"
+          >
+            Register
+          </button>
         </div>
         <div class="error-message" v-if="error != ''">{{ error }}</div>
         <div class="form-actions text-right">
@@ -87,6 +96,10 @@ import { RouteName } from '@/enums/RouteName';
 import { useUserStore } from '@/stores/UserStore';
 import appendRouteHelper from '@/helpers/appendRouteHelper';
 import objectHelper from '@/helpers/objectHelper';
+import AppCaptcha from '@/components/AppCaptcha.vue';
+import CaptchaEmitNotification from '@/types/CaptchaEmitNotification';
+import useNotification from '@/composables/useNotification';
+import { NotificationType } from '@/enums/NotificationType';
 
 const { toSuccessRedirect } = appendRouteHelper();
 
@@ -101,6 +114,9 @@ const form = ref<UserRegisterRequest>({
 
 const error = ref('');
 const avatarFile = ref<File | null>(null);
+const captchaPassed = ref(false);
+const captchaRef = ref(AppCaptcha);
+const captchaErrorMessage = ref('');
 
 const avatarPreview = ref<string | null>(null);
 
@@ -121,6 +137,27 @@ const handleFileUpload = (uploadEvent: Event) => {
   if (form.value.avatar) reader.readAsDataURL(avatarFile.value as Blob);
 };
 
+const notifyUserWithCaptchaResponse = (response: CaptchaEmitNotification) => {
+  if (response.success) {
+    captchaPassed.value = true;
+  } else {
+    captchaPassed.value = false;
+    captchaErrorMessage.value =
+      '🚧 Please resolve the captcha challenge to login.';
+  }
+};
+const verifyCaptchaBeforeRegister = async (
+  _values: Record<string, unknown>
+) => {
+  if (!captchaPassed.value) {
+    useNotification().addNotification({
+      message: captchaErrorMessage.value,
+      type: NotificationType.Error,
+    });
+  } else {
+    register(_values);
+  }
+};
 const register = async (_values: Record<string, unknown>) => {
   const user = await useUserStore().registerUserWithEmailAndPassword({
     avatar: form.value.avatar,
