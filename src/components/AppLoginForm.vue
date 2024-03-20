@@ -102,6 +102,7 @@ const notifyUserWithCaptchaResponse = (response: CaptchaEmitNotification) => {
   if (response.success) {
     captchaPassed.value = true;
   } else {
+    captchaPassed.value = false;
     captchaErrorMessage.value = response.message!;
   }
 };

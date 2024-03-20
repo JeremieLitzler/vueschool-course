@@ -24,39 +24,61 @@ const emits = defineEmits<{
 
 const asyncExecuteHCaptcha = ref<VueHcaptcha | null>(null);
 
-const onVerify = (token: string, eKey: string) => {
-  console.log('Verified: ', { token, eKey });
+/**
+ * The following are the callback supported by @hcaptcha package
+ * @see https://github.com/hCaptcha/vue-hcaptcha?tab=readme-ov-file#callback-events
+ */
+/**
+ * The challenge is validated.
+ */
+const onVerify = (_token: string, _eKey: string) => {
+  // console.log('onVerify: ', { _token, _eKey });
   emits('@hcaptcha-notification', { success: true });
 };
+/**
+ * The token has expired.
+ */
 const onExpire = () => {
-  console.log('Token expired');
+  // console.log('Token expired');
   emits('@hcaptcha-notification', {
     success: false,
     message: 'hCaptcha verification expired',
   });
 };
+/**
+ * The challenge expired.
+ */
 const onChallengeExpire = () => {
-  console.log('Challenge expired');
+  // console.log('Challenge expired');
   emits('@hcaptcha-notification', {
     success: false,
     message: 'hCaptcha challenge expired',
   });
 };
-const onError = (err: unknown) => {
-  console.log('Error', err);
+/**
+ * An error occured.
+ */
+const onError = (_err: unknown) => {
+  // console.log('Error', err);
   emits('@hcaptcha-notification', {
     success: false,
     message: 'hCaptcha error',
   });
 };
-
+/**
+ * Run the captcha if not verified.
+ * The user is prompted to resolve the challenge.
+ * On resolution, it will trigger a onVerify callback.
+ */
 const runCaptcha = async () => {
   if (!asyncExecuteHCaptcha.value) {
     return;
   }
-
   const executeResponse = await asyncExecuteHCaptcha.value!.executeAsync();
   emits('@hcaptcha-execute', executeResponse);
 };
+/**
+ * Finally expose the function to the parent components using this component.
+ */
 defineExpose({ runCaptcha });
 </script>
