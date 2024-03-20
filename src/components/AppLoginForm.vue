@@ -19,7 +19,23 @@
       rules="required|min:8"
       type="password"
     />
+    <app-captcha
+      ref="captchaRef"
+      @@hcaptcha-notification="notifyUserWithCaptchaResponse"
+      @@hcaptcha-execute="processCaptchaExecute"
+    />
     <div class="push-top">
+      <!-- 
+        The button below calls the runCaptcha of the app-captcha.
+        In test mode, it verifies the captcha.
+       -->
+      <!-- <button
+        @click="captchaRef.runCaptcha()"
+        type="submit"
+        class="btn-blue btn-block"
+      >
+        Log in
+      </button> -->
       <button type="submit" class="btn-blue btn-block">Log in</button>
     </div>
     <div v-if="props.errorMessage != ''" class="error-message">
@@ -41,9 +57,12 @@ import { RouteName } from '@/enums/RouteName';
 import { AppQueryStringParam } from '@/enums/AppQueryStringParam';
 import type UserLoginRequest from '@/types/UserLoginRequest';
 import type PropsAppLoginForm from '@/types/PropsAppLoginForm';
+import useNotification from '@/composables/useNotification';
+import { NotificationType } from '@/enums/NotificationType';
+import CaptchaEmitNotification from '@/types/CaptchaEmitNotification';
+import AppCaptcha from '@/components/AppCaptcha.vue';
 
 const route = useRoute();
-const form = ref<UserLoginRequest>({ email: '', password: '' });
 
 const props = withDefaults(defineProps<PropsAppLoginForm>(), {
   enableRegister: true,
@@ -53,11 +72,13 @@ const emits = defineEmits<{
   (event: '@login', request: UserLoginRequest): void;
 }>();
 
+const form = ref<UserLoginRequest>({ email: '', password: '' });
+const captchaPassed = ref(false);
+const captchaRef = ref(AppCaptcha);
+const captchaErrorMessage = ref('');
 const showCheckEmailMessage = ref(false);
 const verifiedEmail = ref('');
-
 const redirectToValue = route.query[AppQueryStringParam.redirectTo] as string;
-console.log(redirectToValue);
 
 const showReconnectMessage = () => {
   if (
@@ -76,10 +97,34 @@ const showReconnectMessage = () => {
 
 showReconnectMessage();
 
+const notifyUserWithCaptchaResponse = (response: CaptchaEmitNotification) => {
+  if (response.success) {
+    captchaPassed.value = true;
+  } else {
+    captchaErrorMessage.value = response.message!;
+  }
+};
+
+const processCaptchaExecute = (executeResponse: unknown) => {
+  console.log(executeResponse);
+
+  //  login();
+};
 const login = async () => {
-  emits('@login', {
-    ...form.value,
-  });
+  if (!captchaPassed.value) {
+    useNotification().addNotification({
+      message: captchaErrorMessage.value,
+      type: NotificationType.Error,
+    });
+  } else {
+    useNotification().addNotification({
+      message: 'Logging-in...',
+      type: NotificationType.Success,
+    });
+    // emits('@login', {
+    //   ...form.value,
+    // });
+  }
 };
 </script>
 
