@@ -1,4 +1,4 @@
-## Common Vue.js Mistakes and How to Avoid Them
+# Common Vue.js Mistakes and How to Avoid Them
 
 The following are a kind of a checklist.
 
@@ -58,10 +58,10 @@ The caveat: set the data of the composable outside of the composable. See [the e
 Watching the array requires to be done in the deep mode.
 
 ```javascript
-watch(numbers, () => console.log('new number added'), {
+watch(numbers, () => console.log("new number added"), {
   //deep option
-  deep: true
-})
+  deep: true,
+});
 ```
 
 Why?
@@ -73,7 +73,7 @@ Another syntax is to use an anonymous arrow function:
 ```javascript
 watch(
   () => [...numbers.value],
-  () => console.log('new number added')
+  () => console.log("new number added")
 );
 ```
 
@@ -110,12 +110,12 @@ If you do use manual event listeners and register them on the `onMounted` hook, 
 ```javascript
 import { onMounted, onUnmounted } from "vue";
 onMounted(() => {
-    document.body.addEventListener('keydown',handlerFunction)
-})
+  document.body.addEventListener("keydown", handlerFunction);
+});
 
 onUnmounted(() => {
-    document.body.removeEventListener('keydown',handlerFunction)
-})
+  document.body.removeEventListener("keydown", handlerFunction);
+});
 ```
 
 In the package `@vueuse/core`, you have a composable `useEventListener` that makes sure the registration and unregistration are done in a single line:
@@ -149,12 +149,12 @@ See this example that contains an error:
 
 ```vue
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 const user = ref({
-  username: 'danielkelly_io',
-  email: 'daniel@vueschool.io',
-  name: 'Daniel Kelly'
-})
+  username: "danielkelly_io",
+  email: "daniel@vueschool.io",
+  name: "Daniel Kelly",
+});
 </script>
 
 <template>
@@ -181,7 +181,7 @@ Using TypeScript, ESLint would underline the `mail` property of `user` and tell 
 
 It may take a few month to learn, but the advantages far exceed the drawbacks.
 
-### Destructuring Reactive Data
+## Destructuring Reactive Data
 
 When you destructure an object, even if it is reactive, the destructured properties are not reactive anymore.
 
@@ -209,7 +209,7 @@ const { prop1, prop2, prop3 } = toRefs(myObject);
 
 This can be an issue in a composable: call `toRefs` on the returned object.
 
-### Calling Composables in the Wrong Place
+## Calling Composables in the Wrong Place
 
 Composables should not be called from:
 
@@ -225,7 +225,7 @@ Also, you should call a composable synchronously.
 
 Why? See [the docs for more](https://vuejs.org/guide/reusability/composables.html#usage-restrictions).
 
-### Using `v-html` with User Provided Data
+## Using `v-html` with User Provided Data
 
 Use `v-html`:
 
@@ -236,7 +236,7 @@ Don't use `v-html`:
 
 - if the source comes from an `input` or `textarea` and is available to an external use.
 
-### Unnecessary Manual DOM Manipulation
+## Unnecessary Manual DOM Manipulation
 
 Just don't manipulate the DOM when you use VueJS.
 

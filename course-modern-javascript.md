@@ -1,4 +1,4 @@
-#
+# Modern JavaScript
 
 ## What Is a Higher Order Function in JavaScript?
 

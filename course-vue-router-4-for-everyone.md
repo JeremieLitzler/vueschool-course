@@ -354,7 +354,7 @@ const routes = [
 
 ## Navigation Guards
 
-They allow to hook into the navigation process and perform checks and act accordingly: continue or show an error page.
+They allow to hook into the navigation process and perform checks and act accordingly: continue or doing something else.
 
 For example, we define a route like the following:
 
@@ -377,7 +377,7 @@ That's when navigation guards are useful.
 We define it on the appropriate event. In the example, **before** we **enter** the next route:
 
 ```javascript
-    beforeEnter(to, from) {
+    beforeEnter(to, from, next) {
       //to is the destination route
       //from is the origin route
       //so we want to check the data contains the element matching route.params.id
@@ -385,10 +385,32 @@ We define it on the appropriate event. In the example, **before** we **enter** t
         (element) => element.id === parseInt(to.params.id),
       );
 
-      if (!exists) return { name: 'notfound' };
+      if (!exists) return next({ name: 'notfound' });
 
       //otherwise we continue
+      next();
     },
+```
+
+While the above guard is an example of a guard in the route definition, also called middleware, you use the guards in the components.
+
+Usually, you use navigation guards defined in the route definition when it is auth-related and if you are making sure the requested data is available.
+
+In some case, you may need to _componentless route_ with a guard that runs some store action: a sign out route is one of those usecases.
+
+```typescript
+const UserLogoutRoute: RouteRecordRaw = {
+  path: "/logout",
+  name: RouteName.UserLogout,
+  redirect: "",
+  beforeEnter: async (_to, _from, next) => {
+    await logoutUser();
+    updateFetching();
+    next({
+      name: RouteName.TheHome,
+    });
+  },
+};
 ```
 
 If you want to keep the URL intact even if it is wrong, you will need to add the following to return statement:
@@ -402,6 +424,10 @@ return {
   hash: to.hash,
 };
 ```
+
+The other two guards are `beforeLeave` and `beforeUpdate`.
+
+The common usecase for `beforeLeave` is to catch the scenario when the user fills a form and click away. You can show the user a _Wanna save?_ modal thanks to this guard.
 
 ## Handle scroll
 
@@ -513,6 +539,8 @@ Using the push method on the router instance on the login page, for example, we 
     router.push({ name: "home" });
   };
   ```
+
+NB: meta fields are passed on to the children in the case of nested routes.
 
 ## Router Query Params
 

@@ -95,3 +95,13 @@ Using it this correct way will render the HTML fine:
 ## The `$event` handler
 
 See [the docs](https://vuejs.org/guide/essentials/event-handling).
+
+## Differences between `v-if` and `v-show`
+
+`v-if` excludes the DOM element from the DOM at render time.
+
+`v-show` simply toggle the `display` CSS property.
+
+Choosing between the two depends on the usecase and the frequency you want to toggle the DOM element.
+
+Listen to Daniel Kelly about that [in the 88th lesson of the original masterclass](https://vueschool.io/lessons/displaying-a-loading-indicator-while-components-fetch-async-data) at 4:45.

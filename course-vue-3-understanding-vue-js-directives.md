@@ -39,13 +39,13 @@ It is the second argument in the custom directive argument.
 <script setup>
   const vColor = (element, binding) => {
     let i = 0;
-    const colors =  binding.value;
+    const colors = binding.value;
     setInterval(() => {
-        element.style.color = colors[i];
-        i++;
-        if (i === colors.length) i = 0;
+      element.style.color = colors[i];
+      i++;
+      if (i === colors.length) i = 0;
     }, 500);
-    }
+  };
 </script>
 
 <template>
@@ -63,29 +63,28 @@ Declare the array of value in the template (non-reactive) or in the script setup
 
 ```htm
 <script setup>
-  import { ref } from 'vue';
+  import { ref } from "vue";
 
-  const colorsPickerArr = ref(['green', 'red', 'gold']);
+  const colorsPickerArr = ref(["green", "red", "gold"]);
   const vColor = (element, binding) => {
     let i = 0;
-    const colors =  binding.value;
+    const colors = binding.value;
     setInterval(() => {
       element.style.color = colors[i];
       i++;
       if (i === colors.length) i = 0;
     }, 500);
-  }
+  };
 
   setTimeout(() => {
     // orange is added after 5 sec.
-    colorsPickerArr.value.push("orange")
+    colorsPickerArr.value.push("orange");
   }, 5000);
 </script>
 
 <template>
   <h1 v-color="colorsPickerArr">My title</h1>
 </template>
-
 ```
 
 ## Using the Custom Directive's argument
@@ -97,11 +96,10 @@ You need to take care of the case where the argument isn't correct using a defau
 The argument possible values are defined in the custom attribute as an object where the keys are the possible values.
 
 ```htm
-
 <script setup>
-  import { ref } from 'vue';
+  import { ref } from "vue";
 
-  const colorsPickerArr = ref(['green', 'red', 'gold']);
+  const colorsPickerArr = ref(["green", "red", "gold"]);
   const vColor = (element, binding) => {
     let i = 0;
     //argument values
@@ -111,18 +109,18 @@ The argument possible values are defined in the custom attribute as an object wh
       fast: 500,
     };
 
-    const speedName = binding.arg || 'normal';
+    const speedName = binding.arg || "normal";
     const speed = speedsMs[speedName];
-    const colors =  binding.value;
+    const colors = binding.value;
     setInterval(() => {
       element.style.color = colors[i];
       i++;
       if (i === colors.length) i = 0;
     }, speed);
-  }
+  };
 
   setTimeout(() => {
-    colorsPickerArr.value.push("orange")
+    colorsPickerArr.value.push("orange");
   }, 5000);
 </script>
 <template>
@@ -138,9 +136,9 @@ They are accessed from the `binding.modifiers`. It is an object where the keys a
 
 ```htm
 <script setup>
-  import { ref } from 'vue';
+  import { ref } from "vue";
 
-  const colorsPickerArr = ref(['green', 'red', 'gold']);
+  const colorsPickerArr = ref(["green", "red", "gold"]);
   const vColor = (element, binding) => {
     let i = 0;
     const speedsMs = {
@@ -149,14 +147,14 @@ They are accessed from the `binding.modifiers`. It is an object where the keys a
       fast: 500,
     };
 
-    const speedName = binding.arg || 'normal';
+    const speedName = binding.arg || "normal";
     const speed = speedsMs[speedName];
-    const colors =  binding.value;
+    const colors = binding.value;
 
-    if(binding.modifiers.underline) {
+    if (binding.modifiers.underline) {
       element.style.textDecoration = "underline";
     }
-    if(binding.modifiers.italic) {
+    if (binding.modifiers.italic) {
       element.style.fontStyle = "italic";
     }
     setInterval(() => {
@@ -164,10 +162,10 @@ They are accessed from the `binding.modifiers`. It is an object where the keys a
       i++;
       if (i === colors.length) i = 0;
     }, speed);
-  }
+  };
 
   setTimeout(() => {
-    colorsPickerArr.value.push("orange")
+    colorsPickerArr.value.push("orange");
   }, 5000);
 </script>
 
@@ -185,11 +183,11 @@ By default, the code above willl run twice: `mounted` and `updated`.
 So, you declare the custom directive in an object and put the logic in the `mounted` hook:
 
 ```javascript
-  const vColor = {
-    mounted(element, binding) {
-        //logic goes here...
-    }
-  };
+const vColor = {
+  mounted(element, binding) {
+    //logic goes here...
+  },
+};
 ```
 
 ## The Directive’s unMounted Hook
@@ -199,22 +197,21 @@ When using `setInterval`, you will want to stop the internal.
 Using the `unmounted` hook, you do so:
 
 ```javascript
-  const vColor = {
-    mounted(element, binding) {
-      //logic goes here...
-      //The double underscores are there to avoid name collisions.
-      element.__ColorInterval__ = setInterval(() => {
-        console.log("🖌️ Coloring");
-        element.style.color = colors[i];
-        i++;
-        if (i === colors.length) i = 0;
-      }, speed);
-
-    },
-    unmounted(element) {
-      clearInterval(element.__ColorInterval__);
-    }
-  };
+const vColor = {
+  mounted(element, binding) {
+    //logic goes here...
+    //The double underscores are there to avoid name collisions.
+    element.__ColorInterval__ = setInterval(() => {
+      console.log("🖌️ Coloring");
+      element.style.color = colors[i];
+      i++;
+      if (i === colors.length) i = 0;
+    }, speed);
+  },
+  unmounted(element) {
+    clearInterval(element.__ColorInterval__);
+  },
+};
 ```
 
 The naming of the interval is a convention: [Name of directive]Interval.
@@ -227,11 +224,36 @@ That is very easy:
 - import the file in `main.js` and use `.directive()`:
 
 ```javascript
-import { createApp } from 'vue';
-import App from './App.vue';
-import clickCloseDirective from './directives/click-close';
+import { createApp } from "vue";
+import App from "./App.vue";
+import clickCloseDirective from "./directives/click-close";
 
-createApp(App).directive('close', clickCloseDirective).mount('#app');
+createApp(App).directive("close", clickCloseDirective).mount("#app");
+```
+
+## The caveat
+
+You cannot use JavaScript expression in the template like we can with `v-on`.
+
+Why? Because the scope in different.
+
+Therefore use a method or an anonymous function (e.g. arrow function).
+
+```htm
+<a @click.prevent="toggleMenu" v-click-outside="closeDropdown" href="#"
+  >Toggle
+</a>
+```
+
+or
+
+```htm
+<a
+  @click.prevent="toggleMenu"
+  v-click-outside="() => menuOpened = false"
+  href="#"
+  >Toggle
+</a>
 ```
 
 ## Conclusion
