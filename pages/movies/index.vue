@@ -46,6 +46,7 @@ import { ref } from 'vue';
 const init = ref(true);
 const ready = ref(false);
 const query = ref('');
+const page = ref(1);
 const movies = ref<Movie[]>([]);
 const resultsFound = ref<number | null>(null);
 const noMovies = computed(() => movies.value.length === 0);
@@ -54,7 +55,7 @@ const search = async () => {
   init.value = false;
   //You can use $fetch that Nuxt provides out-of-the-box
   const response: ApiSearchResponse = await $fetch(
-    `https://www.omdbapi.com/?apikey=236d985a&page=1&s=${query.value}`
+    `${import.meta.env.VITE_OMDBAPI_URL}&page=${page.value}&s=${query.value}`
   );
   // const searchResponse: ApiSearchResponse = { ...(await response.json()) };
   movies.value = [...response.Search];
@@ -66,9 +67,9 @@ const search = async () => {
 <template>
   <h1>Page: movies/index</h1>
   <form @submit.prevent="search">
-    <input v-model="query" type="text" name="query" id="query" /><button>
-      Search
-    </button>
+    <input v-model="query" type="text" name="query" id="query" />
+    <input v-model="page" type="number" name="page" id="page" />
+    <button>Search</button>
   </form>
   <section v-if="!ready && !init">Searching...</section>
   <section v-if="noMovies">No results to show.</section>
