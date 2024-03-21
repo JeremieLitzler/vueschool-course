@@ -15,16 +15,11 @@ const noMovies = computed(() => movies.value.length === 0);
 
 const search = async () => {
   const { pending: fetchIsPending, data: apiSearchResponse } =
-    await useLazyAsyncData<ApiSearchResponse>(
-      `/movies-search/${query.value}`,
-      (): Promise<ApiSearchResponse> => {
-        return $fetch(
-          `${import.meta.env.VITE_OMDBAPI_URL}&page=${page.value}&s=${
-            query.value
-          }`
-        );
-      },
+    await useFetch<ApiSearchResponse>(
+      `${import.meta.env.VITE_OMDBAPI_URL}&page=${page.value}&s=${query.value}`,
       {
+        key: `/movies-search/${query.value}`,
+        lazy: true,
         default: () => null,
         getCachedData(key) {
           const data = nuxtApp.static.data[key] || nuxtApp.payload.data[key];

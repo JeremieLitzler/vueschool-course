@@ -5,12 +5,10 @@ import type Movie from '@@/types/Movie';
 const nuxtApp = useNuxtApp();
 const route = useRoute();
 const init = ref(true);
-const { pending, data: movie } = await useLazyAsyncData<Movie>(
-  `/movies/${route.params.id}`,
-  (): Promise<Movie> => {
-    return $fetch(`${import.meta.env.VITE_OMDBAPI_URL}&i=${route.params.id}`);
-  },
+const { pending, data: movie } = useFetch<Movie>(
+  `${import.meta.env.VITE_OMDBAPI_URL}&i=${route.params.id}`,
   {
+    key: `/movies/${route.params.id}`,
     default: () => null,
     pick: ['Title', 'Plot', 'Poster', 'imdbID'],
     /**
@@ -37,9 +35,6 @@ const { pending, data: movie } = await useLazyAsyncData<Movie>(
     },
   }
 );
-console.log('MovieDetails>data', movie.value);
-
-// const movie = ref<Movie | null>(data.value);
 </script>
 <template>
   <section v-if="pending">Fetching movie details...</section>
