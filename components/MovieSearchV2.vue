@@ -2,11 +2,12 @@
 import { ref } from 'vue';
 import type Movie from '@@/types/Movie';
 import type ApiSearchResponse from '@@/types/ApiSearchResponse';
+import type { RefSymbol } from '@vue/reactivity';
 
 const nuxtApp = useNuxtApp();
 
 const init = ref(true);
-const ready = ref(false);
+const pending = ref(false);
 const query = ref('Steel');
 const page = ref(1);
 const movies = ref<Movie[]>([]);
@@ -14,7 +15,7 @@ const resultsFound = ref<number | null>(null);
 const noMovies = computed(() => movies.value.length === 0);
 
 const search = async () => {
-  const { pending, data: apiSearchResponse } =
+  const { pending: fetchIsPending, data: apiSearchResponse } =
     await useLazyAsyncData<ApiSearchResponse>(
       `/movies-search/${query.value}`,
       (): Promise<ApiSearchResponse> => {
@@ -37,9 +38,20 @@ const search = async () => {
         },
       }
     );
-  ready.value = !pending.value;
-  movies.value = [...apiSearchResponse.value?.Search!];
+  pending.value = !fetchIsPending.value;
+  /**
+   * This watch is for the first request.
+   * The response is undefined when pending is true
+   *
+   */
+  watch(apiSearchResponse, (finalResponse) => {
+    movies.value = [...(finalResponse?.Search || [])];
+  });
+  if (apiSearchResponse.value !== undefined) {
+    movies.value = [...(apiSearchResponse.value?.Search || [])];
+  }
 };
+
 if (query.value !== '') {
   search();
 }
@@ -52,7 +64,7 @@ if (query.value !== '') {
     <input v-model="page" type="number" name="page" id="page" />
     <button>Search</button>
   </form>
-  <section v-if="!ready && !init">Searching...</section>
+  <section v-if="pending && !init">Searching...</section>
   <section v-if="noMovies">No results to show.</section>
   <section v-else>
     <h2>
