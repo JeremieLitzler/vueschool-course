@@ -5,7 +5,7 @@ import type ApiSearchResponse from '@@/types/ApiSearchResponse';
 
 const init = ref(true);
 const ready = ref(false);
-const query = ref('');
+const query = ref('Steel');
 const page = ref(1);
 const movies = ref<Movie[]>([]);
 const resultsFound = ref<number | null>(null);
@@ -22,6 +22,10 @@ const search = async () => {
   resultsFound.value = response.totalResults;
   ready.value = true;
 };
+
+if (query.value !== '') {
+  search();
+}
 </script>
 
 <template>
