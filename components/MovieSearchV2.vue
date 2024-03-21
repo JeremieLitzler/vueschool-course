@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import type Movie from '@@/types/Movie';
 import type ApiSearchResponse from '@@/types/ApiSearchResponse';
-import type { RefSymbol } from '@vue/reactivity';
 
 const nuxtApp = useNuxtApp();
 
@@ -47,7 +46,7 @@ const search = async () => {
   watch(apiSearchResponse, (finalResponse) => {
     movies.value = [...(finalResponse?.Search || [])];
   });
-  if (apiSearchResponse.value !== undefined) {
+  if (!fetchIsPending.value) {
     movies.value = [...(apiSearchResponse.value?.Search || [])];
   }
 };
