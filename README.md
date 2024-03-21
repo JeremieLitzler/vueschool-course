@@ -1,5 +1,11 @@
 # Nuxt 3 Minimal Starter
 
+## Live demo
+
+Thanks to Netlify, a [live demo is available](https://vueschool-nuxt3-jeremiel.netlify.app/).
+
+## About Nuxt
+
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
