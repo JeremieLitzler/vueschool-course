@@ -43,6 +43,11 @@ console.log({ pending: pending.value, error: error.value, movie: movie.value });
 if (movie.value?.imdbID === undefined) {
   showError({ statusCode: 404, message: 'Movie not found...' });
 }
+
+useHead({
+  title: movie.value?.Title,
+  meta: [{ name: 'description', content: movie.value?.Plot }],
+});
 </script>
 <template>
   <section v-if="pending">Fetching movie details...</section>
