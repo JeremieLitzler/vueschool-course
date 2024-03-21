@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import type ApiResponseError from '@@/types/ApiResponseError';
 import type Movie from '@@/types/Movie';
 const nuxtApp = useNuxtApp();
 const route = useRoute();
-const init = ref(true);
-const { pending, data: movie } = useFetch<Movie>(
+const {
+  pending,
+  data: movie,
+  error,
+} = await useFetch<Movie | null>(
   `${import.meta.env.VITE_OMDBAPI_URL}&i=${route.params.id}`,
   {
     key: `/movies/${route.params.id}`,
@@ -23,8 +27,8 @@ const { pending, data: movie } = useFetch<Movie>(
     //     Poster: data.Poster,
     //     imdbID: data.imdbID,
     //   };
-    // },
     getCachedData(key) {
+      console.log('getCachedData>key', key);
       const data = nuxtApp.static.data[key] || nuxtApp.payload.data[key];
       console.log('getCachedData>data', data);
 
@@ -35,9 +39,14 @@ const { pending, data: movie } = useFetch<Movie>(
     },
   }
 );
+console.log({ pending: pending.value, error: error.value, movie: movie.value });
+if (movie.value?.imdbID === undefined) {
+  showError({ statusCode: 404, message: 'Movie not found...' });
+}
 </script>
 <template>
   <section v-if="pending">Fetching movie details...</section>
+  <section v-else-if="error">{{ error }}</section>
   <section v-else>
     <h1>{{ movie?.Title }}</h1>
 

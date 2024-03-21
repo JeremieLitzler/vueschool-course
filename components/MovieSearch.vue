@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type Movie from '@@/types/Movie';
-import type ApiSearchResponse from '@@/types/ApiSearchResponse';
+import type ApiSearchResponse from '@@/types/ApiResponseSearch';
 
 const init = ref(true);
 const ready = ref(false);
@@ -73,3 +73,4 @@ if (query.value !== '') {
   justify-content: space-around;
 }
 </style>
+~/types/ApiResponseSearch

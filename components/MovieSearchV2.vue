@@ -1,48 +1,54 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type Movie from '@@/types/Movie';
-import type ApiSearchResponse from '@@/types/ApiSearchResponse';
+import type ApiResponseSearch from '@@/types/ApiResponseSearch';
+import { errorMessages } from 'vue/compiler-sfc';
 
 const nuxtApp = useNuxtApp();
 
 const init = ref(true);
 const pending = ref(false);
 const query = ref('Steel');
+const errorThrown = ref<string | null>(null);
 const page = ref(1);
-const movies = ref<Movie[]>([]);
+const searchResponse = ref<ApiResponseSearch | ApiResponseSearch | null>();
 const resultsFound = ref<number | null>(null);
-const noMovies = computed(() => movies.value.length === 0);
+const noMovies = computed(() => searchResponse.value?.Search?.length === 0);
 
 const search = async () => {
-  const { pending: fetchIsPending, data: apiSearchResponse } =
-    await useFetch<ApiSearchResponse>(
-      `${import.meta.env.VITE_OMDBAPI_URL}&page=${page.value}&s=${query.value}`,
-      {
-        key: `/movies-search/${query.value}`,
-        lazy: true,
-        default: () => null,
-        getCachedData(key) {
-          const data = nuxtApp.static.data[key] || nuxtApp.payload.data[key];
-          console.log('getCachedData>data', data);
+  pending.value = true;
+  const {
+    pending: isFetching,
+    data: apiSearchResponse,
+    error,
+  } = await useFetch<ApiResponseSearch>(
+    `${import.meta.env.VITE_OMDBAPI_URL}&page=${page.value}&s=${query.value}`,
+    {
+      key: `/movies-search/${query.value}`,
+      lazy: true,
+      default: () => null,
+      getCachedData(key) {
+        const data = nuxtApp.static.data[key] || nuxtApp.payload.data[key];
+        console.log('getCachedData>data', data);
 
-          if (!data || data === undefined) {
-            return;
-          }
-          return data;
-        },
-      }
-    );
-  pending.value = !fetchIsPending.value;
+        if (!data || data === undefined) {
+          return;
+        }
+        return data;
+      },
+    }
+  );
+  pending.value = !isFetching.value;
   /**
    * This watch is for the first request.
    * The response is undefined when pending is true
    *
    */
   watch(apiSearchResponse, (finalResponse) => {
-    movies.value = [...(finalResponse?.Search || [])];
+    searchResponse.value = { ...finalResponse } || {};
   });
-  if (!fetchIsPending.value) {
-    movies.value = [...(apiSearchResponse.value?.Search || [])];
+  if (!isFetching.value) {
+    searchResponse.value = { ...apiSearchResponse.value };
   }
 };
 
@@ -59,7 +65,8 @@ if (query.value !== '') {
     <button>Search</button>
   </form>
   <section v-if="pending && !init">Searching...</section>
-  <section v-if="noMovies">No results to show.</section>
+  <section v-else-if="errorThrown">{{ errorThrown }}</section>
+  <section v-else-if="noMovies">No results to show.</section>
   <section v-else>
     <h2>
       Search results
@@ -75,7 +82,7 @@ if (query.value !== '') {
     </p>
     <article class="movies">
       <NuxtLink
-        v-for="movie in movies"
+        v-for="movie in searchResponse?.Search"
         :key="movie.imdbID"
         class="movie-link"
         :to="{ name: 'movies-id', params: { id: movie.imdbID } }"
@@ -96,3 +103,4 @@ if (query.value !== '') {
   justify-content: space-around;
 }
 </style>
+~/types/ApiResponseSearch
