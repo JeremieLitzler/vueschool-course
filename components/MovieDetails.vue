@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type ApiResponseError from '@@/types/ApiResponseError';
 import type Movie from '@@/types/Movie';
 const nuxtApp = useNuxtApp();
 const route = useRoute();

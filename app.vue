@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const route = useRoute();
 useHead({
   /**
    * Apply a template for all pages with or without the titleChunk
@@ -11,6 +12,12 @@ useHead({
     {
       name: 'description',
       content: 'Welcome to the Vueschool OMDB scrapper demo project',
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: `${import.meta.env.VITE_BASE_URL}${route.fullPath}`,
     },
   ],
 });
