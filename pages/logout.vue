@@ -3,12 +3,12 @@
 <script setup lang="ts">
 definePageMeta({
   async middleware(to, from) {
-    const isLoggedIn = useState<boolean>('isLoggedIn', () => false);
-    isLoggedIn.value = false;
+    const user = useUserStore();
+    user.isLoggedIn = false;
     console.log('logout>middleware>auth', {
       toName: to.name,
       fromName: from.name,
-      userIsLoggedIn: isLoggedIn.value,
+      userIsLoggedIn: user.isLoggedIn,
     });
 
     await useRouter().push({ name: 'index' });

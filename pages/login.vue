@@ -21,7 +21,7 @@
     <button>Login</button>
     <p v-if="logging">Logging in...</p>
   </form>
-  <pre>{{ isLoggedIn }}</pre>
+  <pre>{{ user.isLoggedIn }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -41,11 +41,11 @@ definePageMeta({
 
 const form = ref({ username: '', password: '' });
 const logging = ref(false);
-const isLoggedIn = userIsLoggedIn();
+const user = useUserStore();
 
 const login = async () => {
   logging.value = true;
-  isLoggedIn.value = true;
+  user.isLoggedIn = true;
   await useRouter().push({ name: 'index' });
   logging.value = false;
 };

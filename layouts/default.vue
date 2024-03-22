@@ -1,13 +1,17 @@
 <script setup lang="ts">
-const isLoggedIn = userIsLoggedIn();
+const user = useUserStore();
 </script>
 
 <template>
   <nav>
     <nuxt-link class="nav-link" to="/">Home</nuxt-link>
     <nuxt-link class="nav-link" to="/movies">Movies</nuxt-link>
-    <nuxt-link class="nav-link" v-if="isLoggedIn" to="/admin">Admin </nuxt-link>
-    <nuxt-link class="nav-link" v-if="!isLoggedIn" to="/login">Login</nuxt-link>
+    <nuxt-link class="nav-link" v-if="user.isLoggedIn" to="/admin"
+      >Admin
+    </nuxt-link>
+    <nuxt-link class="nav-link" v-if="!user.isLoggedIn" to="/login"
+      >Login</nuxt-link
+    >
     <nuxt-link class="nav-link" v-else to="/logout">Logout</nuxt-link>
     <nuxt-link
       class="nav-link"
