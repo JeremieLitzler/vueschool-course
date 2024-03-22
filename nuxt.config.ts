@@ -1,4 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+interface NuxtImageConfig {
+  domains: string[];
+  provider?: string;
+}
+const nuxtImageConfig: NuxtImageConfig = {
+  domains: ['m.media-amazon.com'],
+};
+if (import.meta.env.VITE_NUXT_IMAGE_USE_NETLIFY_PROVIDER !== undefined) {
+  nuxtImageConfig['provider'] =
+    import.meta.env.VITE_NUXT_IMAGE_USE_NETLIFY_PROVIDER;
+}
 export default defineNuxtConfig({
   routeRules: {
     '/spa': { ssr: false },
@@ -18,9 +29,7 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
   ],
-  image: {
-    domains: ['m.media-amazon.com'],
-  },
+  image: nuxtImageConfig,
   imports: {
     dirs: ['stores', 'types'],
   },

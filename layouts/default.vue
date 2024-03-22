@@ -6,6 +6,7 @@ const user = useUserStore();
   <nav>
     <nuxt-link class="nav-link" to="/">Home</nuxt-link>
     <nuxt-link class="nav-link" to="/movies">Movies</nuxt-link>
+    <nuxt-link class="nav-link" to="/responsive">Responsive image</nuxt-link>
     <nuxt-link class="nav-link" v-if="user.isLoggedIn" to="/admin"
       >Admin
     </nuxt-link>
