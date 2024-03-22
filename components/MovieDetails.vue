@@ -62,4 +62,3 @@ useHead({
 </template>
 
 <style scoped></style>
-~/types/ApiErrorResponse

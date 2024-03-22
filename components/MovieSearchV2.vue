@@ -90,13 +90,14 @@ if (query.value !== '') {
         :to="{ name: 'movies-id', params: { id: movie.imdbID } }"
       >
         <div class="nuxt-image-variants">
-          <div class="nuxt-image-variant">
+          <!-- <div class="nuxt-image-variant">
             <h3>Default image</h3>
-            <nuxt-img :src="movie.Poster" :alt="movie.Title" />
-          </div>
+            <nuxt-img loading="lazy" :src="movie.Poster" :alt="movie.Title" />
+          </div> -->
           <div class="nuxt-image-variant">
             <h3>Resized from the center to 200 x 150</h3>
             <nuxt-img
+              loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
               width="200"
@@ -108,6 +109,7 @@ if (query.value !== '') {
               Resized to 200 x 150 but <b>contains</b> the whole original image
             </h3>
             <nuxt-img
+              loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
               width="300"
@@ -118,6 +120,7 @@ if (query.value !== '') {
           <div class="nuxt-image-variant">
             <h3>Same as above but in WEBP.</h3>
             <nuxt-img
+              loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
               width="300"
@@ -129,6 +132,7 @@ if (query.value !== '') {
           <div class="nuxt-image-variant">
             <h3>Same as above but in AVIF.</h3>
             <nuxt-img
+              loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
               width="300"
@@ -154,11 +158,6 @@ if (query.value !== '') {
   justify-content: space-around;
 }
 .nuxt-image-variants {
-  display: flex;
-  gap: 0.25em;
-  justify-content: space-around;
-  width: 100vw;
-  overflow-x: scroll;
 }
 .nuxt-image-variant {
   display: flex;
