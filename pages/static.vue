@@ -3,6 +3,16 @@
   <p>{{ new Date() }}</p>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+useHead({
+  title: 'Static',
+  meta: [
+    {
+      name: 'description',
+      content: 'This is a Static page...',
+    },
+  ],
+});
+</script>
 
 <style scoped></style>
