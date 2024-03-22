@@ -20,6 +20,7 @@ useHead({
       href: `${import.meta.env.VITE_BASE_URL}${route.fullPath}`,
     },
   ],
+  htmlAttrs: { lang: 'en-US' },
 });
 </script>
 <template>

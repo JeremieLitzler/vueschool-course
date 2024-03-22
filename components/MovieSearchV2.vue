@@ -60,7 +60,9 @@ if (query.value !== '') {
 <template>
   <h1>Page: movies/index</h1>
   <form @submit.prevent="search">
+    <label for="query">What are you looking for?</label>
     <input v-model="query" type="text" name="query" id="query" />
+    <label for="page">Pick the page</label>
     <input v-model="page" type="number" name="page" id="page" />
     <button>Search</button>
   </form>
