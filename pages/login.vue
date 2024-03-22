@@ -21,7 +21,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const form = ref({ username: '', password: '' });
 
 definePageMeta({
