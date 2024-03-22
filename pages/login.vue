@@ -43,12 +43,9 @@ const form = ref({ username: '', password: '' });
 const logging = ref(false);
 const user = useUserStore();
 
-const login = async () => {
-  logging.value = true;
-  user.isLoggedIn = true;
-  await useRouter().push({ name: 'index' });
-  logging.value = false;
-};
+logging.value = true;
+const login = async () => await user.login();
+logging.value = false;
 </script>
 
 <style scoped></style>
