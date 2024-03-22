@@ -83,13 +83,62 @@ if (query.value !== '') {
       for {{ query }}
     </p>
     <article class="movies">
-      <NuxtLink
+      <nuxt-link
         v-for="movie in searchResponse?.Search"
         :key="movie.imdbID"
         class="movie-link"
         :to="{ name: 'movies-id', params: { id: movie.imdbID } }"
-        ><img :src="movie.Poster" :alt="movie.Title"
-      /></NuxtLink>
+      >
+        <div class="nuxt-image-variants">
+          <div class="nuxt-image-variant">
+            <h3>Default image</h3>
+            <nuxt-img :src="movie.Poster" :alt="movie.Title" />
+          </div>
+          <div class="nuxt-image-variant">
+            <h3>Resized from the center to 200 x 150</h3>
+            <nuxt-img
+              :src="movie.Poster"
+              :alt="movie.Title"
+              width="200"
+              height="150"
+            />
+          </div>
+          <div class="nuxt-image-variant">
+            <h3>
+              Resized to 200 x 150 but <b>contains</b> the whole original image
+            </h3>
+            <nuxt-img
+              :src="movie.Poster"
+              :alt="movie.Title"
+              width="300"
+              height="200"
+              fit="contain"
+            />
+          </div>
+          <div class="nuxt-image-variant">
+            <h3>Same as above but in WEBP.</h3>
+            <nuxt-img
+              :src="movie.Poster"
+              :alt="movie.Title"
+              width="300"
+              height="200"
+              fit="contain"
+              format="webp"
+            />
+          </div>
+          <div class="nuxt-image-variant">
+            <h3>Same as above but in AVIF.</h3>
+            <nuxt-img
+              :src="movie.Poster"
+              :alt="movie.Title"
+              width="300"
+              height="200"
+              fit="contain"
+              format="avif"
+            />
+          </div>
+        </div>
+      </nuxt-link>
     </article>
   </section>
   <!-- <pre>Movies: {{ movies }}</pre>
@@ -104,5 +153,16 @@ if (query.value !== '') {
   flex-wrap: wrap;
   justify-content: space-around;
 }
+.nuxt-image-variants {
+  display: flex;
+  gap: 0.25em;
+  justify-content: space-around;
+  width: 100vw;
+  overflow-x: scroll;
+}
+.nuxt-image-variant {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
 </style>
-~/types/ApiResponseSearch

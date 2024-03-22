@@ -18,6 +18,9 @@ export default defineNuxtConfig({
     ],
     '@nuxt/image',
   ],
+  image: {
+    domains: ['m.media-amazon.com'],
+  },
   imports: {
     dirs: ['stores', 'types'],
   },
