@@ -23,8 +23,9 @@ useHead({
 });
 </script>
 <template>
-  <div>
-    <the-nav-bar />
-    <nuxt-page />
-  </div>
+  <section class="page">
+    <nuxt-layout>
+      <nuxt-page />
+    </nuxt-layout>
+  </section>
 </template>
