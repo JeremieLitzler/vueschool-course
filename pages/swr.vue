@@ -9,7 +9,7 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'This is a Stale While Reloading page...',
+      content: 'This is a Stale While Revalidated page...',
     },
   ],
 });
