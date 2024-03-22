@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const isLoggedIn = useState<boolean>('isLoggedIn', () => false);
+const isLoggedIn = userIsLoggedIn();
 </script>
 
 <template>

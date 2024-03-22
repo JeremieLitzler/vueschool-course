@@ -41,7 +41,7 @@ definePageMeta({
 
 const form = ref({ username: '', password: '' });
 const logging = ref(false);
-const isLoggedIn = useState<boolean>('isLoggedIn', () => false);
+const isLoggedIn = userIsLoggedIn();
 
 const login = async () => {
   logging.value = true;
