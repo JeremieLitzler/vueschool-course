@@ -6,9 +6,9 @@ interface NuxtImageConfig {
 const nuxtImageConfig: NuxtImageConfig = {
   domains: ['m.media-amazon.com'],
 };
-if (import.meta.env.VITE_NUXT_IMAGE_PROVIDER !== undefined) {
-  nuxtImageConfig['provider'] = import.meta.env.VITE_NUXT_IMAGE_PROVIDER;
-}
+// if (import.meta.env.VITE_NUXT_IMAGE_PROVIDER !== undefined) {
+//   nuxtImageConfig['provider'] = import.meta.env.VITE_NUXT_IMAGE_PROVIDER;
+// }
 export default defineNuxtConfig({
   routeRules: {
     '/spa': { ssr: false },
