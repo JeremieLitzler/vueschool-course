@@ -78,6 +78,24 @@ const configImg = ref({ w: 200, h: 300, fit: 'contain', format: 'avif' });
         >for <i>{{ query }}</i></span
       >
     </h2>
+    <article>
+      <label>
+        Width
+        <input v-model="configImg.w" type="number" />
+      </label>
+      <label>
+        Height
+        <input v-model="configImg.h" type="number" />
+      </label>
+      <label>
+        Fit (contain (default), cover, fill)
+        <input v-model="configImg.fit" type="text" />
+      </label>
+      <label>
+        Format (avif, webp, jpg, gif)
+        <input v-model="configImg.format" type="text" />
+      </label>
+    </article>
     <p>
       We found {{ resultsFound }} movie{{
         resultsFound && resultsFound > 1 ? 's' : ''
