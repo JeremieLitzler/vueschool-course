@@ -151,14 +151,14 @@ const configImg = ref({ w: 200, h: 300, fit: 'contain', format: 'avif' });
           </div> -->
           <div class="nuxt-image-variant">
             <h3>Same as above but in AVIF.</h3>
-            <nuxt-img
+            <nuxt-picture
               loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
               width="200"
               height="300"
               fit="cover"
-              format="avif"
+              format="avif,webp"
             />
           </div>
         </div>

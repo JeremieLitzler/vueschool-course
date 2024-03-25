@@ -52,8 +52,14 @@ useHead({
   <section v-else-if="error">{{ error }}</section>
   <section v-else>
     <h1>{{ movie?.Title }}</h1>
-
-    <img :src="movie?.Poster" :alt="movie?.Title" />
+    <nuxt-picture
+      :src="movie?.Poster"
+      :alt="movie?.Title"
+      width="400"
+      height="600"
+      fit="cover"
+      format="avif,webp"
+    />
     <p>
       {{ movie?.Plot }}
     </p>
@@ -61,4 +67,9 @@ useHead({
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(img) {
+  width: 100%;
+  object-fit: contain;
+}
+</style>
