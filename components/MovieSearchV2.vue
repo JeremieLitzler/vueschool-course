@@ -137,7 +137,9 @@ if (query.value !== '') {
               :alt="movie.Title"
               width="300"
               height="200"
-              fit="contain"
+              w="300"
+              h="200"
+              fit="cover"
               format="avif"
             />
           </div>
