@@ -55,6 +55,8 @@ const search = async () => {
 if (query.value !== '') {
   search();
 }
+
+const configImg = ref({ w: 200, h: 300, fit: 'contain', format: 'avif' });
 </script>
 
 <template>
@@ -137,10 +139,11 @@ if (query.value !== '') {
               :alt="movie.Title"
               width="300"
               height="200"
-              w="300"
-              h="200"
-              fit="cover"
               format="avif"
+              :w="configImg.w"
+              :h="configImg.h"
+              :fit="configImg.fit"
+              :f="configImg.format"
             />
           </div>
         </div>
