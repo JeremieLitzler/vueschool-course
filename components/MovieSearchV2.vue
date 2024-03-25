@@ -155,10 +155,7 @@ const configImg = ref({ w: 200, h: 300, fit: 'contain', format: 'avif' });
               loading="lazy"
               :src="movie.Poster"
               :alt="movie.Title"
-              :w="configImg.w"
-              :h="configImg.h"
-              :fit="configImg.fit"
-              :f="configImg.format"
+              sizes="xs:100vw sm:50vw md:100vw"
             />
           </div>
         </div>
