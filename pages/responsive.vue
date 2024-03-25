@@ -10,7 +10,6 @@
           <input
             v-model="crop.width"
             type="range"
-            value="0"
             step="50"
             min="0"
             max="1536"
@@ -21,7 +20,6 @@
           <input
             v-model="crop.height"
             type="range"
-            value="0"
             step="50"
             min="0"
             max="1000"
@@ -29,21 +27,13 @@
         </label>
         <label>
           Top
-          <input
-            v-model="crop.top"
-            type="range"
-            value="0"
-            step="50"
-            min="0"
-            max="1000"
-          />
+          <input v-model="crop.top" type="range" step="50" min="0" max="1000" />
         </label>
         <label>
           Left
           <input
             v-model="crop.left"
             type="range"
-            value="0"
             step="50"
             min="0"
             max="1536"
