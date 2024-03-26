@@ -59,19 +59,6 @@
         </suspense>
       </template>
     </router-view>
-
-    <!-- <suspense>
-      <template #fallback>
-
-        <section class="loading"><app-spinner /></section>
-      </template>
-      <template #default>
-        <section>
-          <the-header />
-          <router-view :key="`${$route.path}${JSON.stringify($route.query)}`" />
-        </section>
-      </template>
-    </suspense> -->
   </div>
   <app-notifications />
 </template>
