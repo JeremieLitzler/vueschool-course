@@ -2,13 +2,13 @@
 
 ## What is TypeScript
 
-Typescript is a super set of Javascript that provides static typing. With static typing we reap a number of benefits including:
+Typescript is a super set of Javascript that provides static typing. With static typing we include a number of benefits including:
 
 - Tighter integration with IDE
 - Better Refactoring with Errors at Compile Time
 - And Self Documented Code that's Easier to Understand by other people or even yourself in 6-months time.
 
-Finally, TypeScript compiles JavaScript, so you can run your TypeScript anywhere you'd run your JavaScript code.
+Finally, TypeScript compiles into JavaScript, so you can run your TypeScript anywhere you'd run your JavaScript code.
 
 See the [TypeScript playground](https://www.typescriptlang.org/play) to learn and test.
 
@@ -40,7 +40,12 @@ lion.runs = true;
 delete lion.teeth;
 ```
 
-In TypeScript, you can be sure variable types don't change or objects retains properties.
+While this has been used to achieve functionnality, it makes the code more opaque.
+
+In TypeScript, you can be sure that:
+
+- variable types don't change
+- objects retains properties.
 
 ## Implicit and Explicit Types in TypeScript
 
@@ -53,7 +58,7 @@ let price = 24;
 price = "24"; //TypeScript doesn't allow this and would not allow the code to compile...
 ```
 
-Basically, TypeScript knows how the primitivily-typed variable was initialize.
+Basically, TypeScript knows how the primitivily-typed variable was initialize, so it knows its type.
 
 Otherwise, use the Explicit way.
 
@@ -65,7 +70,7 @@ Basically, you tell in the code the type of the variable:
 let price: number = 2;
 ```
 
-Trying to initialize the variable to a stringm TypeScript would show an issue.
+Trying to initialize the variable to a string, TypeScript would show an issue.
 
 It leaves no room to mistypes, even if it is more verbose.
 

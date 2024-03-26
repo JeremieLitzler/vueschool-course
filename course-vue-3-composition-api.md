@@ -9,7 +9,7 @@ It takes 2 parameters:
 - a list of props
 - a context object
 
-You define the props above the setup method in the same way we do it in the Options API.
+You can define the props above the setup method in the same way we do it in the Options API. But later in this article, we review the `defineProps` way with TypeScript.
 
 Inside the setup method, we accuess the props using the first parameter:
 
@@ -32,7 +32,7 @@ We can destructure the context to extract `attr`, `slots` and `emits` for exampl
     }
 ```
 
-We can use whatever we want from the context. For example, we can use `emit` only
+We can use whatever we want from the context. For example, we can use `emit` only.
 
 ## Reactivity is not explicit, you have to tell Vue
 
@@ -54,7 +54,7 @@ export default {
 };
 ```
 
-Without using `ref`, you could not edit `name` in Vue DevTools.
+Without `ref`, you could not edit `name` in Vue DevTools and have it update in the UI.
 
 `ref` is a reactive reference.
 
@@ -70,7 +70,7 @@ In the template or lifecycle hooks like `created()` where Vue unwrap the `ref`.
 
 Non-primitives are objects and arrays.
 
-You can use `ref`, but you also have `reactive` method.
+You can use `ref`, but you also have `reactive`.
 
 ```javascript
 import { ref, reactive } from "vue";
@@ -87,9 +87,15 @@ One advantage of `reactive` is that it elimates the need to use `.value`.
 
 See [the docs for more cool stuff about reactivity](https://vuejs.org/api/reactivity-utilities.html).
 
+**However**, one of the trap of `reactive` is that you may assign the variable a complete other value and you will loose the reactivity.
+
+Using `ref` guarantee it doesn't happen.
+
 ### How to choose `ref` or `reactive`
 
 See [the lesson "Refs vs Reactive With the Vue 3 Composition API"](https://vueschool.io/lessons/refs-vs-reactive-with-the-vue-3-composition-api) for the advantages and disavantages of each.
+
+I personnally use exclusively `ref`.
 
 ## Using `computed`
 
@@ -117,7 +123,7 @@ But when using composables, it will provide a new advantage.
 **ALWAYS** copy the reactive array, otherwise, you will work on a reference, not a true copy.
 
 ```javascript
-//newCart amd oldCart point to the same reference
+//newCart and oldCart point to the same reference
 watch(cart, (newCart, oldCart) => console.log(newCart, oldCart));
 ```
 
@@ -154,7 +160,7 @@ export default {
 };
 ```
 
-For example, with `watchEffect`, we write:
+With `watchEffect`, it becomes:
 
 ```javascript
 import { watchEffect } from "vue";
@@ -165,9 +171,7 @@ export default {
 };
 ```
 
-So when to use either one? In the example, above `watch`.
-
-Otherwise, ask yourself:
+So when to use either one? Ask yourself:
 
 - Do I need access to the old value?
 - Will it be a problem if the callback fires inmediatly?
@@ -178,17 +182,17 @@ Use the methods `provide` and `inject`.
 
 `provide` defines in the component N the name and value of the variable.
 
-`inject` reads from component N+2 the variable's value defined in `provide` by component N.
+`inject` reads from component N+2 or deeper the variable's value defined in `provide` by component N.
 
 A provided variable can be made reactive.
-
-PS: I'd create an utility file to list the names of those types of variables to avoid mistyping the variable name in the `inject` method.
 
 Note: you cannot inject a variable not provided by a parent. However, `inject` takes a second argument to prevent broken code.
 
 ```javascript
 const currencySymbol = inject("currencySymbol", ref("$"));
 ```
+
+PS: using TypeScript, you can create an enum to list the names of those types of variables to avoid mistyping the variable name in the `inject` method.
 
 ## Using lifecycle hooks in Composition API
 
@@ -202,11 +206,7 @@ See the docs for [the list of methods](https://vuejs.org/api/composition-api-lif
 
 It is implicity return all variables and methods to become useable in the template.
 
-To declare props, use the macro `defineProps` method.
-
-### One caviat about the `setup` attribut
-
-**Only single file component can use it.**
+One caviat about the `setup` attribut: **only single file component can use it.**
 
 ## Avoid mutation of props that are objects
 
@@ -250,8 +250,6 @@ export default function usePost() {
 
 ## Asynchronous Data and the Composition API
 
-The following breaks the organisation of the code. The logical concerns within the component are mixed up.
-
 ### Using `then()`
 
 ```javascript
@@ -261,7 +259,20 @@ fetchPost(route.params.id).then(() => {
 });
 ```
 
-### Using `async` self-invokin anonymous function
+### Using `async / await`
+
+```javascript
+//fetchUser is dependant on the fetchPost, so we wait it resolves.
+const post = (ref < Post) | (null > null);
+const user = (ref < User) | (null > null);
+
+const fetData = async () => {
+  post.value = await fetchPost(route.params.id);
+  user.value = await fetchUser(post.value.userId);
+};
+```
+
+### Using `async` self-invoking anonymous function
 
 ```javascript
 (async () => {
@@ -294,7 +305,7 @@ watch(
 
 ### Use of `suspense`
 
-**IMPORTANT**: on January 9th 2024, it is still under an experimental status. See [the docs](https://vuejs.org/guide/built-ins/suspense.html#suspense).
+**IMPORTANT**: on January 9th 2024, it is still under an experimental status. See [the docs](https://vuejs.org/guide/built-ins/suspense.html#suspense). However, many projects use it in production (Nuxt 3 for example).
 
 The usage is the following:
 
@@ -334,7 +345,9 @@ To work, you will need to use the `suspense` component higher up in the componen
 </suspense>
 ```
 
-But with `router-view`, it is more like this:
+It is important to note that _Both slots only allow for one immediate child node_.
+
+But with `router-view`, it is more like this that you need to implement it:
 
 ```htm
 <!-- in the template of App.vue -->
@@ -352,3 +365,5 @@ But with `router-view`, it is more like this:
   </template>
 </router-view>
 ```
+
+Read more [in the documentation](https://vuejs.org/guide/built-ins/suspense.html).

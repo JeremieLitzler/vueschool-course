@@ -2,7 +2,7 @@
 
 ## When not to use TypeScript
 
-If you are starting using Vue, [learning Vue in plain old JavaScript first](course-fundamentals.md) is recommanded, then come back.
+If you are starting using Vue, [learning Vue in plain old JavaScript first](course-fundamentals.md) is recommanded, then come back here.
 
 Also, don't use it:
 
@@ -40,20 +40,20 @@ defineEmits<{
   (
     //name of event
     //adding the "@" helps to identify native event (one "@") and custom events (two "@").
-    event: "@addEntry",
+    event: "@add-entry",
     //payload definition
     entry: { entryMessage: string; emoji: Emoji | null }
   ): void; //return type is always void
 }>();
 ```
 
-**IMPORTANT**: In the naming of the event, do not use camelCase as above if you want autocomplete on the parent component. I've asked the VueSchool community why in [a comment of the lesson](https://vueschool.io/lessons/typing-component-events#comment-6375887030).
+**IMPORTANT**: In the naming of the event, always use _kebab-case_ as above if you want autocomplete on the parent component. I've asked the VueSchool community why in [a comment of the lesson](https://vueschool.io/lessons/typing-component-events#comment-6375887030).
 
 ## Declaring and Typing Component Props
 
 OK, I tried this one alone, but it wasn't easy.
 
-But, it is actually as easy as the `defineEmits` using the Type-based decoration is recommended in TypeScript project instead of the runtime decoration.
+But, it is actually as easy as the `defineEmits`. Using the Type-based decoration is recommended in TypeScript project instead of the runtime decoration.
 
 ```typescript
 const props = defineProps<{
@@ -70,15 +70,23 @@ interface Props {
 const props = defineProps<Props>();
 ```
 
-But you cannot use an import of the interface from a file and therefore, it must be defined in the script setup.
-
 **IMPORTANT**: you cannot use the different style decoration in a same component.
+
+If you need defaults, you will need to wrap `defineProps` in `withDefaults`.
+
+```tsx
+import type PropsAppLoginForm from "@/types/PropsAppLoginForm";
+
+const props = withDefaults(defineProps<PropsAppLoginForm>(), {
+  enableRegister: true,
+});
+```
 
 ## Typing Template Refs
 
-Template ref is away to access, when necessary, a DOM Element to work on in the script setup.
+Template ref is a way to access, when necessary, a DOM Element to work on in the script setup.
 
-For example: let's you have a textarea input where you want to focus on as a page loads.
+For example: let's say you have a textarea input where you want to focus on as a page loads.
 
 You can achieve this using the following technique:
 
@@ -106,6 +114,8 @@ onMounted(() => textareaElement.value?.focus());
 </template>
 ```
 
+This is also a method I used in the implementation of a native dialog modal.
+
 Read [more in the docs](https://vuejs.org/guide/typescript/composition-api.html#typing-template-refs) about typing the template refs.
 
 Read [more in the docs](https://vuejs.org/guide/essentials/template-refs.html) about the Template refs, what they are and are used for.
@@ -114,9 +124,9 @@ Read [more in the docs](https://vuejs.org/guide/essentials/template-refs.html) a
 
 Similar to the JavaScript version, the difference is found in the use of the type `InjectionKey` from `vue`:
 
-Injection keys be store in a seperate file that is imported when needed.
+Injection keys need to be store in a seperate file that is imported when needed.
 
-For example of a user object to pass on to childs of `App.vue`:
+For example, a user object to pass on to childs of `App.vue`:
 
 - we create the file containing the inject keys:
 
@@ -147,7 +157,7 @@ import { userInjectionKey } from "@/injectKeys";
 const user = inject(userInjectionKey);
 ```
 
-NB: by default, TypeScript know the injected object could be null. So when you use in the template of the component using the value, think about it.
+NB: by default, TypeScript knows the injected object could be null. So when you use in the template of the component using the value, think about it.
 
 ```htm
 <span>{{ user?.username || "Anonymous" }}</span>

@@ -10,11 +10,11 @@ npm install vue-router@4 --save
 
 ## Adding routes
 
-It is done in the `main.js` file.
+It is done in the `main.js` or `main.ts` file.
 
 The routes can be imported from an external file outside of `main.js`.
 
-A route is defined like this:
+In JavaScript, a route is defined like this:
 
 ```javascript
   routes: [
@@ -30,10 +30,36 @@ A route is defined like this:
 
 ```
 
+However, in TypeScript, you need to do it slightly differently:
+
+1. You create a route variable:
+
+   ```tsx
+   const UserLoginRoute: RouteRecordRaw = {
+     path: RoutePath.UserLogin,
+     name: RouteName.UserLogin,
+     component: () => import("@/pages/UserLogin.vue"),
+   };
+   ```
+
+2. You create the `RouterOptions` where you initialze the `routes` array and add the route variable:
+
+   ```tsx
+   const routerOptions: RouterOptions = {
+     history: createWebHistory(import.meta.env.BASE_URL),
+     routes: [UserLoginRoute],
+   };
+   ```
+
+3. You create the router:
+
+   ```tsx
+   const router: Router = createRouter(routerOptions);
+   ```
+
 ## Using `router-view` to render a page
 
-To render the view for a route, you need to include
-in the `App.vue` the component `router-view`.
+To render the view for a route, you need to include in the `App.vue` the component `router-view`.
 
 ```htm
 <template>
@@ -49,9 +75,11 @@ or
 </template>
 ```
 
+It is recommended to include the `:key` prop to make sure that the components are rendered on route change.
+
 ## Using `router-link` to render routed links
 
-If you want to build the navigation, for example, using the `router-link` component enables to create adequate links:
+If you want to build a navigation, using the `router-link` component enables to create adequate links:
 
 ```htm
 <template>
@@ -63,15 +91,15 @@ If you want to build the navigation, for example, using the `router-link` compon
 
 Using `router-link` instead of `a` elements makes possible to load just what we need instead of everything on each pageload.
 
-If you open the DevTools, the `router-link` is rendered as `a` element.
+If you open the DevTools, the `router-link` is rendered as `a` element in the DOM.
 
-But Vue router intercepts the click events so the browser doesn't reload the page.
+But vue-router intercepts the click events so the browser doesn't reload the page.
 
 Therefore, we'll use `a` elements for external links and `router-link` for internal links.
 
 ## Extracting routes to its own file
 
-This is commun practice. You create a `router` under `src` where you add `inde.js` with the setup of the router.
+This is commun practice. You create a `router` directory under `src` where you add `index.js` with the setup of the router.
 
 ```javascript
 import { createRouter, createWebHistory } from "vue-router";
@@ -101,7 +129,7 @@ The `#` mode is there to imitate a file path without the server setup. It is use
 
 Without the `#`, it uses the HTML5 native web history feature.
 
-The drawback of `#` mode has a bad impact on SEO, so prefer not using it for public applications.
+The drawback of `#` mode has a bad impact on SEO, so prefer not using it for public applications (but SPAs are not good for SEO either, BTW. [See Nuxt framework](course-nuxt-js-3-fundamentals.md)).
 
 So in Vue applications, use `createWebHistory`, which is the HTML5 mode.
 
@@ -141,7 +169,7 @@ var routes = [
 The result is in the `dist` folder:
 
 - the main JavaScript file (`index-[hash].js`)
-- a JavaScript file for each component of each route.
+- a JavaScript file for each component of a given route.
 
 With Vuecli, it uses a similar technique but using a Webpack comment to name the chunk with magic comment:
 
@@ -186,7 +214,7 @@ The best practice: I'd use [Douglas Crockford's](http://javascript.crockford.com
 >
 > Most variables and functions **should start with a lower case letter**.
 
-Conclusion: I'll use `camelCase`.
+Conclusion: I'll use `camelCase` only.
 
 Here for some discussion on the topic:
 
@@ -209,7 +237,37 @@ TheNavigation.vue:4 [Vue warn]: Property "doesntexist" was accessed during rende
 
 Interesting fact: if the route name equals `undefined` though, you will get no warning. But the `a` element will have `href` equal to the currently loaded page.
 
-I wonder what is the best practice to use named routes within a component to avoid typos. I only found about the interesting fact because I tried to store the route names in an array to be reused in `src/router/index` and an application component.
+I wonder what is the best practice to use named routes within a component to avoid typos.
+
+Personally, in TypeScript, I use a `RouteName` enum that I use not only in the router index but also in the various places where I need to create a router link.
+
+That technique allow intellisence and guarantee that you never mistype a route name.
+
+Here is an example:
+
+```tsx
+export enum RouteName {
+  //Public pages
+  TheHome = "TheHome",
+  UserShow = "UserShow",
+  CategoryShow = "CategoryShow",
+  ForumShow = "ForumShow",
+  ThreadShow = "ThreadShow",
+  ThreadCreate = "ThreadCreate",
+  ThreadEdit = "ThreadEdit",
+  UserRegister = "UserRegister",
+  UserLogin = "UserLogin",
+  UserLogout = "UserLogout",
+  //Behind auth pages
+  AccountEdit = "AccountEdit",
+  AccountShow = "AccountShow",
+  //Commun page
+  NotAuthorized = "NotAuthorized",
+  NotFound = "NotFound",
+}
+```
+
+I do the same of the route paths BTW.
 
 ## Reacting to Param Changes
 
@@ -217,11 +275,16 @@ We have two options:
 
 1. use `watch` to listen on the `router.params` changes and fetch the new data.
 
-2. ask Vue to recreate the component using the `key` attribut on the `router-view` component. The value is `$route.path`.
+2. ask Vue to recreate the component using the `key` attribut on the `router-view` component. The value is `$route.path`, but be aware of the query string... You might need something like this:
+
+   ```htm
+   <router-view :key="`${$route.path}${JSON.stringify($route.query)}`">
+   </router-view>
+   ```
 
 The second approach takes more JavaScript computation time.
 
-But it is the solution to use most of the time you use the same component for different data.
+But it is the solution to use most of the time as you use the same component for different data.
 
 ## Usecase of Route Props
 
@@ -240,7 +303,7 @@ const routes = [
 ];
 ```
 
-It would be use the following way in the component:
+It would be used the following way in the component:
 
 ```htm
 <script setup>
@@ -260,7 +323,7 @@ This way, the component can receive the props from any source: route, form input
 
 ## Nested routes
 
-When you have an application with components nested multiple levels deep. In this case, it is very commun that a certain route segment corresponds to the matching component.
+When you have an application with components nested multiple levels deep, it is very commun that a certain route segment corresponds to the matching component.
 
 For example, a `DestinationDetails` component containing a list of `ExperienceDetails` component will be configured as follows:
 
@@ -306,7 +369,9 @@ The component `<transition>...</transition>` is available in Vue2 by wrapping th
 </transition>
 ```
 
-In Vue3, the syntax was changed: `router-view` wraps the `transition` by using the router view slot. Then, the transition component contains an anonymous component that the component available in the slot.
+In Vue3, the syntax was changed: `router-view` wraps the `transition` by using the router view slot.
+
+Then, the transition component contains an anonymous component.
 
 ```htm
 <router-link v-slot="{ Component }">
@@ -354,9 +419,9 @@ const routes = [
 
 ## Navigation Guards
 
-They allow to hook into the navigation process and perform checks and act accordingly: continue or doing something else.
+They allow to hook into the navigation process and perform checks (before we navigate to the requested route or before we navigate away from the current route) and act accordingly: continue or doing something else.
 
-For example, we define a route like the following:
+For example, we define a route:
 
 ```javascript
 const routes = [
@@ -457,7 +522,7 @@ Using `meta` on a given route, you can execute the scroll to top only if the rou
 
 For example:
 
-- in the route definition:
+1. You define the route:
 
 ```javascript
 {
@@ -468,20 +533,20 @@ For example:
 }
 ```
 
-- in the `createRouter` options:
+2. You define the behavior in the `createRouter` options:
 
-```javascript
-scrollBehavior(to) {
-    //this restore the top position with 300 ms dely to avoid a visual bug since we have a transition active.
-    const scroll = {};
-    if (to.meta.toTop) scroll.top = 0;
-    if (to.meta.smoothScroll) scroll.behavior = "smooth";
+   ```javascript
+   scrollBehavior(to) {
+       //this restore the top position with 300 ms dely to avoid a visual bug since we have a transition active.
+       const scroll = {};
+       if (to.meta.toTop) scroll.top = 0;
+       if (to.meta.smoothScroll) scroll.behavior = "smooth";
 
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(scroll), 500);
-    });
-  },
-```
+       return new Promise((resolve) => {
+         setTimeout(() => resolve(scroll), 500);
+       });
+     },
+   ```
 
 ## Route Meta fields
 
@@ -489,11 +554,11 @@ They are abitrary information passed along the route.
 
 A common use case for route meta fields is to mark some routes as protected.
 
-Using a application-wide guard, in the router definition, we can deal with the authentication requirement as follows:
+Using a application-wide guard or global route guard, in the router definition, we can deal with the authentication requirement as follows, in a global route guard:
 
 ```javascript
 router.beforeEach((to, from) => {
-  if (to.meta.requiresAuth && !window.user) {
+  if (to.meta.requiresAuth && !user) {
     // Load a login page
     return {
       name: "login",
@@ -503,6 +568,8 @@ router.beforeEach((to, from) => {
   //Else continue
 });
 ```
+
+## Redirects
 
 Using the push method on the router instance on the login page, for example, we can redirect the user to the protected area and log him out:
 
@@ -548,9 +615,9 @@ To read query parameters, it is as simple as reading the `query` object in the `
 
 An example usecase would be to include the path to a destination page after authentication.
 
-For example, I have an invoices page that requires authentication. If I navigate to it directly, I'd want to return to the invoices page.
+For example, I have an invoices page that requires authentication. If I navigate to it directly, I'd want to return to the invoices page after I sgin-in.
 
-To do so, we need to modify the application guard:
+To do so, we need to modify the global route guard:
 
 ```javascript
 router.beforeEach((to, from) => {
@@ -573,7 +640,7 @@ Again, to navigate to external links, we don't use `router-link` but a regular `
 
 However, it is a good idea to use a single application-web component for both `router-link` and regular `a` element.
 
-We would then create an `AppLink.vue` (to follow the style guidelines).
+We could then create an `AppLink.vue` (to follow the style guidelines).
 
 It would look like this:
 
@@ -585,8 +652,9 @@ It would look like this:
     target="_blank"
     rel="noopener"
     class="external-link"
-    ><slot></slot
-  ></a>
+    >
+    <slot></slot>
+  </a>
   <router-link v-else v-bind="$props" class="internal-link"
     ><slot></slot
   ></router-link>
@@ -701,7 +769,7 @@ To trigger the cases, see the following case:
 
 ## Advanced Routes’ Matching Syntax with regex
 
-Using regular expressions on a route's path can allow fine tuning of the rout.
+Using regular expressions on a route's path can allow fine tuning of the route.
 
 For example:
 
@@ -727,7 +795,7 @@ This can be extended to having a list of data:
   },
 ```
 
-Having the `+` makes requires to provide at least ne value for `id`. Otherwise, you get a 404.
+Having the `+` makes requires to provide at least one value for `id`. Otherwise, you get a 404.
 
 Having the `*` makes the `id` optional and it will load the route and its component. `route.params.id` will just be `undefined`.
 

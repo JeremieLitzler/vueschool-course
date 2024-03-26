@@ -2,7 +2,7 @@
 
 ## Why Pinia
 
-Before Pinia, we use Vuex.
+Before Pinia, we used Vuex.
 
 The creator of Vue Router built Pinia to make state management even easier than Vuex did.
 
@@ -24,14 +24,24 @@ The answer is often subjective.
 Daniel Kelly decides with the following checklist:
 
 - Does the project contain 5 to 10 components?
-- Is the project needing a state?
 - Is the project a demo?
 
-If you answer to one of these, then Pinia is not necessary.
+If you answer yes to one of these, then Pinia is not necessary.
 
 Remember, you can use `props` and `emit` to pass data from a components to another.
 
-If you use a state management, do it at the start as refactoring may take quite a bit time.
+If you use a state management, do it at the start as refactoring may take quite a bit of time.
+
+Another way to explain the choice: when data is used,
+
+- in a component context,
+- in limited scenario (a single click of button, even if it repeated),
+
+Storing that data in the global state isn't necessary.
+
+If the data is bubbling up only one level up, it isn't necessary as well.
+
+Also, if other components don't mutate the data but use it, props are sufficient.
 
 ## Pinia is modular by default
 
@@ -44,7 +54,7 @@ To create a store, you need:
 - to import `defineStore` from `pinia`.
 - to pick a unique name for the store in the application.
 
-Finally, exporting a store to be used is very similar to composables as you will name it `useStoreName("StoreName", { /* store options */})`.
+Finally, exporting a store to be used. It is very similar to composables as you will name it `useStoreName("StoreName", { /* store options */})`.
 
 That gives you:
 
@@ -55,6 +65,41 @@ export const useProductStore = defineStore("ProductStore", {
   //state
   //actions
   //getters
+});
+```
+
+However, you can also use the _Setup method_ to create the store using the arrow function syntax:
+
+```tsx
+export const useCategoryStore = defineStore("CategoryStore", () => {
+  //STATE
+  const categories = ref<Category[]>([]);
+
+  //GETTERS
+  const getCategoryById = (categoryId: string | undefined): Category => {
+    const match = categories.value.find(
+      (category: Category) => category.id === categoryId
+    );
+    if (match === undefined) return { id: "" };
+
+    return match;
+  };
+
+  //ACTIONS
+  const fetchCategory = (id: string): Promise<Category> => {
+    return useCommonStore().fetchItem<Category>({
+      targetStore: categories,
+      collection: FirestoreCollection.Categories,
+      id,
+    });
+  };
+  const fetchAllCategories = (): Promise<Category[]> => {
+    return useCommonStore().fetchAllItems<Category>({
+      targetStore: categories,
+      collection: FirestoreCollection.Categories,
+    });
+  };
+  return { categories, getCategoryById, fetchCategory, fetchAllCategories };
 });
 ```
 
@@ -122,19 +167,6 @@ It reduces the amount of places where the state is updated and if it comes from 
 ```
 
 Doing so remove the need to use `$patch` and it shows a clear mutation timeline with a start and end event showing the action call.
-
-## Local vs Global state
-
-When data is used,
-
-- in a component context,
-- in limited scenario (a single click of button, even if it repeated),
-
-Storing that data in the global state isn't necessary.
-
-If the data is bubbling up only one level up, it isn't necessary as well.
-
-Also, if other components don't mutate the data but use it, props are sufficient.
 
 ## Getters with Pinia
 
@@ -310,7 +342,7 @@ cartStore.$subscribe((mutation, state) => {});
 
 ### What are potential usecases of subscribing to state
 
-- Undo or Redo functionnality: see
+- Undo or Redo functionnality: [see this example for a simple Cart store](https://github.com/JeremieLitzler/vueschool-course/blob/project-pinia-the-enjoyable-vue-store/pinia-course-project/src/plugins/PiniaHistoryPlugin.js).
 
 Read [more in the docs](https://pinia.vuejs.org/core-concepts/state.html#Subscribing-to-the-state)
 
@@ -318,7 +350,9 @@ Read [more in the docs](https://pinia.vuejs.org/core-concepts/state.html#Subscri
 
 To do so, we need to create a javascript file under a `plugins` folder in `src`.
 
-This files contains a function that holds the logic of the plugin. For a Pinia plugin, the function takes a context object providing access to:
+This file contains a function that holds the logic of the plugin.
+
+For a Pinia plugin, the function takes a context object providing access to:
 
 - `context.pinia`: the pinia instance created with `createPinia()`
 - `context.app`: the current app created with `createApp()` (Vue 3 only)
@@ -405,6 +439,9 @@ If you needed to enable the plugin for certain stores only, you simply add a cus
 import { defineStore } from "pinia";
 
 export const useMyStore = defineStore("MyStore", {
+  /**
+   * Tells the plugin is enabled
+   */
   enabledPlugin: true,
   //state
   state: () => {
@@ -427,6 +464,9 @@ Then use the options' property in the plugin to exist if the property isn't true
 import { reactive } from "vue";
 
 export function MyPiniaPlugin({ pinia, app, store, options }) {
+  /**
+   * Check the plugin is enabled
+   */
   if (!options.enabledPlugin) return;
 
   const someData = reactive([]);
@@ -463,11 +503,11 @@ In the lesson, Daniel showcased the useLocalStorage composable from VueUse, but 
 
 ## Conclusion
 
-What did I learn that is better in Pinia:
+What did I learn that is better in Pinia?
 
-- mutations are implicit, which make is easier to use.
-- it is built via Composition API in mind
-- it is easy to extend
-- it is easy to manage undo and redo thanks state subscription.
+- Mutations are implicit, which make is easier to use.
+- It is built via Composition API in mind
+- It is easy to extend
+- It is easy to manage undo and redo thanks state subscription.
 
 Thanks to the VueSchool team for the course and the geate examples.

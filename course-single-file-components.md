@@ -1,14 +1,14 @@
 # Single File Components
 
-See the official documentation on the topic [here for Vue 3](https://vuejs.org/guide/scaling-up/sfc.html) or [there for Vue 2](https://v2.vuejs.org/v2/guide/single-file-components).
+First, you read the official documentation on the topic [here for Vue 3](https://vuejs.org/guide/scaling-up/sfc.html) or [there for Vue 2](https://v2.vuejs.org/v2/guide/single-file-components).
 
-Simply said, we will use a `TheComponent.vue` file where the template, component script and its CSS will live.
+Simply said, we will use a `SingleFileComponent.vue` file where the template, component script and its CSS will live.
 
 ## What are Single File Components
 
 They can be:
 
-- Views, also called pages, placed under the `src/views` directory in a typical Vue project structure.
+- Views, also called pages, placed under the `src/views` or `src/pages` directory in a typical Vue project structure.
 - Components, placed under the `src/components` directory in a typical Vue project structure.
 
 **Reminder:** In most projects, component names should always be PascalCase in Single-File Components and string templates - but kebab-case in in-DOM templates ([what is in-DOM templates](https://stackoverflow.com/a/68583980)).
@@ -16,6 +16,14 @@ They can be:
 ## About scoped styles
 
 Never style HTML elements directly, as it is a bad practice because it cause really bad performance in the browser.
+
+```htm
+<style lang="css" scoped>
+  /*Your CSS code*/
+</style>
+```
+
+Scoped-styles can be SCSS, LESS or SASS also. Just change the `lang` attribut accordingly.
 
 See [this article on the topic of CSS selector performance](https://blogs.windows.com/msedgedev/2023/01/17/the-truth-about-css-selector-performance/).
 
@@ -48,11 +56,15 @@ With webpack, it is as easy as using it this way in the router:
 
 ```
 
-I'd like to understand how to do it with Vite.
+With Vite, no magic comment, just a dynaminc import :
 
-I have found this [article](https://sambitsahoo.com/blog/vite-code-splitting-that-works.html).
-
-I need to investigate with the official documentation of [Vue router](https://router.vuejs.org/guide/advanced/lazy-loading.html), maybe [this section](https://router.vuejs.org/guide/advanced/lazy-loading.html#With-Vite)?.
+```tsx
+const UserLoginRoute: RouteRecordRaw = {
+  path: RoutePath.UserLogin,
+  name: RouteName.UserLogin,
+  component: () => import("@/pages/UserLogin.vue"),
+};
+```
 
 ### For conditionnally displayed components
 
@@ -71,4 +83,4 @@ Using Webpack, you'll need to use the same methods but in the parent component's
   },
 ```
 
-Note: chunks may tagged `prefectch` by default.
+Note: chunks may tagged `prefectch` by default in the generated HTML.
