@@ -36,9 +36,33 @@
     <meta name="twitter:card" content="summary_large_image" />
   </app-page-head>
   <div class="container">
-    <suspense>
+    <router-view
+      v-slot="{ Component }"
+      :key="`${$route.path}${JSON.stringify($route.query)}`"
+    >
+      <suspense>
+        <template #default>
+          <the-header />
+        </template>
+        <template #fallback>
+          <section class="loading"><app-spinner /></section>
+        </template>
+      </suspense>
+      <template v-if="Component">
+        <suspense>
+          <template #default>
+            <component :is="Component"></component>
+          </template>
+          <template #fallback>
+            <section class="loading push-top"><app-spinner /></section>
+          </template>
+        </suspense>
+      </template>
+    </router-view>
+
+    <!-- <suspense>
       <template #fallback>
-        <!-- TODO: bug > doesn't load the spinner work... -->
+
         <section class="loading"><app-spinner /></section>
       </template>
       <template #default>
@@ -47,7 +71,7 @@
           <router-view :key="`${$route.path}${JSON.stringify($route.query)}`" />
         </section>
       </template>
-    </suspense>
+    </suspense> -->
   </div>
   <app-notifications />
 </template>
