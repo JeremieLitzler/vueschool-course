@@ -1,5 +1,7 @@
 # Form validation, with Vuelidate
 
+**Remark:** after completing the Masterclass, I was introducted to VeeValidate library and franckly, it is much better and smoothy to use. See the equivalent notes listed below [in this document](course-vuejs-form-validation-veevalidate.md).
+
 Vuelidate is light and easy to use.
 
 See [the documentation](https://vuelidate.js.org/).
@@ -14,27 +16,23 @@ You can either let Vuelidate handle the transition to _dirty state_ using the `$
 
 ```htm
 <label for="age"
-              >Age:
-              <input
-                type="number"
-                id="age"
-                v-model.number="$v.form.age.$model"
-              />
-            </label>
+  >Age:
+  <input type="number" id="age" v-model.number="$v.form.age.$model" />
+</label>
 ```
 
 Or decide which input should get dirty or not using `$touch()` method:
 
 ```htm
 <label for="age"
-              >Age:
-              <input
-                type="number"
-                id="age"
-                v-model.number="form.age"
-                @input="$v.form.age.$touch()"
-              />
-            </label>
+  >Age:
+  <input
+    type="number"
+    id="age"
+    v-model.number="form.age"
+    @input="$v.form.age.$touch()"
+  />
+</label>
 ```
 
 A good practice is to `touch()` of the form on the click on the submit button for a form.
@@ -63,11 +61,11 @@ It is better to display them when the user exit the input (e.g. focus out).
 An empty input is valid if not required. So use the following logic to force Vuelidate to check for null:
 
 ```javascript
-      // ex: field = $v.form.someInput
-      // below we check the field:
-      //  > is not invalid
-      //  > is not empty
-      return !field.$invalid && field.$model;
+// ex: field = $v.form.someInput
+// below we check the field:
+//  > is not invalid
+//  > is not empty
+return !field.$invalid && field.$model;
 ```
 
 ## Clean templates
@@ -75,13 +73,13 @@ An empty input is valid if not required. So use the following logic to force Vue
 When you have a big form, having dynamic classes can clutter the template.
 
 ```htm
-            <input
-              type="email"
-              v-model="form.email"
-              @blur="$v.form.email.$touch()"
-              :class="{error: $v.form.email.$error, valid: !$v.form.email.$invalid && form.email}"
-              id="email"
-            />
+<input
+  type="email"
+  v-model="form.email"
+  @blur="$v.form.email.$touch()"
+  :class="{error: $v.form.email.$error, valid: !$v.form.email.$invalid && form.email}"
+  id="email"
+/>
 ```
 
 It is good practice to put the logic in a method instead, if possible reused across all inputs.
@@ -89,13 +87,13 @@ It is good practice to put the logic in a method instead, if possible reused acr
 In the template:
 
 ```htm
-            <input
-              type="email"
-              v-model="form.email"
-              @blur="$v.form.email.$touch()"
-              :class="{error: $v.form.email.$error, valid: shouldAppendValidClass($v.form.email)}"
-              id="email"
-            />
+<input
+  type="email"
+  v-model="form.email"
+  @blur="$v.form.email.$touch()"
+  :class="{error: $v.form.email.$error, valid: shouldAppendValidClass($v.form.email)}"
+  id="email"
+/>
 ```
 
 In the method:
@@ -186,15 +184,14 @@ We need to implement it as follows.
 - in the template:
 
 ```htm
-            <label for="github-username"
-              >GitHub username:
-              <input
-                v-model.lazy="$v.form.githubUsername.$model"
-                :class="{error: shouldAppendErrorClass($v.form.githubUsername), valid: shouldAppendValidClass($v.form.githubUsername)}"
-                id="github-username"
-              />
-            </label>
-
+<label for="github-username"
+  >GitHub username:
+  <input
+    v-model.lazy="$v.form.githubUsername.$model"
+    :class="{error: shouldAppendErrorClass($v.form.githubUsername), valid: shouldAppendValidClass($v.form.githubUsername)}"
+    id="github-username"
+  />
+</label>
 ```
 
 - in the component validators's:

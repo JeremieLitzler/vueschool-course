@@ -2,10 +2,9 @@
 
 ## Understanding the Lifecycle Hooks in Vue.js
 
-Find the diagram of the lifecycle [here](https://vuejs.org/guide/essentials/lifecycle.html).
+Find the diagram of the lifecycle [here](https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram).
 
 Also, find the lifecycle hook list in [the official docs](https://vuejs.org/api/composition-api-lifecycle.html) to visualize the existing hooks.
-
 This documentation explains the hooks in Vue 3 and the Composition API.
 
 For the Options API, see [this other documentation](https://vuejs.org/api/options-lifecycle.html).
@@ -29,6 +28,10 @@ Or even us the `OR` operator `{{ aStringValue || "Default value" }}`.
 
 ## Dynamic CSS classes
 
+Instead of creating computed to return a string value of a CSS class based on a JavaScript computation, it is a best practice to use dynamic CSS classes that you toggle on or off based computed or JavaScript expression returns `true` or `false`.
+
+Below, if the `item.purchased`, we toggle `strikeout`.
+
 ```javascript
         <li
           v-for="item in items"
@@ -41,7 +44,7 @@ Or even us the `OR` operator `{{ aStringValue || "Default value" }}`.
 
 ```
 
-or for several classes:
+If you need you can combine several classes:
 
 ```javascript
         <li
@@ -57,14 +60,16 @@ or for several classes:
 
 ## About `computed`
 
-- A `computed` must return a value, contrary to methods.
-- When do you need to use `computed` instead of methods?
-  - When you change data, use methods.
-  - When you change the presentation on the UI, use computed properties.
+- A `computed` must return a value, contrary to methods can be void.
+
+The common question : when do you need to use `computed` instead of methods?
+
+- When you change data, use methods.
+- When you change the presentation on the UI, use computed properties.
 
 ## About `props`
 
-When you use a prop, make sur to use _camel-case_ in the template, otherwise, it won't work.
+When you use a prop, make sur to use [_kebab-case_](https://medium.com/@salmankhan_27014/a-comprehensive-guide-to-understanding-naming-conventions-camel-case-vs-pascal-case-vs-kebab-case-e8d3bf1e14db) in the template.
 
 For example, this component declares a prop `notificationType`:
 
@@ -80,19 +85,47 @@ let NotificationMessageComponent = {
 };
 ```
 
-Using it the following way won't work to add the `error` class, but will use the default value.
+Using it the _camelCase_ name will make the linter unhappy:
 
 ```htm
-<notification-message notificationType="red"></notification-message>
+<notification-message notificationType="error"></notification-message>
 ```
-
-Using it this correct way will render the HTML fine:
 
 ```htm
-<notification-message notification-type="red"></notification-message>
+<notification-message notification-type="error"></notification-message>
 ```
 
-## The `$event` handler
+Read [the rule in the styleguide](https://v2.vuejs.org/v2/style-guide/?redirect=true#Prop-name-casing-strongly-recommended):
+
+> **Prop names should always use camelCase during declaration, but kebab-case in templates and JSX.**
+>
+> We’re simply following the conventions of each language. Within JavaScript, camelCase is more natural. Within HTML, kebab-case is.
+
+## The `$event` object
+
+If you need, the original DOM event is available under `$event`, that you can pass to the methods that to your `v-on`
+or `@` directives.
+
+```htm
+<template>
+  <!-- using $event special variable -->
+  <button @click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+
+  <!-- using inline arrow function -->
+  <button @click="(event) => warn('Form cannot be submitted yet.', event)">
+    Submit
+  </button>
+</template>
+<script setup>
+  function warn(message, event) {
+    // now we have access to the native event
+    if (event) {
+      event.preventDefault();
+    }
+    alert(message);
+  }
+</script>
+```
 
 See [the docs](https://vuejs.org/guide/essentials/event-handling).
 
