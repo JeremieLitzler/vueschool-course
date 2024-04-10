@@ -71,7 +71,11 @@ const onError = (_err: unknown) => {
  * The user is prompted to resolve the challenge.
  * On resolution, it will trigger a onVerify callback.
  */
-const runCaptcha = async () => {
+const runCaptcha = async (captchaEnabled: boolean) => {
+  if (!captchaEnabled) {
+    //When the parent component doesn't need to execute the captcha (e.g. modal of reauthentication.
+    return;
+  }
   if (isVerified.value) {
     //To prevent the execution to run again if the captcha is
     //verified
