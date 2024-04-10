@@ -21,6 +21,7 @@
     />
     <app-captcha
       ref="captchaRef"
+      v-if="enableHcaptcha"
       @@hcaptcha-notification="notifyUserWithCaptchaResponse"
     />
     <div class="push-top">
@@ -30,7 +31,7 @@
         See comment of BenW301 to this reply: https://stackoverflow.com/a/55317353/3910066
        -->
       <button
-        @click="captchaRef.runCaptcha()"
+        @click="captchaRef.runCaptcha(enableHcaptcha)"
         type="submit"
         class="btn-blue btn-block"
       >
@@ -66,6 +67,7 @@ const route = useRoute();
 
 const props = withDefaults(defineProps<PropsAppLoginForm>(), {
   enableRegister: true,
+  enableHcaptcha: true,
 });
 
 const emits = defineEmits<{
@@ -108,6 +110,9 @@ const notifyUserWithCaptchaResponse = (response: CaptchaEmitNotification) => {
 };
 
 const login = async () => {
+  if (!props.enableHcaptcha) {
+    captchaPassed.value = true
+  }
   if (!captchaPassed.value) {
     useNotification().addNotification({
       message: captchaErrorMessage.value,
