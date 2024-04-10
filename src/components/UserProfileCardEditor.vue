@@ -151,7 +151,7 @@
           <app-login-form
             :errorMessage="errorMessage"
             :enable-register="false"
-            :disable-hcaptcha="true"
+            :enable-hcaptcha="false"
             @@login="login"
           />
         </article>
