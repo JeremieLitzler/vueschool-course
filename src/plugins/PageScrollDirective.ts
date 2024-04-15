@@ -28,6 +28,8 @@ const PageScrollDirective = <
   },
 };
 
-export default (app: App) => {
-  app.directive('page-scroll', PageScrollDirective);
+export default {
+  install(app: App) {
+    app.directive('page-scroll', PageScrollDirective);
+  },
 };

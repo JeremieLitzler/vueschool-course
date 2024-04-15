@@ -24,6 +24,8 @@ const ClickOutsideDirective = <
     document.body.removeEventListener('click', el.__clickOutsideHandler__);
   },
 };
-export default (app: App) => {
-  app.directive('click-outside', ClickOutsideDirective);
+export default {
+  install(app: App) {
+    app.directive('click-outside', ClickOutsideDirective);
+  },
 };
