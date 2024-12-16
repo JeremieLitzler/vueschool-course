@@ -1,36 +1,41 @@
 # Fundamentals
 
+{{< blockcontainer jli-notice-tip "If you're interested...">}}
+
+The course is **free** and available [here](https://vueschool.io/courses/vuejs-fundamentals?utm_source=JLI_Blog_EN&utm_medium=recommandations).
+
+{{< /blockcontainer >}}
+
 ## Understanding the Lifecycle Hooks in Vue.js
 
-Find the diagram of the lifecycle [here](https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram).
+You can find the diagram of the lifecycle [here](https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram).
 
-Also, find the lifecycle hook list in [the official docs](https://vuejs.org/api/composition-api-lifecycle.html) to visualize the existing hooks.
-This documentation explains the hooks in Vue 3 and the Composition API.
+Also, yiu can find the lifecycle hook list in [the official docs](https://vuejs.org/api/composition-api-lifecycle.html) to visualize the existing hooks.
 
-For the Options API, see [this other documentation](https://vuejs.org/api/options-lifecycle.html).
+Note: this documentation explains the hooks in **Vue 3 and the `Composition API`**.
+
+For the Options API, see [this documentation](https://vuejs.org/api/options-lifecycle.html) explaining the `Option API` way.
 
 A few comments:
 
-- it is important to note that in the `beforeCreate` hook, the reactivity isn't in place yet. So you can update any data then.
-- on `mounted` gives access to `this.$el`, which the DOM element where the app resides.
+- it is important to note that in the `beforeCreate` hook, the reactivity isn't in place yet. So you can update any data at the moment.
+- on `mounted` gives access to `this.$el`, which is the DOM element where the app resides.
 
-The order is : `beforeCreate > created > beforeMount > mounted > beforeUnmount > unmounted`
+In short, the lifecycle order is : `beforeCreate > created > beforeMount > mounted > beforeUnmount > unmounted`
 
 ## Double mustaches
 
-We can evaluate one expression in a `{{ ... }}`.
+We can evaluate an expression in a `{{ ... }}`.
 
-We cannot declare variables or declare if statements.
-
-However, the ternary statement can be used in `{{ ifTrue ? "Display this" : "Display that" }}`.
-
-Or even us the `OR` operator `{{ aStringValue || "Default value" }}`.
+We cannot declare variables or declare if statements in double mustaches. However, the ternary statement can be used in `{{ ifTrue ? "Display this" : "Display that" }}`, or the `OR` operator `{{ aStringValue || "Default value" }}`.
 
 ## Dynamic CSS classes
 
-Instead of creating computed to return a string value of a CSS class based on a JavaScript computation, it is a best practice to use dynamic CSS classes that you toggle on or off based computed or JavaScript expression returns `true` or `false`.
+Instead of creating computed to return a string value of a CSS class based on a JavaScript computation, it is a best practice to use dynamic CSS classes.
 
-Below, if the `item.purchased`, we toggle `strikeout`.
+You can use them to toggle on or off JavaScript expressions that return `true` or `false`.
+
+Below, if the `item.purchased` is `true`, we toggle `strikeout` CSS class on the element. The example uses the object syntax.
 
 ```javascript
         <li
@@ -41,10 +46,9 @@ Below, if the `item.purchased`, we toggle `strikeout`.
         >
           {{ item.label }}
         </li>
-
 ```
 
-If you need you can combine several classes:
+If you need, you can combine several classes in the array syntax:
 
 ```javascript
         <li
@@ -55,14 +59,13 @@ If you need you can combine several classes:
         >
           {{ item.label }}
         </li>
-
 ```
 
 ## About `computed`
 
-- A `computed` must return a value, contrary to methods can be void.
+A `computed` is a calculated value and must return a value, contrary to methods that can be void.
 
-The common question : when do you need to use `computed` instead of methods?
+The common question : when do you need to use `computed` over methods?
 
 - When you change data, use methods.
 - When you change the presentation on the UI, use computed properties.
@@ -75,21 +78,23 @@ For example, this component declares a prop `notificationType`:
 
 ```javascript
 let NotificationMessageComponent = {
-  template: "#notification-message-template",
+  template: '#notification-message-template',
   props: {
     notificationType: {
       type: String,
-      default: "info",
+      default: 'info',
     },
   },
 };
 ```
 
-Using it the _camelCase_ name will make the linter unhappy:
+Using it the _camelCase_ name in the template will make the linter unhappy:
 
 ```htm
 <notification-message notificationType="error"></notification-message>
 ```
+
+With the following, you're good to go:
 
 ```htm
 <notification-message notification-type="error"></notification-message>
@@ -137,4 +142,9 @@ See [the docs](https://vuejs.org/guide/essentials/event-handling).
 
 Choosing between the two depends on the usecase and the frequency you want to toggle the DOM element.
 
-Listen to Daniel Kelly about that [in the 88th lesson of the original masterclass](https://vueschool.io/lessons/displaying-a-loading-indicator-while-components-fetch-async-data) at 4:45.
+Generally speaking,
+
+- `v-if` has higher toggle costs because the DOM element is not rendered if the condition is false.
+- `v-show` has higher initial render costs because the DOM element is rendered if not matter the the condition value. A `display: none` is simply apply by Vue.
+
+So prefer `v-show` if you need to toggle something very often, and prefer `v-if` if the condition is unlikely to change at runtime.

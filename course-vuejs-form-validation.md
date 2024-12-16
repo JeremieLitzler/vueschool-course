@@ -1,14 +1,36 @@
 # Form validation, with Vuelidate
 
-**Remark:** after completing the Masterclass, I was introducted to VeeValidate library and franckly, it is much better and smoothy to use. See the equivalent notes listed below [in this document](course-vuejs-form-validation-veevalidate.md).
+{{< blockcontainer jli-notice-tip "If you're interested...">}}
 
-Vuelidate is light and easy to use.
+The course is **free** and available [here](https://vueschool.io/courses/vuejs-form-validation?utm_source=JLI_Blog_EN&utm_medium=recommandations).
 
-See [the documentation](https://vuelidate.js.org/).
+{{< /blockcontainer >}}
+
+{{< blockcontainer jli-notice-warning "This is a Vue 2 course">}}
+
+Yet, I still participated to it and you never know: you might work on legacy projects.
+
+Otherwise, you can participate to the [new masterclass released in 2024](https://vueschool.io/the-vuejs-master-class?utm_source=JLI_Blog_EN&utm_medium=recommandations) if you want the latest and shiniest.
+
+{{< /blockcontainer >}}
+
+{{< blockcontainer jli-notice-tip "After completing the original Vue 3 Masterclass...">}}
+
+I was introducted to _VeeValidate_ library and franckly, it is much better and smoothy to use than _Vuelidate_.
+
+You can find the equivalent notes listed below [in this article](course-vuejs-form-validation-veevalidate.md).
+
+VeeValidate is light and easy to use, especially if you use TypeScript.
+
+{{< /blockcontainer >}}
+
+## Introduction
+
+You can read the documentation [here](https://vuelidate.js.org/).
 
 ## `$error` in Vuelidate
 
-It is a shorthand for`$invalid` = True && `$dirty` = True.
+It is a shorthand for `$invalid = True && $dirty = True`.
 
 ## To handle error messages and when to display them
 
@@ -114,13 +136,19 @@ In the code above, we could do the same thing on the error class as a consistent
 
 Since you may have multiple forms with similar inputs, you can export those helper methods to a mixin or a plugin.
 
-**_TODO: How do you export those helper methods to a mixin or a plugin_**
+{{< blockcontainer jli-notice-note "About the mixins">}}
+
+However, I haven't gone into the details of using mixins because with the new Vue 3 and its Composition API, the composables are the new best practice and it resolved issues that Vue.js developers had with mixins.
+
+More on composables later...
+
+{{< /blockcontainer >}}
 
 ## About custom validators
 
-Sometimes, youu will need custom validators.
+Sometimes, you will need custom validators.
 
-They need a key and be defined with a function, as follows:
+They need a key and need to be defined with a function, as follows:
 
 ```javascript
       food: {
@@ -134,11 +162,11 @@ They need a key and be defined with a function, as follows:
 
 ```
 
-**Tip 1:** It is good practice to extrac custom validators to their own files.
+**Tip 1:** It is good practice to extract custom validators to their own files.
 
 **Tip 2:** You can also extract validators using built-in validators.
 
-For example, you could have that
+For example, you could have that:
 
 ```javascript
 // ... in the validators declaration
@@ -173,7 +201,11 @@ You can apply conditional validation as below:
       },
 ```
 
-**BE CAREFUL**: use a regular javascript function so it works and not an arrow function. Why? Because the function is bound to the component instance. You would not have access to it with an arrow function.
+{{< blockcontainer jli-notice-danger "BE CAREFUL">}}
+
+Use a regular javascript function so it works and not an arrow function. Why? Because the function is bound to the component instance. You would not have access to it with an arrow function.
+
+{{< /blockcontainer >}}
 
 ### Asynchronous validation
 

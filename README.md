@@ -8,7 +8,7 @@
 
 ## Notes
 
-### [Fundamentals](module-fundamentals.md)
+### [Fundamentals](course-fundamentals.md)
 
 ### [Form validation, with Vuelidate](module-vuejs-form-validation.md)
 
