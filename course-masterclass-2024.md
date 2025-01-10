@@ -98,7 +98,8 @@ If you need Tailwind, make sure to add:
 - `tailwindcss` as development dependency
 
 If you need a boilerplate for a `Button`, you'll need to use _shadcn for Vue_ and add `class-variance-authority` and `radix-vue`.
-If you need a boilerplate for a `Dropdown` and co, you'll to sue _shadcn for Vue_ and `radix-vue`. Run `ui-add` custom command with `dropdown-menu` to install it.
+If you need a boilerplate for a `Dropdown` and co, you'll need to use _shadcn for Vue_ and `radix-vue`. Run `ui-add` custom command with `dropdown-menu` to install it.
+If you need a boilerplate for a `DataTable`, you'll need to add `"@tanstack/vue-table": "^8.20.5"`. Then, run `ui-add` custom command with `table` to install it.
 
 ## About Environment Variables
 
@@ -143,11 +144,11 @@ I suggest the following folder structure
   - For the rest, I'd recommend to use a flat-directory approach and follow the official Vue.js guidelines about naming the components.
 - `composables`: To store custom composables. But remember, [`vueuse` probably has](https://vueuse.org/) what you need.
 - `enums`: See [below](#creating-enums-folder-to-store-magic-strings) for more details.
-- `plugins`: To store the custom plugins. The boileplate doesn't contain any.
+- `plugins`: To store the custom plugins. The boilerplate doesn't contain any.
 - `services`: To store anything related to external API.
   - In the boilerplate, you'll find the services related to authentication, retrieving profiles and the dummy tables.
 - `pages`: To store the pages if you use Unplugin Vue Router.
-  - In the boileplate, you'll find:
+  - In the boilerplate, you'll find:
     - an `index` (for Home),
     - a `login` and a `register` page,
     - a `settings` page,
@@ -239,6 +240,14 @@ export default router;
 Update `env.d.ts` as describe in the comment inside the code above.
 
 And finish by creating a `pages` folder with at least an `index.vue` file for the homepage.
+
+Oh, and a tip in the `script setup` of a page.
+
+If the page receives a parameter, you can get autocompletion from the route value:
+
+```typescript
+const { id } = useRoute("/sub-entities/[id]").params;
+```
 
 ## About the `enums` folder to store magic strings
 
@@ -358,6 +367,91 @@ const { logout } = await import("@/utils/supabase-auth.ts");
 
 They must be initialized inside a script `setup`.
 
+## About Watcher and Asynchronous Operations
+
+I'm not sure what is the reason for this behavior, if you have some code like the following, the watcher won't execute.
+
+```ts
+await store.getSubEntity(id);
+watch(
+  () => subEntity.value?.name,
+  () => {
+    console.log("watch sub-entity", subEntity.value);
+
+    usePageStore().pageData.title = `Sub-Entity: ${
+      subEntity.value?.name || "Not Sub-Entity found"
+    }`;
+  }
+);
+```
+
+To solve that, you simply need to swap the asynchronous call and the watcher.
+
+## Using FormKit
+
+FormKit simplifies the form building.
+
+Let's see how you can add it. The boilerplate already includes it. So to remove it, undo the steps that follow.
+
+### The Package
+
+Install the package:
+
+```sh
+npm i @formkit/vue
+```
+
+### Configure FormKit
+
+First, we'll create `formkit.theme.ts` file at the project's root.
+To doso ,
+
+1. Head to the [theme website for FormKit](https://themes.formkit.com)
+2. Copy the command on the homepage for the default theme: `npx formkit theme --theme=regenesis`.
+3. Run it in Visual Studio Code.
+
+You should see the new file now.
+
+If you need another theme, feel free to play around the interface of this website.
+
+Then, add a `formkit.config.ts` at the project's root with the following content:
+
+```ts
+import { defaultConfig } from "@formkit/vue";
+import { rootClasses } from "./formkit.theme";
+
+export default defaultConfig({ config: { rootClasses } });
+```
+
+Then, we need to tell TypeScript about those configuration files. In `tsconfig.app.json`, add this:
+
+```json
+{
+  // the rest of the file
+  "include": [
+    // the rest of the values
+    "formkit.config.ts",
+    "formkit.theme.ts"
+  ]
+  // the rest of the file
+}
+```
+
+Next, in `main.ts`, we'll import _FormKit_ and tell Vue to use it:
+
+```ts
+import { plugin } from "@formkit/vue";
+import customConfig from "../formkit.config";
+
+const app = createApp(App);
+
+// adding formKit
+app.use(plugin, customConfig);
+app.mount("#app");
+```
+
+From there, we can start using _FormKit_. For usage examples, check the boilerplate project.
+
 ## Using Supabase
 
 If you are using Supabase, you'll want to perform the following:
@@ -412,7 +506,7 @@ sp-link-env
 
 ### Create a New Migration To Store The Profiles Table
 
-The boileplate contains that migration. But I'd like to detail how you can create a migration.
+The boilerplate contains that migration. But I'd like to detail how you can create a migration.
 
 The profile table enriches the `auth.users` table Supabase provides to you by default. The two tables are linked through `id` column.
 
