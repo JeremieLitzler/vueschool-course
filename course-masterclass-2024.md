@@ -551,7 +551,7 @@ for SELECT
 to authenticated
 using (true);
 
--- This rule prevents any new registration.
+-- This rule prevents any new registration for non-authenticated users.
 create policy "Enable insert access for authenticated users only"
 on "public"."profiles"
 as PERMISSIVE
